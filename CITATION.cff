@@ -1,0 +1,31 @@
+# TODO: Add title of Python package.
+title: "Seedcase Flower"
+# TODO: Add abstract of Python package.
+abstract: ""
+authors:
+  - family-names: Johnston
+    given-names: Luke William
+    orcid: "https://orcid.org/0000-0003-4169-2616"
+    affiliation: "Steno Diabetes Center Aarhus"
+  - family-names: Brødbæk
+    given-names: Signe Kirk
+    affiliation: "Steno Diabetes Center Aarhus"
+    orcid: "https://orcid.org/0009-0000-2208-7088"
+  - family-names: Vago
+    given-names: Marton
+    affiliation: "Steno Diabetes Center Aarhus"
+    orcid: "https://orcid.org/0009-0007-4628-655X"
+  - family-names: Ostblom
+    given-names: Joel
+    orcid: ""
+cff-version: 1.2.0
+# doi:
+# date-released: ""
+keywords:
+  # TODO: Add keywords relevant to the project.
+  - "data package"
+  - "documentation"
+license: MIT
+message: "If you use this Python package, please cite it using these metadata."
+repository-code: "https://github.com/seedcase-project/seedcase-flower"
+url: "https://flower.seedcase-project.org"
