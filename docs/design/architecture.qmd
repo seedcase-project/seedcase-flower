@@ -1,0 +1,149 @@
+---
+title: "Architecture"
+---
+
+This document contains the architectural design for `seedcase-flower`. For design details of the Seedcase Project as a whole, see the [Seedcase Design](https://design.seedcase-project.org) documentation.
+
+The purpose of this description is to ensure that the team shares a common understanding about the implementation and to outline the design to anyone else interested in the internal workings of the package.
+
+## User types {#user-types}
+
+This section describes the different users we expect and design for. `seedcase-flower` has a single primary user: someone who publishes Data Package metadata in a human-readable form. However, this user may interact with `seedcase-flower` in different ways depending on how much control they want over the generated output.
+
+-   **Default-mode user:** Uses Flower with its opinionated defaults to generate a human-readable representation of a Data Package. Wants a high-quality output with minimal configuration and no need for customisation.
+
+-   **Custom-mode user:** Uses `seedcase-flower`'s configuration options and/or templates to control the structure, format, and presentation of the output. Wants flexibility to adapt the generated output to specific project needs or publishing workflows.
+
+## Naming
+
+This section contains a naming scheme for `seedcase-flower` that incorporates terms used in the [Data Package standard](https://datapackage.org/). The main objects and actions used throughout the package can be found in the tables below.
+
+| Object | Description |
+|----------------------------|--------------------------------------------|
+| package | A Data Package that contains a collection of related data resources and descriptor(s). |
+| descriptor | A standalone and complete metadata structure contained in a JSON file, for example, in `datapackage.json`. |
+| properties | Metadata fields (name-value pairs) of a descriptor loaded as a Python dictionary. This can be a subset of the original descriptor or the entire structure. |
+| config | An object containing settings for modifying the behaviour and output of `seedcase-flower`, e.g., output format, template paths, or style. |
+| section | A configuration unit that defines an output path and a list of metadata items to render at that path. |
+| template | A Jinja file that defines the structure, layout, and format for rendering a metadata item. |
+| style | A name for a set of templates that defines a coherent look and structure for the output, e.g., `quarto-book` or `quarto-resource-listings`. |
+
+: Objects used throughout `seedcase-flower`.
+
+| Action | Description |
+|----------------------------|--------------------------------------------|
+| build/bundle | Generate structured, human-readable output from a Data Package's properties using the configuration and templates. |
+| view/show | Render a Data Package's properties as a human-readable string for terminal output. |
+| read | Read various files, such as a Data Package descriptor (the properties) or a configuration file. |
+
+: Actions that `seedcase-flower` can perform.
+
+## C4 Models
+
+This section contains the [C4 Models](https://c4model.com/) for `seedcase-flower`. The C4 Model is an established visualisation approach to describe the architecture of a software system. It breaks the system down into four levels of architectural abstraction: system context, containers, components, and code.
+
+### System context
+
+The system context diagram shows the users and external systems that interact with `seedcase-flower`. This includes the user types, the configuration file, and any template files used to define output structure.
+
+The users, described in the [User types](#user-types) section, provide `seedcase-flower` with their Data Package's metadata to convert it into structured, human-readable documents.
+
+```{mermaid}
+%%| label: fig-c4-context
+%%| fig-cap: "C4 system context diagram showing the anticipated users and external systems `seedcase-flower` interacts with."
+flowchart LR
+
+    subgraph "Users"
+        user_default("Default-mode user<br>[person]")
+        user_custom("Custom-mode user<br>[person]")
+    end
+
+    config("Config<br>[file]")
+    template("Template<br>[file]")
+    flower("seedcase-flower<br>[CLI]")
+
+    config --"Customises behaviour<br>and output"--> flower
+    template --"Defines output<br>structure and layout"--> flower
+    Users --"Render Data Package<br>properties"--> flower
+
+    %% Styling
+    style Users fill:#FFFFFF, color:#000000
+```
+
+### Container
+
+In C4, a [container diagram](https://c4model.com/diagrams/container) zooms in on the system boundary to show the *containers* within it, such as web applications or databases. This diagram displays the main containers of `seedcase-flower`, their responsibilities, and how they interact, including the technologies used for each.
+
+`seedcase-flower` is primarily designed for use as a command-line interface, with its core functionality also exposed as a Python API.
+
+```{mermaid}
+%%| label: fig-c4-container
+%%| fig-cap: "C4 container diagram showing the core Python package in `seedcase-flower` and the command line interface."
+flowchart LR
+
+    user("User<br>[person]")
+    config("Config<br>[toml]")
+    template("Template<br>[Jinja]")
+
+    subgraph "seedcase-flower"
+        python("Core Python Package<br>[Python, Jinja]")
+        cli("CLI<br>[Python]")
+
+    python -. "Provides<br>functionality" .-> cli
+    end
+
+    config --"Customises behaviour<br>and output"--> seedcase-flower
+    template --"Defines output<br>structure and layout"--> seedcase-flower
+    user --"Renders Data Package<br>properties programmatically"--> python
+    user -- "Renders Data Package<br>properties via the CLI" --> cli
+
+    %% Styling
+    style seedcase-flower fill:#FFFFFF, color:#000000
+```
+
+### Component/code
+
+In the diagram below, we zoom in on the core Python package container to show its internal components. In C4, a [component](https://c4model.com/abstractions/component) is "a grouping of related functionality encapsulated behind a well-defined interface", like a class or a module, while [code](https://c4model.com/abstractions/code) is the basic building blocks, such as classes and functions.
+
+Because the core Python package is relatively small and simple, and because both component and code diagrams include classes, we combine the component and code levels of the C4 model into a single diagram as shown below. This diagram shows the main classes and functions within the core Python package.
+
+```{mermaid}
+%%| label: fig-c4-component
+%%| fig-cap: "C4 component diagram showing the parts of the Python package and their connections."
+flowchart LR
+
+    subgraph python_package["Core Python Package"]
+
+        subgraph config_file["Configuration file"]
+            config("Config<br>[class]")
+            section("Section<br>[class]")
+        end
+
+        read_config["read_config()<br>[function]"]
+        read_json["read_json()<br>[function]"]
+        build("bundle/build()<br>[function]")
+
+        section --"Lists metadata<br>items to include"--> config
+        config_file -. "Provides build<br>configurations" .-> read_config
+
+        read_json --"Provides properties<br>as dict"--> build
+        read_config -. "Adds build<br>configurations" .-> build
+        config --"Adds build<br>configurations"--> build
+    end
+
+    template("Template<br>[Jinja]")
+    user("User<br>[person]")
+    output("Output<br>[files and<br>folders]")
+
+    template --"Provides output<br>structure and layout"--> build
+    user --"Provides datapackage.json<br>to render"--> read_json
+    user --"Provides configuration file<br>(optional)"--> config_file
+    user --"Provides templates<br>(optional)"--> template
+    build --"Populates template(s)<br>with metadata items"--> output
+
+    %% Styling
+    style python_package fill:#FFFFFF, color:#000000
+    style config_file fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+```
+
+For more details on the individual classes and functions, see the [interface documentation](/docs/design/interface.qmd) and the [reference documentation](/docs/reference/index.qmd).
