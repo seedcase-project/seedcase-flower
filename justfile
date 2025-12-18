@@ -61,7 +61,7 @@ build-website:
   # Delete any previously built files from quartodoc.
   # -f is to not give an error if the files don't exist yet.
   rm -rf docs/reference
-  uv run quartodoc build
+  # uv run quartodoc build
   uv run quarto render --execute
 
 # Check the commit messages on the current branch that are not on the main branch
