@@ -147,16 +147,36 @@ human-readable documents.
 %%| fig-cap: "C4 system context diagram showing the anticipated users and external systems Flower interacts with."
 flowchart LR
 
-    subgraph "Users"
-        user_default("Default-mode user<br>[person]")
-        user_custom("Custom-mode user<br>[person]")
+    subgraph Users
+        Producers["Producer users"]
+        Consumers["Consumer users"]
     end
 
+    subgraph Producers
+        user_owner("Owner<br>[person]")
+        user_manager("Manager<br>[person]")
+        user_communicator1("Communication or<br>outreach<br>[person]")
+    end
+
+    subgraph Consumers
+        user_communicator2("Communication or<br>outreach<br>[person]")
+        user_coordinator("Coordinator<br>[person]")
+        user_researcher("Researcher or<br>analyst<br>[person]")
+    end
+
+    datapackage("Data Package<br>[datapackage.json]")
     flower("seedcase-flower<br>[CLI]")
 
-    Users --"Render Data Package<br>properties"--> flower
+    output("Human-readable<br>[files and folders]")
+
+    datapackage --"Contains metadata"--> flower
+    Producers --"Gives Data Package"--> flower
+    flower --"Generates docs"--> output
+    Consumers --"Uses docs to understand<br>Data Package contents"--> output
 
     %% Styling
+    style Producers fill:#FFFFFF, color:#000000
+    style Consumers fill:#FFFFFF, color:#000000
     style Users fill:#FFFFFF, color:#000000
 ```
 
