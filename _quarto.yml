@@ -47,28 +47,25 @@ website:
         - section: "Guide"
           href: docs/guide/index.qmd
 
-quartodoc:
-  sidebar: "docs/reference/_sidebar.yml"
-  style: "pkgdown"
-  dir: "docs/reference"
-  package: "seedcase_flower"
-  parser: google
-  dynamic: true
-  renderer:
-    style: _renderer.py
-    table_style: description-list
-    show_signature_annotations: true
+# quartodoc:
+#   sidebar: "docs/reference/_sidebar.yml"
+#   style: "pkgdown"
+#   dir: "docs/reference"
+#   package: "seedcase_flower"
+#   parser: google
+#   dynamic: true
+#   renderer:
+#     style: _renderer.py
+#     table_style: description-list
+#     show_signature_annotations: true
 
-metadata-files:
-  - docs/reference/_sidebar.yml
+# metadata-files:
+#   - docs/reference/_sidebar.yml
 
 format:
   seedcase-theme-html:
-    theme:
-      - brand
-    # TODO: Uncomment if using the goatcounter website visitor counter
-    # include-before-body:
-      # - "docs/includes/site-counter.html"
+    include-before-body:
+      - "docs/includes/site-counter.html"
 
 editor:
   markdown:
