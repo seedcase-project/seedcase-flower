@@ -19,7 +19,7 @@ Overall, Flower should:
 
 Specifically, Flower must:
 
--   Accept Data Package properties as input.
+-   Accept Data Package properties (i.e., the `datapackage.json` file) as input.
 -   Generate structured, human-readable documents from Data Package metadata.
 -   Be primarily usable as a command-line interface (CLI), with its core functionality exposed as a Python API.
 -   Support displaying generated output directly in the terminal.
