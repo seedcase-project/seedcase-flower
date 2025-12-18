@@ -249,10 +249,10 @@ flowchart
         build("build()<br>[function]")
 
         section --"Lists metadata<br>items to include"--> config
-        config_file -. "Provides build<br>configurations" .-> read_config
+        config_file -- "Provides build<br>configurations" --> read_config
 
         read_json --"Provides properties<br>as dict"--> build
-        read_config -. "Adds build<br>configurations" .-> build
+        read_config -- "Adds build<br>configurations" --> build
         config --"Adds build<br>configurations"--> build
     end
 
