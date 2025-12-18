@@ -1,3 +1,49 @@
 ---
 title: "Design"
 ---
+
+The purpose of these design documents is to describe the design of
+Flower in enough detail to guide a sustainable implementation (i.e.,
+maintainable in the long term) and to ensure that the team has a shared
+understanding of the package's scope and architecture.
+
+Flower's design builds on our overall Seedcase [design principles and
+patterns](https://design.seedcase-project.org/), and follows the same
+principles and patterns described there.
+
+## Purpose
+
+The overall aim of Flower is to generate structured, human-readable
+documents from a Data Package's metadata. The primary input is the Data
+Package descriptor (i.e., the `datapackage.json` file), whose contents
+are referred to as
+["properties"](https://datapackage.org/standard/data-package/#properties).
+
+Overall, Flower should:
+
+1.  Read Data Package metadata and transform it into structured,
+    human-readable documents.
+2.  Be highly customisable while providing opinionated default settings.
+
+## Requirements
+
+Specifically, Flower must:
+
+-   Accept Data Package properties (i.e., the `datapackage.json` file)
+    as input.
+-   Generate structured, human-readable documents from Data Package
+    metadata.
+-   Be primarily usable as a command-line interface (CLI), with its core
+    functionality exposed as a Python API.
+-   Support displaying generated output directly in the terminal.
+-   Support writing generated output to disk as a set of files.
+-   Support configuration for controlling or customising:
+    -   output content, layout, and style
+    -   output file format
+    -   output folder structure
+-   Offer opinionated defaults for customisable settings.
+
+In general, Flower will not:
+
+-   Modify Data Package metadata.
+-   Handle rendering, publishing, or deploying the generated documents.
