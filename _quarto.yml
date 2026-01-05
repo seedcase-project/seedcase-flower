@@ -40,10 +40,10 @@ website:
         - CONTRIBUTING.md
     - id: design
       contents:
-        - text: "Design"
+        - section: "Design"
           href: docs/design/index.qmd
-        - text: "Architecture"
-          href: docs/design/architecture.qmd
+          contents:
+            - docs/design/architecture.qmd
     - id: guide
       contents:
         - section: "Guide"
