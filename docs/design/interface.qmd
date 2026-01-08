@@ -4,7 +4,7 @@ title: "Interface"
 
 ## Outputs
 
-The output of Flower is one or more Markdown files showing the metadata
+The output of Flower is one or more files showing the metadata
 of a Data Package (i.e., the content of `datapackage.json`), formatted
 in a human-readable way. The exact structure and format of the output
 depends on the configuration provided by the user.
@@ -17,9 +17,10 @@ information on customizing the output, see the
 
 ### Built-in styles
 
-Flower includes three built-in styles for generating documentation from
+Flower initially includes a few built-in styles for generating documentation from
 a Data Package: `quarto-book`, `quarto-resource-listings`, and
-`quarto-resource-tables`.
+`quarto-resource-tables`. Because of the extensibility of Flower, more built-in
+styles can be added as Flower is developed and used.
 
 To demonstrate the built-in styles below, we'll use a Data Package for a
 (made up) study on flowers and their growing conditions. The
@@ -122,7 +123,7 @@ pp(properties)
 ### Style: `quarto-book` (default)
 
 The `quarto-book` style generates a Quarto book structure, where
-everything, including the resources, is organized into a single Markdown
+everything, including the resources, is organized into a single Quarto Markdown
 file, `index.qmd`. This is the default style used by Flower.
 
 This style is suitable for simple Data Packages with a small number of
