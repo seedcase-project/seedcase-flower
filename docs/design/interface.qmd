@@ -29,18 +29,11 @@ To demonstrate the built-in styles below, we'll use a Data Package for a
 along with two resources: a catalog of flora species and a set of growth
 stage records for those species.
 
-Since the content of `datapackage.json` file is quite verbose, it's
-hidden in the collapsible section below. You can expand the section to
-see the full content of the `datapackage.json` file used in the
-examples.
-
-::: {.callout-note collapse="true" appearance="minimal"}
+::: {.callout-tip collapse="true" appearance="minimal"}
 ### Expand to see the `datapackage.json` content
 
-```{python}
-#| echo: false
-
-properties = {
+```{.json filename="datapackage.json"}
+{
   "name": "flora",
   "title": "Observations of flora species and seasonal development",
   "id": "29b1b5e4-3f4c-4d2a-9f8e-123456789abc",
@@ -114,10 +107,6 @@ properties = {
     }
   ]
 }
-
-
-from pprint import pp
-pp(properties)
 ```
 :::
 
