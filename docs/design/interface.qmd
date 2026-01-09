@@ -18,10 +18,13 @@ information on customizing the output, see the
 ### Built-in styles
 
 Flower initially includes a few built-in styles for generating
-documentation from a Data Package: `quarto-book`,
-`quarto-resource-listings`, and `quarto-resource-tables`. Because of the
-extensibility of Flower, more built-in styles can be added as Flower is
-developed and used.
+documentation from a Data Package. Because of the extensibility of
+Flower, more built-in styles can be added as Flower is developed and
+used. The current built-in styles are:
+
+-   [`quarto-book`](#quarto-book-default)
+-   [`quarto-resource-listing`](#quarto-resource-listing)
+-   [`quarto-resource-tables`](#quarto-resource-tables)
 
 To demonstrate the built-in styles below, we'll use a Data Package for a
 (made up) study on flowers and their growing conditions. The
@@ -110,7 +113,7 @@ stage records for those species.
 ```
 :::
 
-#### `quarto-book` (default)
+#### `quarto-book` (default) {#quarto-book-default}
 
 The `quarto-book` style generates a Quarto book structure, where
 everything, including the resources, is organized into a single Quarto
@@ -179,7 +182,7 @@ This resource contains records of observed growth stages for various flora speci
 ```
 :::
 
-#### `quarto-resource-listing`
+#### `quarto-resource-listing` {#quarto-resource-listing}
 
 The `quarto-resource-listing` style generates a Quarto documentation
 structure where each resource of a Data Package is documented in its own
@@ -291,7 +294,7 @@ description: "This resource contains records of observed growth stages for vario
 ```
 ::::
 
-#### `quarto-resource-tables`
+#### `quarto-resource-tables` {#quarto-resource-tables}
 
 As the `quarto-resource-listings` style, the `quarto-resource-tables`
 style generates a Quarto documentation structure where each resource in
