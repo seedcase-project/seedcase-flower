@@ -1,13 +1,11 @@
 project:
-  # TODO: change to extension name if using a custom extension
   type: seedcase-theme
 
 website:
-  # TODO: Fill in the title of the website.
   title: "Seedcase Flower"
-  # TODO: Set the Netlify custom domain URL
   site-url: "https://flower.seedcase-project.org"
   repo-url: "https://github.com/seedcase-project/seedcase-flower"
+  favicon: "_extensions/seedcase-project/seedcase-theme/logos/flower-logo.svg"
   page-navigation: true
   navbar:
     pinned: true
@@ -49,20 +47,20 @@ website:
         - section: "Guide"
           href: docs/guide/index.qmd
 
-# quartodoc:
-#   sidebar: "docs/reference/_sidebar.yml"
-#   style: "pkgdown"
-#   dir: "docs/reference"
-#   package: "seedcase_flower"
-#   parser: google
-#   dynamic: true
-#   renderer:
-#     style: _renderer.py
-#     table_style: description-list
-#     show_signature_annotations: true
+quartodoc:
+  sidebar: "docs/reference/_sidebar.yml"
+  style: "pkgdown"
+  dir: "docs/reference"
+  package: "seedcase_flower"
+  parser: google
+  dynamic: true
+  renderer:
+    style: _renderer.py
+    table_style: description-list
+    show_signature_annotations: true
 
-# metadata-files:
-#   - docs/reference/_sidebar.yml
+metadata-files:
+  - docs/reference/_sidebar.yml
 
 format:
   seedcase-theme-html:

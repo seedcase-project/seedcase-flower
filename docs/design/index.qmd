@@ -29,7 +29,7 @@ Overall, Flower should:
 
 Specifically, Flower must:
 
--   Accept Data Package properties (i.e., the `datapackage.json` file)
+-   Accept a Data Package descriptor (i.e., the `datapackage.json` file)
     as input.
 -   Generate structured, human-readable documents from Data Package
     metadata.
