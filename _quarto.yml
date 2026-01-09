@@ -1,11 +1,8 @@
 project:
-  # TODO: change to extension name if using a custom extension
   type: seedcase-theme
 
 website:
-  # TODO: Fill in the title of the website.
   title: "Seedcase Flower"
-  # TODO: Set the Netlify custom domain URL
   site-url: "https://flower.seedcase-project.org"
   repo-url: "https://github.com/seedcase-project/seedcase-flower"
   favicon: "_extensions/seedcase-project/seedcase-theme/logos/flower-logo.svg"
