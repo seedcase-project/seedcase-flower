@@ -8,6 +8,7 @@ website:
   # TODO: Set the Netlify custom domain URL
   site-url: "https://flower.seedcase-project.org"
   repo-url: "https://github.com/seedcase-project/seedcase-flower"
+  favicon: "_extensions/seedcase-project/seedcase-theme/logos/flower-logo.svg"
   page-navigation: true
   navbar:
     pinned: true
