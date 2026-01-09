@@ -110,7 +110,7 @@ stage records for those species.
 ```
 :::
 
-### Style: `quarto-book` (default)
+#### `quarto-book` (default)
 
 The `quarto-book` style generates a Quarto book structure, where
 everything, including the resources, is organized into a single Quarto
@@ -179,7 +179,7 @@ This resource contains records of observed growth stages for various flora speci
 ```
 :::
 
-### Style: `quarto-resource-listing`
+#### `quarto-resource-listing`
 
 The `quarto-resource-listing` style generates a Quarto documentation
 structure where each resource of a Data Package is documented in its own
@@ -291,7 +291,7 @@ description: "This resource contains records of observed growth stages for vario
 ```
 ::::
 
-### Style: `quarto-resource-tables`
+#### `quarto-resource-tables`
 
 As the `quarto-resource-listings` style, the `quarto-resource-tables`
 style generates a Quarto documentation structure where each resource in
