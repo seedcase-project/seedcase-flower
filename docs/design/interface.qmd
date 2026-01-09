@@ -35,7 +35,7 @@ stage records for those species.
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ### Expand to see the `datapackage.json` content
 
-```{.json filename="datapackage.json"}
+``` {.json filename="datapackage.json"}
 {
   "name": "flora",
   "title": "Observations of flora species and seasonal development",
