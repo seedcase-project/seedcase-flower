@@ -24,7 +24,8 @@ View the Data Package's metadata in the terminal.
 #### Arguments
 
 {{< var wip >}} `path` or `url`
-: The local path or remote url to a Data Package. Defaults to `datapackage.json` (in the current directory).
+: The local path or remote url to a Data Package. Defaults to
+`datapackage.json` (in the current directory).
 
 #### Examples
 
