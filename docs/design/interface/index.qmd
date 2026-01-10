@@ -16,5 +16,5 @@ implemented. It is split into the following set of documents:
     for configuration options to be stored in a text file.
 
 ::: callout-important
-Throughout the interface documentation, the {{< var wip >}} icon indicates that development is in progress and the marked functionality is not ready for public use.
+Throughout the interface documentation, the {{< var wip >}} icon indicates that development is in progress and the marked functionality is not yet ready for public use.
 :::
