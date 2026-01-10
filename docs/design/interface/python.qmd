@@ -1,6 +1,8 @@
 ## {{< var wip >}} Python Interface
 
-All the command line functionality can be called from Python. A few examples are given below. Note that all examples assume the following import convention:
+All the command line functionality can be called from Python. A few
+examples are given below. Note that all examples assume the following
+import convention:
 
 ```python
 import seedcase_flower as fl

@@ -1,4 +1,17 @@
+```{=html}
+<style>
+:is(h1, h2, h3, h4, h5, h6, dt) code {
+    font-weight: bold;
+}
+</style>
+```
+
 ## Inputs
 
-`datapackage.json`
-This machine-readable JSON file is the foundation of a data package and contains the full Frictionless Data specification. This file contains metadata on the package (like title, description, and contributors) as well as metadata on the data resources (like column names, data types, descriptions, and a path to the Parquet file with the data in it).
+### `datapackage.json`
+
+This machine-readable JSON file is the foundation of a data package and
+contains the full Frictionless Data specification. This file contains
+metadata on the package (like title, description, and contributors) as
+well as metadata on the data resources (like column names, data types,
+descriptions, and a path to the Parquet file with the data in it).

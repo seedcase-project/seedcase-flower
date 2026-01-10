@@ -1,6 +1,11 @@
 ## {{< var wip >}} Configuration File
 
-In addition to passing configuration options via command line flags or python parameters, `flower` can be configured via `pyproject.toml`. The advantage of doing so is that the formatting can be easier for complex multi-page documentation sites and that options that are frequently used can be set once instead of included each time flower is called from the command line or Python.
+In addition to passing configuration options via command line flags or
+python parameters, `flower` can be configured via `pyproject.toml`. The
+advantage of doing so is that the formatting can be easier for complex
+multi-page documentation sites and that options that are frequently used
+can be set once instead of included each time flower is called from the
+command line or Python.
 
 ### Examples
 

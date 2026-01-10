@@ -14,7 +14,8 @@
 
 ## Commands
 
-A description of the available commands and their arguments and options follow.
+A description of the available commands and their arguments and options
+follow.
 
 ## {{< var wip >}} `view [ARGS]`
 
@@ -40,26 +41,41 @@ Build documentation pages from the Data Package's metadata.
 #### Arguments
 
 {{< var wip >}} `path` or `url`
-: The local path or remote url to a Data Package. Defaults to `datapackage.json` (in the current directory).
+: The local path or remote url to a Data Package. Defaults to
+`datapackage.json` (in the current directory).
 
 #### Options
 
 {{< var wip >}} `-s/--style TEXT`
-: The style of the output document. One of `quarto-book`, `quarto-resource-listings`, `quarto-resource-tables`, or `custom`. If set to `custom`, the `--content` flag must be used to specify the custom style. Defaults to `quarto-book`.
+: The style of the output document. One of `quarto-book`,
+`quarto-resource-listings`, `quarto-resource-tables`, or `custom`. If
+set to `custom`, the `--content` flag must be used to specify the custom
+style. Defaults to `quarto-book`.
 
 {{< var wip >}} `-c/--content LIST of TEXT or LIST of LISTS`
-: A list of which content to include when the style is set to custom. The following options are available `package`, `contributors`, `licenses`, `sources`, `resources`, `resource-schema`, `resource-licenses`, `resource-sources`, `resource-schema-fields`. This can also be a list of lists, splitting the content into multiple pages ,e.g. `-c [[package], [sources]]` creates two pages, one with the `package` metadata and one with the `sources` metadata.
+: A list of which content to include when the style is set to custom.
+The following options are available `package`, `contributors`,
+`licenses`, `sources`, `resources`, `resource-schema`,
+`resource-licenses`, `resource-sources`, `resource-schema-fields`. This
+can also be a list of lists, splitting the content into multiple pages
+,e.g. `-c [[package], [sources]]` creates two pages, one with the
+`package` metadata and one with the `sources` metadata.
 
 {{< var wip >}} `-t/--template PATH or LIST of PATHS`
-: Path to jinja template to use for custom output formats and styles, e.g. custom formatting of an HTML page. To just change the extension of the output files but keep the default formatting, and empty file can be specified. Can also be a list of paths, one per page specified in `--content`.
+: Path to jinja template to use for custom output formats and styles,
+e.g. custom formatting of an HTML page. To just change the extension of
+the output files but keep the default formatting, and empty file can be
+specified. Can also be a list of paths, one per page specified in
+`--content`.
 
 {{< var wip >}} `-o/--output PATH`
-: The location to write the file. Can also be a list of locations, one per page specified in `--content`. Defaults to `docs/`.
+: The location to write the file. Can also be a list of locations, one
+per page specified in `--content`. Defaults to `docs/`.
 
 {{< var wip >}} `-i/--ci-template TEXT`
-: Whether to include template files for continuous deployment with a certain framework on GitHub. Currently the only option is `quarto`. Defaults to not include the CI template files.
-
-<!--content TODO automatically sets style to custom? -->
+: Whether to include template files for continuous deployment with
+a certain framework on GitHub. Currently the only option is `quarto`.
+Defaults to not include the CI template files.
 
 #### Examples
 
@@ -67,7 +83,8 @@ Build documentation pages from the Data Package's metadata.
 flower build
 ```
 
-Builds a documentation site in qmd format for the data package in the current working directory.
+Builds a documentation site in qmd format for the data package in the
+current working directory.
 
 ---
 
