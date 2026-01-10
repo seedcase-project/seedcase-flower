@@ -11,7 +11,7 @@ implemented. It is split into the following set of documents:
 -   The [Command Line Interface](cli.qmd) that
     forms the main entry point to flower.
 -   The [Python interace](python.qmd) that calls flower
-    from withing Python code.
+    from within Python code.
 -   The [Configuration file](cli.qmd) which allows
     for configuration options to be stored in a text file.
 
