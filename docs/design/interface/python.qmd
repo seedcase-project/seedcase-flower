@@ -9,7 +9,7 @@ import seedcase_flower as fl
 ### Examples
 
 ```python
-fl.view(path="https://...")
+fl.view("https://...")
 ```
 Views the metadata for a Data Package located online in the terminal
 
@@ -26,7 +26,7 @@ current working directory.
 
 ```python
 fl.build(
-    path="my-folder/datapackage.json",
+    "my-folder/datapackage.json",
     config=fl.Config(
         style="quarto-resource-listings",
         ci="quarto"
