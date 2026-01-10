@@ -1,0 +1,16 @@
+---
+title: "Interface"
+---
+
+This section of the documentation focuses on how the interface is
+implemented. It is split into the following set of documents:
+
+-   The [Inputs](inputs.qmd) accepted by Flower.
+-   The [Outputs](outputs.qmd), including the different styles
+    of splitting content into multiple pages.
+-   The [Command Line Interface](cli.qmd) that
+    forms the main entry point to flower.
+-   The [Python interace](python.qmd) that calls flower
+    from withing Python code.
+-   The [Configuration file](cli.qmd) which allows
+    for configuration options to be stored in a text file.
