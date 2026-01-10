@@ -1,0 +1,4 @@
+## Inputs
+
+`datapackage.json`
+This machine-readable JSON file is the foundation of a data package and contains the full Frictionless Data specification. This file contains metadata on the package (like title, description, and contributors) as well as metadata on the data resources (like column names, data types, descriptions, and a path to the Parquet file with the data in it).
