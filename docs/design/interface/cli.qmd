@@ -6,7 +6,7 @@
 </style>
 ```
 
-# Command Line Interface
+# {{< var wip >}} Command Line Interface
 
 `flower` is called from the command line with the following signature:
 
@@ -23,7 +23,7 @@ View the Data Package's metadata in the terminal.
 #### Arguments
 
 {{< var wip >}} `path` or `url`
-: The local path or remote url to a Data Package. Defaults to the current directory.
+: The local path or remote url to a Data Package. Defaults to `datapackage.json` (in the current directory).
 
 #### Examples
 
@@ -40,7 +40,7 @@ Build documentation pages from the Data Package's metadata.
 #### Arguments
 
 {{< var wip >}} `path` or `url`
-: The local path or remote url to a Data Package. Defaults to the current directory.
+: The local path or remote url to a Data Package. Defaults to `datapackage.json` (in the current directory).
 
 #### Options
 
@@ -72,11 +72,11 @@ Builds a documentation site in qmd format for the data package in the current wo
 ---
 
 ```sh
-flower build my-data-pkg/ -s quarto-resource-listings -i quarto
+flower build my-folder/datapackage.json -s quarto-resource-listings -i quarto
 ```
 
 Builds a documentation site in qmd format for the data package in
-`my-data-pkg`. The chosen style splits the documentation into several
+`my-folder`. The chosen style splits the documentation into several
 pages. Template files are included for setting up continuous integration
 with quarto on github.
 
