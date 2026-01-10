@@ -1,1 +1,1 @@
-wip: '[{{< fa hammer size="l" title="This icon indicates that development is in progress and the marked functionality is not yet ready for public use." >}}]{style="color: #7647DC"}'
+wip: '[{{< fa hammer size="l" title="This icon marks functionality that is in a planning or development stage and not yet ready for public use." >}}]{style="color: #7647DC"}'

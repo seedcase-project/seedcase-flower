@@ -17,8 +17,8 @@ implemented. It is split into the following set of documents:
 
 ::: callout-important
 
-Throughout the interface documentation, the {{< var wip >}} icon
-indicates that development is in progress and the marked functionality
-is not yet ready for public use.
+Throughout the interface documentation, the {{< var wip >}} icon marks
+functionality that is in a planning or development stage and not yet
+ready for public use.
 
 :::
