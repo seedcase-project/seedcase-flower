@@ -49,7 +49,6 @@ website:
             - docs/design/interface/outputs.qmd
             - docs/design/interface/cli.qmd
             - docs/design/interface/python.qmd
-            - docs/design/interface/config.qmd
     - id: guide
       contents:
         - section: "Guide"
