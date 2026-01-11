@@ -1,0 +1,60 @@
+## {{< var wip >}} Python Interface
+
+All the command line functionality can be called from Python. A few
+examples are given below. Note that all examples assume the following
+import convention:
+
+```python
+import seedcase_flower as fl
+```
+
+### Examples
+
+```python
+fl.view("https://...")
+```
+Views the metadata for a Data Package located online in the terminal
+
+---
+
+```python
+fl.build()
+```
+
+Builds a documentation site in qmd format for the data package in the
+current working directory.
+
+---
+
+```python
+fl.build(
+    "my-folder/datapackage.json",
+    config=fl.Config(
+        style="quarto-resource-listings",
+        ci="quarto"
+    )
+)
+```
+
+Builds a documentation site in qmd format for the data package in
+`my-folder/datapackage.json`. The chosen style splits the documentation
+into several pages. Template files are included for setting up
+continuous integration with quarto on github.
+
+---
+
+```python
+fl.build(
+    config=fl.Config(
+        style="custom",
+        content=[["package"], ["contributors", "licenses"]]
+        template=["1st-page.html", "2nd-page.html"]
+    )
+)
+```
+
+Builds a documentation site in html format for the data package in the
+current working directory. The custom style of the documentation creates
+one page with the package metadata and a second page with info on the
+contributors and license. Both pages are created using a custom HTML
+template.
