@@ -6,6 +6,13 @@
 </style>
 ```
 
+::: callout-important
+
+The {{< var wip >}} icon marks functionality that is in a planning or
+development stage and not yet ready for public use.
+
+:::
+
 # {{< var wip >}} Command Line Interface
 
 `flower` is called from the command line with the following signature:
