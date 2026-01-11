@@ -1,10 +1,10 @@
 ---
 title: "Installing"
-description: "A succinct instruction on installing `flower` in a Python project."
+description: "Install Flower to use on the command-line and in Python projects."
 order: 0
 ---
 
-Before installing `flower`, you need to have
+Before installing Flower, you need to have
 [Python](https://www.python.org/downloads/) and
 [uv](https://docs.astral.sh/uv/) installed.
 
@@ -20,9 +20,10 @@ If Python and uv are installed, these commands will show you the
 versions installed on your system. If you get an error, you need to
 install them before continuing.
 
-## Install `flower` in a Python project
+## Install in a Python project
 
-It's generally recommended to install Python packages in a project's
+If you only want to use Flower in a few Python projects rather than globally,
+it's generally recommended to install it in a project's
 virtual environment to keep the project's dependencies isolated from the
 system-wide Python setup and avoid conflicts. We use (and recommend)
 [uv](https://docs.astral.sh/uv/).
@@ -40,12 +41,12 @@ uv add "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flowe
 
 <!-- TODO: Change to `uv add seedcase_flower` when we've released it on PyPI -->
 
-You can check that `flower` has been installed correctly by
+You can check that Flower has been installed correctly by
 running this command:
 
 ``` {.bash filename="Terminal"}
 uv pip show seedcase_flower
 ```
 
-If `flower` has been installed successfully, the output will
-show details about `flower`.
+If Flower has been installed successfully, the output will
+show details about Flower.
