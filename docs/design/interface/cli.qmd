@@ -30,8 +30,8 @@ View the Data Package's metadata in the terminal.
 
 #### Arguments
 
-{{< var wip >}} `path` or `url`
-: The local path or remote url to a Data Package. Defaults to
+{{< var wip >}} `location`
+: A local path or remote url to a Data Package. Defaults to
 `datapackage.json` (in the current directory).
 
 #### Examples
@@ -48,8 +48,8 @@ Build documentation pages from the Data Package's metadata.
 
 #### Arguments
 
-{{< var wip >}} `path` or `url`
-: The local path or remote url to a Data Package. Defaults to
+{{< var wip >}} `location`
+: A local path or remote url to a Data Package. Defaults to
 `datapackage.json` (in the current directory).
 
 #### Options
