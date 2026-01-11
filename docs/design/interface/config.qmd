@@ -1,22 +1,22 @@
 ## {{< var wip >}} Configuration File
 
 In addition to passing configuration options via command line flags or
-python parameters, `flower` can be configured via `pyproject.toml`. The
+Python parameters, Flower can be configured via the `pyproject.toml` or `.flower.toml` files. The
 advantage of doing so is that the formatting can be easier for complex
 multi-page documentation sites and that options that are frequently used
-can be set once instead of included each time flower is called from the
-command line or Python.
+can be set once instead of included each time Flower is called from the
+Terminal or Python.
 
 ### Examples
 
 ```{.toml filename="pyproject.toml"}
-[tool.flower]
+[tool.seedcase-flower]
 style="quarto-resource-listings"
 ci="quarto"
 ```
 
 Running `build` with this configuration file builds a documentation site
-in qmd format for the data package in the current working directory. The
+with Quarto for the Data Package in the current working directory. The
 chosen style splits the documentation into several pages. Template files
 are included for setting up continuous integration with quarto on
 GitHub.
