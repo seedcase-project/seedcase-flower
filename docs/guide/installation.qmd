@@ -20,6 +20,19 @@ If Python and uv are installed, these commands will show you the
 versions installed on your system. If you get an error, you need to
 install them before continuing.
 
+## Install globally
+
+Installing Flower globally allows you to use it via the command line
+from any location of your machine. You can install it globally with
+`uv`:
+
+``` {.bash filename="Terminal"}
+uv tool install "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flower"
+```
+
+You can now run Flower from any location of your computer by simply
+typing `flower` at the command line.
+
 ## Install in a Python project
 
 If you only want to use Flower in a few Python projects rather than globally,
