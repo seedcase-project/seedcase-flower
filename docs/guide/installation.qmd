@@ -30,8 +30,8 @@ from any location of your machine. You can install it globally with
 uv tool install "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flower"
 ```
 
-You can now run Flower from any location of your computer by simply
-typing `flower` at the command line.
+You can now run Flower from any location on your computer by
+typing `seedcase-flower` in the Terminal:
 
 ## Install in a Python project
 
@@ -46,7 +46,7 @@ We assume you've already created a Python project that has a
 [projects](https://docs.astral.sh/uv/guides/projects/).
 
 While in the Terminal and in the project's directory, add
-`flower` to your project's virtual environment by running:
+Flower to your project's virtual environment by running:
 
 ``` {.bash filename="Terminal"}
 uv add "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flower"
