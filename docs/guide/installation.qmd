@@ -23,19 +23,19 @@ install them before continuing.
 ## Install globally
 
 Installing Flower globally allows you to use it via the command line
-from any location of your machine. You can install it globally with
-`uv`:
+from any location on your machine. You can install it globally with
+uv:
 
 ``` {.bash filename="Terminal"}
 uv tool install "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flower"
 ```
 
 You can now run Flower from any location on your computer by
-typing `seedcase-flower` in the Terminal:
+typing `seedcase-flower` in the Terminal.
 
 ## Install in a Python project
 
-If you only want to use Flower in a few Python projects rather than globally,
+If you only want to use Flower in within Python projects rather than globally,
 it's generally recommended to install it in a project's
 virtual environment to keep the project's dependencies isolated from the
 system-wide Python setup and avoid conflicts. We use (and recommend)
@@ -62,4 +62,4 @@ uv pip show seedcase_flower
 ```
 
 If Flower has been installed successfully, the output will
-show details about Flower.
+show details about Flower, and you're now ready to start using Flower to format your metadata. 
