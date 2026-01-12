@@ -91,12 +91,14 @@ from pathlib import Path
 class Section:
     """A section of the documentation with specific `datapackage.json` properties.
 
+    TODO: add link below.
+    
     See the [guide](LINK) on how to set up custom styles and sections.
 
     Attributes:
         output_path (Optional[Path]): The output path for this section. If `None`, it will print
             to the screen as a formatted string that follows the `"default-terminal"` style.
-            If a directory is provided, files will be created for each content type that have
+            If a directory is provided, files will be created for each content type that has
             a `name` property (e.g. `resources` or `resource-schema-fields`) For example,
             if `output_path` is `Path("docs/")` and `contents` is `["resources"]`, then each resource
             will be output to `docs/{resource_name}.md` (or whichever output format is used in the
