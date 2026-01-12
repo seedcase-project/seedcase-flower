@@ -1,6 +1,6 @@
 ---
 title: "Guide"
-description: "A guide on using `flower` to format metadata to increase readability for humans."
+description: "A guide to using `flower` to convert your Data Package metadata into a more human-readable format."
 listing:
     contents: .
     type: grid
