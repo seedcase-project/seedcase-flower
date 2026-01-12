@@ -359,3 +359,9 @@ A dataset containing flora species records and their observed growth stages acro
 :::
 
 <!-- TODO: We could add calculated fields, such as the number of variables in the resources? -->
+
+::: content-hidden
+## Custom styles with templates
+
+<!--TODO: To be added later-->
+:::
