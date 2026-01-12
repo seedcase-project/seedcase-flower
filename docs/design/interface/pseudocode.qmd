@@ -92,7 +92,7 @@ class Section:
     """A section of the documentation with specific `datapackage.json` properties.
 
     TODO: add link below.
-    
+
     See the [guide](LINK) on how to set up custom styles and sections.
 
     Attributes:
