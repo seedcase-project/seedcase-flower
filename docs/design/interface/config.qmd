@@ -17,9 +17,7 @@ ci="quarto"
 
 Running `build` with this configuration file builds a documentation site
 with Quarto for the Data Package in the current working directory. The
-chosen style splits the documentation into several pages. Template files
-are included for setting up continuous integration with quarto on
-GitHub.
+chosen style splits the documentation into several pages.
 
 ---
 
