@@ -9,8 +9,8 @@ implemented. It is split into the following set of documents:
 -   The [Outputs](outputs.qmd), including the different styles
     of splitting content into multiple pages.
 -   The [Command Line Interface](cli.qmd) that
-    forms the main entry point to flower.
--   The [Python interface](python.qmd) that calls flower
+    forms the main entry point to Flower.
+-   The [Python interface](python.qmd) that calls Flower
     from within Python code.
--   The [Configuration file](cli.qmd) which allows
+-   The [Configuration file](config.qmd) which allows
     for configuration options to be stored in a text file.
