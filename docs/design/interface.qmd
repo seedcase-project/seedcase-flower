@@ -4,16 +4,28 @@ title: "Interface"
 
 ## Outputs
 
-The output of Flower is one or more files showing the metadata of a Data
-Package (i.e., the content of `datapackage.json`), formatted in a
-human-readable way. The exact structure and format of the output depends
-on the configuration provided by the user.
+The principal output of Flower is Data Package metadata (i.e., the
+content of `datapackage.json`) that has been reformatted to be
+friendlier to read for humans. Flower can output this reformatted
+metadata in two ways:
 
-You can either use the built-in styles or provide your own custom
-templates to generate the output in a format that suits your needs. This
-section describes the built-in styles available in Flower. For more
-information on customizing the output, see the
-[Guide](/docs/guide/index.qmd).
+1. As text to be displayed directly, e.g. in a terminal.
+2. As one or more files which can be used to build documentation for
+   a Data package metadata (by default files are in CommonMark-compliant
+   Markdown format).
+
+In addition, Flower can also output template configuration files to
+build a documentation website using common frameworks such as Quarto.
+These are primarily meant to be used with continuous integration on e.g.
+GitHub.
+
+When outputting text for immediate viewing, Flower uses a set format
+optimized readability in a terminal environment. However, when
+outputting files to be used for documentation there are several options
+for how these should be styled. Flower includes a few built-in styles to
+choose from, which cover most common styling scenarios. For anything
+else, it is possible to provide a custom template to generate the output
+in any format that suits your needs.
 
 ### Built-in styles
 
