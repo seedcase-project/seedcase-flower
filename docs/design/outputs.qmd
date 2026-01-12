@@ -1,8 +1,7 @@
 ---
-title: "Interface"
+title: "Outputs"
 ---
 
-## Outputs
 
 The output of Flower is one or more files showing the metadata of a Data
 Package (i.e., the content of `datapackage.json`), formatted in a
@@ -15,7 +14,7 @@ section describes the built-in styles available in Flower. For more
 information on customizing the output, see the
 [Guide](/docs/guide/index.qmd).
 
-### Built-in styles
+## Built-in styles
 
 Flower initially includes a few built-in styles for generating
 documentation from a Data Package. Because of the extensibility of
@@ -113,7 +112,7 @@ stage records for those species.
 ```
 :::
 
-#### `quarto-book` (default) {#quarto-book-default}
+### `quarto-book` (default) {#quarto-book-default}
 
 The `quarto-book` style generates a Quarto book structure, where
 everything, including the resources, is organized into a single Quarto
@@ -182,7 +181,7 @@ This resource contains records of observed growth stages for various flora speci
 ```
 :::
 
-#### `quarto-resource-listing` {#quarto-resource-listing}
+### `quarto-resource-listing` {#quarto-resource-listing}
 
 The `quarto-resource-listing` style generates a Quarto documentation
 structure where each resource of a Data Package is documented in its own
@@ -294,7 +293,7 @@ description: "This resource contains records of observed growth stages for vario
 ```
 ::::
 
-#### `quarto-resource-tables` {#quarto-resource-tables}
+### `quarto-resource-tables` {#quarto-resource-tables}
 
 As the `quarto-resource-listing` style, the `quarto-resource-tables`
 style generates a Quarto documentation structure where each resource in
