@@ -67,7 +67,7 @@ class Config:
                     output_path=Path("docs/package.qmd"),
                     contents=["package", "license", "contributors"]
                 ),
-                # Section that outputs each resources as a file in the `resources/` folder
+                # Section that outputs each resource as a file in the `resources/` folder
                 Section(
                     output_path=Path("docs/resources/"),
                     contents=["resources"]
