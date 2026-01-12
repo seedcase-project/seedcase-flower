@@ -62,4 +62,4 @@ uv pip show seedcase_flower
 ```
 
 If Flower has been installed successfully, the output will
-show details about Flower, and you're now ready to start using Flower to format your metadata. 
+show details about Flower, and you're now ready to start using Flower to format your metadata.
