@@ -17,6 +17,17 @@ output is intended for quick inspection, while the file outputs are
 meant for more detailed documentation that can be shared and published.
 Both output formats can be customised to suit different needs.
 
+## Terminal output
+
+When outputting to the terminal, Flower generates a plain text
+representation of the Data Package metadata. This output is designed to
+be human-readable and provides a quick overview of the Data Package's
+contents. As with file outputs, the terminal output can be customised
+using different styles and templates.
+
+<!-- TODO: Include potential built-in styles for terminal output and customisation options -->
+<!-- TODO: Add example terminal output -->
+
 ## Built-in styles
 
 Flower includes a few built-in styles for generating documentation from
