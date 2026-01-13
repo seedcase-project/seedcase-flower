@@ -12,4 +12,4 @@ There are two main inputs to Flower:
     the data).
 
 -   The configuration settings, either provided as command-line
-    arguments, through a Python class, or contained within a file.
+    arguments, through a Python class, or contained within a configuration file.

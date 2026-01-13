@@ -2,8 +2,8 @@
 title: "Command line"
 ---
 
-This document describes the command-line interface (CLI) as the
-signature, documentation, some pseudocode, and diagrams that represent
+This document describes the command-line interface (CLI) with
+signatures, documentation, some pseudocode, and diagrams that represent
 its interface along with explanations for these design decisions. It
 primarily serves as a reference for us to develop from and track what
 has been finished and what remains to be done.
