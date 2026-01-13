@@ -1,4 +1,4 @@
-## {{< var wip >}} Configuration File
+## {{< var wip >}} Configuration file
 
 In addition to passing configuration options via command line flags or
 Python parameters, Flower can be configured via the `pyproject.toml` or `.flower.toml` files. The
@@ -9,17 +9,19 @@ Terminal or Python.
 
 ### Examples
 
+#### Using a built-in style
+
 ```{.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
 style="quarto-resource-listings"
-ci="quarto"
 ```
 
-Running `build` with this configuration file builds a documentation site
+Running `build` with this configuration file builds metadata files
 with Quarto for the Data Package in the current working directory. The
-chosen style splits the documentation into several pages.
+chosen style, `quarto-resource-listings`, splits the metadata into several files.
+See the [Outputs](/docs/design/outputs.qmd) page for details on the built-in style options.
 
----
+#### Using a custom style
 
 ```{.toml filename="pyproject.toml"}
 [tool.flower]
@@ -37,8 +39,8 @@ content=[
 ]
 ```
 
-Running `build` with this configuration file builds a documentation site
-in html format for the data package in the current working directory.
-The custom style of the documentation creates one page with the package
+Running `build` with this configuration file builds the Data Package metadata files
+in html format in the current working directory.
+The custom style creates one page with the package
 metadata and a second page with info on the contributors and license.
 Both pages are created using a custom HTML template.
