@@ -11,10 +11,6 @@ human-readable. Flower can output this reformatted metadata in two ways:
     Data package (by default files are in a CommonMark-compliant
     Markdown format).
 
-In addition, Flower can output template configuration files to build a
-documentation website using common frameworks such as Quarto. These are
-primarily meant to be used with continuous integration on e.g. GitHub.
-
 When outputting text for immediate viewing, Flower uses a set format
 optimized for readability in a terminal environment. However, when
 outputting files to be used for documentation there are several style
