@@ -11,21 +11,22 @@ human-readable. Flower can output this reformatted metadata in two ways:
     Data package (by default files are in a CommonMark-compliant
     Markdown format).
 
-When outputting text for immediate viewing, Flower uses a set format
-optimized for readability in a terminal environment. However, when
-outputting files to be used for documentation there are several style
-options. Flower includes a few built-in styles to choose from, which
-cover some common scenarios. To accommodate for custom needs beyond what
-the built-in styles provide, Flower is designed to be extensible via
-templates. With these custom templates, you can generate the output in
-any format that suits your needs.
+Both output formats are designed to be human-readable, making it easier
+to get an overview of the contents of a Data Package. The terminal
+output is intended for quick inspection, while the file outputs are
+meant for more detailed documentation that can be shared and published.
+Both output formats can be customised to suit different needs.
 
 ## Built-in styles
 
-Flower initially includes a few built-in styles for generating
-documentation from a Data Package. Because of the extensibility of
-Flower, more built-in styles can be added as Flower is developed and
-used. The current built-in styles are:
+Flower includes a few built-in styles for generating documentation from
+Data Package metadata. Because of the extensibility of Flower, more
+built-in styles can be added as Flower is developed and used. The
+exetensibility also accommodate for custom needs beyond what the
+built-in styles provide. With custom templates, you can generate the
+output in any format that suits your needs.
+
+The current built-in styles are:
 
 -   [`quarto-book`](#quarto-book-default)
 -   [`quarto-resource-listing`](#quarto-resource-listing)
