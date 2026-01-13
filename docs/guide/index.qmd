@@ -1,3 +1,12 @@
 ---
 title: "Guide"
+description: "A guide to using Flower to convert your Data Package metadata into a more human-readable format."
+listing:
+    contents: .
+    type: grid
+    grid-columns: 1
+    sort: "order"
+    fields:
+        - title
+        - description
 ---
