@@ -147,7 +147,12 @@ flowchart LR
 Configuration can be provided either as command-line arguments (as shown
 in the signature) or through the configuration file. The CLI command
 will first look for a configuration file named `_flower.toml` (or
-`pyproject.toml`) in the current directory.
+`pyproject.toml`) in the current directory. We name it with a leading
+`_` rather than `.` to make it more visible in file listings, as it's
+intended to be visible to the user unlike other types of configuration
+files that are usually hidden. We follow the style used by
+[Quarto](https://quarto.org/), where they name their configuration file
+`_quarto.yml`.
 
 The main argument to `build` is the location of the Data Package file as
 a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
