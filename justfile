@@ -1,7 +1,7 @@
 @_default:
     just --list --unsorted
 
-@_checks: check-python check-unused check-security check-spelling check-commits
+@_checks: check-python check-unused check-security check-spelling check-urls check-commits
 @_tests: test-python
 @_builds: build-contributors build-website build-readme
 
@@ -48,6 +48,16 @@ check-python:
   uv run ruff check .
   # Check types
   uv run mypy .
+
+# Install lychee from https://lychee.cli.rs/guides/getting-started/
+# Check that URLs work
+check-urls:
+  lychee . \
+    --extensions md,qmd,py \
+    --exclude-all-private \
+    --exclude "^file://" \
+    --exclude "raw\.githubusercontent\.com" \
+    --exclude-path "_badges.qmd"
 
 # Reformat Python code to match coding style and general structure
 format-python:
