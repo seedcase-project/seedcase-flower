@@ -276,22 +276,22 @@ class Section:
 
     TODO: add link below.
 
-    See the [design](LINK) for an explanation on the decisions for the design of
+    See the [design](LINK) for an explanation of the design of
     `Section`. See the [guide](LINK) on how to set up custom styles and sections.
     See `Config` for more details on the top-level settings.
 
     Attributes:
         output_path (Optional[Path]): The output path for this section. Can be `None`
             when a style outputs to the terminal such as when using `view()`.
-            If a directory is provided, files will be created for each content type that has
+            If a directory is provided, files will be created for each content item that has
             a `name` property (e.g. `resources` or `resource-schema-fields`) For example,
             if `output_path` is `Path("docs/")` and `contents` is `["resources"]`,
             then each resource will be output to `docs/{resource_name}.md` (or whichever output
             format is used in the Jinja2 template files). If a file path is provided, all contents
             within the `Section` will be output to that single file.
-        contents (list[Literal[...]]): List of content to include in this
-            section. Must be the name of one or more of the content listed. Each of these must
-            have a corresponding Jinja2 template file in the `template_dir` of the same name (e.g.
+        contents (list[Literal[...]]): List of content items to include in this
+            section. Each item must
+            have a corresponding Jinja2 template file of the same name in the `template_dir` (e.g.
             `package.md.jinja` or `resources.rst.jinja`).
 
     Examples:
@@ -318,31 +318,31 @@ class Section:
 <!-- TODO: Replace link with our own decision "why TOML" post -->
 
 We use a configuration file to ensure that how the documentation is
-built is explicitly defined and reproducible whenever someone simply
+built is explicitly defined and reproducible whenever someone
 uses the `seedcase-flower build` command. This way, anyone who has
 access to the Data Package and the configuration file can re-build the
 documentation in the same way. We use TOML for the file format since
 there are [more advantages to it for storing configuration
 settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/).
-The two biggest advantages to TOML for us are that you can use comments
-(with `#`) and the content is treated purely as data (e.g. YAML can
+The two biggest advantages of TOML for us are that you can use comments
+(with `#`) and that the content is treated purely as data (whereas YAML can
 contain content that can be parsed as code and executed).
 
-The configuration file contains a one-to-one mapping with the `Config`
-and `Section` classes described above. The configuration file can either
-be named `_flower.toml` or be included in the `pyproject.toml` file
+The configuration file maps one-to-one to the `Config`
+and `Section` classes described above. The configuration can
+be put either in a separate `_flower.toml` file or in the `pyproject.toml` file
 under the `[tool.seedcase-flower]` table. The ordering of which
 configurations are used is as follows:
 
 1.  If an argument is given to `style` in the `build()` CLI function,
     use that.
 2.  If not, search for a `_flower.toml` file in the working directory
-    and read the configurations if it exists.
+    and, if found, read the configurations.
 3.  If `_flower.toml` does not exist, search for a `pyproject.toml` file
-    in the working directory and read the configurations under the
-    `[tool.seedcase-flower]` table if it exists.
-4.  If neither file exists, use the default configurations as defined in
-    the `Config` class, which represents the default built-in style.
+    in the working directory and, if found, read the configurations under the
+    `[tool.seedcase-flower]` table.
+4.  If neither file exists, use the default configurations defined in
+    the `Config` class, which represent the default built-in style.
 
 We chose to override the configurations if given from the CLI to prevent
 potential configuration conflicts between settings in the configuration
@@ -407,13 +407,12 @@ contents = ["resource-schema-fields"]
 
 We allow the configuration settings to be set in the `pyproject.toml`
 file under the `[tool.seedcase-flower]` table for convenience,
-particularly if the Data Package is also a Python project that needs to
-use `pyproject.toml`. This way, they don't need to create an additional
-configuration file just for Flower.
+which is particularly useful if the Data Package is a Python project that needs to
+use `pyproject.toml`. This way, no additional
+configuration file is needed just for Flower.
 
-The same configuration settings can also be provided in the
-`pyproject.toml` file under the `[tool.seedcase-flower]` table. Taking
-the complex example from the `_flower.toml` above, the `pyproject.toml`
+Taking
+the complex example from `_flower.toml` above, the `pyproject.toml`
 version would look like:
 
 ``` toml
@@ -425,7 +424,7 @@ template_dir = "templates/"
 output_path = "docs/package.qmd"
 contents = [
     "package",
-    ...
+    "contributors"
 ]
 
 [[tool.seedcase-flower.section]]
