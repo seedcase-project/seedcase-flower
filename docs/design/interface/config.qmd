@@ -13,20 +13,19 @@ has been finished and what remains to be done.
 
 ## Overview
 
-Given that a Data Package can either be very simple with only a few data
+Given that a Data Package can be very simple with only a few data
 resources or complex with many resources and detailed schemas with
 hundreds of resource fields, Flower needs to be configurable to
 accommodate different use cases for displaying the wide range of
 metadata. Displaying all the metadata in a single file may be sufficient
-for a simple Data Package, but is impractical for more complex ones.
-That's where the configuration comes in to be able to customise the
+for a simple Data Package, but it is impractical for more complex ones.
+The configuration makes it possible to customise the
 generated documentation output.
 
 Flower's configurations are meant to be used to control what type of
 files are output for the human-readable documentation of the
-`datapackage.json` metadata, how those the contents of those files are
-structured (determined by the templates), what contents are included in
-those files, and where those files are output.
+`datapackage.json` metadata, how the contents of those files are
+structured (determined by the templates), what contents are included, and where the files are output.
 
 The configuration is split into two main parts:
 
@@ -39,7 +38,7 @@ The configuration is split into two main parts:
 -   The lower-level configuration that is represented by one or more
     `Section` classes, the `[[tool.seedcase-flower.section]]` tables in
     `pyproject.toml`, or the `[[section]]` tables in `_flower.toml`.
-    These settings dictate what contents of the `datapackage.json`
+    These settings dictate which contents of the `datapackage.json`
     (**not individual properties**) are included in each section of the
     documentation and where those sections are output.
 
@@ -55,7 +54,7 @@ configuration options can be complex (e.g. multiple sections with
 different content types). This would make the CLI complex, more
 difficult to implement and parse, and less reproducible for those
 wanting to re-build the documentation later (or if a collaborator wants
-to re-build it). That way, as long as the configuration file is included
+to re-build it). This way, as long as the configuration file is included
 in the project, the same documentation can be built consistently when
 using `seedcase-flower build`.
 
@@ -64,7 +63,7 @@ using `seedcase-flower build`.
 ### {{< var planned >}} `Config`
 
 This class contains all the configuration settings for styling the
-documentation. It represents a one-to-one mapping to the settings
+documentation. It represents a one-to-one mapping of the settings
 provided in the `_flower.toml` or `pyproject.toml` file.
 
 It contains settings for whether to use a built-in style or to use a
@@ -73,7 +72,7 @@ to create for the output. A description of each attribute is listed
 below in the docstring of the pseudocode.
 
 Flower will use [Jinja2](https://jinja.palletsprojects.com/en/stable/)
-to generate the human-readable documentation from the `datapackage.json`
+to generate human-readable documentation from the `datapackage.json`
 metadata. The advantage of using Jinja2 is that you can create any type
 of file output because it first gets rendered by Jinja2. For example,
 you can create `.qmd` files if the Jinja2 template ends in `.qmd.jinja`.
@@ -89,7 +88,7 @@ attribute. For example, if a `Section` has
 `contents=["package", "resources"]` and
 `template_dir=Path("templates/)`, then there must be two files:
 `templates/package.md.jinja` and `templates/resources.md.jinja` (if
-outputting to `.md` files) Flower won't check if you've included
+outputting to `.md` files). Flower won't check if you've included
 template files with different names than what is allowed by
 `Section.contents`, but will restrict the types of names you can use in
 the `Section.contents` attribute.
@@ -134,7 +133,7 @@ class Config:
 
     TODO: Include link when implemented
 
-    See the [design](LINK) for an explanation on the decisions for how Config is
+    See the [design](LINK) for an explanation of how Config is
     designed. See the [guide](LINK) on how to set up custom styles and sections.
     See `Section` for more details on how to set up sections.
 
@@ -147,8 +146,8 @@ class Config:
             the directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
             template files. The directory **must** contain one template file for each
             `Section.contents` type used in the `sections` attribute.
-        sections (Optional[list[Section]]): List of `Section` classes that dictate one or
-            more sections to create for the output, including output path and content types.
+        sections (Optional[list[Section]]): List of `Section` classes that define one or
+            more sections to create in the output, including output path and content items.
 
     Examples:
         ``` python
@@ -197,12 +196,10 @@ class Config:
 The main purpose of `Section` is to allow creating separate "sections"
 of the documentation, in this case, separate files to display different
 parts of the `datapackage.json` metadata. There are two attributes:
-`output_path` and `contents`. Each has some specific decision patterns
-to them that increase their complexity but also allow for some powerful
-flexibility.
+`output_path` and `contents`.
 
-For the `output_path`, this dictates what the name of the file or output
-folder should be. But it isn't as simple as "this outputs content to
+The `output_path` specifies the name of the output file or folder.
+But it isn't as simple as "this outputs content to
 this given file". That's because specific properties of the
 `datapackage.json` file are arrays (or Python lists). For instance, you
 can have more than one data resource, which itself has many properties
@@ -217,9 +214,9 @@ brackets in place of where the file name should be to allow creating
 multiple files for each resource. Since we need some way to replace the
 `{}` with the actual name of the property to display, we can only allow
 this behaviour when the given property has a `name` sub-property. The
-reason we decided to use the `name` property is because it has
+reason we decided to use the `name` property is that it has
 requirements in the Data Package specification that make it ideal for
-using as a file name, specifically that it can't have spaces and must be
+use as a file name, specifically that it can't have spaces and must be
 all lowercase.
 
 To show how this might look, imagine we wanted to create individual
