@@ -40,7 +40,7 @@ commands:
 seedcase-flower
 ```
 
-The reason the default behavior is to show the help message is to
+The default behavior shows the help message to
 prevent accidental execution of commands without the user intending to
 invoke them. Plus, it helps as a quick way of listing what the available
 commands are without having to use `--help`.
@@ -107,7 +107,7 @@ seedcase-flower = "seedcase_flower.cli:app"
 Which can be tested using `uv run seedcase-flower`.
 :::
 
-## {{< var planned >}} `seedcase-flower build`
+## {{< var planned >}} `build`
 
 The `build` command has the following signature:
 
@@ -145,12 +145,12 @@ flowchart LR
 ```
 
 Configuration can be provided either as command-line arguments (as shown
-in the signature) or through the configuration file. The CLI command
+in the signature) or through a configuration file. The CLI command
 will first look for a configuration file named `_flower.toml` (or
 `pyproject.toml`) in the current directory. We name it with a leading
 `_` rather than `.` to make it more visible in file listings, as it's
 intended to be visible to the user unlike other types of configuration
-files that are usually hidden. We follow the style used by
+files that are usually hidden. This follows the style used by
 [Quarto](https://quarto.org/), where they name their configuration file
 `_quarto.yml`.
 
@@ -218,7 +218,7 @@ option allows you to quickly switch between several different built-in
 styles of generated output. The behaviour of `--style` is as follows:
 
 -   If no style is given *and* no configuration file is found, it
-    defaults to `quarto-book`.
+    defaults to `quarto-one-page`.
 -   If a style is given *and* no configuration file is found, it uses
     the style given.
 -   If no style is given *and* a configuration file is found, the style
@@ -238,10 +238,10 @@ Flower does not check whether the `datapackage.json` file is correct or
 not, it will only read and parse it. If an error happens during reading
 or parsing, it might not be very informative. Use
 [`check-datapackage`](https://check-datapackage.seedcase-project.org)
-first to check that the Data Package is correct.
+first to check that the `datapackage.json` is correct.
 :::
 
-## {{< var planned >}} `seedcase-flower view`
+## {{< var planned >}} `view`
 
 The `view` command has the following base signature:
 

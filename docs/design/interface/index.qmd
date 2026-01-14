@@ -9,8 +9,7 @@ implemented. It is split into the following documents:
 -   The [Outputs](outputs.qmd), including the different styles for
     generating documentation from the `datapackage.json` file.
 -   The [Command Line Interface](cli.qmd) that forms the main entry
-    point to Flower and includes the Python interface for these
-    commands.
+    point.
 -   The [Configuration settings](config.qmd) as a Python class and
     within a file.
 -   The [Python interface](python.qmd) that contains the Python code
