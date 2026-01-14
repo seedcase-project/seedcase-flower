@@ -42,7 +42,7 @@ website:
           href: docs/design/index.qmd
           contents:
             - docs/design/architecture.qmd
-            - docs/design/outputs.qmd
+            - docs/design/interface/outputs.qmd
     - id: guide
       contents:
         - section: "Guide"
