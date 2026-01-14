@@ -2,9 +2,9 @@
 title: "Outputs"
 ---
 
-The output of Flower is Data Package metadata (i.e., the
-content of `datapackage.json`) that has been reformatted to be more
-human-readable. Flower can output this reformatted metadata in two ways:
+The output of Flower is Data Package metadata (i.e., the content of
+`datapackage.json`) that has been reformatted to be more human-readable.
+Flower can output this reformatted metadata in two ways:
 
 1.  As text to be displayed directly, e.g. in a terminal.
 2.  As one or more files that can be used to build documentation for a
@@ -26,17 +26,17 @@ contents. As with file outputs, the terminal output can be customised
 using different styles.
 
 <!-- TODO: Include potential built-in styles for terminal output and customisation options -->
+
 <!-- TODO: Add example terminal output -->
 
 ## File output: Built-in styles
 
 Flower includes a few built-in styles for generating documentation from
-Data Package metadata. We designed Flower to be extensible to make
-it easier for us to develop built-in styles and to expand them in the future.
-This
-extensibility also accommodates custom needs beyond what the
-built-in styles provide. With custom templates, different output formats
-can be generated to meet varying needs.
+Data Package metadata. We designed Flower to be extensible to make it
+easier for us to develop built-in styles and to expand them in the
+future. This extensibility also accommodates custom needs beyond what
+the built-in styles provide. With custom templates, different output
+formats can be generated to meet varying needs.
 
 The current built-in styles are:
 
@@ -135,10 +135,10 @@ stage records for those species.
 
 The `quarto-one-page` style generates a Quarto book structure, where
 everything, including the resources, is organized into a single Quarto
-Markdown file, `index.qmd`. This is the default style used by Flower.
-We use this as the default style because it's simple, keeps everything
-together, and it can be used to create a simple, single-page website or single page PDF
-(rendered by Quarto).
+Markdown file, `index.qmd`. This is the default style used by Flower. We
+use this as the default style because it's simple, keeps everything
+together, and it can be used to create a simple, single-page website or
+single page PDF (rendered by Quarto).
 
 This style is suitable for simple Data Packages with a small number of
 resources and/or resources with a small number of variables, as it keeps
@@ -208,7 +208,9 @@ This resource contains records of observed growth stages for various flora speci
 The `quarto-resource-listing` style generates a Quarto documentation
 structure where each resource of a Data Package is documented in its own
 separate Markdown file. This style includes an overview of the resources
-in a [Quarto listing style](https://quarto.org/docs/websites/website-listings.html) in the `index.qmd` file.
+in a [Quarto listing
+style](https://quarto.org/docs/websites/website-listings.html) in the
+`index.qmd` file.
 
 This style can be useful for more complex Data Packages with many
 resources and/or resources with many variables, as it divides the
