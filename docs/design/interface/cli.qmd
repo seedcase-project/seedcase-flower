@@ -156,10 +156,13 @@ files that are usually hidden. This follows the style used by
 
 The main argument to `build` is the location of the Data Package file as
 a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
-build the documentation from. There are different behaviours depending
-on what is given:
+build the documentation from. We'll support the following URIs:
 
-<!-- NOTE: We'll start with file and later add https and gh. -->
+- {{< var planned >}} `file://` or a path without `file://`
+- {{< var planned >}} `https://`
+- {{< var planned >}} `gh:` or `github:`
+
+Depending which URI is given, there are different behaviours:
 
 -   If nothing is given, `build` will by default use the URI
     `file://CURRENT_DIRECTORY/datapackage.json`.
