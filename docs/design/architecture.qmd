@@ -272,5 +272,5 @@ flowchart
 ```
 
 For more details on the individual classes and functions, see the
-[interface documentation](/docs/design/interface.qmd) and the [reference
+[interface documentation](/docs/design/interface/index.qmd) and the [reference
 documentation](/docs/reference/index.qmd).
