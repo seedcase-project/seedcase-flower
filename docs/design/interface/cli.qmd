@@ -40,10 +40,10 @@ commands:
 seedcase-flower
 ```
 
-The default behavior shows the help message to
-prevent accidental execution of commands without the user intending to
-invoke them. Plus, it helps as a quick way of listing what the available
-commands are without having to use `--help`.
+The default behavior shows the help message to prevent accidental
+execution of commands without the user intending to invoke them. Plus,
+it helps as a quick way of listing what the available commands are
+without having to use `--help`.
 
 If the command is used regularly, it might be useful to set up an alias
 in the Terminal for it, e.g.:
@@ -54,9 +54,9 @@ alias flower="seedcase-flower"
 
 We intentionally use the same name as the Python package and repository,
 `seedcase-flower`, to give a consistent experience when installing and
-using the package. Some other projects
-use different names for the CLI, e.g. `cz` for the `commitizen` package,
-but we believe that using the same name reduces confusion.
+using the package. Some other projects use different names for the CLI,
+e.g. `cz` for the `commitizen` package, but we believe that using the
+same name reduces confusion.
 
 There will be two commands available:
 
@@ -145,8 +145,8 @@ flowchart LR
 ```
 
 Configuration can be provided either as command-line arguments (as shown
-in the signature) or through a configuration file. The CLI command
-will first look for a configuration file named `_flower.toml` (or
+in the signature) or through a configuration file. The CLI command will
+first look for a configuration file named `_flower.toml` (or
 `pyproject.toml`) in the current directory. We name it with a leading
 `_` rather than `.` to make it more visible in file listings, as it's
 intended to be visible to the user unlike other types of configuration
@@ -158,28 +158,28 @@ The main argument to `build` is the location of the Data Package file as
 a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
 build the documentation from. We'll support the following URIs:
 
-- {{< var planned >}} `file://` or a path without `file://`
-- {{< var planned >}} `https://`
-- {{< var planned >}} `gh:` or `github:`
+-   {{< var planned >}} `file://` or a path without `file://`
+-   {{< var planned >}} `https://`
+-   {{< var planned >}} `gh:` or `github:`
 
 Depending which URI is given, there are different behaviours:
 
 -   If nothing is given, `build` will by default use the URI
     `file://CURRENT_DIRECTORY/datapackage.json`.
 -   If a relative path to a folder is given, it will resolve it to the
-    absolute path and append `datapackage.json`, so that the URI
-    becomes `file://ABSOLUTE_PATH/datapackage.json`.
+    absolute path and append `datapackage.json`, so that the URI becomes
+    `file://ABSOLUTE_PATH/datapackage.json`.
 -   If no URI prefix is given, it defaults to adding `file://FILE`. In
-    this situation, if the file path is relative, it will be resolved
-    to an absolute path before being prefixed with `file://`.
--   `https://` URIs must point to a raw file. We won't support
-    using `http://` URIs for security reasons.
--   `gh:` or `github:` URIs must be in the format
-    `gh:OWNER/REPO` or `github:OWNER/REPO`. Add either `[@BRANCH]` or
-    `[@TAG]` to the end to specify a specific branch or tag. `build`
-    will resolve this URI to the raw URL of the `datapackage.json` file
-    in the repository, assuming the `datapackage.json` file is in the
-    root of the repository. For example:
+    this situation, if the file path is relative, it will be resolved to
+    an absolute path before being prefixed with `file://`.
+-   `https://` URIs must point to a raw file. We won't support using
+    `http://` URIs for security reasons.
+-   `gh:` or `github:` URIs must be in the format `gh:OWNER/REPO` or
+    `github:OWNER/REPO`. Add either `[@BRANCH]` or `[@TAG]` to the end
+    to specify a specific branch or tag. `build` will resolve this URI
+    to the raw URL of the `datapackage.json` file in the repository,
+    assuming the `datapackage.json` file is in the root of the
+    repository. For example:
     -   A URI of `gh:seedcase-project/seedcase-project` will resolve to
         `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/heads/main/datapackage.json`.
     -   A URI of `github:seedcase-project/seedcase-flower@0.1.0` will
@@ -202,8 +202,8 @@ document. The reason we don't allow customising via the CLI is to:
     considering that customising the output can get quite complex with
     multiple sections, templates, and output paths.
 -   Enforce reproducible builds by having the configuration in a file
-    that can be version controlled, shared, and made visible to others, such as
-    collaborators.
+    that can be version controlled, shared, and made visible to others,
+    such as collaborators.
 
 This also means that if the URI is not a `file://`, we can't look for
 the configuration file in the same location as the `datapackage.json`
@@ -292,6 +292,8 @@ are possible given the constraint of displaying in a Terminal are
 limited compared to generating full documentation as output. This is why
 we intentionally don't allow customisation outside of our built-in
 styles for this command.
+
+<!-- TODO: Add link to style contributing guide when created -->
 
 ::: callout-tip
 Want a different style for viewing the metadata? You can contribute a
