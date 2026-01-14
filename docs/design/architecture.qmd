@@ -113,7 +113,7 @@ tables below.
 | config | An object containing settings for modifying the behaviour and output of Flower, e.g., output format, template paths, or style. |
 | section | A configuration unit that defines an output path and a list of metadata items to render at that path. |
 | template | A Jinja file that defines the structure, layout, and format for rendering a metadata item. |
-| style | A name for a set of templates that defines a coherent look and structure for the output, e.g., `quarto-book` or `quarto-resource-listings`. |
+| style | A name for a set of templates that defines a coherent look and structure for the output, e.g., `quarto-one-page` or `quarto-resource-listings`. |
 
 : Objects used throughout Flower.
 

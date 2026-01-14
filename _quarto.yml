@@ -45,6 +45,7 @@ website:
         - section: "Interface"
           href: docs/design/interface/index.qmd
           contents:
+            - docs/design/outputs.qmd
             - docs/design/interface/python.qmd
     - id: guide
       contents:
