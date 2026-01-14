@@ -1,0 +1,302 @@
+---
+title: "Command line"
+---
+
+This document describes the command-line interface (CLI) with
+signatures, documentation, some pseudocode, and diagrams that represent
+its interface along with explanations for these design decisions. It
+primarily serves as a reference for us to develop from and track what
+has been finished and what remains to be done.
+
+We use symbols to indicate parts of the design that are actively being
+worked on, done, or planned (see table below). For work that is planned
+or is in progress, we include the function signatures and docstrings to
+clarify the design. Once the interface is implemented (done), we will
+remove the signatures from the documentation and point to the reference
+documentation instead. The symbols we use are described in the table
+below.
+
+| Status | Description |
+|:-----------------------------:|:----------------------------------------|
+| {{< var done >}} | Interface that has been implemented. |
+| {{< var wip >}} | Interface that is currently being worked on. |
+| {{< var planned >}} | Interface that is planned, but isn't being worked on currently. |
+
+: A table showing the symbols used to indicate the status of interface
+components, along with their descriptions.
+
+## {{< var planned >}} `seedcase-flower`
+
+`seedcase-flower` has the following signature:
+
+``` {.bash filename="Terminal"}
+seedcase-flower <COMMAND> [OPTIONS] [ARGS]
+```
+
+When used on its own it will show the help message with available
+commands:
+
+``` {.bash filename="Terminal"}
+seedcase-flower
+```
+
+The default behavior shows the help message to prevent accidental
+execution of commands without the user intending to invoke them. Plus,
+it helps as a quick way of listing what the available commands are
+without having to use `--help`.
+
+If the command is used regularly, it might be useful to set up an alias
+in the Terminal for it, e.g.:
+
+``` {.bash filename="Terminal"}
+alias flower="seedcase-flower"
+```
+
+We intentionally use the same name as the Python package and repository,
+`seedcase-flower`, to give a consistent experience when installing and
+using the package. Some other projects use different names for the CLI,
+e.g. `cz` for the `commitizen` package, but we believe that using the
+same name reduces confusion.
+
+There will be two commands available:
+
+-   `build`: Build the documentation from the metadata in the
+    `datapackage.json` file.
+
+-   `view`: Display the `datapackage.json` metadata in a human-friendly
+    way in the Terminal.
+
+::: {.callout-tip collapse="true" icon="false"}
+### Pseudocode: CLI entry point
+
+This is the potential implementation of the CLI entry point in
+`src/seedcase_flower/cli.py`. This will be deleted once the CLI is
+implemented. We'll build the CLI using
+[Typer](https://typer.tiangolo.com/). Details on the interface as Python
+code for the individual CLI commands is found in the [Python
+interface](python.qmd) design document.
+
+``` {.python filename="src/seedcase_flower/cli.py"}
+import typer
+
+
+app = typer.Typer()
+
+
+@app.callback()
+def callback():
+    """Display your `datapackage.json` file in a human-friendly way."""
+
+@app.command()
+def build():
+    # See Python interface design doc.
+
+@app.command()
+def view():
+    # See Python interface design doc.
+```
+
+And the entry point for it in the `pyproject.toml` file would look like
+this:
+
+``` {.toml filename="pyproject.toml"}
+[project.scripts]
+seedcase-flower = "seedcase_flower.cli:app"
+```
+
+Which can be tested using `uv run seedcase-flower`.
+:::
+
+## {{< var planned >}} `build`
+
+The `build` command has the following signature:
+
+``` {.bash filename="Terminal"}
+seedcase-flower build [OPTIONS] [URI]
+```
+
+And when fully specified, it will look like this:
+
+``` {.bash filename="Terminal"}
+seedcase-flower build --style STYLE URI
+```
+
+The diagram below shows a simple flow for how the inputs and outputs
+work for `build`.
+
+```{mermaid}
+%%| label: fig-cli-build-flow
+%%| fig-cap: "The flow of input and output through the CLI `build` command."
+flowchart LR
+    uri("datapackage.json<br>[URI: file, https,<br>gh/github]")
+    config_file["_flower.toml or<br>pyproject.toml<br>[file]"]
+    build("build")
+    style_opt("--style<br>[option]")
+    templates["Templates<br>[folder with<br>Jinja files]"]
+    output["Output<br>[files and<br>folders]"]
+    config{"config"}
+
+    uri --> build
+    templates --> config_file
+    config_file -- "either" --> config
+    style_opt -- "or" --> config
+    config --> build
+    build --> output
+```
+
+Configuration can be provided either as command-line arguments (as shown
+in the signature) or through a configuration file. The CLI command will
+first look for a configuration file named `_flower.toml` (or
+`pyproject.toml`) in the current directory. We name it with a leading
+`_` rather than `.` to make it more visible in file listings, as it's
+intended to be visible to the user unlike other types of configuration
+files that are usually hidden. This follows the style used by
+[Quarto](https://quarto.org/), where they name their configuration file
+`_quarto.yml`.
+
+The main argument to `build` is the location of the Data Package file as
+a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
+build the documentation from. We'll support the following URIs:
+
+-   {{< var planned >}} `file://` or a path without `file://`
+-   {{< var planned >}} `https://`
+-   {{< var planned >}} `gh:` or `github:`
+
+Depending which URI is given, there are different behaviours:
+
+-   If nothing is given, `build` will by default use the URI
+    `file://CURRENT_DIRECTORY/datapackage.json`.
+-   If a relative path to a folder is given, it will resolve it to the
+    absolute path and append `datapackage.json`, so that the URI becomes
+    `file://ABSOLUTE_PATH/datapackage.json`.
+-   If no URI prefix is given, it defaults to adding `file://FILE`. In
+    this situation, if the file path is relative, it will be resolved to
+    an absolute path before being prefixed with `file://`.
+-   `https://` URIs must point to a raw file. We won't support using
+    `http://` URIs for security reasons.
+-   `gh:` or `github:` URIs must be in the format `gh:OWNER/REPO` or
+    `github:OWNER/REPO`. Add either `[@BRANCH]` or `[@TAG]` to the end
+    to specify a specific branch or tag. `build` will resolve this URI
+    to the raw URL of the `datapackage.json` file in the repository,
+    assuming the `datapackage.json` file is in the root of the
+    repository. For example:
+    -   A URI of `gh:seedcase-project/seedcase-project` will resolve to
+        `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/heads/main/datapackage.json`.
+    -   A URI of `github:seedcase-project/seedcase-flower@0.1.0` will
+        resolve to
+        `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/tags/0.1.0/datapackage.json`.
+
+The reason we use a URI is to allow flexibility in specifying the
+location of the Data Package file and to allow us to extend to other
+locations in the future, e.g. remote files.
+
+<!-- TODO: Maybe also at some point allow using `doi:` URI? -->
+
+If you want to customise the output, you need to create a `_flower.toml`
+configuration file in the current directory or put the configurations in
+the `pyproject.toml` for Python projects. The design of the
+configuration is described in the [Configuration settings](config.qmd)
+document. The reason we don't allow customising via the CLI is to:
+
+-   Simplify the CLI implementation and avoid long commands. Especially
+    considering that customising the output can get quite complex with
+    multiple sections, templates, and output paths.
+-   Enforce reproducible builds by having the configuration in a file
+    that can be version controlled, shared, and made visible to others,
+    such as collaborators.
+
+This also means that if the URI is not a `file://`, we can't look for
+the configuration file in the same location as the `datapackage.json`
+file, even if it exists on the remote location. However, `build` will
+still look for a `_flower.toml` (or `pyproject.toml`) file in the
+current directory. This way, you can keep the `datapackage.json` in a
+separate location from the generated documentation, which might be
+useful in situations where you don't own the Data Package but you still
+want to or need to generate documentation for it, e.g. when it's in a
+GitHub repository not owned by you.
+
+However, you don't need to create or have a configuration file in order
+to have different styles of documentation generated. The `--style`
+option allows you to quickly switch between several different built-in
+styles of generated output. The behaviour of `--style` is as follows:
+
+-   If no style is given *and* no configuration file is found, it
+    defaults to `quarto-one-page`.
+-   If a style is given *and* no configuration file is found, it uses
+    the style given.
+-   If no style is given *and* a configuration file is found, the style
+    specified in the configuration file is used.
+-   If a style is given *and* a configuration file is found, the style
+    given in the command line overrides the style in the configuration
+    file.
+
+We override the style in the configuration file if the user specifies a
+style in the CLI rather than merging the CLI option with the config file
+settings. This will allow for quicker testing of different styles as
+well as prevent the unintended side effects that might arise when a
+style is mixed with incompatible configuration settings.
+
+::: callout-important
+Flower does not check whether the `datapackage.json` file is correct or
+not, it will only read and parse it. If an error happens during reading
+or parsing, it might not be very informative. Use
+[`check-datapackage`](https://check-datapackage.seedcase-project.org)
+first to check that the `datapackage.json` is correct.
+:::
+
+## {{< var planned >}} `view`
+
+The `view` command has the following base signature:
+
+``` {.bash filename="Terminal"}
+seedcase-flower view [OPTIONS] [ARG]
+```
+
+And when fully specified, it will look like this:
+
+``` {.bash filename="Terminal"}
+seedcase-flower view --style STYLE URI
+```
+
+The diagram below shows a simple flow for how the inputs and outputs
+work for `view`.
+
+```{mermaid}
+%%| label: fig-cli-view-flow
+%%| fig-cap: "The flow of input and output through the CLI `view` command."
+flowchart LR
+    uri("datapackage.json<br>[URI: file, https,<br>gh/github]")
+    view("view")
+    style_opt("--style<br>[option]")
+    output("Output<br>[Terminal]")
+
+    uri --> view
+    style_opt --> view
+    view --> output
+```
+
+In many ways, `view` works similarly to `build`, as it also takes a URI
+to the Data Package file and a `--style` option to specify how the
+metadata should be displayed in the Terminal. There are a few
+differences:
+
+-   No output files are generated, it only displays the metadata in a
+    human-friendly way in the Terminal.
+-   No configuration file is used or looked for. The only way to change
+    the output is to use the `--style` option with our built-in styles.
+
+The reason we don't use a configuration file for `view` is to keep it
+simple and lightweight, as it's primarily meant for quick inspection of
+a Data Package's metadata. Likewise, the types of customisations that
+are possible given the constraint of displaying in a Terminal are
+limited compared to generating full documentation as output. This is why
+we intentionally don't allow customisation outside of our built-in
+styles for this command.
+
+<!-- TODO: Add link to style contributing guide when created -->
+
+::: callout-tip
+Want a different style for viewing the metadata? You can contribute a
+new style by creating a pull request on the GitHub repository with the
+implementation for the new style.
+:::
