@@ -243,24 +243,25 @@ would only need the properties of a single resource. So to be consistent
 with the input to the template, we decided on using the `{content-id}`
 tag.
 
-For the `contents` attribute, we decided on using a specific set based
-on whether a property in the `datapackage.json` is a list or whether it
-represents a distinct "entity" that might be worthy of having a
-dedicated page of documentation. Based on that, the properties as JSON
-paths are `.contributors`, `.licenses`, `.sources`, `.resources`,
-`.resources[*].schema`, `.resources[*].sources`,
-`.resources[*].licenses`, and `.resources[*].schema.fields`. But there's
-also the top level `.` (all the Data Package properties). So simplifying
-those, the `contents` we allow are `package` (for the `.` top-level),
-`contributors`, `licenses`, `sources`, `resources`, and for individual
-resource properties `resource-schema`, `resource-licenses`,
-`resource-sources`, and `resource-schema-fields`. So semantically, the
-`package` content and it's corresponding, e.g., `package.md.jinja`
-template file could contain all properties listed in its template file,
-but `licenses` would only contain the properties found under
-`.licenses`. However, Flower won't parse and check if other properties
-are used outside of their semantic place, for example if the `.title`
-top-level property was used in the `licenses` content template file.
+For the `contents` attribute, we define a set of allowed values that
+correspond to selected Data Package properties we consider useful to
+document in standalone pages. The allowed values and their corresponding
+[JSON paths](https://en.wikipedia.org/wiki/JSONPath) to the Data Package
+property are:
+
+| Property JSON Path            | `contents` item          |
+|-------------------------------|--------------------------|
+| `.`                           | `package`                |
+| `.contributors[*]`            | `contributors`           |
+| `.licenses[*]`                | `licenses`               |
+| `.resources`                  | `resources`              |
+| `.resources[*].sources`       | `resource-sources`       |
+| `.resources[*].licenses`      | `resource-licenses`      |
+| `.resources[*].schema`        | `resource-schema`        |
+| `.resources[*].schema.fields` | `resource-schema-fields` |
+
+: The pairing between `contents` item and JSON Path of it's
+corresponding Data Package property.
 
 ::: {.callout-tip icon="false" collapse="true"}
 ### Pseudocode: `Section` class
@@ -318,36 +319,38 @@ class Section:
 <!-- TODO: Replace link with our own decision "why TOML" post -->
 
 We use a configuration file to ensure that how the documentation is
-built is explicitly defined and reproducible whenever someone
-uses the `seedcase-flower build` command. This way, anyone who has
-access to the Data Package and the configuration file can re-build the
-documentation in the same way. We use TOML for the file format since
-there are [more advantages to it for storing configuration
-settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/).
-The two biggest advantages of TOML for us are that you can use comments
-(with `#`) and that the content is treated purely as data (whereas YAML can
-contain content that can be parsed as code and executed).
+built is explicitly defined and reproducible whenever someone uses the
+`seedcase-flower build` command. This way, anyone who has access to the
+Data Package and the configuration file can re-build the documentation
+in the same way. We use TOML for the file format since there are [many
+advantages to it for storing configuration
+settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
+especially in contrast to YAML. The two biggest advantages of TOML for
+us are that you can use comments (with `#`) and that the content is
+treated purely as data (whereas YAML can contain content that can be
+parsed as code and executed).
 
-The configuration file maps one-to-one to the `Config`
-and `Section` classes described above. The configuration can
-be put either in a separate `_flower.toml` file or in the `pyproject.toml` file
-under the `[tool.seedcase-flower]` table. The ordering of which
-configurations are used is as follows:
+The configuration file maps one-to-one to the `Config` and `Section`
+classes described above. The configuration can be put either in a
+separate `_flower.toml` file or in the `pyproject.toml` file under the
+`[tool.seedcase-flower]` table. The ordering of which configurations are
+used is as follows:
 
 1.  If an argument is given to `style` in the `build()` CLI function,
     use that.
 2.  If not, search for a `_flower.toml` file in the working directory
     and, if found, read the configurations.
 3.  If `_flower.toml` does not exist, search for a `pyproject.toml` file
-    in the working directory and, if found, read the configurations under the
-    `[tool.seedcase-flower]` table.
+    in the working directory and, if found, read the configurations
+    under the `[tool.seedcase-flower]` table.
 4.  If neither file exists, use the default configurations defined in
     the `Config` class, which represent the default built-in style.
 
-We chose to override the configurations if given from the CLI to prevent
-potential configuration conflicts between settings in the configuration
-file and settings given on the CLI. This way, it is clear which ordering
-the settings are applied.
+We chose to override the style configurations (which overrides any other
+customisations) if given from the CLI to prevent potential configuration
+conflicts between settings in the configuration file and settings given
+on the CLI. This way, it is clear which ordering the settings are
+applied.
 
 ### {{< var planned >}} `_flower.toml`
 
@@ -356,21 +359,13 @@ For a simple configuration using the built-in style, the file can be as
 simple as:
 
 ``` {.toml filename="_flower.toml"}
-style = "quarto-book"
+style = "quarto-one-page"
 ```
 
-For such a simple configuration, it would be easier to give the CLI
-`--style` option the `quarto-book` argument instead. But using the
-configuration file makes it clear which style was used, for
-reproducibility and transparency purposes.
-
 More complex customisations are where a configuration file becomes
-necessary. For example, if you want to set custom settings using your
-own Jinja2 templates along with the custom sections where the content is
-output, the `_flower.toml` file could look like:
+necessary. For example:
 
 ``` toml
-# This is optional if `template-dir` is given.
 style = "custom"
 # This would have at least the files:
 # -   package.qmd.jinja
@@ -406,14 +401,13 @@ contents = ["resource-schema-fields"]
 ### {{< var planned >}} `pyproject.toml`
 
 We allow the configuration settings to be set in the `pyproject.toml`
-file under the `[tool.seedcase-flower]` table for convenience,
-which is particularly useful if the Data Package is a Python project that needs to
-use `pyproject.toml`. This way, no additional
-configuration file is needed just for Flower.
+file under the `[tool.seedcase-flower]` table for convenience, which is
+particularly useful if the Data Package is a Python project that needs
+to use `pyproject.toml`. This way, no additional configuration file is
+needed just for Flower.
 
-Taking
-the complex example from `_flower.toml` above, the `pyproject.toml`
-version would look like:
+Taking the complex example from `_flower.toml` above, the
+`pyproject.toml` version would look like:
 
 ``` toml
 [tool.seedcase-flower]
