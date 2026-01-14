@@ -33,7 +33,7 @@ components, along with their descriptions.
 seedcase-flower <COMMAND> [OPTIONS] [ARGS]
 ```
 
-When used on it's own it will show the help message with available
+When used on its own it will show the help message with available
 commands:
 
 ``` {.bash filename="Terminal"}
@@ -42,7 +42,7 @@ seedcase-flower
 
 The reason the default behavior is to show the help message is to
 prevent accidental execution of commands without the user intending to
-do so. Plus, it helps as a quick way of listing what the available
+invoke them. Plus, it helps as a quick way of listing what the available
 commands are without having to use `--help`.
 
 If the command is used regularly, it might be useful to set up an alias
@@ -54,7 +54,7 @@ alias flower="seedcase-flower"
 
 We intentionally use the same name as the Python package and repository,
 `seedcase-flower`, to give a consistent experience when installing and
-using the package, as they are both the same name. Some other projects
+using the package. Some other projects
 use different names for the CLI, e.g. `cz` for the `commitizen` package,
 but we believe that using the same name reduces confusion.
 
@@ -71,7 +71,7 @@ There will be two commands available:
 
 This is the potential implementation of the CLI entry point in
 `src/seedcase_flower/cli.py`. This will be deleted once the CLI is
-implemented. We'll build the CLI using the
+implemented. We'll build the CLI using
 [Typer](https://typer.tiangolo.com/). Details on the interface as Python
 code for the individual CLI commands is found in the [Python
 interface](python.qmd) design document.
@@ -109,10 +109,10 @@ Which can be tested using `uv run seedcase-flower`.
 
 ## {{< var planned >}} `seedcase-flower build`
 
-The `build` command has the following base signature:
+The `build` command has the following signature:
 
 ``` {.bash filename="Terminal"}
-seedcase-flower build [OPTIONS] [ARG]
+seedcase-flower build [OPTIONS] [URI]
 ```
 
 And when fully specified, it will look like this:
@@ -163,15 +163,15 @@ on what is given:
 
 -   If nothing is given, `build` will by default use the URI
     `file://CURRENT_DIRECTORY/datapackage.json`.
--   If a relative path to a folder is given, it will resolve the
-    absolute path and append `datapackage.json` to it, so that the URI
+-   If a relative path to a folder is given, it will resolve it to the
+    absolute path and append `datapackage.json`, so that the URI
     becomes `file://ABSOLUTE_PATH/datapackage.json`.
--   If no prefix URI is given, it defaults to adding `file://FILE`. In
-    this situation, if the file path is a relative path, it will resolve
-    to an absolute path before prefixing with `file://`.
--   For `https://` URIs, it must point to a raw file. We won't support
+-   If no URI prefix is given, it defaults to adding `file://FILE`. In
+    this situation, if the file path is relative, it will be resolved
+    to an absolute path before being prefixed with `file://`.
+-   `https://` URIs must point to a raw file. We won't support
     using `http://` URIs for security reasons.
--   For `gh:` or `github:` URIs, it must be in the format
+-   `gh:` or `github:` URIs must be in the format
     `gh:OWNER/REPO` or `github:OWNER/REPO`. Add either `[@BRANCH]` or
     `[@TAG]` to the end to specify a specific branch or tag. `build`
     will resolve this URI to the raw URL of the `datapackage.json` file
@@ -184,7 +184,7 @@ on what is given:
         `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/tags/0.1.0/datapackage.json`.
 
 The reason we use a URI is to allow flexibility in specifying the
-location of the Data Package file and allows us to extend to other
+location of the Data Package file and to allow us to extend to other
 locations in the future, e.g. remote files.
 
 <!-- TODO: Maybe also at some point allow using `doi:` URI? -->
@@ -199,7 +199,7 @@ document. The reason we don't allow customising via the CLI is to:
     considering that customising the output can get quite complex with
     multiple sections, templates, and output paths.
 -   Enforce reproducible builds by having the configuration in a file
-    that can be version controlled, shared, and visible to others like
+    that can be version controlled, shared, and made visible to others, such as
     collaborators.
 
 This also means that if the URI is not a `file://`, we can't look for
@@ -215,8 +215,7 @@ GitHub repository not owned by you.
 However, you don't need to create or have a configuration file in order
 to have different styles of documentation generated. The `--style`
 option allows you to quickly switch between several different built-in
-styles of generated output. Based on how `--style` is used changes it's
-behaviour is as follows:
+styles of generated output. The behaviour of `--style` is as follows:
 
 -   If no style is given *and* no configuration file is found, it
     defaults to `quarto-book`.
@@ -229,9 +228,9 @@ behaviour is as follows:
     file.
 
 We override the style in the configuration file if the user specifies a
-style in the CLI rather than merge the CLI option with the config file
+style in the CLI rather than merging the CLI option with the config file
 settings. This will allow for quicker testing of different styles as
-well as to prevent the unintended side effects that might arise when a
+well as prevent the unintended side effects that might arise when a
 style is mixed with incompatible configuration settings.
 
 ::: callout-important
@@ -287,7 +286,7 @@ The reason we don't use a configuration file for `view` is to keep it
 simple and lightweight, as it's primarily meant for quick inspection of
 a Data Package's metadata. Likewise, the types of customisations that
 are possible given the constraint of displaying in a Terminal are
-limited compared to generating full documentation as output. That's way,
+limited compared to generating full documentation as output. This is why
 we intentionally don't allow customisation outside of our built-in
 styles for this command.
 

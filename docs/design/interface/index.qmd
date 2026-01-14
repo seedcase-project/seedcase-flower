@@ -3,13 +3,13 @@ title: "Interface"
 ---
 
 This section of the documentation focuses on how the interface is
-implemented. It is split into the following set of documents:
+implemented. It is split into the following documents:
 
 -   The [Inputs](inputs.qmd) accepted by Flower.
--   The [Outputs](outputs.qmd), including the different styles of
+-   The [Outputs](outputs.qmd), including the different styles for
     generating documentation from the `datapackage.json` file.
 -   The [Command Line Interface](cli.qmd) that forms the main entry
-    point to Flower, that includes the Python interface for these
+    point to Flower and includes the Python interface for these
     commands.
 -   The [Configuration settings](config.qmd) as a Python class and
     within a file.
