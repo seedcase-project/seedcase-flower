@@ -1,0 +1,47 @@
+# flora: Observations of flora species and seasonal development
+
+License: [CCO 1.0
+UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+\| Version: 1.2.3 \| ID: 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
+
+A dataset containing flora species records and their observed growth
+stages across different environments.
+
+## Contributors
+
+-   Jane Doe, creator, jane-doe\@example.com
+-   John Smith, author, john-smith\@example.com
+
+## Resources
+
+### Flora Species (species_catalog)
+
+This resource contains a catalog of flora species.
+
+-   Path: resources/species_catalog/data.parquet
+-   Primary key: `species_id`
+
+| Title | Name | Type | Description |
+|------------------|------------------|------------------|------------------|
+| Species ID | `species_id` | integer | The unique identifier for each species. |
+| Scientific name | `scientific_name` | string | The Latin name of the species. |
+| Common name | `common_name` | string | The common name of the species. |
+| Family | `family` | string | The Latin family to which the species belongs. |
+
+### Growth Stage Records (growth_records)
+
+This resource contains records of observed growth stages for various
+flora species.
+
+-   Path: resources/growth_records/data.parquet
+-   Primary key: `record_id`
+-   Foreign keys:
+    -   Field: `species_id`, resource: `species_catalog`
+
+| Title | Name | Type | Description |
+|------------------|------------------|------------------|------------------|
+| Record ID | `record_id` | integer | The unique identifier for each growth record. |
+| Species ID | `species_id` | integer | The unique identifier for each species. |
+| Observation date | `observation_date` | date | The date when the observation was made. |
+| Growth Stage | `growth_stage` | string | The observed growth stage of the species. |
+| Location | `location` | string | The location where the observation was made. |

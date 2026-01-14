@@ -1,0 +1,381 @@
+---
+title: "Outputs"
+---
+
+The output of Flower is Data Package metadata (i.e., the content of
+`datapackage.json`) that has been reformatted to be more human-readable.
+Flower can output this reformatted metadata in two ways:
+
+1.  As text to be displayed directly, e.g. in a terminal.
+2.  As one or more files that can be used to build documentation for a
+    Data package (by default files are in a CommonMark-compliant
+    Markdown format with [Quarto](https://quarto.org) features).
+
+Both output formats are designed to be human-readable, making it easier
+to get an overview of the contents of a Data Package. The terminal
+output is intended for quick inspection, while the file outputs are
+meant for more detailed documentation that can be shared and published.
+Both output formats can be customised to suit different needs.
+
+## Terminal output
+
+When outputting to the terminal, Flower generates a plain text
+representation of the Data Package metadata. This output is designed to
+be human-readable and provides a quick overview of the Data Package's
+contents. As with file outputs, the terminal output can be customised
+using different styles.
+
+<!-- TODO: Include potential built-in styles for terminal output and customisation options -->
+
+<!-- TODO: Add example terminal output -->
+
+## File output: Built-in styles
+
+Flower includes a few built-in styles for generating documentation from
+Data Package metadata. We designed Flower to be extensible to make it
+easier for us to develop built-in styles and to expand them in the
+future. This extensibility also accommodates custom needs beyond what
+the built-in styles provide. With custom templates, different output
+formats can be generated to meet varying needs.
+
+The current built-in styles are:
+
+-   [`quarto-one-page`](#quarto-one-page-default)
+-   [`quarto-resource-listing`](#quarto-resource-listing)
+-   [`quarto-resource-tables`](#quarto-resource-tables)
+
+To demonstrate the built-in styles below, we'll use a Data Package for a
+(made up) study on flowers and their growing conditions. The
+`datapackage.json` for this example includes some package-level metadata
+along with two resources: a catalog of flora species and a set of growth
+stage records for those species.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+### Expand to see the `datapackage.json` content
+
+``` {.json filename="datapackage.json"}
+{
+  "name": "flora",
+  "title": "Observations of flora species and seasonal development",
+  "id": "29b1b5e4-3f4c-4d2a-9f8e-123456789abc",
+  "description": "A dataset containing flora species records and their observed growth stages across different environments.",
+  "version": "1.2.3",
+  "licenses": [
+    {
+        "name": "CCO 1.0 UNIVERSAL",
+        "path": "https://creativecommons.org/publicdomain/zero/1.0/legalcode"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "Jane Doe",
+      "role": ["creator"],
+      "email": "jane-doe@example.com",
+      "organization": "Example University"
+    },
+    {
+      "title": "John Smith",
+      "role": ["author"],
+      "email": "john-smith@example.com",
+      "organization": "Example Institute"
+    }
+  ],
+  "sources": [{ "title": "Example Data Source", "version": "1.0", "path": "https://example.com/data-source", "email": "source@example.com" }],
+  "resources": [
+    {
+      "name": "species_catalog",
+      "title": "Flora Species",
+      "description": "This resource contains a catalog of flora species.",
+      "path": "resources/species_catalog/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "primaryKey": "species_id",
+      "schema": {
+        "fields": [
+          { "title": "Species ID", "name": "species_id", "type": "integer", "description": "The unique identifier for each species." },
+          { "title": "Scientific name", "name": "scientific_name", "type": "string", "description": "The Latin name of the species." },
+          { "title": "Common name", "name": "common_name", "type": "string", "description": "The common name of the species." },
+          { "title": "Family", "name": "family", "type": "string", "description": "The Latin family to which the species belongs." }
+        ]
+      },
+      "sources": [
+        { "title": "Flora Species Source", "version": "1.0", "path": "https://example.com/data-source/flora-species", "email": "source@example.com" }]
+    },
+    {
+      "name": "growth_records",
+      "title": "Growth Stage Records",
+      "description": "This resource contains records of observed growth stages for various flora species.",
+      "path": "resources/growth_records/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "primaryKey": "record_id",
+      "foreignKey": {
+          "fields": "species_id",
+          "reference": {
+            "resource": "species_catalog",
+            "fields": "species_id"
+          }
+        },
+      "schema": {
+        "fields": [
+          { "title": "Record ID", "name": "record_id", "type": "integer", "description": "The unique identifier for each growth record." },
+          { "title": "Species ID", "name": "species_id", "type": "integer", "description": "The unique identifier for each species." },
+          { "title": "Observation date", "name": "observation_date", "type": "date", "description": "The date when the observation was made." },
+          { "title": "Growth Stage", "name": "growth_stage", "type": "string", "description": "The observed growth stage of the species." },
+          { "title": "Location", "name": "location", "type": "string", "description": "The location where the observation was made." }
+        ]
+      }
+    }
+  ]
+}
+```
+:::
+
+### `quarto-one-page` (default) {#quarto-one-page-default}
+
+The `quarto-one-page` style generates a Quarto book structure, where
+everything, including the resources, is organized into a single Quarto
+Markdown file, `index.qmd`. This is the default style used by Flower. We
+use this as the default style because it's simple, keeps everything
+together, and it can be used to create a simple, single-page website or
+single page PDF (rendered by Quarto).
+
+This style is suitable for simple Data Packages with a small number of
+resources and/or resources with a small number of variables, as it keeps
+everything in one place for easy viewing.
+
+Below, we show the output (rendered and raw) generated by the
+`quarto-one-page` style for the flower study example.
+
+::: panel-tabset
+#### Rendered output
+
+![The rendered output of `index.qmd` with the `quarto-one-page`
+style.](/docs/design/example-output/images/example-quarto-one-page.png){.border
+fig-alt="An example of the rendered output of Flower's quarto-one-page style using the flower study example."}
+
+#### Raw output
+
+``` {.md filename="index.qmd"}
+# flora: Observations of flora species and seasonal development
+
+License: [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode) | Version: 1.2.3 | ID: 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
+
+A dataset containing flora species records and their observed growth stages across different environments.
+
+## Contributors
+
+- Jane Doe, creator, jane-doe@example.com
+- John Smith, author, john-smith@example.com
+
+## Resources
+
+### Flora Species (species_catalog)
+
+This resource contains a catalog of flora species.
+
+- Path: resources/species_catalog/data.parquet
+- Primary key: `species_id`
+
+| Title | Name | Type | Description |
+| ---- | ---- | ---- | ---- |
+| Species ID | `species_id` | integer | The unique identifier for each species. |
+| Scientific name | `scientific_name` | string | The Latin name of the species. |
+| Common name | `common_name` | string | The common name of the species. |
+| Family | `family` | string | The Latin family to which the species belongs. |
+
+### Growth Stage Records (growth_records)
+
+This resource contains records of observed growth stages for various flora species.
+
+- Path: resources/growth_records/data.parquet
+- Primary key: `record_id`
+- Foreign keys:
+    - Field: `species_id`, resource: `species_catalog`
+
+| Title | Name | Type | Description |
+| ---- | ---- | ---- | ---- |
+| Record ID | `record_id` | integer | The unique identifier for each growth record. |
+| Species ID | `species_id` | integer | The unique identifier for each species. |
+| Observation date | `observation_date` | date | The date when the observation was made. |
+| Growth Stage | `growth_stage` | string | The observed growth stage of the species. |
+| Location | `location` | string | The location where the observation was made. |
+```
+:::
+
+### `quarto-resource-listing` {#quarto-resource-listing}
+
+The `quarto-resource-listing` style generates a Quarto documentation
+structure where each resource of a Data Package is documented in its own
+separate Markdown file. This style includes an overview of the resources
+in a [Quarto listing
+style](https://quarto.org/docs/websites/website-listings.html) in the
+`index.qmd` file.
+
+This style can be useful for more complex Data Packages with many
+resources and/or resources with many variables, as it divides the
+documentation into smaller, more manageable files.
+
+With the flower study example, this style generates three files:
+`index.qmd`, `resources/species-catalog.qmd`, and
+`resources/growth-records.qmd`, as shown below.
+
+:::: panel-tabset
+#### Rendered output
+
+![The rendered output of `index.qmd` with the `quarto-resource-listing`
+style.](/docs/design/example-output/images/example-quarto-resource-listing.png){.border
+fig-alt="The rendered output for the `index.qmd` file with Flower's quarto-resource-listing style using the flower study example. An overview of the resources are provided in a listing."}
+
+![The rendered output of a resource, here
+`resources/species-catalog.qmd`, with the `quarto-resource-listing`
+style. This would be the same with the `quarto-resource-tables`
+style.](/docs/design/example-output/images/example-quarto-resource-species-catalog.png){.border
+fig-alt="The rendered output for the species-catalog resource from the flower study example with Flower's quarto-resource-listing style. With the `quarto-resource-tables` style, the output of the resource files is the same."}
+
+![The rendered output of a resource, here
+`resources/growth-records.qmd`, with the `quarto-resource-listing`
+style. This would be the same with the `quarto-resource-tables`
+style.](/docs/design/example-output/images/example-quarto-resource-growth-records.png){.border
+fig-alt="The rendered output for the growth-records resource from the flower study example with Flower's quarto-resource-listing style. With the `quarto-resource-tables` style, the output of the resource files is the same."}
+
+#### Raw output
+
+``` {.md filename="index.qmd"}
+---
+listing:
+    type: table
+    contents: resources
+    fields: [title, subtitle, description]
+    field-display-names:
+        subtitle: "Name"
+---
+
+# flora: Observations of flora species and seasonal development
+
+License: [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode) | Version: 1.2.3 | ID: 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
+
+A dataset containing flora species records and their observed growth stages across different environments.
+
+## Contributors
+
+- Jane Doe, creator, jane-doe@example.com
+- John Smith, author, john-smith@example.com
+
+## Resources
+```
+
+::: callout-note
+The `index.qmd` file uses Quarto's [listing
+feature](https://quarto.org/docs/authoring/metadata/#listings) to
+generate a table listing of the resources in the Data Package, including
+their titles and descriptions. This table is appended to the file and
+will appear after the "\## Resources" heading when rendered.
+
+The table is interactive, allowing users to search for specific
+resources based on their titles. Clicking on the title, takes the user
+to the corresponding resource documentation file.
+:::
+
+``` {.md filename="resources/species_catalog.qmd"}
+---
+title: "Flora Species"
+subtitle: "species_catalog"
+description: "This resource contains a catalog of flora species."
+---
+
+- Path: resources/species_catalog/data.parquet
+- Primary key: `species_id`
+
+| Title | Name | Type | Description |
+| ---- | ---- | ---- | ---- |
+| Species ID | `species_id` | integer | The unique identifier for each species. |
+| Scientific name | `scientific_name` | string | The Latin name of the species. |
+| Common name | `common_name` | string | The common name of the species. |
+| Family | `family` | string | The Latin family to which the species belongs. |
+```
+
+``` {.md filename="resources/growth_records.qmd"}
+---
+title: "Growth Stage Records"
+subtitle: "growth_records"
+description: "This resource contains records of observed growth stages for various flora species."
+---
+
+- Path: resources/growth_records/data.parquet
+- Primary key: `record_id`
+- Foreign keys:
+    - Field: `species_id`, resource: `species_catalog`
+
+| Title | Name | Type | Description |
+| ---- | ---- | ---- | ---- |
+| Record ID | `record_id` | integer | The unique identifier for each growth record. |
+| Species ID | `species_id` | integer | The unique identifier for each species. |
+| Observation date | `observation_date` | date | The date when the observation was made. |
+| Growth Stage | `growth_stage` | string | The observed growth stage of the species. |
+| Location | `location` | string | The location where the observation was made. |
+```
+::::
+
+### `quarto-resource-tables` {#quarto-resource-tables}
+
+As the `quarto-resource-listing` style, the `quarto-resource-tables`
+style generates a Quarto documentation structure where each resource in
+the Data Package is documented in its own separate Markdown file. The
+resource files are identical to those generated by the
+`quarto-resource-listing` style. The difference between the two styles
+lies in the `index.qmd` file, where the resources are summarized in a
+table format instead of a listing, as shown below. With this style, the
+tables are filterable and columns can be sorted, making it easier to
+find specific resources and variables within a Data Package.
+
+<!-- TODO: Example output aren't with filterable tables yet -->
+
+::: callout-note
+Since the resource documentation files are the same as those generated
+by the `quarto-resource-listing` style, they are not repeated here.
+Please refer to the previous section for the rendered and raw output of
+the resource files.
+:::
+
+::: panel-tabset
+#### Rendered output
+
+![The rendered output of `index.qmd` with the `quarto-resource-tables`
+style.](/docs/design/example-output/images/example-quarto-resource-tables.png){.border
+fig-alt="An example of the rendered output for the `index.qmd` file with Flower's quarto-resource-tables style. The top is a header with the data package name and title, with the license, version, ID, and description shown below. Below is a contributors section and a resources section with the resource title, name, and description shown in a table."}
+
+#### Raw output
+
+``` {.md filename="index.qmd"}
+---
+listing:
+    type: table
+    contents: resources
+    fields: [title, subtitle, description]
+    field-display-names:
+        subtitle: "Name"
+---
+
+# flora: Observations of flora species and seasonal development
+
+License: [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode) | Version: 1.2.3 | ID: 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
+
+A dataset containing flora species records and their observed growth stages across different environments.
+
+## Contributors
+
+- Jane Doe, creator, jane-doe@example.com
+- John Smith, author, john-smith@example.com
+
+## Resources
+```
+:::
+
+<!-- TODO: We could add calculated fields, such as the number of variables in the resources? -->
+
+::: content-hidden
+## Custom styles with templates
+
+<!--TODO: To be added later-->
+:::
