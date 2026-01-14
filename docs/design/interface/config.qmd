@@ -19,13 +19,14 @@ hundreds of resource fields, Flower needs to be configurable to
 accommodate different use cases for displaying the wide range of
 metadata. Displaying all the metadata in a single file may be sufficient
 for a simple Data Package, but it is impractical for more complex ones.
-The configuration makes it possible to customise the
-generated documentation output.
+The configuration makes it possible to customise the generated
+documentation output.
 
 Flower's configurations are meant to be used to control what type of
 files are output for the human-readable documentation of the
 `datapackage.json` metadata, how the contents of those files are
-structured (determined by the templates), what contents are included, and where the files are output.
+structured (determined by the templates), what contents are included,
+and where the files are output.
 
 The configuration is split into two main parts:
 
@@ -74,7 +75,7 @@ below in the docstring of the pseudocode.
 Flower will use [Jinja2](https://jinja.palletsprojects.com/en/stable/)
 to generate human-readable documentation from the `datapackage.json`
 metadata. The advantage of using Jinja2 is that you can create any type
-of file output because it first gets rendered by Jinja2. For example,
+of file output as long as the file is a plain text file. For example,
 you can create `.qmd` files if the Jinja2 template ends in `.qmd.jinja`.
 This gives a lot of flexibility in the types of outputs a user can
 create. They aren't limited to a specific markup language or file
@@ -98,15 +99,14 @@ metadata found in the `datapackage.json` file in a single Jinja template
 file, as long as it was called `package.md.jinja` (or whichever output
 format they wanted).
 
-When making a Jinja2 template file, we designed Flower to pass the full
-`datapackage.json` file into the template file to keep it easier for us
-to implement and easier to create templates as we can make use of [JSON
-path syntax](https://en.wikipedia.org/wiki/JSONPath). But that also
-means that each property must be listed in full following the JSON path
-syntax. For example, if we wanted to list all the contributors first
-name in the `contributors.md.jinja` template, we would use Jinja2 loops
-on all contributors with `.contributors[ID].given_name` (where `ID` is
-the number for the item in the contributors list).
+When making a Jinja2 template file, we designed Flower to pass the only
+that parts of the `datapackage.json` file that are relevant to the
+`Section.contents` provided. This makes it easier to create the
+templates as the full path to the property you want to use doesn't need
+to be given. For example, if we wanted to list all the contributors'
+first name in the `contributors.md.jinja` template, we would only need
+to use `contributors[0].given_name` (for the first contributor). See the
+`Section` design description below for more details.
 
 As will be described later, we intentionally restrict the types of names
 you can use in the `Section.contents` attribute to ensure that there is
@@ -162,7 +162,7 @@ class Config:
             template_dir=Path("templates"),
             sections=[
                 Section(
-                    output_path=Path("docs/"),
+                    output_path=Path("docs/index.qmd"),
                     contents=["package"]
                 )
             ]
@@ -198,50 +198,50 @@ of the documentation, in this case, separate files to display different
 parts of the `datapackage.json` metadata. There are two attributes:
 `output_path` and `contents`.
 
-The `output_path` specifies the name of the output file or folder.
-But it isn't as simple as "this outputs content to
-this given file". That's because specific properties of the
-`datapackage.json` file are arrays (or Python lists). For instance, you
-can have more than one data resource, which itself has many properties
-that also could have many of them such as having many fields in its
-schema. So we need some way to output a list of data resources to a
-corresponding list of output files. That's where some complexity comes
-in.
+The `output_path` specifies the name of the output file or folder. But
+it isn't as simple as "this outputs content to this given file". That's
+because some Data Package properties are arrays of objects. Sometimes it
+makes sense to create a separate output file for each array item.
 
 When a property that we want to display is a list, like resources, we
-can set an output path as a folder with the special `{}` whisker
+would set the output path as a folder with the special `{}` whisker
 brackets in place of where the file name should be to allow creating
-multiple files for each resource. Since we need some way to replace the
-`{}` with the actual name of the property to display, we can only allow
-this behaviour when the given property has a `name` sub-property. The
-reason we decided to use the `name` property is that it has
-requirements in the Data Package specification that make it ideal for
-use as a file name, specifically that it can't have spaces and must be
-all lowercase.
+multiple files for each resource. For now, we only allow properties that
+have a `name` sub-property to output to multiple files. The reason we
+decided to use the `name` property is that it has requirements in the
+Data Package specification that make it ideal for use as a file name,
+specifically that it can't have spaces and must be all lowercase.
 
-To show how this might look, imagine we wanted to create individual
-files for each resource in the `docs/resources/` folder. We would set
-`output_path="docs/resources/{resource-name}.qmd"`. Why `resource-name`
-and not `name`? Because if we wanted to create individual files for each
-field in the schema of each resource, we would need some way to
-differentiate between the two `name` properties. So we could use
-`docs/resources/{resource-name}/fields/{resource-schema-field-name}.qmd`
-in this case.
+For example, creating an output file for all resources in a `resources/`
+folder would use this path `resources/{resource-name}.qmd`. Why
+`resource-name` and not `name`? Because it allows for the use of created
+multiple folders with custom names when multiple `name` properties exist
+in the nested property. For example, the schema fields property has a
+`name` property, as does it's parent `resources` property. So to output
+a file for each resource's field for each resource, we could use the
+output path
+`docs/resources/{resource-name}/fields/{resource-schema-field-name}.qmd`.
 
 <!-- TODO: Not sure how this might be implemented in the Jinja templates. -->
+
+<!-- TODO: Not sure how to do this for mult-file output. Could detect if multi-file and give only bare resource array? -->
 
 When setting a multi-file output, the properties used within the Jinja2
 template must use `{content-id}` format. For example, if we wanted to
 output one file for each resource with an `output_path` like
 `resources/{resource-name}.qmd`, then the corresponding
-`template/resource.qmd.jinja` file must use Jinja2 variables that
-reference a resource's properties with the JSON path syntax of
-`.resources[{resource-id}].title` (for the `title` property of each
-resource). Then Flower will loop through each resource property and
-insert the number for that item in the resource. In this case, if there
-were two resources, Flower would resolve it to `.resources[0].title` in
-one output template file and `.resources[1].title` in another output
-template file.
+`template/resources.qmd.jinja` file must use Jinja2 variables that
+reference a resource's properties with the syntax of
+`resources[{resource-id}].title` (for the `title` property of each
+resource). The reason we designed it this way is because a template
+could list all, for instance, resources within a single
+`resources.qmd.jinja` file to output only one file. Or the template
+could display only one resource in order to output one file *per
+resource*. In the case of a single file output, the template would need
+the full array of the property while theoretically the multi-file output
+would only need the properties of a single resource. So to be consistent
+with the input to the template, we decided on using the `{content-id}`
+tag.
 
 For the `contents` attribute, we decided on using a specific set based
 on whether a property in the `datapackage.json` is a list or whether it
