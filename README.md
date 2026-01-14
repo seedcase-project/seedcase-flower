@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="https://flower.seedcase-project.org/">
-        <img src="https://raw.githubusercontent.com/seedcase-project/seedcase-flower/main/_extensions/seedcase-project/seedcase-theme/logos/navbar-logo-seedcase-flower.svg" alt="Link to Flower website" height="150"/>
+        <img src="https://raw.githubusercontent.com/seedcase-project/seedcase-flower/main/_extensions/seedcase-project/seedcase-theme/logos/flower/navbar.svg" alt="Link to Flower website" height="150"/>
     </a>
 </p>
 
