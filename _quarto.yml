@@ -5,12 +5,12 @@ website:
   title: "Seedcase Flower"
   site-url: "https://flower.seedcase-project.org"
   repo-url: "https://github.com/seedcase-project/seedcase-flower"
-  favicon: "_extensions/seedcase-project/seedcase-theme/logos/flower-logo.svg"
+  favicon: "_extensions/seedcase-project/seedcase-theme/logos/flower/icon.svg"
   page-navigation: true
   navbar:
     pinned: true
     title: false
-    logo: "_extensions/seedcase-project/seedcase-theme/logos/navbar-logo-seedcase-flower.svg"
+    logo: "_extensions/seedcase-project/seedcase-theme/logos/flower/navbar.svg"
     logo-alt: "seedcase flower logo: Main page"
     left:
       - text: "Overview"
@@ -45,6 +45,7 @@ website:
         - section: "Interface"
           href: docs/design/interface/index.qmd
           contents:
+            - docs/design/interface/outputs.qmd
             - docs/design/interface/config.qmd
     - id: guide
       contents:
