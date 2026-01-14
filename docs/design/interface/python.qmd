@@ -1,4 +1,153 @@
-## {{< var wip >}} Python Interface
+---
+title: Python functions
+---
+
+This document describes the Python functions that form the CLI
+and non-CLI functions. Non-CLI functions are those used by the
+CLI functions. We include function
+signatures, documentation, some pseudocode, and diagrams that represent
+its interface along with explanations for these design decisions. It
+primarily serves as a reference for us to develop from and track what
+has been finished and what remains to be done.
+
+We use symbols to indicate parts of the design that are actively being
+worked on, done, or planned (see table below). For work that is planned
+or is in progress, we include the function signatures and docstrings to
+clarify the design. Once the interface is implemented (done), we will
+remove the signatures from the documentation and point to the reference
+documentation instead. The symbols we use are described in the table
+below.
+
+| Status | Description |
+|:-----------------------------:|:----------------------------------------|
+| {{< var done >}} | Interface that has been implemented. |
+| {{< var wip >}} | Interface that is currently being worked on. |
+| {{< var planned >}} | Interface that is planned, but isn't being worked on currently. |
+
+: A table showing the symbols used to indicate the status of interface
+components, along with their descriptions.
+
+## Overview
+
+There are two parts to the Python interface: those functions that represent the
+interface via the Terminal (CLI) and those functions that are used by the CLI functions
+to implement their behaviour. We will call them "CLI" and "non-CLI" functions.
+We have this split for a few reasons:
+
+- Creates a clear separation between the code that is exposed through the CLI and code that could be used on its own as a Python package library.
+- Can apply functional programming practices to the non-CLI functions, as CLI functions often require the use of side effects and
+other non-functional practices.
+- More easily write unit tests for the non-CLI code, while write integration tests for the CLI code.
+- Keep the size of the CLI functions small, as they will be built up by functional units of non-CLI code.
+
+## Python CLI functions
+
+These functions are the direct Python equivalents to the CLI commands described in the [CLI design page](cli.qmd).
+They are `build()` and `view()`. This page describes the Python design and decisions made and won't repeat
+the content found in the CLI design page.
+
+### {{< var planned >}} `build()`
+
+As already described in the CLI design page, this function has two parameters:
+
+- `uri` for the URI argument. The default is the `datapackage.json` file found in the
+working directory.
+- `style` for what style to use
+
+::: {.callout-tip collapse="true" icon="false"}
+## Pseudocode: `build()`
+``` {.python, filename="src/seedcase_flower/cli.py"}
+from typing import Optional, Literal
+def build(uri: str = "datapackage.json", style: Optional[Literal[BUILT_IN_STYLES]] = None) -> None:
+    """Build the documentation from source files."""
+    # Potential implementation steps:
+
+    # Maybe str?
+    path_datapackage: str = resolve_uri(uri)
+
+    # Only if
+    path_current_dir: Path =
+
+    match style:
+        case BUILT_IN_STYLES:
+            config = load_style(style)
+        case None:
+            config = load_config()
+
+    config: Config = read_config(path_current_dir)
+
+    metadata: dict = read_datapackage(path_datapackage)
+
+    output: str = build_output(
+        metadata, # or properties
+        config
+    )
+
+    write_output(output, config)
+
+    return None
+
+```
+:::
+
+### {{< var planned >}} `view()`
+
+::: {.callout-tip collapse="true" icon="false"}
+## Pseudocode: `view()`
+
+``` {.python, filename="src/seedcase_flower/cli.py"}
+from typing import Optional
+
+def view(uri: str = "datapackage.json", style: str = "terminal-default") -> str:
+    """Display the `datapackage.json` properties in a human-friendly way in the terminal.
+
+    Args:
+        input (str): A file path, URL to a raw file, a GitHub repository specification,
+            or other. Defaults to `.datapackage.json`.
+        style (str): Style to use for rendering. Defaults to `terminal-default`.
+    """
+    # change input to Path or URL object and read from it, e.g.:
+    if input == Path(".datapackage.json"):
+        input = read_datapackage(input)
+    # check style equals to existing built-in terminal styles
+    # if style not in BUILT_IN_STYLES, ensure template_dir and section_contents is provided
+    if section_contents is None:
+        # TODO: All of them?
+        section_contents = [
+            "package", "contributors", "licenses", "sources", "resources",
+            # TODO: Or all these get included into "resources" rather than separate?
+            "resource-schema", "resource-licenses", "resource-sources",
+            "resource-schema-fields"
+        ]
+
+    section = Section(
+        # If none, outputs as string?
+        output_path=None,
+        contents=section_contents
+    )
+
+    if style in BUILT_IN_TERMINAL_STYLES:
+        config = Config(
+            style=style,
+            # TODO: Not sure this is the right way to get the template dir
+            template_dir=TEMPLATE_DIR[style],
+            sections=[section]
+        )
+    else if style == "custom":
+        config = Config(
+            style=style,
+            template_dir=template_dir,
+            sections=[section]
+        )
+    # TODO: Need error for non-existing style?
+
+    # TODO: List of a dict with section name and str of content for each section?
+    sections: list[dict[str, str]] = build_sections(input, config)
+
+    # TODO: combine only str content and pretty print or raw str?
+    return pretty_print(sections)
+```
+:::
 
 All the command line functionality can be called from Python. A few
 examples are given below. Note that all examples assume the following
@@ -8,53 +157,42 @@ import convention:
 import seedcase_flower as fl
 ```
 
-### Examples
 
-```python
-fl.view("https://...")
-```
-Views the metadata for a Data Package located online in the terminal
+## Python non-CLI functions
 
----
 
-```python
-fl.build()
-```
+### `read_config()`
 
-Builds a documentation site in qmd format for the data package in the
-current working directory.
+``` python
+def read_config(path: str) -> Config:
+    """Read configuration settings from a file.
 
----
+    Args:
+        path (str): Path to the configuration file.
+    Returns:
+        Config: Configuration settings for the application.
+    """
+    # read toml then convert to Config
 
-```python
-fl.build(
-    "my-folder/datapackage.json",
-    config=fl.Config(
-        style="quarto-resource-listings",
-        ci="quarto"
-    )
-)
+    # if style is "custom", ensure template_dir and sections are set
+
+    # if template_dir is set, ensure style is "custom" and that dir exists
+    # and contains required files as listed in `Section.contents`
+
+    # if style is "custom", ensure there is at least one section in sections
 ```
 
-Builds a documentation site in qmd format for the data package in
-`my-folder/datapackage.json`. The chosen style splits the documentation
-into several pages. Template files are included for setting up
-continuous integration with quarto on github.
+### `read_datapackage()`
 
----
+### `build()`
 
-```python
-fl.build(
-    config=fl.Config(
-        style="custom",
-        content=[["package"], ["contributors", "licenses"]]
-        template=["1st-page.html", "2nd-page.html"]
-    )
-)
+### `view()`
+
+
 ```
 
-Builds a documentation site in html format for the data package in the
-current working directory. The custom style of the documentation creates
-one page with the package metadata and a second page with info on the
-contributors and license. Both pages are created using a custom HTML
-template.
+    # - if style then load_style()
+    # - if not style then get_config_filepath() and match read_config()
+    # - else if file pyproject.toml exists, `read_config(path)`
+    # - else return default Config
+```
