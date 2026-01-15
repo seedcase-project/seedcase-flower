@@ -94,14 +94,10 @@ metadata found in the `datapackage.json` file in a single Jinja template
 file, as long as it was called `package.md.jinja` (or whichever output
 format they wanted).
 
-When making a Jinja2 template file, we designed Flower to only pass the
-parts of the `datapackage.json` file that are relevant to the
-`Section.contents` provided. This makes it easier to create the
-templates as the full path to the property you want to include doesn't
-need to be given. For example, if we wanted to list all the
-contributors' first name in the `contributors.md.jinja` template, we
-would only need to use `contributors[0].given_name` (for the first
-contributor). See the `Section` design description below for more
+Jinja2 template files are given only the parts of the `datapackage.json`
+file that are relevant to the `Section.contents` provided. For example,
+in the `contributors.md.jinja` template only the list of contributors is
+made available. See the `Section` design description below for more
 details.
 
 We intentionally restrict the types of names you can use in the
