@@ -2,10 +2,9 @@
 title: Configuration
 ---
 
-This document describes the configuration settings as an interface for
-both the Python classes as well as the file that contains the settings.
-For the Python classes, this document includes the signature,
-docstrings, and some pseudocode as a potential implementation. It
+This document describes the configuration settings for
+both the Python classes and the configuration file.
+It
 primarily serves as a reference for us to develop from and track what
 has been finished and what remains to be done.
 
@@ -17,16 +16,15 @@ Given that a Data Package can be very simple with only a few data
 resources or complex with many resources and detailed schemas with
 hundreds of resource fields, Flower needs to be configurable to
 accommodate different use cases for displaying the wide range of
-metadata. Displaying all the metadata in a single file may be sufficient
+metadata in `datapackage.json`. Displaying all the metadata in a single file may be sufficient
 for a simple Data Package, but it is impractical for more complex ones.
 The configuration makes it possible to customise the generated
-documentation output.
+documentation output accordingly.
 
-Flower's configurations are meant to be used to control what type of
-files are output for the human-readable documentation of the
-`datapackage.json` metadata, how the contents of those files are
-structured (determined by the templates), what contents are included,
-and where the files are output.
+Flower's configurations controls the type of
+output files, the content structure of those files
+(determined by the templates), what content to include,
+and the output destination of those files.
 
 The configuration is split into two main parts:
 
@@ -35,7 +33,7 @@ The configuration is split into two main parts:
     `pyproject.toml`, or the settings at the top level of the
     `_flower.toml` file. These settings dictate whether to use a
     built-in style or a custom style, along with the location of the
-    template files for any custom style.
+    template files for any custom style and which sections to include.
 -   The lower-level configuration that is represented by one or more
     `Section` classes, the `[[tool.seedcase-flower.section]]` tables in
     `pyproject.toml`, or the `[[section]]` tables in `_flower.toml`.
@@ -47,15 +45,15 @@ The configuration files are read in and directly mapped to the Python
 classes. So, we'll describe most of the design details in the Python
 classes below.
 
-As already mentioned in the [CLI design document](cli.qmd), one design
-choice we're making is that configuration can only happen either
-directly in the Python classes or in the configuration files, but not on
+As mentioned in the [CLI design document](cli.qmd), 
+configuration can only happen either
+directly in the Python classes or in the configuration files, not on
 the CLI. This keeps the CLI simpler, especially considering that some
 configuration options can be complex (e.g. multiple sections with
-different content types). This would make the CLI complex, more
+different content types), which would make the CLI complex, more
 difficult to implement and parse, and less reproducible for those
 wanting to re-build the documentation later (or if a collaborator wants
-to re-build it). This way, as long as the configuration file is included
+to re-build it). By keeping the configuration in a file
 in the project, the same documentation can be built consistently when
 using `seedcase-flower build`.
 
@@ -63,35 +61,34 @@ using `seedcase-flower build`.
 
 ### {{< var planned >}} `Config`
 
-This class contains all the configuration settings for styling the
+This class contains the configuration settings for styling the
 documentation. It represents a one-to-one mapping of the settings
-provided in the `_flower.toml` or `pyproject.toml` file.
+provided in the `_flower.toml` or `pyproject.toml` file. It includes
+three attributes: `style`, `template_dir`, and `sections` which are described in the pseudocode below.
 
-It contains settings for whether to use a built-in style or to use a
+The `Config` class defines whether to use a built-in style or to use a
 custom one with custom Jinja2 templates, along with the list of sections
-to create for the output. A description of each attribute is listed
-below in the docstring of the pseudocode.
+to create for the output.
 
-Flower will use [Jinja2](https://jinja.palletsprojects.com/en/stable/)
-to generate human-readable documentation from the `datapackage.json`
-metadata. The advantage of using Jinja2 is that you can create any type
-of file output as long as the file is a plain text file. For example,
+Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/)
+to generate more human-friendly documentation from a `datapackage.json` file.
+The advantage of using Jinja2 is that you can create any type
+of file output as long as it's a plain text file. For example,
 you can create `.qmd` files if the Jinja2 template ends in `.qmd.jinja`.
 This gives a lot of flexibility in the types of outputs a user can
-create. They aren't limited to a specific markup language or file
-format. It also makes it easier for us to develop Flower and to add new
+create. It also makes it easier for us to develop Flower and to add new
 built-in styles, as we don't need to do any checks on the type of output
 file itself or the content, as we let Jinja2 handle that.
 
-The contents of the the `template_dir` path must contain one Jinja2
-template file for each `Section.contents` type used in the `sections`
+The contents of the `template_dir` attribute must contain one Jinja2
+template file for each `Section.contents` item in the `sections`
 attribute. For example, if a `Section` has
 `contents=["package", "resources"]` and
-`template_dir=Path("templates/)`, then there must be two files:
+`template_dir=Path("templates/)`, then there must be two files in the `templates/` directory:
 `templates/package.md.jinja` and `templates/resources.md.jinja` (if
 outputting to `.md` files). Flower won't check if you've included
 template files with different names than what is allowed by
-`Section.contents`, but will restrict the types of names you can use in
+`Section.contents`, but will restrict the names you can use in
 the `Section.contents` attribute.
 
 Theoretically, a user could create a custom style that lists all the
@@ -99,8 +96,8 @@ metadata found in the `datapackage.json` file in a single Jinja template
 file, as long as it was called `package.md.jinja` (or whichever output
 format they wanted).
 
-When making a Jinja2 template file, we designed Flower to pass the only
-that parts of the `datapackage.json` file that are relevant to the
+When making a Jinja2 template file, we designed Flower to only pass the
+parts of the `datapackage.json` file that are relevant to the
 `Section.contents` provided. This makes it easier to create the
 templates as the full path to the property you want to use doesn't need
 to be given. For example, if we wanted to list all the contributors'
