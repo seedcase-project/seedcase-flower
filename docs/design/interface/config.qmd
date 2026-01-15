@@ -99,16 +99,16 @@ format they wanted).
 When making a Jinja2 template file, we designed Flower to only pass the
 parts of the `datapackage.json` file that are relevant to the
 `Section.contents` provided. This makes it easier to create the
-templates as the full path to the property you want to use doesn't need
+templates as the full path to the property you want to include doesn't need
 to be given. For example, if we wanted to list all the contributors'
 first name in the `contributors.md.jinja` template, we would only need
 to use `contributors[0].given_name` (for the first contributor). See the
 `Section` design description below for more details.
 
-As will be described later, we intentionally restrict the types of names
+We intentionally restrict the types of names
 you can use in the `Section.contents` attribute to ensure that there is
 a clear mapping between what is available in the `datapackage.json` file
-and what can be output in the documentation.
+and what can be output in the documentation. The available `contents` are described in the `Section` section below. 
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
@@ -116,7 +116,7 @@ and what can be output in the documentation.
 
 <!-- TODO: Include a prefix on the styles that includes that version? -->
 
-::: {.callout-tip icon="false" collapse="true"}
+::: {.callout-tip collapse="true" appearance="minimal"}
 ### Pseudocode: `Config` class
 
 ```` python
@@ -132,17 +132,17 @@ class Config:
 
     See the [design](LINK) for an explanation of how Config is
     designed. See the [guide](LINK) on how to set up custom styles and sections.
-    See `Section` for more details on how to set up sections.
+    See `Section` for more details on how to set up the sections.
 
     Attributes:
-        style (Literal["quarto-book", "custom"]): Whether to use a built-in
-            style or to use a custom one.  Default is the "quarto-book" style. If
+        style (Literal["quarto-one-page", "custom"]): Whether to use a built-in
+            style or a custom one.  Default is the "quarto-one-page" style. If
             you want to use a custom style, set this to "custom" and provide the
             path to the templates in `template_dir`.
         template_dir (Optional[Path]): If `style` is "custom", this should be
-            the directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
+            the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
             template files. The directory **must** contain one template file for each
-            `Section.contents` type used in the `sections` attribute.
+            `Section.contents` used in the `sections` attribute.
         sections (Optional[list[Section]]): List of `Section` classes that define one or
             more sections to create in the output, including output path and content items.
 
@@ -150,7 +150,7 @@ class Config:
         ``` python
         # A config using the built-in `quarto-book` style
         config = Config(
-            style="quarto-book"
+            style="quarto-one-page"
         )
 
         # A custom config with only `package` contents in one section
@@ -174,7 +174,7 @@ class Config:
                     output_path=Path("docs/package.qmd"),
                     contents=["package", "license", "contributors"]
                 ),
-                # Section that outputs each resource as a file in the `resources/` folder
+                # Section that outputs each resource as a file in the `docs/resources/` folder
                 Section(
                     output_path=Path("docs/resources/"),
                     contents=["resources"]
@@ -182,7 +182,7 @@ class Config:
             ]
         ```
     """
-    style: Literal["quarto-book", "custom"] = "quarto-book"
+    style: Literal["quarto-one-page", "custom"] = "quarto-one-page"
     template_dir: Optional[Path] = None
     sections: Optional[list[Section]] = None
 ````
@@ -192,7 +192,7 @@ class Config:
 
 The main purpose of `Section` is to allow creating separate "sections"
 of the documentation, in this case, separate files to display different
-parts of the `datapackage.json` metadata. There are two attributes:
+parts of the `datapackage.json` metadata. It includes two attributes:
 `output_path` and `contents`.
 
 The `output_path` specifies the name of the output file or folder. But
@@ -200,31 +200,33 @@ it isn't as simple as "this outputs content to this given file". That's
 because some Data Package properties are arrays of objects. Sometimes it
 makes sense to create a separate output file for each array item.
 
-When a property that we want to display is a list, like resources, we
+For example, when a property that we want to display is a list, like resources, we
 would set the output path as a folder with the special `{}` whisker
 brackets in place of where the file name should be to allow creating
-multiple files for each resource. For now, we only allow properties that
+multiple files, one for each resource. For now, we only allow properties that
 have a `name` sub-property to output to multiple files. The reason we
 decided to use the `name` property is that it has requirements in the
 Data Package specification that make it ideal for use as a file name,
 specifically that it can't have spaces and must be all lowercase.
 
-For example, creating an output file for all resources in a `resources/`
-folder would use this path `resources/{resource-name}.qmd`. Why
-`resource-name` and not `name`? Because it allows for the use of created
-multiple folders with custom names when multiple `name` properties exist
-in the nested property. For example, the schema fields property has a
-`name` property, as does it's parent `resources` property. So to output
-a file for each resource's field for each resource, we could use the
-output path
+For example, to create one output file per resource in a `resources/`
+folder you would use the `output_path` `resources/{resource-name}.qmd`.
+You can also provide the folder as a path like `resources/`, which
+would be equivalent to the above. Why
+`resource-name` and not `name`? Because it allows for the creation of
+multiple files and folders with custom names when multiple `name` properties exist
+at different levels in a nested property. For example, each schema field has a
+`name` property, as does the resource the fields belong to. So to output
+a file for each schema field for each resource, we use the
+`output_path`
 `docs/resources/{resource-name}/fields/{resource-schema-field-name}.qmd`.
 
 <!-- TODO: Not sure how this might be implemented in the Jinja templates. -->
 
-<!-- TODO: Not sure how to do this for mult-file output. Could detect if multi-file and give only bare resource array? -->
+<!-- TODO: Not sure how to do this for multi-file output. Could detect if multi-file and give only bare resource array? -->
 
 When setting a multi-file output, the properties used within the Jinja2
-template must use `{content-id}` format. For example, if we wanted to
+template must use a `{content-id}` format. For example, if we wanted to
 output one file for each resource with an `output_path` like
 `resources/{resource-name}.qmd`, then the corresponding
 `template/resources.qmd.jinja` file must use Jinja2 variables that
@@ -244,23 +246,23 @@ For the `contents` attribute, we define a set of allowed values that
 correspond to selected Data Package properties we consider useful to
 document in standalone pages. The allowed values and their corresponding
 [JSON paths](https://en.wikipedia.org/wiki/JSONPath) to the Data Package
-property are:
+property are listed in the table below.
 
 | Property JSON Path            | `contents` item          |
 |-------------------------------|--------------------------|
 | `.`                           | `package`                |
-| `.contributors[*]`            | `contributors`           |
-| `.licenses[*]`                | `licenses`               |
+| `.contributors`            | `contributors`           |
+| `.licenses`                | `licenses`               |
 | `.resources`                  | `resources`              |
 | `.resources[*].sources`       | `resource-sources`       |
 | `.resources[*].licenses`      | `resource-licenses`      |
 | `.resources[*].schema`        | `resource-schema`        |
 | `.resources[*].schema.fields` | `resource-schema-fields` |
 
-: The pairing between `contents` item and JSON Path of it's
-corresponding Data Package property.
+: Mapping between `contents` items and the JSON Paths of
+their corresponding Data Package property.
 
-::: {.callout-tip icon="false" collapse="true"}
+::: {.callout-tip collapse="true" appearance="minimal"}
 ### Pseudocode: `Section` class
 
 ```` python
@@ -279,7 +281,7 @@ class Section:
     See `Config` for more details on the top-level settings.
 
     Attributes:
-        output_path (Optional[Path]): The output path for this section. Can be `None`
+        output_path (Optional[Path]): The output path for the section. Can be `None`
             when a style outputs to the terminal such as when using `view()`.
             If a directory is provided, files will be created for each content item that has
             a `name` property (e.g. `resources` or `resource-schema-fields`) For example,
