@@ -108,7 +108,7 @@ to use `contributors[0].given_name` (for the first contributor). See the
 We intentionally restrict the types of names
 you can use in the `Section.contents` attribute to ensure that there is
 a clear mapping between what is available in the `datapackage.json` file
-and what can be output in the documentation. The available `contents` are described in the `Section` section below. 
+and what can be output in the documentation. The available `contents` are described in the `Section` section below.
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
