@@ -45,7 +45,7 @@ The configuration files are read in and directly mapped to the Python
 classes. So, we'll describe most of the design details in the Python
 classes below.
 
-As mentioned in the [CLI design document](cli.qmd), 
+As mentioned in the [CLI design document](cli.qmd),
 configuration can only happen either
 directly in the Python classes or in the configuration files, not on
 the CLI. This keeps the CLI simpler, especially considering that some
