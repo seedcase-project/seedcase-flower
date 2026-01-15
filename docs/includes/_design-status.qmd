@@ -1,6 +1,5 @@
-We use symbols to indicate parts of the design that are actively being
-worked on, done, or planned (see table below). For work that is planned
-or is in progress, we include the function signatures and docstrings to
+We use symbols to indicate the status of implementation for the different parts of the interface (see table below). For work that is planned
+or is in progress, we include in-depth descriptions of the planned implementation. This may include signatures, docstrings, and pseudocode to
 clarify the design. Once the interface is implemented (done), we will
 remove the signatures from the documentation and point to the reference
 documentation instead. The symbols we use are described in the table
