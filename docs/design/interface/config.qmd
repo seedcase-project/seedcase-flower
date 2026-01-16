@@ -342,10 +342,12 @@ used is as follows:
 4.  If neither file exists, use the default configurations defined in
     the `Config` class, which represent the default built-in style.
 
-We decided that if style is given on the CLI that it overrides any
-configuration given in the configuration file, including if the style is
-something other than `"custom"`, to provide a clear precedence to the
-ordering of which settings are applied and which aren't.
+To provide a clear precedence for applying settings, we decided
+that styles specified on the CLI override settings in the configuration
+file. Though, using `"custom"` style on the CLI won't do anything, as
+the custom style requires a path to the template directory as well
+as the different sections for the content, which can't be provided on
+the CLI.
 
 ### {{< var planned >}} `_flower.toml`
 
