@@ -22,7 +22,7 @@ template. Both the uv and justfile websites have a more detailed guide
 on using uv, but below are some simple instructions to get you started.
 
 It's easiest to install uv and justfile using
-[pipx](https://pypa.github.io/pipx/), so install that first. Then,
+[pipx](https://pipx.pypa.io/latest/), so install that first. Then,
 install uv and justfile by running:
 
 ``` bash
@@ -52,6 +52,6 @@ automatically create a release based on the commit message by using
 [Commitizen](https://decisions.seedcase-project.org/why-semantic-release-with-commitizen).
 If you don't use Conventional Commits when making a commit, we will
 revise the pull request title to follow that format, as we use [squash
-merges](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/squashing-commits/about-squash-merges)
-when merging pull requests, so all other commits in the pull request
-will be squashed into one commit.
+merges](https://git-scm.com/docs/git-merge) when merging pull requests,
+so all other commits in the pull request will be squashed into one
+commit.
