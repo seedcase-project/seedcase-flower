@@ -66,6 +66,12 @@ quartodoc:
     style: _renderer.py
     table_style: description-list
     show_signature_annotations: true
+  sections:
+    - title: CLI functions
+      desc: "Functions available via the command line interface."
+      contents:
+        - build
+        - view
 
 metadata-files:
   - docs/reference/_sidebar.yml
