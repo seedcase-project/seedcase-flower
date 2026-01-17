@@ -117,7 +117,16 @@ the `Section` section below.
 
 ```` python
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Optional
+from enum import Enum
+
+# Allows for strict checking of built-in styles, as this is a sum type.
+class Style(Enum):
+    """Built-in styles for documentation output."""
+    quarto_one_page = "quarto-one-page"
+    # Not sure how to handle terminal style yet in implementation.
+    terminal_default = "terminal-default"
+    custom = "custom"
 
 # TODO: Might have to use pydantic instead to run basic checks when creating the class...?
 @dataclass(frozen=True)
@@ -131,11 +140,10 @@ class Config:
     See `Section` for more details on how to set up the sections.
 
     Attributes:
-        style (Literal["quarto-one-page", "custom"]): Whether to use a built-in
-            style or a custom one.  Default is the "quarto-one-page" style. If
-            you want to use a custom style, set this to "custom" and provide the
-            path to the templates in `template_dir`.
-        template_dir (Optional[Path]): If `style` is "custom", this should be
+        style (Style): Whether to use a built-in style or a custom one.  Default is
+            the `Style.quarto_one_page` style. If you want to use a custom style, set
+            this to `Style.custom` and provide the path to the templates in `template_dir`.
+        template_dir (Optional[Path]): If `style` is `Style.custom`, this should be
             the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
             template files. The directory **must** contain one template file for each
             `Section.contents` used in the `sections` attribute.
@@ -146,12 +154,12 @@ class Config:
         ``` python
         # A config using the built-in `quarto-book` style
         config = Config(
-            style="quarto-one-page"
+            style=Style.quarto_one_page
         )
 
         # A custom config with only `package` contents in one section
         config = Config(
-            style="custom",
+            style=Style.custom,
             template_dir=Path("templates"),
             sections=[
                 Section(
@@ -163,7 +171,7 @@ class Config:
 
         # A custom config with multiple sections and content types
         config = Config(
-            style="custom",
+            style=Style.custom,
             template_dir=Path("templates"),
             sections=[
                 Section(
@@ -178,7 +186,7 @@ class Config:
             ]
         ```
     """
-    style: Literal["quarto-one-page", "custom"] = "quarto-one-page"
+    style: Style = Style.quarto_one_page
     template_dir: Optional[Path] = None
     sections: Optional[list[Section]] = None
 ````
