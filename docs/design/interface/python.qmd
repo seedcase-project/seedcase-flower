@@ -95,7 +95,8 @@ flowchart TD
 ## Pseudocode: `build()`
 
 ``` {.python filename="src/seedcase_flower/cli.py"}
-from typing import Optional, Literal
+from typing import Optional
+from seedcase_flower.config import Style
 from pathlib import Path
 from dataclasses import dataclass
 
@@ -105,19 +106,15 @@ class BuiltSection:
     output_path: Path
     rendered_content: str
 
-# Listing one for now as a starting point to build first.
-BUILT_IN_STYLES = [
-    "quarto-one-page"
-]
-
-DEFAULT_STYLE = BUILT_IN_STYLES[0]
-
+# TODO: Will need to convert them to Typer CLI args.
+# See https://typer.tiangolo.com/tutorial/arguments/default/
+# and https://typer.tiangolo.com/tutorial/commands/help/#rich-markdown-and-markup
 # CLI functions don't need return type.
 def build(
-        uri: str = "datapackage.json",
-        style: Optional[Literal[BUILT_IN_STYLES]] = None,
-        output_dir: Path = Path("."),
-        quiet: bool = False
+    uri: str = "datapackage.json",
+    style: Optional[Style] = None,
+    output_dir: Path = Path("."),
+    quiet: bool = False
     ):
     """Build the human-friendly documentation from the `datapackage.json` file.
 
@@ -125,9 +122,9 @@ def build(
         uri: The URI to the datapackage.json file. Defaults to
             `datapackage.json` in the current working directory.
         style: The style of output to use. Either one of the built-in styles
-            `BUILT_IN_STYLES` or None. If None, it will look for a config file in
+            `Style` or None. If None, it will look for a config file in
             the same directory as the `datapackage.json` file. If a config file is
-            not found, it will use the default style (`DEFAULT_STYLE`).
+            not found, it will use the default style (`Style.quarto_one_page`).
         output_dir: The directory to output the generated files to.
             Defaults to the current working directory.
         quiet: If True, suppress output messages.
@@ -136,12 +133,18 @@ def build(
         Outputs a message of the files created (if quiet is not set).
     """
     # Potential implementation steps:
-    # Maybe str? Path?
+
+    # Output maybe str? Path?
+    # Use `match` inside for strictness on URI types?
     path: str = resolve_uri(uri)
 
-    # If none and no
+    # TODO: Use match inside of load_config to have strict checks?
+    # If style is None and no config path found, use default style.
+    # If style is None, look for config file in same dir as datapackage.json.
+    # If style is provided, use that, not the config file.
     config: Config = load_config(style, path)
 
+    # Able to read from URI, e.g. `https` or `file` or `gh`
     metadata: dict = read_datapackage(path)
 
     # One item per section, rendered from template.
