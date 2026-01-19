@@ -10,5 +10,5 @@ def build() -> Path:
 
 
 def view() -> str:
-    """View the flower dataset."""
+    """Display the contents of a `datapackage.json` to the Terminal in a human-friendly way."""
     return ""
