@@ -78,39 +78,22 @@ also makes it easier for us to develop Flower and to add new built-in
 styles, as we don't need to do any checks on the type of output file
 itself or the content, as we let Jinja2 handle that.
 
-The contents of the `template_dir` attribute must contain one Jinja2
-template file for each `Section.contents` item in the `sections`
-attribute. For example, if a `Section` has
-`contents=["package", "resources"]` and
-`template_dir=Path("templates/)`, then there must be two files in the
-`templates/` directory: `templates/package.md.jinja` and
-`templates/resources.md.jinja` (if outputting to `.md` files). Flower
-won't check if you've included template files with different names than
-what is allowed by `Section.contents`, but will restrict the names you
-can use in the `Section.contents` attribute.
+The contents of the `template_dir` attribute is used to indicate where
+the Jinja2 templates are found.
 
 Theoretically, a user could create a custom style that lists all the
 metadata found in the `datapackage.json` file in a single Jinja template
-file, as long as it was called `package.md.jinja` (or whichever output
-format they wanted).
+file, depending on how they set up the `sections` attribute and created
+their Jinja2 template.
 
-Jinja2 template files are given only the parts of the `datapackage.json`
-file that are relevant to the `Section.contents` provided. For example,
-in the `contributors.md.jinja` template only the list of contributors is
-made available. See the `Section` design description below for more
-details.
-
-We intentionally restrict the types of names you can use in the
-`Section.contents` attribute to ensure that there is a clear mapping
-between what is available in the `datapackage.json` file and what can be
-output in the documentation. The available `contents` are described in
-the `Section` section below.
+Jinja2 template files listed in the `Content.template_path` are given
+only the parts of the `datapackage.json` file that are listed by the
+`Content.jsonpath`. See the `Section` and `Content` design description
+below for more details.
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
 <!-- TODO: Include a setting for Data Package version? -->
-
-<!-- TODO: Include a prefix on the styles that includes that version? -->
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ### Pseudocode: `Config` class
@@ -137,7 +120,7 @@ class Config:
 
     See the [design](LINK) for an explanation of how Config is
     designed. See the [guide](LINK) on how to set up custom styles and sections.
-    See `Section` for more details on how to set up the sections.
+    See `Section` and `Content` help for more details on how to set up the sections.
 
     Attributes:
         style (Style): Whether to use a built-in style or a custom one.  Default is
@@ -147,6 +130,8 @@ class Config:
             the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
             template files. The directory **must** contain one template file for each
             `Section.contents` used in the `sections` attribute.
+        output_dir (Optional[Path]): The directory where output files will be saved.
+            If `None`, defaults to the current working directory.
         sections (Optional[list[Section]]): List of `Section` classes that define one or
             more sections to create in the output, including output path and content items.
 
@@ -154,40 +139,66 @@ class Config:
         ``` python
         # A config using the built-in `quarto-book` style
         config = Config(
-            style=Style.quarto_one_page
+            style=Style.quarto_one_page,
+            output_dir=Path("docs/")
         )
 
         # A custom config with only `package` contents in one section
         config = Config(
             style=Style.custom,
             template_dir=Path("templates"),
+            output_dir=Path("docs/"),
             sections=[
                 Section(
                     output_path=Path("docs/index.qmd"),
-                    contents=["package"]
-                )
+                    contents=[Content(
+                        jsonpath=".",
+                        template_path=Path("templates/package.qmd.jinja"),
+                        jinja_variable="package",
+                        mode=Mode.one
+                )]
             ]
         )
 
-        # A custom config with multiple sections and content types
+        # A custom config with multiple sections and content types, generated
+        # in the root folder.
         config = Config(
             style=Style.custom,
             template_dir=Path("templates"),
             sections=[
                 Section(
                     output_path=Path("docs/package.qmd"),
-                    contents=["package", "license", "contributors"]
+                    contents=[
+                        Content(
+                            jsonpath=".",
+                            template_path=Path("templates/package.qmd.jinja"),
+                            jinja_variable="package",
+                            mode=Mode.one
+                        ),
+                        Content(
+                            jsonpath=".contributors",
+                            template_path=Path("templates/contributors.qmd.jinja"),
+                            jinja_variable="contributors",
+                            mode=Mode.one
+                        )
+                    ]
                 ),
                 # Section that outputs each resource as a file in the `docs/resources/` folder
                 Section(
                     output_path=Path("docs/resources/"),
-                    contents=["resources"]
+                    contents=[Content(
+                        jsonpath=".resources",
+                        template_path=Path("templates/resources.qmd.jinja"),
+                        jinja_variable="resources",
+                        mode=Mode.one
+                    )]
                 )
             ]
         ```
     """
     style: Style = Style.quarto_one_page
     template_dir: Optional[Path] = None
+    output_dir: Optional[Path] = None
     sections: Optional[list[Section]] = None
 ````
 :::
@@ -225,54 +236,16 @@ as does the resource the fields belong to. So to output a file for each
 schema field for each resource, we use the `output_path`
 `docs/resources/{resource-name}/fields/{resource-schema-field-name}.qmd`.
 
-<!-- TODO: Not sure how this might be implemented in the Jinja templates. -->
-
-<!-- TODO: Not sure how to do this for multi-file output. Could detect if multi-file and give only bare resource array? -->
-
-When setting a multi-file output, the properties used within the Jinja2
-template must use a `{content-id}` format. For example, if we wanted to
-output one file for each resource with an `output_path` like
-`resources/{resource-name}.qmd`, then the corresponding
-`template/resources.qmd.jinja` file must use Jinja2 variables that
-reference a resource's properties with the syntax of
-`resources[{resource-id}].title` (for the `title` property of each
-resource). The reason we designed it this way is because a template
-could list all, for instance, resources within a single
-`resources.qmd.jinja` file to output only one file. Or the template
-could display only one resource in order to output one file *per
-resource*. In the case of a single file output, the template would need
-the full array of the property while theoretically the multi-file output
-would only need the properties of a single resource. So to be consistent
-with the input to the template, we decided on using the `{content-id}`
-tag.
-
-For the `contents` attribute, we define a set of allowed values that
-correspond to selected Data Package properties we consider useful to
-document in standalone pages. The allowed values and their corresponding
-[JSON paths](https://en.wikipedia.org/wiki/JSONPath) to the Data Package
-property are listed in the table below.
-
-| Property JSON Path            | `contents` item          |
-|-------------------------------|--------------------------|
-| `.`                           | `package`                |
-| `.contributors`               | `contributors`           |
-| `.licenses`                   | `licenses`               |
-| `.resources`                  | `resources`              |
-| `.resources[*].sources`       | `resource-sources`       |
-| `.resources[*].licenses`      | `resource-licenses`      |
-| `.resources[*].schema`        | `resource-schema`        |
-| `.resources[*].schema.fields` | `resource-schema-fields` |
-
-: Mapping between `contents` items and the JSON Paths of their
-corresponding Data Package property.
+When setting a multi-file output, you can customise what properties get
+sent to the Jinja2 template by using the `Section.contents` attribute.
+See the section on the `Content` class below for more details.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ### Pseudocode: `Section` class
 
 ```` python
 from dataclasses import dataclass
-from typing import Literal, Optional
-from pathlib import Path
+from typing import Optional
 
 @dataclass(frozen=True)
 class Section:
@@ -282,7 +255,8 @@ class Section:
 
     See the [design](LINK) for an explanation of the design of
     `Section`. See the [guide](LINK) on how to set up custom styles and sections.
-    See `Config` for more details on the top-level settings.
+    See `Config` for more details on the top-level settings and `Content` for
+    more details on the content items.
 
     Attributes:
         output_path (Optional[Path]): The output path for the section. Can be `None`
@@ -293,10 +267,11 @@ class Section:
             then each resource will be output to `docs/{resource_name}.md` (or whichever output
             format is used in the Jinja2 template files). If a file path is provided, all contents
             within the `Section` will be output to that single file.
-        contents (list[Literal[...]]): List of content items to include in this
-            section. Each item must
-            have a corresponding Jinja2 template file of the same name in the `template_dir` (e.g.
-            `package.md.jinja` or `resources.rst.jinja`).
+        contents (list[Content]): List of content items to include in this
+            section. See `Content` for more detail about what to include. If more than one
+            content item is included, they will be concatenated in the order provided,
+            so that, for example, the `output_path` file will contain the output of the
+            rendered Jinja2 templates for each content item, each appended after the other.
 
     Examples:
         ``` python
@@ -304,18 +279,98 @@ class Section:
         # saved to the `docs/package.qmd` file.
         Section(
             output_path=Path("docs/package.qmd"),
-            contents=["package", "contributors"]
+            contents=[
+                Content(
+                    jsonpath=".",
+                    template_path=Path("templates/package.qmd.jinja"),
+                    jinja_variable="package",
+                    mode=Mode.one
+                ),
+                Content(
+                    jsonpath=".contributors",
+                    template_path=Path("templates/contributors.qmd.jinja"),
+                    jinja_variable="contributors",
+                    mode=Mode.one
+                )
+            ]
        )
        ```
     """
     output_path: Optional[Path] = None
-    # Needs to be one or more of the following strings.
-    # TODO: Not sure if this is the best/correct way to ensure option is only one of these.
-    contents: list[Literal[
-        "package", "contributors", "licenses", "sources", "resources", "resource-schema",
-        "resource-licenses", "resource-sources", "resource-schema-fields"
-    ]]
+    contents: list[Content]
 ````
+:::
+
+### {{< var planned >}} `Content`
+
+The `Content` class provides a precise description of the path to the
+Jinja2 template, which [JSON
+Path](https://en.wikipedia.org/wiki/JSONPath) of the Data Package
+property will be sent to the template, what the name of the Jinja2
+variable is within the template, and whether the content represents one
+or many files for properties that are arrays. We designed this class to
+allow for flexibly creating complex custom documentation structures for
+both the user and for us when we develop built-in styles.
+
+When a Data Package property is an array and we want to output multiple
+files, one for each array, the `Content.mode` attribute must be set to
+"many" (`Mode.many` in Python). This informs Flower to use the template
+file provided to render many output files, not just one. The reason we
+have this design choice is because, if the output is one file, the Data
+Package property given to the template must be the full array. For
+multi-file outputs, the array property that is sent to the template must
+only have one array item
+
+For example, if we wanted to output one file for each resource with an
+`output_path` like `resources/{resource-name}.qmd`, then the
+corresponding `template/resources.qmd.jinja` file needs to be given only
+one `.resources[*]` item, so one template has `.resources[0]`, the next
+would have `.resources[1]`, and so on. If we instead wanted to output
+all resources in a single file, the `template/resources.qmd.jinja` file
+would be given the full `.resources` array.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+### Pseudocode: `Section` class
+
+``` python
+from dataclasses import dataclass
+from pathlib import Path
+from enum import Enum
+
+# Enum sum types ensure only one of the modes is used.
+class Mode(Enum):
+    one = "one"
+    many = "many"
+
+@dataclass(frozen=True)
+class Content:
+    """Content to include within a `Section`.
+
+    The `Content` class defines what Data Package properties and their connected
+    [Jinja2](https://jinja.palletsprojects.com/en/stable/) template file belong within
+    a specific section (an output file or folder) in the documentation. You can use
+    this class to structure customise how different parts of the `datapackage.json` file
+    are displayed in the documentation and can be used to create common presets when
+    styles share similar content structures.
+
+    Attributes:
+        jsonpath (str): The [JSON path syntax](https://en.wikipedia.org/wiki/JSONPath)
+            to the Data Package property that should be sent to the `template_path`
+            Jinja2 file.
+        template_path (Path): The path to the Jinja2 template file for this content item.
+        jinja_variable (str): The Jinja2 variable name that will be used in the template
+            to reference this content item.
+        mode (Mode): Whether this content item is used to output one file or many files.
+            This determines how the Jinja2 template should be structured and how it
+            references the Data Package property. If `Mode.one`, the `Content` item
+            represents the output of one file, while `Mode.many` represents the output of
+            multiple files, one for each item for properties that are arrays.
+    """
+    jsonpath: str
+    template_path: Path
+    jinja_variable: str
+    mode: Mode
+```
 :::
 
 ## Configuration file
@@ -350,12 +405,11 @@ used is as follows:
 4.  If neither file exists, use the default configurations defined in
     the `Config` class, which represent the default built-in style.
 
-To provide a clear precedence for applying settings, we decided
-that styles specified on the CLI override settings in the configuration
-file. Though, using `"custom"` style on the CLI won't do anything, as
-the custom style requires a path to the template directory as well
-as the different sections for the content, which can't be provided on
-the CLI.
+To provide a clear precedence for applying settings, we decided that
+styles specified on the CLI override settings in the configuration file.
+Though, using `"custom"` style on the CLI won't do anything, as the
+custom style requires a path to the template directory as well as the
+different sections for the content, which can't be provided on the CLI.
 
 ### {{< var planned >}} `_flower.toml`
 
@@ -365,6 +419,7 @@ simple as:
 
 ``` {.toml filename="_flower.toml"}
 style = "quarto-one-page"
+output_dir = "docs/"
 ```
 
 The configuration file becomes necessary with more complex
@@ -383,10 +438,16 @@ templates-dir = "path/to/templates/"
 # contents from the Jinja2 templates.
 [[section]]
 output-path = "docs/index.qmd"
-contents = [
-    "package",
-    "contributors"
-]
+[[section.contents]]
+jsonpath = "."
+template-path = "path/to/templates/package.qmd.jinja"
+jinja-variable = "package"
+mode = "one"
+[[section.contents]]
+jsonpath = ".contributors"
+template-path = "path/to/templates/contributors.qmd.jinja"
+jinja-variable = "contributors"
+mode = "one"
 
 # This creates one file per resource in the `docs/resources/` folder.
 # E.g. `docs/resources/demographics.qmd`, `docs/resources/blood.qmd`, etc.
@@ -394,7 +455,11 @@ contents = [
 output-path = "docs/resources/"
 # Or equivalently
 # output-path = "docs/resources/{resource-name}.qmd
-contents = ["resources"]
+[[section.contents]]
+jsonpath = ".resources"
+template-path = "path/to/templates/resources.qmd.jinja"
+jinja-variable = "resources"
+mode = "many"
 
 # This creates a YAML file for each resource containing its schema fields.
 # The `{resource-name}` variable is replaced with the name of each resource.
@@ -402,7 +467,11 @@ contents = ["resources"]
 # fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[section]]
 output-path = "docs/resources/{resource-name}/schema-fields.yml"
-contents = ["resource-schema-fields"]
+[[section.contents]]
+jsonpath = ".resources[*].schema.fields"
+template-path = "path/to/templates/resource-schema-fields.yml.jinja"
+jinja-variable = "fields"
+mode = "many"
 ```
 
 ### {{< var planned >}} `pyproject.toml`
@@ -420,19 +489,34 @@ Taking the complex example from `_flower.toml` above, the
 [tool.seedcase-flower]
 style = "custom"
 template_dir = "templates/"
+output_dir = "docs/"
 
 [[tool.seedcase-flower.section]]
 output_path = "docs/package.qmd"
-contents = [
-    "package",
-    "contributors"
-]
+[[tool.seedcase-flower.section.contents]]
+jsonpath = "."
+template-path = "path/to/templates/package.qmd.jinja"
+jinja-variable = "package"
+mode = "one"
+[[tool.seedcase-flower.section.contents]]
+jsonpath = ".contributors"
+template-path = "path/to/templates/contributors.qmd.jinja"
+jinja-variable = "contributors"
+mode = "one"
 
 [[tool.seedcase-flower.section]]
 output_path = "docs/resources/"
-contents = ["resources"]
+[[tool.seedcase-flower.section.contents]]
+jsonpath = ".resources"
+template-path = "path/to/templates/resources.qmd.jinja"
+jinja-variable = "resources"
+mode = "many"
 
 [[tool.seedcase-flower.section]]
-output-path = "docs/resources/{resource-name}/schema-fields.yml"
-contents = ["resource-schema-fields"]
+output_path = "docs/resources/{resource-name}/schema-fields.yml"
+[[tool.seedcase-flower.section.contents]]
+jsonpath = ".resources[*].schema.fields"
+template-path = "path/to/templates/resource-schema-fields.yml.jinja"
+jinja-variable = "fields"
+mode = "many"
 ```
