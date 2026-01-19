@@ -5,7 +5,7 @@ title: Python functions
 This document describes the Python functions that form the CLI and
 non-CLI functions. Non-CLI functions are those used by the CLI
 functions. We include function signatures, documentation, some
-pseudocode, and diagrams that represent its interface along with
+pseudocode, and diagrams that represent the interface along with
 explanations for these design decisions. It primarily serves as a
 reference for us to develop from and track what has been finished and
 what remains to be done.
@@ -29,48 +29,48 @@ components, along with their descriptions.
 
 ## Overview
 
-There are two parts to the Python interface: those functions that
-represent the interface via the Terminal (CLI) and those functions that
-are used by the CLI functions to implement their behaviour. We will call
+The Python interface has two parts: the functions that
+represent the interface via the Terminal (CLI) and the functions that
+implement the behaviour of the CLI functions. We will call
 them "CLI" and "non-CLI" functions. We have this split for a few
 reasons:
 
--   Creates a clear separation between the code that is exposed through
+-   Create a clear separation between code that is exposed through
     the CLI and code that could be used on its own as a Python package
     library.
--   Can apply functional programming practices to the non-CLI functions,
-    as CLI functions often require the use of side effects and other
-    non-functional practices.
--   More easily write unit tests for the non-CLI code, while write
+-   Apply functional programming practices to the non-CLI functions,
+    while restricting the use of side effects and other non-functional practices
+    to CLI functions.
+-   Write unit tests for the non-CLI code and
     integration tests for the CLI code.
--   Keep the size of the CLI functions small, as they will be built up
-    by functional units of non-CLI code.
+-   Keep the CLI functions small by building them
+    from functional units of non-CLI code.
 
 ## Python CLI functions
 
-These functions are the direct Python equivalents to the CLI commands
-described in the [CLI design page](cli.qmd). They are `build()` and
-`view()`. This page describes the Python design and decisions made and
-won't repeat the content found in the CLI design page.
+These functions are the direct Python equivalents of the CLI commands
+described on the [CLI design page](cli.qmd): `build()` and
+`view()`. This page describes the Python design and decisions made, and
+does not repeat the content of the CLI design page.
 
 ### {{< var planned >}} `build()`
 
-As already described in the CLI design page, this function has two
+As already described in the CLI design page, this function has four
 parameters:
 
 -   `uri` for the URI argument. The default is the `datapackage.json`
     file found in the working directory. See the [CLI design](cli.qmd)
     for reasons why we use a URI.
--   `style` for the style of output to use, which dictates the output
-    file type and the number of files that are created. Either
+-   `style` for the style of output to use, which specifies the output
+    file type and the number of files created. Either
     `"custom"` or one of the built-in styles.
--   `output_dir` to specify where the starting directory is for the
+-   `output_dir` to specify where the root directory is for the
     output files. Defaults to the current working directory.
 -   `quiet` to suppress output messages.
 
 <!-- TODO: Or maybe instead of `quiet` do `verbose` so the default is quiet? -->
 
-The internal flow of this function is approximately represented in the
+The internal flow of this function is shown in the
 diagram below.
 
 ```{mermaid}
@@ -116,12 +116,12 @@ def build(
     output_dir: Path = Path("."),
     quiet: bool = False
     ):
-    """Build the human-friendly documentation from the `datapackage.json` file.
+    """Build human-friendly documentation from the `datapackage.json` file.
 
     Args:
         uri: The URI to the datapackage.json file. Defaults to
             `datapackage.json` in the current working directory.
-        style: The style of output to use. Either one of the built-in styles
+        style: The style of output to use. Either one of the built-in styles in
             `Style` or None. If None, it will look for a config file in
             the same directory as the `datapackage.json` file. If a config file is
             not found, it will use the default style (`Style.quarto_one_page`).
@@ -139,9 +139,9 @@ def build(
     path: str = resolve_uri(uri)
 
     # TODO: Use match inside of load_config to have strict checks?
-    # If style is None and no config path found, use default style.
-    # If style is None, look for config file in same dir as datapackage.json.
     # If style is provided, use that, not the config file.
+    # If style is None, look for config file in same dir as datapackage.json.
+    # If style is None and no config path found, use default style.
     config: Config = load_config(style, path)
 
     # Able to read from URI, e.g. `https` or `file` or `gh`
