@@ -58,15 +58,16 @@ when using `seedcase-flower build`.
 
 ### {{< var planned >}} `Config`
 
-This class contains the configuration settings for styling the
-documentation. It represents a one-to-one mapping of the settings
-provided in the `_flower.toml` or `pyproject.toml` file. It includes
-three attributes: `style`, `template_dir`, and `sections` which are
-described in the pseudocode below.
+The `Config` class specifies the top-level configurations and includes 
+four attributes: `style`, `template_dir`, `output_dir`, and `sections`. `style` defines 
+whether the documentation should use a built-in style or a custom one.
+`template_dir` is optional and defines path to the directory containing
+the custom Jinja2 templates for custom styles. `output_dir` indicates which
+folder the output should be sent to. `sections` 
+specifies which sections to include. 
 
-The `Config` class defines whether to use a built-in style or to use a
-custom one with custom Jinja2 templates, along with the list of sections
-to create for the output.
+`Config` represents a one-to-one mapping of the settings
+provided in the `_flower.toml` or `pyproject.toml` file. 
 
 Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/) to
 generate more human-friendly documentation from a `datapackage.json`
@@ -78,8 +79,6 @@ also makes it easier for us to develop Flower and to add new built-in
 styles, as we don't need to do any checks on the type of output file
 itself or the content, as we let Jinja2 handle that.
 
-The contents of the `template_dir` attribute is used to indicate where
-the Jinja2 templates are found.
 
 Theoretically, a user could create a custom style that lists all the
 metadata found in the `datapackage.json` file in a single Jinja template
@@ -123,8 +122,9 @@ class Config:
     See `Section` and `Content` help for more details on how to set up the sections.
 
     Attributes:
-        style (Style): Whether to use a built-in style or a custom one.  Default is
-            the `Style.quarto_one_page` style. If you want to use a custom style, set
+        style (Style): Whether to use a built-in style or a custom one. Default is
+           `Style.quarto_one_page`. If you want to use a custom style, set
+
             this to `Style.custom` and provide the path to the templates in `template_dir`.
         template_dir (Optional[Path]): If `style` is `Style.custom`, this should be
             the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
@@ -321,8 +321,8 @@ Package property given to the template must be the full array. For
 multi-file outputs, the array property that is sent to the template must
 only have one array item
 
-For example, if we wanted to output one file for each resource with an
-`output_path` like `resources/{resource-name}.qmd`, then the
+For example, if we wanted to output one file for each resource with a
+`Section.output_path` like `resources/{resource-name}.qmd`, then the
 corresponding `template/resources.qmd.jinja` file needs to be given only
 one `.resources[*]` item, so one template has `.resources[0]`, the next
 would have `.resources[1]`, and so on. If we instead wanted to output
@@ -330,7 +330,7 @@ all resources in a single file, the `template/resources.qmd.jinja` file
 would be given the full `.resources` array.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
-### Pseudocode: `Section` class
+### Pseudocode: `Content` class
 
 ``` python
 from dataclasses import dataclass
