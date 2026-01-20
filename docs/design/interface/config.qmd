@@ -59,15 +59,22 @@ when using `seedcase-flower build`.
 ### {{< var planned >}} `Config`
 
 The `Config` class specifies the top-level configurations and includes
-four attributes: `style`, `template_dir`, `output_dir`, and `sections`. `style` defines
-whether the documentation should use a built-in style or a custom one.
-`template_dir` is optional and defines path to the directory containing
-the custom Jinja2 templates for custom styles. `output_dir` indicates which
-folder the output should be sent to. `sections`
-specifies which sections to include.
+four attributes: `style`, `template_dir`, `output_dir`, and `sections`.
+`style` defines whether the documentation should use a built-in style or
+a custom one. `template_dir` is optional and defines path to the
+directory containing the custom Jinja2 templates for custom styles.
+`output_dir` is optional and indicates which folder the output should be
+sent to. `sections` specifies which sections to include.
 
-`Config` represents a one-to-one mapping of the settings
-provided in the `_flower.toml` or `pyproject.toml` file.
+We include two attributes for output paths: the `output_dir` attribute
+in `Config` and the `output_path` attribute in the `Section` class
+(which would be set in the `sections` attribute of `Config`). We use two
+paths so that when using a built-in style, where the internal
+`Section.output_path` values are set and can't be changed, the user can
+still specify the final output folder using the `Config.output_dir`
+attribute. This provides flexibility in how individual styles are
+structured internally while not restricting the final location of those
+outputs.
 
 Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/) to
 generate more human-friendly documentation from a `datapackage.json`
@@ -79,7 +86,6 @@ also makes it easier for us to develop Flower and to add new built-in
 styles, as we don't need to do any checks on the type of output file
 itself or the content, as we let Jinja2 handle that.
 
-
 Theoretically, a user could create a custom style that lists all the
 metadata found in the `datapackage.json` file in a single Jinja template
 file, depending on how they set up the `sections` attribute and created
@@ -89,6 +95,9 @@ Jinja2 template files listed in the `Content.template_path` are given
 only the parts of the `datapackage.json` file that are listed by the
 `Content.jsonpath`. See the `Section` and `Content` design description
 below for more details.
+
+`Config` also represents a one-to-one mapping of the settings provided
+in the `_flower.toml` or `pyproject.toml` file.
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
@@ -124,7 +133,6 @@ class Config:
     Attributes:
         style (Style): Whether to use a built-in style or a custom one. Default is
            `Style.quarto_one_page`. If you want to use a custom style, set
-
             this to `Style.custom` and provide the path to the templates in `template_dir`.
         template_dir (Optional[Path]): If `style` is `Style.custom`, this should be
             the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
