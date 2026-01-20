@@ -58,16 +58,16 @@ when using `seedcase-flower build`.
 
 ### {{< var planned >}} `Config`
 
-The `Config` class specifies the top-level configurations and includes 
-four attributes: `style`, `template_dir`, `output_dir`, and `sections`. `style` defines 
+The `Config` class specifies the top-level configurations and includes
+four attributes: `style`, `template_dir`, `output_dir`, and `sections`. `style` defines
 whether the documentation should use a built-in style or a custom one.
 `template_dir` is optional and defines path to the directory containing
 the custom Jinja2 templates for custom styles. `output_dir` indicates which
-folder the output should be sent to. `sections` 
-specifies which sections to include. 
+folder the output should be sent to. `sections`
+specifies which sections to include.
 
 `Config` represents a one-to-one mapping of the settings
-provided in the `_flower.toml` or `pyproject.toml` file. 
+provided in the `_flower.toml` or `pyproject.toml` file.
 
 Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/) to
 generate more human-friendly documentation from a `datapackage.json`
