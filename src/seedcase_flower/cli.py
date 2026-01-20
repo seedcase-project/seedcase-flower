@@ -10,5 +10,5 @@ def build() -> Path:
 
 
 def view() -> str:
-    """Display the contents of a `datapackage.json` to the Terminal in a human-friendly way."""
+    """Display the contents of a `datapackage.json` in a human-friendly way."""
     return ""
