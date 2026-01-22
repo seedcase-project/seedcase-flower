@@ -48,6 +48,7 @@ website:
             - docs/design/interface/inputs.qmd
             - docs/design/interface/outputs.qmd
             - docs/design/interface/cli.qmd
+            - docs/design/interface/config.qmd
             - docs/design/interface/python.qmd
     - id: guide
       contents:
@@ -67,6 +68,12 @@ quartodoc:
     style: _renderer.py
     table_style: description-list
     show_signature_annotations: true
+  sections:
+    - title: CLI functions
+      desc: "Functions available via the command line interface."
+      contents:
+        - build
+        - view
 
 metadata-files:
   - docs/reference/_sidebar.yml
