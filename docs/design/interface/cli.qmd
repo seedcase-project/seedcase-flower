@@ -226,7 +226,7 @@ well as prevent the unintended side effects that might arise when a
 style is mixed with incompatible configuration settings.
 
 This overriding behaviour also applies to the other CLI options,
-`--output-dir` and `--verbose`. If they are used on the CLI, they
+`--output-dir` and `--verbose`; if they are used on the CLI, they
 override the corresponding settings in the configuration file.
 
 ::: callout-important
