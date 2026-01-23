@@ -150,7 +150,7 @@ def build(
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata
     output: list[BuiltSection] = build_sections(
-        properties, 
+        properties,
         config
     )
 
