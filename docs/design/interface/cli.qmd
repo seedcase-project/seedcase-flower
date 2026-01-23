@@ -8,22 +8,7 @@ its interface along with explanations for these design decisions. It
 primarily serves as a reference for us to develop from and track what
 has been finished and what remains to be done.
 
-We use symbols to indicate parts of the design that are actively being
-worked on, done, or planned (see table below). For work that is planned
-or is in progress, we include the function signatures and docstrings to
-clarify the design. Once the interface is implemented (done), we will
-remove the signatures from the documentation and point to the reference
-documentation instead. The symbols we use are described in the table
-below.
-
-| Status | Description |
-|:-----------------------------:|:----------------------------------------|
-| {{< var done >}} | Interface that has been implemented. |
-| {{< var wip >}} | Interface that is currently being worked on. |
-| {{< var planned >}} | Interface that is planned, but isn't being worked on currently. |
-
-: A table showing the symbols used to indicate the status of interface
-components, along with their descriptions.
+{{< include /docs/includes/_design-status.qmd >}}
 
 ## {{< var planned >}} `seedcase-flower`
 
@@ -132,6 +117,8 @@ flowchart LR
     config_file["_flower.toml or<br>pyproject.toml<br>[file]"]
     build("build")
     style_opt("--style<br>[option]")
+    verbose_opt("--verbose<br>[option]")
+    output_dir_opt("--output-dir<br>[option]")
     templates["Templates<br>[folder with<br>Jinja files]"]
     output["Output<br>[files and<br>folders]"]
     config{"config"}
@@ -140,6 +127,8 @@ flowchart LR
     templates --> config_file
     config_file -- "either" --> config
     style_opt -- "or" --> config
+    output_dir_opt --> config
+    verbose_opt --> build
     config --> build
     build --> output
 ```
@@ -235,6 +224,10 @@ style in the CLI rather than merging the CLI option with the config file
 settings. This will allow for quicker testing of different styles as
 well as prevent the unintended side effects that might arise when a
 style is mixed with incompatible configuration settings.
+
+This overriding behaviour also applies to the other CLI options,
+`--output-dir` and `--verbose`; if they are used on the CLI, they
+override the corresponding settings in the configuration file.
 
 ::: callout-important
 Flower does not check whether the `datapackage.json` file is correct or
