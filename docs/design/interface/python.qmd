@@ -23,7 +23,7 @@ functions. We have this split for a few reasons:
     the CLI and code that could be used on its own as a Python package
     library.
 -   To apply functional programming practices to the non-CLI functions,
-    and restricting the use of side effects and other non-functional
+    and restrict the use of side effects and other non-functional
     practices to CLI functions.
 -   To write unit tests for the non-CLI functions and integration tests
     for the CLI functions.
