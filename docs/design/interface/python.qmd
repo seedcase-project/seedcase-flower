@@ -23,19 +23,19 @@ functions. We have this split for a few reasons:
     the CLI and code that could be used on its own as a Python package
     library.
 -   To apply functional programming practices to the non-CLI functions,
-    and restricting the use of side effects and other non-functional practices
-    to CLI functions.
--   To write unit tests for the non-CLI functions and
-    integration tests for the CLI functions.
--   To keep the CLI functions small by building them
-    from functional units of non-CLI code.
+    and restricting the use of side effects and other non-functional
+    practices to CLI functions.
+-   To write unit tests for the non-CLI functions and integration tests
+    for the CLI functions.
+-   To keep the CLI functions small by building them from functional
+    units of non-CLI code.
 
 ## Python CLI functions
 
 These functions are the direct Python equivalents of the CLI commands
-described on the [CLI design page](cli.qmd): `build()` and
-`view()`. This page focuses on the Python design and decisions made to
-avoid too much overlap with the content of the CLI design page.
+described on the [CLI design page](cli.qmd): `build()` and `view()`.
+This page focuses on the Python design and decisions made to avoid too
+much overlap with the content of the CLI design page.
 
 ### {{< var planned >}} `build()`
 
