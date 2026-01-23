@@ -14,11 +14,10 @@ what remains to be done.
 
 ## Overview
 
-The Python interface has two parts: the functions that
-represent the interface via the Terminal (CLI) and the functions that
-implement the behaviour of the CLI functions. We will call
-them "CLI" and "non-CLI" functions. We have this split for a few
-reasons:
+The Python interface has two parts: the functions that represent the
+interface via the Terminal (CLI) and the functions that implement the
+behaviour of the CLI functions. We will call them "CLI" and "non-CLI"
+functions. We have this split for a few reasons:
 
 -   To create a clear separation between code that is exposed through
     the CLI and code that could be used on its own as a Python package
@@ -47,16 +46,13 @@ parameters:
     file found in the working directory. See the [CLI design](cli.qmd)
     for reasons why we use a URI.
 -   `style` for the style of output to use, which specifies the output
-    file type and the number of files created. Either
-    `"custom"` or one of the built-in styles.
--   `output_dir` to specify where the root directory is for the
-    output files. Defaults to the current working directory.
--   `quiet` to suppress output messages.
+    file type and the number of files created. Either `None` or one of
+    the built-in styles.
+-   `output_dir` to specify where the root directory is for the output
+    files. Defaults to the current working directory.
+-   `verbose` to output more messages, rather than have no output.
 
-<!-- TODO: Or maybe instead of `quiet` do `verbose` so the default is quiet? -->
-
-The internal flow of this function is shown in the
-diagram below.
+The internal flow of this function is shown in the diagram below.
 
 ```{mermaid}
 %%| label: fig-python-build-flow
@@ -71,7 +67,7 @@ flowchart TD
     output_dir:::input --> write_sections
     write_sections --> files["list[Path]"]
     files --> cli_message{{"cli_message()"}} --> stdout
-    quiet:::input --> cli_message
+    verbose:::input --> cli_message
 
     classDef input fill:#FFF
 ```
@@ -99,7 +95,7 @@ def build(
     uri: str = "datapackage.json",
     style: Optional[Style] = None,
     output_dir: Path = Path("."),
-    quiet: bool = False
+    verbose: bool = False
     ):
     """Build human-friendly documentation from a `datapackage.json` file.
 
@@ -110,12 +106,15 @@ def build(
             `Style` or None. If None, it will look for a config file in
             the same directory as the `datapackage.json` file. If a config file is
             not found, it will use the default style (`Style.quarto_one_page`).
+            The `Style.custom` option is only available to use in the config
+            file (or directly via `Config`).
         output_dir: The directory to output the generated files to.
             Defaults to the current working directory.
-        quiet: If True, suppress output messages.
+        verbose: If True, outputs messages to the console.
 
     Returns:
-        Outputs a message of the files created (if quiet is not set).
+        Outputs a message of the files created if verbose is True, otherwise
+            outputs nothing.
     """
     # Potential implementation steps:
 
@@ -141,7 +140,7 @@ def build(
 
     output_files: list[Path] = write_sections(output, output_dir)
 
-    if (not quiet):
-        cli_message(ioutput_files) #?
+    if verbose:
+        cli_message(output_files) #?
 ```
 :::
