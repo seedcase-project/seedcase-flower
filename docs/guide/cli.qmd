@@ -17,10 +17,7 @@ To get started, try calling the program without any commands, arguments,
 or options by typing `seedcase-flower` and pressing enter. This is the
 same as invoking the `--help` flag and will show the following text:
 
-```{bash filename="Terminal"}
-#| echo: false
-seedcase-flower
-```
+<!--TODO include output help text here when it is available -->
 
 ## Viewing Data Package metadata
 
