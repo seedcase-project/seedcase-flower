@@ -53,7 +53,7 @@ following:
 seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
 
-<!--TODO should we includ output for all of these commands? collapsed by default -->
+<!--TODO should we include output for all of these commands? collapsed by default -->
 
 If you would like to customize the style of how the metadata is
 displayed, you can use the `--style` flag. This option allows you to
