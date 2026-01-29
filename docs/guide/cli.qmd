@@ -58,11 +58,9 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 
 <!--TODO should we includ output for all of these commands? collapsed by default -->
 
-If you would like to customize
-the style of how the metadata is displayed,
-you can use the `--style` flag.
-This option allows you to format the output
-with any of the [built-in styles](#built-in-styles):
+If you would like to customize the style of how the metadata is
+displayed, you can use the `--style` flag. This option allows you to
+format the output with any of [the built-in styles](../design/interface/outputs.html#built-in-styles):
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --style quarto-resource-listing gh:seedcase-project/example-seed-beetle
