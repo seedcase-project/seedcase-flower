@@ -31,15 +31,18 @@ seedcase-flower view
 ```
 
 The `view` command displays the metadata in an easy to
-read format that is optimized for display directly in the Terminal. By
-default, `view` looks for a `datapackage.json` file in the current
+read format that is optimized for display directly in the Terminal.
+
+### Working with a Data Package in a custom location
+
+By default, `view` looks for a `datapackage.json` file in the current
 directory, but you can specify a different path if desired:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view another/directory/datapackage.json
 ```
 
-It is also possible to point Flower to a Data Package that is available
+It also is possible to point Flower to a Data Package that is available
 online. To do this, you can provide the full URL to the remote
 `datapackage.json`, e.g.
 
@@ -47,15 +50,17 @@ online. To do this, you can provide the full URL to the remote
 seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
 ```
 
-For Data Packages on GitHub (like for the URL used above), you can use the `gh:` prefix as
-a shortcut. For example, the long URL above can be shortened to the
-following:
+For Data Packages on GitHub (like for the URL used above), you can use
+the `gh:` prefix as a shortcut. For example, the long URL above can be
+shortened to the following:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
 
 <!--TODO should we include output for all of these commands? collapsed by default -->
+
+### Styling the output
 
 If you would like to customize the style of how the metadata is
 displayed, you can use the `--style` flag. This option allows you to
