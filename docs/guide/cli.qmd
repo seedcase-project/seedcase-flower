@@ -19,6 +19,7 @@ same as invoking the `--help` flag and will show the following text:
 
 ```{.bash filename="Terminal"}
 seedcase-flower
+```
 
 ## Viewing Data Package metadata
 
@@ -58,7 +59,8 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 
 If you would like to customize the style of how the metadata is
 displayed, you can use the `--style` flag. This option allows you to
-format the output with any of [the built-in styles](/docs/design/interface/outputs.html#built-in-styles):
+format the output with any of [the built-in
+styles](../design/interface/outputs.html#built-in-styles):
 
 <!-- TODO: point link above to guide for styles, or ref docs, not design -->
 
