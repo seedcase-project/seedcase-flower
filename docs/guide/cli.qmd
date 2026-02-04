@@ -4,10 +4,10 @@ description: "How to use Flower on the command-line."
 order: 1
 ---
 
-`seedcase-flower` is designed to provide a friendly user experience from
+Flower is designed to provide a friendly user experience from
 the command line. The CLI has commands for both viewing a building
 documentation from a Data Package's metadata. The general pattern for
-how to use seedcase-flower from the CLI is:
+how to use Flower from the CLI is:
 
 ```{.bash filename="Terminal"}
 seedcase-flower COMMAND [ARGS] [OPTIONS]
@@ -17,7 +17,8 @@ To get started, try calling the program without any commands, arguments,
 or options by typing `seedcase-flower` and pressing enter. This is the
 same as invoking the `--help` flag and will show the following text:
 
-<!--TODO include output help text here when it is available -->
+```{.bash filename="Terminal"}
+seedcase-flower
 
 ## Viewing Data Package metadata
 
@@ -28,16 +29,16 @@ use the `view` command like so:
 seedcase-flower view
 ```
 
-As you can see, the `view` command displays the metadata in an easy to
-read format that is optimized for display directly in the terminal. By
-default, `view` will look for a `datapackage.json` file in the current
+The `view` command displays the metadata in an easy to
+read format that is optimized for display directly in the Terminal. By
+default, `view` looks for a `datapackage.json` file in the current
 directory, but you can specify a different path if desired:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view another/directory/datapackage.json
 ```
 
-It is also possible to point flower to a Data Package that is available
+It is also possible to point Flower to a Data Package that is available
 online. To do this, you can provide the full URL to the remote
 `datapackage.json`, e.g.
 
@@ -45,7 +46,7 @@ online. To do this, you can provide the full URL to the remote
 seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
 ```
 
-For files that reside on GitHub, you can use the `gh:` prefix as
+For Data Packages on GitHub (like for the URL used above), you can use the `gh:` prefix as
 a shortcut. For example, the long URL above can be shortened to the
 following:
 
@@ -57,7 +58,9 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 
 If you would like to customize the style of how the metadata is
 displayed, you can use the `--style` flag. This option allows you to
-format the output with any of [the built-in styles](../design/interface/outputs.html#built-in-styles):
+format the output with any of [the built-in styles](/docs/design/interface/outputs.html#built-in-styles):
+
+<!-- TODO: point link above to guide for styles, or ref docs, not design -->
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --style quarto-resource-listing gh:seedcase-project/example-seed-beetle
