@@ -75,5 +75,15 @@ seedcase-flower view --style terminal-simple gh:seedcase-project/example-seed-be
 
 <!--TODO potentically change this depending on the name of this style when implemented -->
 
+::: callout-important
+If you have set the `style` option in a configuration file read bpy
+flower, you might be confused as to why it does not have an effect when
+calling `seedcase-flower view --style ...`. The reason for this is that
+the `view` command by design completely ignores any configuration read
+from flower's configuration file, even those with the same name as the
+options passed to `view`. You can only configure `view` via command line
+flags.
+:::
+
 For more details about what you can do with `view`, see `seedcase-flower
 view --help`.
