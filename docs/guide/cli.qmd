@@ -70,8 +70,10 @@ styles](../design/interface/outputs.html#built-in-styles):
 <!-- TODO: point link above to guide for styles, or ref docs, not design -->
 
 ```{.bash filename="Terminal"}
-seedcase-flower view --style quarto-resource-listing gh:seedcase-project/example-seed-beetle
+seedcase-flower view --style terminal-simple gh:seedcase-project/example-seed-beetle
 ```
+
+<!--TODO potentically change this depending on the name of this style when implemented -->
 
 For more details about what you can do with `view`, see `seedcase-flower
 view --help`.
