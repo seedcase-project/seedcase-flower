@@ -245,13 +245,15 @@ flowchart
         end
 
         read_config["read_config()<br>[function]"]
-        read_json["read_json()<br>[function]"]
+        read_properties["read_properties()<br>[function]"]
+        properties["PackageProperties<br>[class]"]
         build("build()<br>[function]")
 
         section --"Lists metadata<br>items to include"--> config
         config_file -- "Provides build<br>configurations" --> read_config
 
-        read_json --"Provides properties<br>as dict"--> build
+        read_properties --> properties
+        properties --> build
         read_config -- "Adds build<br>configurations" --> build
         config --"Adds build<br>configurations"--> build
     end
@@ -261,7 +263,7 @@ flowchart
     output("Output<br>[files and<br>folders]")
 
     templates --"Provides output<br>structure and layout"--> config
-    user --"Provides datapackage.json<br>to build"--> read_json
+    user --"Provides datapackage.json<br>to build"--> read_properties
     user --"Provides configurations,<br>as file or Python class<br>(optional)"--> config_file
     user --"Provides templates<br>in folder<br>(optional)"--> templates
     build --"Populates template(s)<br>with metadata items"--> output

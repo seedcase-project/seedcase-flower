@@ -179,6 +179,15 @@ The reason we use a URI is to allow flexibility in specifying the
 location of the Data Package file and to allow us to extend to other
 locations in the future, e.g. remote files.
 
+::: callout-note
+Flower reads the `datapackage.json` file with the
+[Sprout](https://sprout.seedcase-project.org) function
+`read_properties()`. This function will check whether the properties
+comply with the Data Package specification and will output an error if
+there are any issues via
+[`check-datapackage`](https://check-datapackage.seedcase-project.org).
+:::
+
 <!-- TODO: Maybe also at some point allow using `doi:` URI? -->
 
 If you want to customise the output, you need to create a `_flower.toml`
@@ -228,14 +237,6 @@ style is mixed with incompatible configuration settings.
 This overriding behaviour also applies to the other CLI options,
 `--output-dir` and `--verbose`; if they are used on the CLI, they
 override the corresponding settings in the configuration file.
-
-::: callout-important
-Flower does not check whether the `datapackage.json` file is correct or
-not, it will only read and parse it. If an error happens during reading
-or parsing, it might not be very informative. Use
-[`check-datapackage`](https://check-datapackage.seedcase-project.org)
-first to check that the `datapackage.json` is correct.
-:::
 
 ## {{< var planned >}} `view`
 
