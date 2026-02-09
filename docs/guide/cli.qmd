@@ -5,7 +5,7 @@ order: 1
 ---
 
 Flower is designed to provide a friendly user experience from
-the command line. The CLI has commands for both viewing a building
+the command line. The CLI has commands for both viewing and building
 documentation from a Data Package's metadata. The general pattern for
 how to use Flower from the CLI is:
 
@@ -73,7 +73,7 @@ styles](/docs/design/interface/outputs.html#built-in-styles):
 seedcase-flower view --style terminal-simple gh:seedcase-project/example-seed-beetle
 ```
 
-<!--TODO potentically change this depending on the name of this style when implemented -->
+<!--TODO potentially change this depending on the name of this style when implemented -->
 
 ::: callout-important
 If you have set the `style` option in a configuration file read by
