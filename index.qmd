@@ -1,3 +1,82 @@
 ---
-title: "Welcome!"
+toc: false
+page-layout: custom
 ---
+
+::::: landing-page-block
+:::: hero-text
+::: text-center
+![](_extensions/seedcase-project/seedcase-theme/logos/flower/icon.svg){fig-alt="Seedcase Flower logo."
+width="150px"}
+
+![](_extensions/seedcase-project/seedcase-theme/logos/flower/font.svg){fig-alt="Seedcase Flower font."
+height="50px"}
+
+## Display your Data Package metadata in a human-friendly way
+
+[Overview](/docs/index.qmd){.btn .about-link} [Explore
+guide](/docs/guide/index.qmd){.btn .about-link}
+:::
+::::
+:::::
+
+:::: landing-page-block
+::: {#hero-heading}
+{{< include /docs/includes/_badges.qmd >}}
+:::
+::::
+
+::::: hero-banner
+:::: landing-page-block
+::: hero-text
+Flower is a Python package and command-line interface (CLI) that takes a
+[Data Package's](https://datapackage.org/)
+[JSON](https://en.wikipedia.org/wiki/JSON) metadata and generates
+structured, human-readable documents from it.
+
+## :sparkles: Key features
+
+-   Create structured and human-friendly documents from a Data Package's
+    `datapackage.json` file.
+-   Use through the command line for convenience, speed, and automation.
+-   Has multiple opinionated built-in styles for the output, but also
+    has a very flexible and powerful way to create your own custom
+    styles.
+-   Display the contents of a `datapackage.json` file in a
+    human-friendly way directly in the terminal.
+
+:warning: Flower does not manage rendering, publishing, or deploying the
+generated documents. See our
+[`template-data-package`](https://template-data-package.seedcase-project.org/)
+for a template that includes those additional aspects.
+:::
+::::
+:::::
+
+:::: landing-page-block
+::: hero-text
+## About the Seedcase Project
+
+Flower is part of the [**Seedcase
+Project**](https://seedcase-project.org), which helps research projects
+manage and process data in line with the
+[FAIR](https://www.go-fair.org/fair-principles/) principles.
+
+This package works as a standalone tool but is also integrated into our
+[`template-data-package`](https://template-data-package.seedcase-project.org/)
+template, which makes it easier to setup, build, and manage a Data
+Package.
+:::
+::::
+
+::::: hero-banner
+:::: landing-page-block
+::: hero-text
+## Want to contribute?
+
+We would love your feedback or contributions! Head over to the [GitHub
+repository]({{< meta links.github >}}) to share your ideas or contribute
+code. Your input makes us better!
+:::
+::::
+:::::
