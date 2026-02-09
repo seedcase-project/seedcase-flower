@@ -1,0 +1,89 @@
+---
+title: "Using the CLI"
+description: "How to use Flower on the command-line."
+order: 1
+---
+
+Flower is designed to provide a friendly user experience from
+the command line. The CLI has commands for both viewing and building
+documentation from a Data Package's metadata. The general pattern for
+how to use Flower from the CLI is:
+
+```{.bash filename="Terminal"}
+seedcase-flower COMMAND [ARGS] [OPTIONS]
+```
+
+To get started, try calling the program without any commands, arguments,
+or options by typing `seedcase-flower` and pressing enter. This is the
+same as invoking the `--help` flag and will show the following text:
+
+```{.bash filename="Terminal"}
+seedcase-flower
+```
+
+## Viewing Data Package metadata
+
+To view the metadata of a Data Package directly in the terminal, you can
+use the `view` command like so:
+
+```{.bash filename="Terminal"}
+seedcase-flower view
+```
+
+The `view` command displays the metadata in an easy to
+read format that is optimized for display directly in the Terminal.
+
+### Working with a Data Package in a custom location
+
+By default, `view` looks for a `datapackage.json` file in the current
+directory, but you can specify a different path if desired:
+
+```{.bash filename="Terminal"}
+seedcase-flower view another/directory/datapackage.json
+```
+
+It also is possible to point Flower to a Data Package that is available
+online. To do this, you can provide the full URL to the remote
+`datapackage.json`, e.g.
+
+```{.bash filename="Terminal"}
+seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
+```
+
+For Data Packages on GitHub (like for the URL used above), you can use
+the `gh:` prefix as a shortcut. For example, the long URL above can be
+shortened to the following:
+
+```{.bash filename="Terminal"}
+seedcase-flower view gh:seedcase-project/example-seed-beetle
+```
+
+<!--TODO should we include output for all of these commands? collapsed by default -->
+
+### Styling the output
+
+If you would like to customize the style of how the metadata is
+displayed, you can use the `--style` flag. This option allows you to
+format the output with any of [the built-in
+styles](/docs/design/interface/outputs.html#built-in-styles):
+
+<!-- TODO: point link above to guide for styles, or ref docs, not design -->
+
+```{.bash filename="Terminal"}
+seedcase-flower view --style terminal-simple gh:seedcase-project/example-seed-beetle
+```
+
+<!--TODO potentially change this depending on the name of this style when implemented -->
+
+::: callout-important
+If you have set the `style` option in a configuration file read by
+Flower, you might be confused as to why it does not have an effect when
+calling `seedcase-flower view --style ...`. The reason for this is that
+the `view` command by design completely ignores any configuration read
+from Flower's configuration file, even those with the same name as the
+options passed to `view`. You can only configure `view` via command line
+flags.
+:::
+
+For more details about what you can do with `view`, see `seedcase-flower
+view --help`.

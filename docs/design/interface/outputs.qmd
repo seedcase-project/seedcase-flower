@@ -29,7 +29,7 @@ using different styles.
 
 <!-- TODO: Add example terminal output -->
 
-## File output: Built-in styles
+## File output: Built-in styles {#built-in-styles}
 
 Flower includes a few built-in styles for generating documentation from
 Data Package metadata. We designed Flower to be extensible to make it
