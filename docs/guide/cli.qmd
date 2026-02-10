@@ -153,7 +153,6 @@ seedcase-flower build --style quarto-resource-listing
 
 
 :::
-<!--TODO I think this approach with using the same option name but with different allowed values/styles could be quite confusing, particularly for new users. If we want to go this route, we need to have clear error messages listing the supported styles and making it clear they are subcommand specific, or consider one of the other solutions I mentioned in https://github.com/seedcase-project/seedcase-flower/pull/84#discussion_r2767684036 -->
 
 As the default output style `quarto-one-page`, this style also creates the file `docs/index.qmd`. In addition to this, it creates
 a separate file for the data resource in
