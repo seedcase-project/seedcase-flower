@@ -260,7 +260,7 @@ flowchart
     templates("Templates<br>[folder with<br>Jinja files]")
     user("User<br>[person]")
     output_files("Output<br>[files and<br>folders]")
-    output_screen("Output<br>[files and<br>folders]")
+    output_screen("Output<br>[text in the Terminal]")
 
     templates --"Provides output<br>structure and layout"--> config
     user --"Provides datapackage.json<br>to build"--> read_json
