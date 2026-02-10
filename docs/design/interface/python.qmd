@@ -208,7 +208,7 @@ def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.ter
         # This matches all other cases not explicitly handled above.
         case _:
             # Or however we implement error handling here.
-            error("Style not supported for terminal output.")
+            error("Style not supported for terminal output. Should be one of ...")
 
     # Able to read from URI, e.g. `https` or `file` or `gh`
     properties: PackageProperties = read_properties(path)
