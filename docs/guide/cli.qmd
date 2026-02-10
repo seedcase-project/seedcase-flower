@@ -106,7 +106,7 @@ The `qmd` extension indicates that this file contains
 [Quarto](https://quarto.org/)-flavored Markdown. While this is the
 default text format outputted from Flower, you can change it by
 specifying your own custom templates as detailed in [the configuration
-section of this guide](/docs/design/interface/config.qmd). 
+section of this guide](/docs/design/interface/config.qmd).
 
 <!--TODO change link when how-to section exists -->
 
