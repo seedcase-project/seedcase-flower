@@ -37,16 +37,16 @@ described on the [CLI design page](cli.qmd): `build()` and `view()`.
 This page focuses on the Python design and decisions made to avoid too
 much overlap with the content of the CLI design page.
 
-Both `build()` and `view()` functions read in the `datapackage.json`
-file through the `read_properties()` function from the `seedcase_sprout`
-package, which returns a `PackageProperties` object. This is a Python
+Both the `build()` and `view()` functions read in the `datapackage.json`
+file through the `read_properties()` function from [Sprout](https://sprout.seedcase-project.org)
+, which returns a `PackageProperties` object. This is a Python
 class that represents the properties of a datapackage, and is used as
 the main input for the non-CLI functions that build the output files.
 This class is used instead of a dictionary for a few reasons:
 
--   Provides a clear and structured way to represent the properties of a
-    Data Package, with defined attributes and types.
--   Allows for better type checking of the properties and ensures the
+-   Provides a clear and structured way of representing the properties of a
+    Data Package with defined attributes and types.
+-   Allows for better type checking of the properties to ensure the
     properties are in the expected format.
 -   Provides a clearer and documented interface for accessing the
     properties.

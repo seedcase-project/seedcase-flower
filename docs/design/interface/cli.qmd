@@ -184,7 +184,7 @@ Flower reads the `datapackage.json` file with the
 [Sprout](https://sprout.seedcase-project.org) function
 `read_properties()`. This function will check whether the properties
 comply with the Data Package specification and will output an error if
-there are any issues via
+there are any issues using
 [`check-datapackage`](https://check-datapackage.seedcase-project.org).
 :::
 
