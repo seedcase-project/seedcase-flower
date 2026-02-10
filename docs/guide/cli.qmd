@@ -90,8 +90,8 @@ view --help`.
 
 ## Building documentation from Data Package metadata
 
-In addition to viewing metadata in the terminal, Flower can organize
-Data Package metadata into a set of plain text files. These files can be
+In addition to viewing metadata in the terminal, Flower converts
+Data Package metadata into a set of plain text files that is more human-friendly than the `datapackage.json`. These files can be
 used to build a documentation site which can make your Data Package's
 metadata more easily discoverable and readable. Generating this set of
 files can be achieved with the `build` command:
@@ -100,11 +100,11 @@ files can be achieved with the `build` command:
 seedcase-flower build
 ```
 
-When you run this command, you will see that there is one new file
-generated: `docs/index.qmd`. <!--TODO Is this the correct location? -->
+This command generates one new file:
+`docs/index.qmd`. <!--TODO Is this the correct location? -->
 The `qmd` extension indicates that this file contains
 [Quarto](https://quarto.org/)-flavored Markdown. While this is the
-default text format outputted from Flower, you can change it by
+default text format, you can change it by
 specifying your own custom templates as detailed in [the configuration
 section of this guide](/docs/design/interface/config.qmd).
 
@@ -120,18 +120,18 @@ like with `view`):
 seedcase-flower build another/directory/datapackage.json
 ```
 
-If you want the generated files to end up in another location, you can
-use the `--output-dir` flag followed by a folder name. For example, to
-create `my-dir/index.qmd` instead of `docs/index.qmd`, you would run the
-following command.
+To generate files in a different location,
+use the `--output-dir` flag with a folder name. For example:
 
 ```{.bash filename="Terminal"}
 seedcase-flower build --output-dir my-dir
 ```
 
+This will generate `my-dir/index.qmd` instead of `docs/index.qmd`.
+
 ### Styling the output
 
-Just like with the `view` command, the `build` command also accepts the
+Just like the `view` command, the `build` command accepts a
 `--style` option, where you can choose to organize the metadata
 according to one of the [built-in
 styles](/docs/design/interface/outputs.html#built-in-styles).
@@ -144,16 +144,17 @@ seedcase-flower build --style quarto-resource-listing
 ```
 
 ::: callout-important
-If you try to use a style that worked fine with `view` for the `build`
-command, you might be wondering why you received an error. This is
-because `view` and `build` do not support the same styles, and you
-need to make sure you use the correct set of styles for the respective
-command.
+`view` and `build` support different styles, so a style that works with
+`view` may cause an error with `build` and vice versa.
+
+<!-- TODO: Add overview of this or link to an overview -->
+
+
 :::
 <!--TODO I think this approach with using the same option name but with different allowed values/styles could be quite confusing, particularly for new users. If we want to go this route, we need to have clear error messages listing the supported styles and making it clear they are subcommand specific, or consider one of the other solutions I mentioned in https://github.com/seedcase-project/seedcase-flower/pull/84#discussion_r2767684036 -->
 
-As previously, this creates the file `docs/index.qmd`, but now there is
-also a separate file created for the data resource under
+As the default output style `quarto-one-page`, this style also creates the file `docs/index.qmd`. In addition to this, it creates
+a separate file for the data resource in
 `docs/resources/seed-beetle-metabolic-rate.qmd`.
 You can read more about the available default styles and how to create
 your own custom style in [the configuration section of the
