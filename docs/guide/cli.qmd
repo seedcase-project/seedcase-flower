@@ -101,12 +101,14 @@ seedcase-flower build
 ```
 
 This command generates one new file:
-`docs/index.qmd`. <!--TODO Is this the correct location? -->
+`docs/index.qmd`.
 The `qmd` extension indicates that this file contains
 [Quarto](https://quarto.org/)-flavored Markdown. While this is the
 default text format, you can change it by
 specifying your own custom templates as detailed in [the configuration
 section of this guide](/docs/design/interface/config.qmd).
+Later in this guide, we will also see how we can generate
+more than one file by using different styles with `build`.
 
 <!--TODO change link when how-to section exists -->
 
