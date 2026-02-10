@@ -40,7 +40,7 @@ much overlap with the content of the CLI design page.
 Both the `build()` and `view()` functions read in the `datapackage.json`
 file through the `read_properties()` function from [Sprout](https://sprout.seedcase-project.org)
 , which returns a `PackageProperties` object. This is a Python
-class that represents the properties of a datapackage, and is used as
+[data class](https://docs.python.org/3/library/dataclasses.html) that represents the Data Package properties, and is used as
 the main input for the non-CLI functions that build the output files.
 This class is used instead of a dictionary for a few reasons:
 
