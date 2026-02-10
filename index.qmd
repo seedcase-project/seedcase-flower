@@ -12,7 +12,7 @@ width="150px"}
 ![](_extensions/seedcase-project/seedcase-theme/logos/flower/font.svg){fig-alt="Seedcase Flower font."
 height="50px"}
 
-## Display your Data Package metadata in a human-friendly way
+## Transform your Data Package metadata in a human-friendly way
 
 [Overview](/docs/index.qmd){.btn .about-link} [Explore
 guide](/docs/guide/index.qmd){.btn .about-link}
@@ -29,26 +29,21 @@ guide](/docs/guide/index.qmd){.btn .about-link}
 ::::: hero-banner
 :::: landing-page-block
 ::: hero-text
-Flower is a Python package and command-line interface (CLI) that takes a
-[Data Package's](https://datapackage.org/)
-[JSON](https://en.wikipedia.org/wiki/JSON) metadata and generates
-structured, human-readable documents from it.
+Flower is a Python package and command-line interface (CLI) that generates
+human-readable documentation from your [Data Package](https://datapackage.org/)
+metadata.
 
 ## :sparkles: Key features
 
 -   Create structured and human-friendly documents from a Data Package's
     `datapackage.json` file.
 -   Use through the command line for convenience, speed, and automation.
--   Has multiple opinionated built-in styles for the output, but also
-    has a very flexible and powerful way to create your own custom
-    styles.
+-   Comes with multiple built-in styles and supports custom styles with [Jinja2](https://jinja.palletsprojects.com/en/stable/) templates.
 -   Display the contents of a `datapackage.json` file in a
     human-friendly way directly in the terminal.
 
-:warning: Flower does not manage rendering, publishing, or deploying the
-generated documents. See our
-[`template-data-package`](https://template-data-package.seedcase-project.org/)
-for a template that includes those additional aspects.
+Flower focuses on generating documents. For rendering, publishing, or deploying, see our
+[`template-data-package`](https://template-data-package.seedcase-project.org/).
 :::
 ::::
 :::::
