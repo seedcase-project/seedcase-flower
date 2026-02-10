@@ -161,7 +161,4 @@ You can read more about the available default styles and how to create
 your own custom style in [the configuration section of the
 documentation](/docs/design/interface/outputs.html#built-in-styles).
 
-<!--TODO where in the user how to guide should these styles be described
-in more detail? On this page, the config file page as I suggested above,
-or a separate page for the different outputs like in the design docs?
 -->
