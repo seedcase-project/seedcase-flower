@@ -248,25 +248,28 @@ flowchart
         read_properties["read_properties()<br>[function]"]
         properties["PackageProperties<br>[class]"]
         build("build()<br>[function]")
+        view("view()<br>[function]")
 
         section --"Lists metadata<br>items to include"--> config
         config_file -- "Provides build<br>configurations" --> read_config
 
         read_properties --> properties
-        properties --> build
+        properties --> build & view
         read_config -- "Adds build<br>configurations" --> build
-        config --"Adds build<br>configurations"--> build
+        config --"Adds build<br>configurations"--> build & view
     end
 
     templates("Templates<br>[folder with<br>Jinja files]")
     user("User<br>[person]")
-    output("Output<br>[files and<br>folders]")
+    output_files("Output<br>[files and<br>folders]")
+    output_screen("Output<br>[text in the Terminal]")
 
     templates --"Provides output<br>structure and layout"--> config
     user --"Provides datapackage.json<br>to build"--> read_properties
     user --"Provides configurations,<br>as file or Python class<br>(optional)"--> config_file
     user --"Provides templates<br>in folder<br>(optional)"--> templates
-    build --"Populates template(s)<br>with metadata items"--> output
+    build --"Populates template(s)<br>with metadata items"--> output_files
+    view --"Displays output<br>to screen"--> output_screen
 
     %% Styling
     style python_package fill:#FFFFFF, color:#000000
