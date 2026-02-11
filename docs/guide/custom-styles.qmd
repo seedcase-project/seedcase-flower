@@ -1,0 +1,381 @@
+---
+title: "Custom styles"
+description: "Create custom styles for displaying the metadata of your Data Package."
+order: 2
+---
+
+Flower comes with a number of [built-in
+styles](https://flower.seedcase-project.org/docs/design/interface/outputs#built-in-styles),
+but it is also possible to create new styles that match your particular
+use case. As with built-in styles, custom styles can only be used with
+the `build` command and not with `view`.
+
+Creating a custom style involves defining templates that set the layout
+for the output and adding configuration files that link the templates
+and the `datapackage.json` file to display.
+
+In this guide, we will create a custom style that generates one markdown
+file for the package as a whole and separate markdown files for each
+resource.
+
+To demonstrate the custom style, we will render the following Data
+Package describing a made-up study on flowers and their growing
+conditions.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+### Expand to see the `datapackage.json` content
+
+``` {.json filename="datapackage.json"}
+{
+  "name": "flora",
+  "title": "Observations of flora species and seasonal development",
+  "id": "29b1b5e4-3f4c-4d2a-9f8e-123456789abc",
+  "description": "A dataset containing flora species records and their observed growth stages across different environments.",
+  "version": "1.2.3",
+  "created": "2025-11-07T11:12:56+01:00",
+  "keywords": ["flora", "species", "growth stages", "observations", "seasonal development"],
+  "licenses": [
+    {
+        "name": "CCO 1.0 UNIVERSAL",
+        "path": "https://creativecommons.org/publicdomain/zero/1.0/legalcode"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "Jane Doe",
+      "role": ["creator"],
+      "email": "jane-doe@example.com",
+      "organization": "Example University"
+    },
+    {
+      "title": "John Smith",
+      "role": ["author"],
+      "email": "john-smith@example.com",
+      "organization": "Example Institute"
+    }
+  ],
+  "sources": [{ "title": "Example Data Source", "version": "1.0", "path": "https://example.com/data-source", "email": "source@example.com" }],
+  "resources": [
+    {
+      "name": "species_catalog",
+      "title": "Flora Species",
+      "description": "This resource contains a catalog of flora species.",
+      "path": "resources/species_catalog/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "primaryKey": "species_id",
+      "schema": {
+        "fields": [
+          { "title": "Species ID", "name": "species_id", "type": "integer", "description": "The unique identifier for each species." },
+          { "title": "Scientific name", "name": "scientific_name", "type": "string", "description": "The Latin name of the species." },
+          { "title": "Common name", "name": "common_name", "type": "string", "description": "The common name of the species." },
+          { "title": "Family", "name": "family", "type": "string", "description": "The Latin family to which the species belongs." }
+        ]
+      },
+      "sources": [
+        { "title": "Flora Species Source", "version": "1.0", "path": "https://example.com/data-source/flora-species", "email": "source@example.com" }]
+    },
+    {
+      "name": "growth_records",
+      "title": "Growth Stage Records",
+      "description": "This resource contains records of observed growth stages for various flora species.",
+      "path": "resources/growth_records/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "primaryKey": "record_id",
+      "foreignKey": {
+          "fields": "species_id",
+          "reference": {
+            "resource": "species_catalog",
+            "fields": "species_id"
+          }
+        },
+      "schema": {
+        "fields": [
+          { "title": "Record ID", "name": "record_id", "type": "integer", "description": "The unique identifier for each growth record." },
+          { "title": "Species ID", "name": "species_id", "type": "integer", "description": "The unique identifier for each species." },
+          { "title": "Observation date", "name": "observation_date", "type": "date", "description": "The date when the observation was made." },
+          { "title": "Growth Stage", "name": "growth_stage", "type": "string", "description": "The observed growth stage of the species." },
+          { "title": "Location", "name": "location", "type": "string", "description": "The location where the observation was made." }
+        ]
+      }
+    }
+  ]
+}
+```
+:::
+
+After completing the steps, your file structure should look like:
+
+``` txt
+flora/
+├── datapackage.json
+├── .flower.toml
+└── templates/
+    ├── .sections.toml
+    ├── package.qmd.jinja
+    ├── contributors.qmd.jinja
+    ├── resource.qmd.jinja
+└── docs/
+    ├── index.qmd
+    └── resources/
+        ├── species_catalog.qmd
+        ├── growth_records.qmd
+```
+
+## Creating the templates
+
+You can define a custom layout for your metadata or part of your
+metadata using a [Jinja2
+template](https://jinja.palletsprojects.com/en/stable/). In this
+template, you write out the structure of your desired output in your
+target language (e.g., HTML, markdown, yaml, etc.), using placeholder
+values for the metadata elements that will come from your
+`datapackage.json`.
+
+1.  Make a new folder for your templates and create Jinja files inside
+    with descriptive names and the desired extension, like so:
+
+    ``` txt
+    flora/
+    ├── datapackage.json
+    └── templates/
+        ├── package.qmd.jinja
+        ├── contributors.qmd.jinja
+        ├── resource.qmd.jinja
+    ```
+
+    In this guide, the template folder is called `templates/` and it is
+    inside the Data Package root folder, but you can store your
+    templates wherever it makes sense for your project. Similarly, we
+    use `qmd` as the extension, but you should use the extension of your
+    target file format.
+
+2.  Define the desired layout of your documentation in each template.
+    Use Jinja syntax where appropriate.
+
+    In the `package.qmd.jinja` template, we define the layout for
+    package properties. A simple template might look like:
+
+    ``` {.djangotemplate filename="templates/package.qmd.jinja"}
+    ---
+    title: "{{ package.title or package.name }}"
+    subtitle: "{{ package.version }}"
+    date: "{{ package.created }}"
+    ---
+
+    {{ package.description }}
+
+    {% if package.keywords %}
+    **Keywords:** {{ package.keywords | join(", ") }}
+    {% endif %}
+    ```
+
+    Notice that metadata values are referenced via placeholder variables
+    (e.g., `package.title`, `package.description`). When you run
+    `build`, Flower will populate the template with actual values from
+    your `datapackage.json`. You can choose any variable name in your
+    template; we could have chosen `root`, for example, and accessed
+    nested properties like `root.title`. The variable name will be
+    linked to the template in the `sections.toml` configuration file.
+
+    In the `contributors.qmd.jinja` template, we define the layout for
+    the contributors (using the variable name `contributors`). We could
+    include the contributors in the `package.qmd.jinja` template, but,
+    to show how to split content across templates, we will create a
+    separate template.
+
+    ``` {.djangotemplate filename="templates/contributors.qmd.jinja"}
+    ## Contributors
+
+    {%- if contributors %}
+    {% for contributor in contributors %}
+    ### {{ contributor.title }}
+
+    {%- if contributor.organization %}
+    **Organization:** {{ contributor.organization }}
+    {% endif %}
+
+    {% if contributor.email -%}
+    **Email:** <{{ contributor.email }}>
+    {%- endif %}
+    {% endfor %}
+
+    {% else %}
+    No contributors listed.
+    {% endif %}
+    ```
+
+    In the `resource.qmd.jinja` template, we define the layout for a
+    single resource (using the variable name `resource`):
+
+    ``` {.djangotemplate filename="templates/resource.qmd.jinja"}
+    ---
+    title: "{{ resource.title or resource.name }}"
+    ---
+
+    {{ resource.description }}
+
+    ## Overview
+
+    - **Name:** `{{ resource.name }}`
+    {% if resource.path %}
+    - **Path:** `{{ resource.path }}`
+    {% endif %}
+
+    {%- if resource.schema and resource.schema.fields %}
+    - **Number of fields:** {{ resource.schema.fields | length }}
+    {% else %}
+    - **Number of fields:** 0
+    {% endif %}
+    ```
+
+    ::: callout-note
+    The template variable can reference any property or collection of
+    properties in the `datapackage.json` that is possible to select
+    using [JSON path
+    notation](https://jg-rp.github.io/python-jsonpath/syntax/). This
+    JSON path will be defined in the `sections.toml` configuration file.
+    :::
+
+## Creating the configuration files
+
+### Main configuration file
+
+The main configuration file is used to set the style, template folder,
+and output folder for the documentation. Flower can read the main
+configuration from the `.flower.toml` or the `pyproject.toml` file in
+the root of your Data Package. In this guide, we will use
+`.flower.toml`.
+
+1.  Create a `.flower.toml` file in the root of your Data Package.
+
+2.  Add the following settings:
+
+    ``` {.toml filename=".flower.toml"}
+    # Let Flower know you're using a custom style
+    style = "custom"
+    # Point Flower to the folder containing your templates
+    template-dir = "templates/"
+    # Specify where the output files should be generated
+    output-dir = "docs/"
+    ```
+
+### `sections.toml` configuration file
+
+The `sections.toml` file is used to define which files the documentation
+will be split across and which metadata will be displayed in each file.
+Documentation is split into sections, where each section corresponds to
+one output file (e.g., an index file) or a group of similar output files
+(e.g., a file for each resource).
+
+Each section contains one or more content items, with each content item
+corresponding to a specific part of the metadata (e.g., the
+contributors). A content item links this specific part of the metadata
+to the template that will be used to render it. In the rendered output,
+content items in the same section will be combined into the same output
+file in the order they are defined.
+
+The `sections.toml` file must be stored in the template folder.
+
+1.  Create a `.sections.toml` file in the `templates/` folder.
+
+2.  Define the sections:
+
+    ``` {.toml filename=".sections.toml"}
+    # One output file at docs/index.qmd
+    [[section]]
+    output-path = "docs/index.qmd"
+
+    # One output file for each resource in docs/resources/
+    [[section]]
+    output-path = "docs/resources/"
+    ```
+
+    ::: callout-tip
+    To generate more than one output files for a section, `output-path`
+    can be set either to a folder (e.g., `docs/resources/`) or to a file
+    path with a placeholder for the file name (e.g.,
+    `docs/resources/{resource-name}.qmd`). See the
+    [`Section`](https://flower.seedcase-project.org/docs/design/interface/config#section)
+    documentation for more details.
+    :::
+
+3.  Add content to each section, specifying the following fields:
+
+    -   `jsonpath`: The JSON path to the metadata that will be sent to
+        the template. The JSON path should be expressed using [JSON path
+        syntax](https://jg-rp.github.io/python-jsonpath/syntax/).
+    -   `template-path`: The path to the Jinja template file for this
+        content item, relative to the template folder.
+    -   `jinja-variable`: The variable name that will be used in the
+        template to reference the selected metadata.
+    -   `mode`: Whether to render the selected metadata item as one
+        output file (`one`) or to render each item in the selected
+        metadata collection as a separate output file (`many`).
+
+    ``` {.toml filename=".sections.toml"}
+    [[section]]
+    output-path = "docs/index.qmd"
+
+    [[section.contents]]
+    # Select the whole metadata object
+    jsonpath = "$"
+    # Render the selected metadata with this template
+    template-path = "package.qmd.jinja"
+    # Reference the selected metadata in the template with this
+    # variable name
+    jinja-variable = "package"
+    # Render the selected metadata item as one output file
+    mode = "one"
+
+    [[section.contents]]
+    jsonpath = "$.contributors"
+    template-path = "contributors.qmd.jinja"
+    jinja-variable = "contributors"
+    mode = "one"
+
+    [[section]]
+    output-path = "docs/resources/"
+
+    [[section.contents]]
+    jsonpath = "$.resources"
+    template-path = "resource.qmd.jinja"
+    jinja-variable = "resource"
+    # Render each item in the selected metadata collection as a
+    # separate output file
+    mode = "many"
+    ```
+
+## Running the `build` command
+
+To generate the documentation, run the `build` command in the Terminal
+from the root of your Data Package:
+
+``` {.bash filename="Terminal"}
+seedcase-flower build
+```
+
+This will read the configuration files (`.flower.toml` and
+`.sections.toml`), populate the templates (in the `templates/` folder)
+with metadata from `datapackage.json`, and output the generated
+documentation files to the specified output directory (`docs/` in this
+example).
+
+Your file structure should now look like:
+
+``` txt
+flora/
+├── datapackage.json
+├── .flower.toml
+└── templates/
+    ├── .sections.toml
+    ├── package.qmd.jinja
+    ├── contributors.qmd.jinja
+    ├── resource.qmd.jinja
+└── docs/
+    ├── index.qmd
+    └── resources/
+        ├── species_catalog.qmd
+        ├── growth_records.qmd
+```
