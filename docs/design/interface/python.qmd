@@ -202,8 +202,8 @@ def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.ter
     # Match works well when paired with enums for strictness and checking.
     match style:
         # Might be a more concise way of doing this when there are more styles.
-        case TerminalStyle.terminal_default:
-            config: Config = Config(style=Style.terminal_default)
+        case _ if style in TerminalStyle:
+            config: Config = Config(style=TerminalStyle(style))
 
         # This matches all other cases not explicitly handled above.
         case _:
