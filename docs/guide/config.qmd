@@ -1,0 +1,82 @@
+---
+title: "Configuration"
+description: "How to configure Flower."
+order: 3
+---
+
+When using Flower,
+you can change the configuration in three ways:
+
+1. By passing option flags to the CLI, as described in [the CLI
+   guide](/docs/guide/cli.qmd).
+2. By setting parameters in the Python `Config` class, as described in
+   [the Python guide](/docs/guide/python.qmd).
+3. By reading from a configuration file on disk, as described below.
+<!-- TODO the python file does not exist yet, make sure link is uptaded
+if name is different -->
+
+Since there are multiple ways to configure Flower, you might wonder what
+happens if the same configuration option is modified in both the CLI (or
+Python interface) and then also in the configuration file. In this case,
+the option that is passed to the CLI (or Python interface) will take
+precedence over what is written in the configuration file. If no value
+is specified for an option in either of these locations, Flower will
+fall back to the default values listed below.
+
+Note The CLI and Python interface uniquely specifies which URI to read,
+this cannot be set from the configuration file. The CLI and Python
+interface are also the only ways to change the configuration for the
+`view` subcommand; the configuration file is only read when the `build`
+subcommand is used.
+
+## The configuration file
+
+Flower will try to read settings from `.flower.toml`.
+If that file does not exist,
+Flower will look in `pyproject.toml` instead.
+If both files exist, only `.flower.toml` will be read.
+
+### Configurable settings
+
+The following settings can be configured via the configuration file:
+
+`style`
+: The style decides how the metadata is structured in the output files.
+One of `'quarto-one-page'`, `'quarto-resource-listing'`,
+`'quarto-resource-tables'`, or `'custom'`. Default: `'quarto-one-page'`
+
+`output-dir`
+: The directory where Flower will save the output files. Default: `'docs/'`
+
+`template-dir`
+: The directory that contains the templates files to use when `style='custom'`.
+Default: `'templates/'`
+
+To see examples of how the different styles would structure the output,
+see [the Outputs documentation](`docs/design/interface/outputs.qmd`).
+<!-- TODO change to guide link when available -->
+When style is set to `'custom'`,
+the structure of the output is determined by a custom set of templates
+and configurations explained in [the documentation about custom
+styles](../guide/custom-styles.qmd).
+
+### Configuration file syntax
+
+To change the configuration settings from their default values, the
+following syntax would be used in `.flower.toml`:
+
+``` {.toml filename=".flower.toml"}
+style = "custom"
+template-dir = "my-templates/"
+output-dir = "my-docs/"
+```
+
+If configuring Flower via `pyproject.toml` instead, a heading needs to
+be included to indicate where in the file Flower can find the settings:
+
+``` {.toml filename="pyproject.toml"}
+[tool.seedcase-flower]
+style = "custom"
+template_dir = "my-templates/"
+output_dir = "my-docs/"
+```
