@@ -7,8 +7,8 @@ order: 2
 Flower comes with a number of [built-in
 styles](https://flower.seedcase-project.org/docs/design/interface/outputs#built-in-styles),
 but it is also possible to create new styles that match your particular
-use case. As with built-in styles, custom styles can only be used with
-the `build` command and not with `view`.
+use case. Custom styles can only be used with the `build` command and
+not with `view`.
 
 Creating a custom style involves defining templates that set the layout
 for the output and adding configuration files that link the templates
