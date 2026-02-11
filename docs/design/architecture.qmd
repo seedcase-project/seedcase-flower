@@ -234,7 +234,7 @@ Python package that represents the CLI.
 
 ```{mermaid}
 %%| label: fig-c4-component
-%%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections between."
+%%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections."
 flowchart
 
     subgraph python_package["Python code"]
