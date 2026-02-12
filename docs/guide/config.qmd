@@ -31,10 +31,10 @@ subcommand is used.
 
 ## The configuration file
 
-Flower will try to read settings from `.flower.toml`.
-If that file does not exist,
-Flower will look in `pyproject.toml` instead.
-If both files exist, only `.flower.toml` will be read.
+Flower will read the configurations from **either** `.flower.toml` or `pyproject.toml` (not both) in this order:
+
+1. `.flower.toml`
+2. `pyproject.toml`
 
 ### Configurable settings
 
@@ -46,16 +46,15 @@ One of `'quarto-one-page'`, `'quarto-resource-listing'`,
 `'quarto-resource-tables'`, or `'custom'`. Default: `'quarto-one-page'`
 
 `output-dir`
-: The directory where Flower will save the output files. Default: `'docs/'`
+: The directory where Flower will save the output files, with the default being `'docs/'`.
 
 `template-dir`
-: The directory that contains the templates files to use when `style='custom'`.
-Default: `'templates/'`
+: The directory that contains the templates files to use when `style="custom"`.
 
 To see examples of how the different styles would structure the output,
 see [the Outputs documentation](`docs/design/interface/outputs.qmd`).
 <!-- TODO change to guide link when available -->
-When style is set to `'custom'`,
+When style is set to `"custom"`,
 the structure of the output is determined by a custom set of templates
 and configurations explained in [the documentation about custom
 styles](../guide/custom-styles.qmd).
