@@ -20,7 +20,7 @@ def build(
     style: BuildStyle | None = None,
     output_dir: Path = Path(),
     verbose: bool = False,
-) -> Path:
+) -> str:
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
@@ -43,20 +43,20 @@ def build(
     # Match works well when paired with enums for strictness and checking.
     match style:
         case _ if style in BuildStyle:
-            print("Style supported!")  # Placeholder
+            cli_message = "Style supported!"  # Placeholder
             # TODO implement setting the style in the config class
             # config: Config = Config(style=BuildStyle(style))
 
         case None:
-            print("Setting style from config (or default if no file found)")
+            cli_message = "Setting style from config (or default if no file found)"
             # TODO implement loading the style from the config
             # TODO It seems appropriate to set the default value inside `load_config` if
             # no file found since this will be a repeating pattern
             # config: Config = load_config(style, path)
 
         case _:
-            print(  # Placeholder
-                "Style not supported for `view`. Should be one of "
+            cli_message = (  # Placeholder
+                "Style not supported for `build`. Should be one of "
                 f"{BuildStyle._member_names_}"
             )
             # TODO Raise error
@@ -72,7 +72,7 @@ def build(
     properties: PackageProperties = read_properties(path)
 
     print(output_dir, verbose, properties)  # Placeholder to ensure no unused args
-    return Path()
+    return cli_message
 
 
 def view() -> str:
