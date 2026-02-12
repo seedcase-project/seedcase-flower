@@ -2,31 +2,23 @@
 from enum import Enum
 from pathlib import Path
 
-import cyclopts
+from seedcase_sprout import PackageProperties, read_properties
 
-app = cyclopts.App()
 
 # Allows for strict checking of built-in styles, as this is a sum type.
-# The specific terminal style needs to also exist in the Style enum.
 class BuildStyle(Enum):
     """Built-in styles for outputting to file."""
     quarto_one_page = 'quarto_one_page'
     quarto_resource_listing = 'quarto_resource_listing'
     quarto_resource_tables = 'quarto_resource_tables'
 
-# TODO To keep track of path and built content for each section.
-# @dataclass(frozen=True)
-# class BuiltSection:
-#     output_path: Path
-#     built_content: str
 
-@app.command
 def build(
     uri: str = "datapackage.json",
     style: BuildStyle | None = None,
     output_dir: Path = Path(),
     verbose: bool = False
-    ) -> None:
+    ) -> Path:
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
@@ -46,16 +38,11 @@ def build(
         Outputs a message of the files created if verbose is True, otherwise
             outputs nothing.
     """
-    # Output maybe str? Path?
-    # Use `match` inside for strictness on URI types?
-    # path: str = resolve_uri(uri)
-
-
     # Match works well when paired with enums for strictness and checking.
     match style:
         case _ if style in BuildStyle:
             print("Style supported!")  # Placeholder
-            # TODO implement setting the style in the config
+            # TODO implement setting the style in the config class
             # config: Config = Config(style=BuildStyle(style))
 
         case None:
@@ -73,26 +60,19 @@ def build(
             # TODO Raise error
 
     # Able to read from URI, e.g. `https` or `file` or `gh`
+    # Output maybe str? Path?
+    # Use `match` inside for strictness on URI types?
+    # TODO implement resolve_uri
+    # path: str = resolve_uri(uri)
+
+    # TODO temp workaround since sprout only handles reading file paths currently
+    path: Path = Path(uri)
     properties: PackageProperties = read_properties(path)
 
-    # # One item per section, rendered from template.
-    # # Internally uses Jinja2 to render templates with metadata.
-    # output: list[BuiltSection] = build_sections(
-    #     properties,
-    #     config
-    # )
-
-    # output_files: list[Path] = write_sections(output, output_dir)
-
-    # if verbose:
-    #     cli_message(output_files) #?
-    print(uri, output_dir, verbose)  # Placeholder
+    print(output_dir, verbose, properties)  # Placeholder to ensure no unnused args
+    return Path()
 
 
 def view() -> str:
     """Display the contents of a `datapackage.json` in a human-friendly way."""
     return ""
-
-
-if __name__ == "__main__":
-    app()
