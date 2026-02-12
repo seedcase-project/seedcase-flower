@@ -23,7 +23,7 @@ precedence over what is written in the configuration file. If no value
 is specified for an option in either of these locations, Flower will
 fall back to the default values listed below.
 
-Note The CLI and Python interface uniquely specifies which URI to read,
+Note that the CLI and Python interface uniquely specifies which URI to read,
 this cannot be set from the configuration file. The CLI and Python
 interface are also the only ways to change the configuration for the
 `view` subcommand; the configuration file is only read when the `build`
