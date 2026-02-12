@@ -27,7 +27,9 @@ keywords = [
   "data package website",
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "seedcase-sprout>=0.49.1",
+]
 
 [project.urls]
 homepage = "https://flower.seedcase-project.org"
