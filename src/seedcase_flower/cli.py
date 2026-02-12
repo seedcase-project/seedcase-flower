@@ -71,7 +71,7 @@ def build(
     path: Path = Path(uri)
     properties: PackageProperties = read_properties(path)
 
-    print(output_dir, verbose, properties)  # Placeholder to ensure no unnused args
+    print(output_dir, verbose, properties)  # Placeholder to ensure no unused args
     return Path()
 
 
