@@ -179,6 +179,9 @@ The reason we use a URI is to allow flexibility in specifying the
 location of the Data Package file and to allow us to extend to other
 locations in the future, e.g. remote files.
 
+
+<!-- TODO: We might need to update this based on whether we use Sprout or not -->
+
 ::: callout-note
 Flower reads the `datapackage.json` file with the
 [Sprout](https://sprout.seedcase-project.org) function
