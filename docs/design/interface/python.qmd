@@ -136,8 +136,8 @@ def build(
     # we might not need to implement this ourselves.
 
     # If any config option is provided, use that, not the config file.
-    # If there is no config option, look for config file in same dir as datapackage.json.
-    # Lastly, if none of the above, use the default style.
+    # If there is no config option, look for config file in same dir as
+    # `datapackage.json`. Lastly, if none of the above, use the default style.
     config: Config = Config(
         style=style,
         template_dir=template_dir,
@@ -153,7 +153,11 @@ def build(
     properties: dict = read_datapackage(path)
 
     # One item per section, rendered from template.
-    # Internally uses Jinja2 to render templates with metadata
+    # Internally uses Jinja2 to render templates with metadata, which
+    # are loaded within `build_sections()`. The Jinja2 templates and
+    # and the `sections.toml` file are loaded from the template directory,
+    # given by the `template_dir` arg or by the built-in styles (which points
+    # to a Flower internal template directory).
     output: list[BuiltSection] = build_sections(
         properties,
         config

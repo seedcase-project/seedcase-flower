@@ -32,12 +32,12 @@ The configuration is split into two main parts:
     `.flower.toml` file. These settings dictate whether to use a
     built-in style or a custom style, along with the location of the
     template files for any custom style and which sections to include.
--   The lower-level configuration that is represented by one or more
-    `Section` classes, the `[[tool.seedcase-flower.section]]` tables in
-    `pyproject.toml`, or the `[[section]]` tables in `.flower.toml`.
-    These settings dictate which contents of the `datapackage.json`
-    (**not individual properties**) are included in each section of the
-    documentation and where those sections are output.
+-   The style-level configuration that is represented by one or more
+    `Section` classes or `[[section]]` tables in the `sections.toml`
+    file in the directory where the template files are. These settings
+    dictate which contents of the `datapackage.json` (**not individual
+    properties**) are included in each section of the documentation and
+    where those sections are output.
 
 The configuration files are read in and directly mapped to the Python
 classes. So, we'll describe most of the design details in the Python
@@ -64,8 +64,9 @@ whether the documentation should use a built-in style or a custom one.
 `template_dir` is optional and defines the path to the directory
 containing the custom Jinja2 templates for custom styles and a
 `sections.toml` file with the settings that determine how the templates
-are used to create the output. `output_dir` is optional and indicates
-which folder the output should be sent to.
+are used to create the output (more about this file is in the
+[Section](#section-class) section below). `output_dir` is optional and
+indicates which folder the output should be sent to.
 
 We include two attributes for output paths: the `output_dir` attribute
 in `Config` and the `output_path` attribute in the [`Section`
@@ -382,7 +383,8 @@ directly to the `Section` and `Content` classes For any given style, the
 template directory must have this `sections.toml` file, which contains
 the settings for the `Section` class. For built-in styles, this
 `sections.toml` file is kept internally in Flower while for custom
-styles, the user must provide it in their template directory.
+styles, the user must provide it in their template directory. This file
+maps to one or more `Section` classes.
 
 To provide a clear precedence for applying settings, we decided that
 styles specified on the CLI override settings in the configuration file.
