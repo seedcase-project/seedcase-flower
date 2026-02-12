@@ -168,3 +168,83 @@ def build(
         cli_message(output_files) #?
 ```
 :::
+
+### {{< var planned >}} `view()`
+
+As mentioned in the CLI design page, this function has two parameters that
+are both the same as those in the `build()` function: `uri` and `style`.
+The only difference with the `style` parameter is that it can only accept built-in terminal styles
+and does not allow a custom style.
+
+The internal flow of this function is shown in the diagram below.
+
+```{mermaid}
+%%| label: fig-python-view-flow
+%%| fig-cap: "Diagram of the internal flow of functions and objects in the `view()` CLI function."
+flowchart TD
+    uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
+    style_cfg[style]:::input --> Config
+    path --> read_dp{{"read_properties()"}} --> PackageProperties
+    PackageProperties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
+    output --> pretty_print{{"pretty_print()"}}
+
+    classDef input fill:#FFF
+```
+
+::: {.callout-tip collapse="true" icon="false"}
+## Pseudocode: `view()`
+
+``` {.python filename="src/seedcase_flower/cli.py"}
+from typing import Optional
+from seedcase_flower.config import Style
+from seedcase_sprout import read_properties, PackageProperties
+from pathlib import Path
+from enum import Enum
+
+# Allows for strict checking of built-in styles, as this is a sum type.
+# The specific terminal style needs to also exist in the Style enum.
+class TerminalStyle(Enum):
+    """Built-in styles for outputting to the terminal."""
+    # Can add more styles later here if needed.
+    terminal_default = "terminal-default"
+
+def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.terminal_default):
+    """Display the `datapackage.json` properties in a human-friendly way in the terminal.
+
+    Args:
+        uri: The URI to a datapackage.json file. Defaults to
+            `datapackage.json` in the current working directory.
+        style: The style of output to use. Must be one of built-in terminal
+            styles in `TerminalStyle` or None.
+    """
+    # Potential implementation steps:
+
+    # Output maybe str? Path?
+    # Use `match` inside for strictness on URI types?
+    path: str = resolve_uri(uri)
+
+    # Match works well when paired with enums for strictness and checking.
+    match style:
+        # Might be a more concise way of doing this when there are more styles.
+        case _ if style in TerminalStyle:
+            config: Config = Config(style=TerminalStyle(style))
+
+        # This matches all other cases not explicitly handled above.
+        case _:
+            # Or however we implement error handling here.
+            error("Style not supported for terminal output. Should be one of ...")
+
+    # Able to read from URI, e.g. `https` or `file` or `gh`
+    properties: PackageProperties = read_properties(path)
+
+    # One item per section, rendered from template.
+    # Internally uses Jinja2 to render templates with metadata.
+    output: list[BuiltSection] = build_sections(
+        properties,
+        config
+    )
+
+    # Pretty printing here.
+    return print(output)
+```
+:::
