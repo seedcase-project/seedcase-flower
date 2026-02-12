@@ -1,4 +1,5 @@
 """Module containing functions for the exposed CLI."""
+
 from enum import Enum
 from pathlib import Path
 
@@ -8,17 +9,18 @@ from seedcase_sprout import PackageProperties, read_properties
 # Allows for strict checking of built-in styles, as this is a sum type.
 class BuildStyle(Enum):
     """Built-in styles for outputting to file."""
-    quarto_one_page = 'quarto_one_page'
-    quarto_resource_listing = 'quarto_resource_listing'
-    quarto_resource_tables = 'quarto_resource_tables'
+
+    quarto_one_page = "quarto_one_page"
+    quarto_resource_listing = "quarto_resource_listing"
+    quarto_resource_tables = "quarto_resource_tables"
 
 
 def build(
     uri: str = "datapackage.json",
     style: BuildStyle | None = None,
     output_dir: Path = Path(),
-    verbose: bool = False
-    ) -> Path:
+    verbose: bool = False,
+) -> Path:
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
@@ -46,7 +48,7 @@ def build(
             # config: Config = Config(style=BuildStyle(style))
 
         case None:
-            print('Setting style from config (or default if no file found)')
+            print("Setting style from config (or default if no file found)")
             # TODO implement loading the style from the config
             # TODO It seems appropriate to set the default value inside `load_config` if
             # no file found since this will be a repeating pattern
