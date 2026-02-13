@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Any, Optional
 
 from seedcase_flower.internals import _read_properties, _resolve_uri
+import cyclopts
+
+app = cyclopts.App()
 
 
 class BuildStyle(Enum):
@@ -15,6 +18,7 @@ class BuildStyle(Enum):
     quarto_resource_tables = "quarto_resource_tables"
 
 
+@app.command()
 def build(
     uri: str = "datapackage.json",
     style: Optional[BuildStyle] = None,
@@ -75,3 +79,7 @@ def build(
 def view() -> str:
     """Display the contents of a `datapackage.json` in a human-friendly way."""
     return ""
+
+
+if __name__ == "__main__":
+    app()
