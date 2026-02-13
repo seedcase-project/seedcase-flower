@@ -145,7 +145,6 @@ def build(
     )
     # Pseudocode, this might not be necessary.
     if Config is all None:
-        # Within `load_config()` is also loading of the `sections.toml` file,
         # if `template_dir` is given.
         config: Config = load_config(path)
 
