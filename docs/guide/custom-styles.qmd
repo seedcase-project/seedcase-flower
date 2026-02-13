@@ -102,22 +102,22 @@ date: "{{ package.created }}"
 {{ package.description }}
 ```
 
-Here, we are using Jinja syntax to access properties on the metadata
-object passed to the template as `package`. Double curly brackets
-`{{{...}}}` are used to output the value of a variable or expression. In
-this example, `{{{ package.title or package.name }}}` sets the title of
-the generated document to the `title` property of the package metadata,
-or to the `name` property if `title` is not available. You can use any
-name for the metadata object passed to the template (e.g., `root` or
+Here, Jinja syntax is used to access properties on the metadata object
+passed to the template as `package`. Double curly brackets `{{{...}}}`
+are used to output the value of a variable or expression. In this
+example, `{{{ package.title or package.name }}}` sets the title of the
+generated document to the `title` property of the package metadata, or
+to the `name` property if `title` is not available. You can use any name
+for the metadata object passed to the template (e.g., `root` or
 `data_package` instead of `package`); this variable name will be defined
 in the `sections.toml` configuration file.
 
 Jinja also provides built-in filters and functions for processing
 values, as well as control flow statements such as conditionals and
-loops. Below, we extend `package.qmd.jinja` to include a list of
+loops. Below, you will extend `package.qmd.jinja` to include a list of
 keywords that describe the Data Package. An `if` statement is used to
 check if the `keywords` property exists in the package metadata. If it
-does, we output a line with the keywords joined by commas using the
+does, it will output a line with the keywords joined by commas using the
 built-in Jinja `join` filter. You can learn more about advanced Jinja
 features in the [Jinja
 documentation](https://jinja.palletsprojects.com/en/stable/templates/).
@@ -138,10 +138,11 @@ date: "{{ package.created }}"
 
 ### `contributors.qmd.jinja`
 
-In the `contributors.qmd.jinja` template, we define the layout for the
-contributors (using the variable name `contributors`). We could include
-the contributors in the `package.qmd.jinja` template, but, to show how
-to split content across templates, we will create a separate template.
+In the `contributors.qmd.jinja` template, you will define the layout for
+the contributors (using the variable name `contributors`). You could
+include the contributors in the `package.qmd.jinja` template, but, to
+show how to split content across templates, you will create a separate
+template.
 
 ``` {.djangotemplate filename="templates/contributors.qmd.jinja"}
 ## Contributors
@@ -171,8 +172,8 @@ display the metadata of each resource in a separate file with the same
 layout. To do this, you can create a template that defines the layout
 for a single resource and then use the `sections.toml` configuration
 file to indicate that this template should be applied to each resource
-in the Data Package. In the template, we use the variable name
-`resource` to refer to the metadata of any single resource that will be
+in the Data Package. In the template, the variable name `resource` is
+used to refer to the metadata of any single resource that will be
 rendered with the template.
 
 ``` {.djangotemplate filename="templates/resource.qmd.jinja"}
@@ -211,7 +212,7 @@ file.
 The main configuration file is used to set the style, template folder,
 and output folder for the documentation. Flower can read the main
 configuration from the `.flower.toml` or the `pyproject.toml` file in
-the root of your Data Package. In this guide, we will use
+the root of your Data Package. In this guide, you will use
 `.flower.toml`.
 
 Create a `.flower.toml` file in the root of your Data Package and add
