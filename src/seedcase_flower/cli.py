@@ -26,12 +26,11 @@ def build(
     Args:
         uri: The URI to a datapackage.json file. Defaults to
             `datapackage.json` in the current working directory.
-        style: The style of output to use. Either one of the built-in styles in
-            `Style` or None. If None, it will look for a config file in
-            the same directory as the `datapackage.json` file. If a config file is
-            not found, it will use the default style (`Style.quarto_one_page`).
-            The `Style.custom` option is only available to use in the config
-            file (or directly via `Config`).
+        style: The style of output to use. If None, Flower will look for a
+            config file in the same directory as the `datapackage.json` file.
+            If a config file is not found, it will use the default style
+            (`quarto-one-page`). The `custom` style is only configurable from
+            the config file (or via the `Config` Python class).
         output_dir: The directory to output the generated files to.
             Defaults to the current working directory.
         verbose: If True, outputs messages to the console.
