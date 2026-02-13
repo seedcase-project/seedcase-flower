@@ -1,21 +1,21 @@
 """These are integration tests for the CLI commands."""
 
 from pytest import mark
-from seedcase_flower.cli import build, view
+
+from seedcase_flower.cli import BuildStyle, build, view
 
 
 @mark.parametrize(
     "style, expected",
     [
         (None, "Setting style from config (or default if no file found)"),
-        ("quarto_one_page", "Style supported!"),
-        ("unsupported_style", "Style not supported for `build`. Should be one of"),
+        (BuildStyle.quarto_one_page, "Style supported!"),
     ],
 )
-def test_build(style, expected) -> None:
+def test_build(style: BuildStyle | None, expected: str) -> None:
     """Test the build CLI function."""
     result = build(style=style)
-    assert result.startswith(expected)
+    assert result == expected
 
 
 def test_view() -> None:
