@@ -49,11 +49,6 @@ def build(
     """
     # Match works well when paired with enums for strictness and checking.
     match style:
-        case _ if style in BuildStyle:
-            cli_message = "Style supported!"  # Placeholder
-            # TODO implement setting the style in the config class
-            # config: Config = Config(style=BuildStyle(style))
-
         case None:
             cli_message = "Setting style from config (or default if no file found)"
             # TODO implement loading the style from the config
@@ -61,12 +56,11 @@ def build(
             # no file found since this will be a repeating pattern
             # config: Config = load_config(style, path)
 
+        # cyclopts guarantees that any value other than None is a `BuildStyle`
         case _:
-            cli_message = (  # Placeholder
-                "Style not supported for `build`. Should be one of "
-                f"{BuildStyle._member_names_}"
-            )
-            # TODO Raise error
+            cli_message = "Style supported!"  # Placeholder
+            # TODO implement setting the style in the config class
+            # config: Config = Config(style=BuildStyle(style))
 
     path: Path = _resolve_uri(uri)
     properties: dict[str, Any] = _read_properties(path)
