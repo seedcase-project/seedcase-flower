@@ -7,7 +7,9 @@ from typing import Any, Optional
 from seedcase_flower.internals import _read_properties, _resolve_uri
 import cyclopts
 
-app = cyclopts.App()
+app = cyclopts.App(
+    help="Flower generates human-readable documentation from Data Packages."
+)
 
 
 class BuildStyle(Enum):
