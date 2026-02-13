@@ -18,7 +18,7 @@ class BuildStyle(Enum):
 def build(
     uri: str = "datapackage.json",
     style: Optional[BuildStyle] = None,
-    output_dir: Path = Path(),
+    output_dir: Path = Path("docs"),
     verbose: bool = False,
 ) -> str:
     """Build human-readable documentation from a `datapackage.json` file.
