@@ -17,7 +17,7 @@ class BuildStyle(Enum):
 
 def build(
     uri: str = "datapackage.json",
-    style: BuildStyle | None = None,
+    style: Optional[BuildStyle] = None,
     output_dir: Path = Path(),
     verbose: bool = False,
 ) -> str:
