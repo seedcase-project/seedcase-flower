@@ -21,7 +21,7 @@ configure Flower's output, Flower **will not** use the settings in the configura
 CLI, the Python interface, or in the configuration file, Flower will use it's defaults.
 
 ::: callout-note
-The URI is only given on the CLI or from the Python interface and 
+The URI is only given on the CLI or from the Python interface and
 not from the configuration file. Similarly, you can only configure
 the `view` command from the CLI or the Python interface, not the configuration file.
 :::
