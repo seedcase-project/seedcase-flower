@@ -4,26 +4,27 @@ description: "Configuring Flower with different settings and output options."
 order: 3
 ---
 
-When using Flower,
-you can change the configuration in three ways:
+There are three ways to configure Flower:
 
-1. By passing option flags to the CLI, as described in [the CLI
+1. Via the command line interface (CLI), as described in [the CLI
    guide](/docs/guide/cli.qmd).
-2. By setting parameters in the Python `Config` class, as described in
-   [the Python guide](/docs/guide/python.qmd).
-3. By reading from a configuration file on disk, as described below.
+2. Via the Python interface, as described in [the Python
+   guide](/docs/guide/python.qmd).
+3. Via a configuration file, as described below.
 <!-- TODO the python file does not exist yet, make sure link is uptaded
 if name is different -->
 
-There are two ways to configure Flower: As options on the command line interface (CLI), when using the Python interface directly,
-or in the configuration file. If you use the CLI (or the Python interface) to
-configure Flower's output, Flower **will not** use the settings in the configuration file. If there are no configuration settings given in either the
-CLI, the Python interface, or in the configuration file, Flower will use it's defaults.
+If you use the CLI (or the Python interface) to
+configure Flower's output, Flower **will not** use the settings in the
+configuration file. If there are no configuration settings given in
+either the CLI, the Python interface, or in the configuration file,
+Flower will use it's defaults.
 
 ::: callout-note
-The URI is only given on the CLI or from the Python interface and
-not from the configuration file. Similarly, you can only configure
-the `view` command from the CLI or the Python interface, not the configuration file.
+The URI can only be specified via the CLI or the Python interface, not
+from the configuration file. Similarly, you can only configure the
+`view` command from the CLI or the Python interface, not from the
+configuration file.
 :::
 
 ## The configuration file
@@ -89,9 +90,10 @@ template-dir = "my-templates/"
 If you prefer to configure Flower via `pyproject.toml` instead, the
 syntax will be the same as we have seen above. The only difference is
 that a heading needs to be included to indicate where in the file Flower
-can find the settings. Open up `pyproject.toml` and add a new table header to the end
-as `[tool.seedcase-flower]`. Then put the same config settings as you used above
-in `.flower.toml` below this table header.
+can find the settings. Open up `pyproject.toml` and add a new table
+header to the end as `[tool.seedcase-flower]`. Then put the same
+configuration settings as you used above in `.flower.toml` below this
+table header.
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
