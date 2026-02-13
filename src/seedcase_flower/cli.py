@@ -4,11 +4,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
-from seedcase_flower.internals import _read_properties, _resolve_uri
-import cyclopts
+from cyclopts import App, Parameter
 
-app = cyclopts.App(
-    help="Flower generates human-readable documentation from Data Packages."
+from seedcase_flower.internals import _read_properties, _resolve_uri
+
+app = App(
+    help="Flower generates human-readable documentation from Data Packages.",
+    default_parameter=Parameter(negative=()),
 )
 
 
