@@ -27,7 +27,9 @@ keywords = [
   "data package website",
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "cyclopts>=4.5.3",
+]
 
 [project.urls]
 homepage = "https://flower.seedcase-project.org"
