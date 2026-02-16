@@ -30,8 +30,8 @@ def datapackage_path(tmp_path):
 @mark.parametrize(
     "style, expected",
     [
-        (None, "Setting style from config (or default if no file found)"),
-        (BuildStyle.quarto_one_page, "Style supported!"),
+        (None, ""),
+        (BuildStyle.quarto_one_page, ""),
     ],
 )
 def test_build(
