@@ -1,12 +1,12 @@
 # Changelog
 
-Since we follow [Conventional
-Commits](https://decisions.seedcase-project.org/why-conventional-commits)
+Since we follow
+[Conventional Commits](https://decisions.seedcase-project.org/why-conventional-commits/)
 when writing commit messages, we're able to automatically create formal
 releases of the Python package based on the commit messages. The
 releases are also published to Zenodo for easier discovery, archival,
 and citation purposes. We use
-[Commitizen](https://decisions.seedcase-project.org/why-semantic-release-with-commitizen)
+[Commitizen](https://decisions.seedcase-project.org/why-semantic-release-with-commitizen/)
 to be able to automatically create these releases, which uses
 [SemVar](https://semverdoc.org) as the version numbering scheme.
 
@@ -15,6 +15,12 @@ often, sometimes several times in a day. This also means that any
 individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
+
+## 0.2.0 (2026-02-16)
+
+### Feat
+
+- :sparkles: add skeleton of `build()` (#112)
 
 ## 0.1.1 (2026-01-08)
 

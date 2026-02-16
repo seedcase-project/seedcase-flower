@@ -48,7 +48,7 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 
 - `.github/`: Contains GitHub-specific files, such as issue and pull
   request templates, workflows,
-  [dependabot](https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide)
+  [dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide)
   configuration, pull request templates, and a
   [CODEOWNERS](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
   file.
@@ -94,6 +94,8 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
   for linting and formatting Python code.
 - `uv.lock`: Lockfile used by [`uv`](https://docs.astral.sh/uv/) to
   record exact versions of installed dependencies.
+- `.rumdl.toml`: [rumdl](https://rumdl.dev/) configuration file for
+  formatting Markdown files so that they are standardized and consistent
 
 ## Contributing
 
@@ -110,8 +112,8 @@ to abide by its terms.
 The following people have contributed to this project by submitting pull
 requests :tada:
 
-[@signekb](https://github.com/signekb),
 [@lwjohnst86](https://github.com/lwjohnst86),
+[@signekb](https://github.com/signekb),
 [@joelostblom](https://github.com/joelostblom),
 [@martonvago](https://github.com/martonvago)
 

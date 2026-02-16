@@ -1,3 +1,7 @@
 gh:
   repo: seedcase-flower
   org: seedcase-project
+
+links:
+  github: "https://github.com/seedcase-project/seedcase-flower"
+  site: "https://flower.seedcase-project.org"

@@ -4,15 +4,15 @@ subtitle: "growth_records"
 description: "This resource contains records of observed growth stages for various flora species."
 ---
 
--   Path: resources/growth_records/data.parquet
--   Primary key: `record_id`
--   Foreign keys:
-    -   Field: `species_id`, resource: `species_catalog`
+- Path: resources/growth_records/data.parquet
+- Primary key: `record_id`
+- Foreign keys:
+  - Field: `species_id`, resource: `species_catalog`
 
-| Title | Name | Type | Description |
-|------------------|------------------|------------------|------------------|
-| Record ID | `record_id` | integer | The unique identifier for each growth record. |
-| Species ID | `species_id` | integer | The unique identifier for each species. |
-| Observation date | `observation_date` | date | The date when the observation was made. |
-| Growth Stage | `growth_stage` | string | The observed growth stage of the species. |
-| Location | `location` | string | The location where the observation was made. |
+| Title            | Name               | Type    | Description                                   |
+|------------------|--------------------|---------|-----------------------------------------------|
+| Record ID        | `record_id`        | integer | The unique identifier for each growth record. |
+| Species ID       | `species_id`       | integer | The unique identifier for each species.       |
+| Observation date | `observation_date` | date    | The date when the observation was made.       |
+| Growth Stage     | `growth_stage`     | string  | The observed growth stage of the species.     |
+| Location         | `location`         | string  | The location where the observation was made.  |
