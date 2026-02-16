@@ -4,8 +4,8 @@ description: "How to use Flower on the command-line."
 order: 1
 ---
 
-Flower is designed to provide a friendly user experience from
-the command line. The CLI has commands for both viewing and building
+Flower is designed to provide a friendly user experience from the
+command line. The CLI has commands for both viewing and building
 documentation from a Data Package's metadata. The general pattern for
 how to use Flower from the CLI is:
 
@@ -30,8 +30,8 @@ use the `view` command like so:
 seedcase-flower view
 ```
 
-The `view` command displays the metadata in an easy to
-read format that is optimized for display directly in the Terminal.
+The `view` command displays the metadata in an easy to read format that
+is optimized for display directly in the Terminal.
 
 ### Working with a Data Package in a custom location
 
@@ -64,8 +64,8 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 
 If you would like to customize the style of how the metadata is
 displayed, you can use the `--style` flag. This option allows you to
-format the output with any of [the built-in
-styles](/docs/design/interface/outputs.html#built-in-styles):
+format the output with any of
+[the built-in styles](/docs/design/interface/outputs.html#built-in-styles):
 
 <!-- TODO: point link above to guide for styles, or ref docs, not design -->
 
@@ -85,5 +85,5 @@ options passed to `view`. You can only configure `view` via command line
 flags.
 :::
 
-For more details about what you can do with `view`, see `seedcase-flower
-view --help`.
+For more details about what you can do with `view`, see
+`seedcase-flower view --help`.

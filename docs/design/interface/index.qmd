@@ -5,12 +5,11 @@ title: "Interface"
 This section of the documentation focuses on how the interface is
 implemented. It is split into the following documents:
 
--   The [Inputs](inputs.qmd) accepted by Flower.
--   The [Outputs](outputs.qmd), including the different styles for
-    generating documentation from the `datapackage.json` file.
--   The [Command Line Interface](cli.qmd) that forms the main entry
-    point.
--   The [Configuration settings](config.qmd) as a Python class and
-    within a file.
--   The [Python interface](python.qmd) that contains the Python code
-    that powers the CLI Python functions.
+- The [Inputs](inputs.qmd) accepted by Flower.
+- The [Outputs](outputs.qmd), including the different styles for
+  generating documentation from the `datapackage.json` file.
+- The [Command Line Interface](cli.qmd) that forms the main entry point.
+- The [Configuration settings](config.qmd) as a Python class and within
+  a file.
+- The [Python interface](python.qmd) that contains the Python code that
+  powers the CLI Python functions.
