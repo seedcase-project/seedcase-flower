@@ -39,8 +39,8 @@ much overlap with the content of the CLI design page.
 
 ### {{< var planned >}} `build()`
 
-As already described in the CLI design page, this function has four
-parameters:
+As already described in the CLI design page, this function has the
+following parameters:
 
 -   `uri` for the URI argument. The default is the `datapackage.json`
     file found in the working directory. See the [CLI design](cli.qmd)
@@ -48,6 +48,10 @@ parameters:
 -   `style` for the style of output to use, which specifies the output
     file type and the number of files created. Either `None` or one of
     the built-in styles.
+-   `template_dir` for directory that contains the custom styling Jinja
+    template files as well as the `sections.toml` file. Defaults to
+    `None` as the default style is a built-in style that uses built-in
+    templates.
 -   `output_dir` to specify where the root directory is for the output
     files. Defaults to the current working directory.
 -   `verbose` to output more messages, rather than have no output.
@@ -61,6 +65,7 @@ flowchart TD
     uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
     path --> load_config{{"load_config()"}} --> Config
     style_cfg[style]:::input --> load_config
+    template_dir_cfg[template_dir]:::input --> load_config
     path --> read_dp{{"read_datapackage()"}} --> metadata
     metadata & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
     output --> write_sections{{"write_sections()"}}
@@ -94,6 +99,7 @@ class BuiltSection:
 def build(
     uri: str = "datapackage.json",
     style: Optional[Style] = None,
+    template_dir: Optional[Path] = None,
     output_dir: Path = Path("."),
     verbose: bool = False
     ):
@@ -108,6 +114,9 @@ def build(
             not found, it will use the default style (`Style.quarto_one_page`).
             The `Style.custom` option is only available to use in the config
             file (or directly via `Config`).
+        template_dir: The directory that contains the custom styling Jinja
+            template files as well as the `sections.toml` file. Defaults to None
+            as the default style is a built-in style that uses built-in templates.
         output_dir: The directory to output the generated files to.
             Defaults to the current working directory.
         verbose: If True, outputs messages to the console.
@@ -123,22 +132,37 @@ def build(
     path: str = resolve_uri(uri)
 
     # TODO: Use match inside of load_config to have strict checks?
-    # If style is provided, use that, not the config file.
-    # If style is None, look for config file in same dir as datapackage.json.
-    # If style is None and no config path found, use default style.
-    config: Config = load_config(style, path)
+    # TODO: I believe cylcopts can handle the config loading of CLI options, so
+    # we might not need to implement this ourselves.
+
+    # If any config option is provided, use that, not the config file.
+    # If there is no config option, look for config file in same dir as
+    # `datapackage.json`. Lastly, if none of the above, use the default style.
+    config: Config = Config(
+        style=style,
+        template_dir=template_dir,
+        output_dir=output_dir
+    )
+    # Pseudocode, this might not be necessary.
+    if Config is all None:
+        # if `template_dir` is given.
+        config: Config = load_config(path)
 
     # Able to read from URI, e.g. `https` or `file` or `gh`
     properties: dict = read_datapackage(path)
 
     # One item per section, rendered from template.
-    # Internally uses Jinja2 to render templates with metadata
+    # Internally uses Jinja2 to render templates with metadata, which
+    # are loaded within `build_sections()`. The Jinja2 templates and
+    # and the `sections.toml` file are loaded from the template directory,
+    # given by the `template_dir` arg or by the built-in styles (which points
+    # to a Flower internal template directory).
     output: list[BuiltSection] = build_sections(
         properties,
         config
     )
 
-    output_files: list[Path] = write_sections(output, output_dir)
+    output_files: list[Path] = write_sections(output, config.output_dir)
 
     if verbose:
         cli_message(output_files) #?
