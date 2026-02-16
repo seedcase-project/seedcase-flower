@@ -14,8 +14,8 @@ listing:
 
 # flora: Observations of flora species and seasonal development
 
-License: [CCO 1.0
-UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+License:
+[CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
 \| Version: 1.2.3 \| ID: 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
 
 A dataset containing flora species records and their observed growth
@@ -23,7 +23,7 @@ stages across different environments.
 
 ## Contributors
 
--   Jane Doe, creator, jane-doe\@example.com
--   John Smith, author, john-smith\@example.com
+- Jane Doe, creator, jane-doe\@example.com
+- John Smith, author, john-smith\@example.com
 
 ## Resources

@@ -19,16 +19,16 @@ interface via the Terminal (CLI) and the functions that implement the
 behaviour of the CLI functions. We will call them "CLI" and "non-CLI"
 functions. We have this split for a few reasons:
 
--   To create a clear separation between code that is exposed through
-    the CLI and code that could be used on its own as a Python package
-    library.
--   To apply functional programming practices to the non-CLI functions,
-    and restrict the use of side effects and other non-functional
-    practices to CLI functions.
--   To write unit tests for the non-CLI functions and integration tests
-    for the CLI functions.
--   To keep the CLI functions small by building them from functional
-    units of non-CLI code.
+- To create a clear separation between code that is exposed through the
+  CLI and code that could be used on its own as a Python package
+  library.
+- To apply functional programming practices to the non-CLI functions,
+  and restrict the use of side effects and other non-functional
+  practices to CLI functions.
+- To write unit tests for the non-CLI functions and integration tests
+  for the CLI functions.
+- To keep the CLI functions small by building them from functional units
+  of non-CLI code.
 
 ## Python CLI functions
 
@@ -42,19 +42,18 @@ much overlap with the content of the CLI design page.
 As already described in the CLI design page, this function has the
 following parameters:
 
--   `uri` for the URI argument. The default is the `datapackage.json`
-    file found in the working directory. See the [CLI design](cli.qmd)
-    for reasons why we use a URI.
--   `style` for the style of output to use, which specifies the output
-    file type and the number of files created. Either `None` or one of
-    the built-in styles.
--   `template_dir` for directory that contains the custom styling Jinja
-    template files as well as the `sections.toml` file. Defaults to
-    `None` as the default style is a built-in style that uses built-in
-    templates.
--   `output_dir` to specify where the root directory is for the output
-    files. Defaults to the current working directory.
--   `verbose` to output more messages, rather than have no output.
+- `uri` for the URI argument. The default is the `datapackage.json` file
+  found in the working directory. See the [CLI design](cli.qmd) for
+  reasons why we use a URI.
+- `style` for the style of output to use, which specifies the output
+  file type and the number of files created. Either `None` or one of the
+  built-in styles.
+- `template_dir` for directory that contains the custom styling Jinja
+  template files as well as the `sections.toml` file. Defaults to `None`
+  as the default style is a built-in style that uses built-in templates.
+- `output_dir` to specify where the root directory is for the output
+  files. Defaults to the current working directory.
+- `verbose` to output more messages, rather than have no output.
 
 The internal flow of this function is shown in the diagram below.
 
@@ -171,10 +170,11 @@ def build(
 
 ### {{< var planned >}} `view()`
 
-As mentioned in the CLI design page, this function has two parameters that
-are both the same as those in the `build()` function: `uri` and `style`.
-The only difference with the `style` parameter is that it can only accept built-in terminal styles
-and does not allow a custom style.
+As mentioned in the CLI design page, this function has two parameters
+that are both the same as those in the `build()` function: `uri` and
+`style`. The only difference with the `style` parameter is that it can
+only accept built-in terminal styles and does not allow a custom style.
+It also doesn't read from the configuration file.
 
 The internal flow of this function is shown in the diagram below.
 

@@ -26,18 +26,19 @@ include, and the output destination of those files.
 
 The configuration is split into two main parts:
 
--   The top-level configuration that is represented by the `Config`
-    class, the settings under the `[tool.seedcase-flower]` table in
-    `pyproject.toml`, or the settings at the top level of the
-    `.flower.toml` file. These settings dictate whether to use a
-    built-in style or a custom style, along with the location of the
-    template files for any custom style and which sections to include.
--   The style-level configuration that is represented by one or more
-    `Section` classes or `[[section]]` tables in the `sections.toml`
-    file in the directory where the template files are. These settings
-    dictate which contents of the `datapackage.json` (**not individual
-    properties**) are included in each section of the documentation and
-    where those sections are output.
+- The top-level configuration that is represented by the `Config` class,
+  the settings under the `[tool.seedcase-flower]` table in
+  `pyproject.toml`, or the settings at the top level of the
+  `.flower.toml` file. These settings dictate whether to use a built-in
+  style or a custom style, along with the location of the template files
+  for any custom style and which sections to include. These
+  configurations are only used by `build` and not `view`.
+- The style-level configuration that is represented by one or more
+  `Section` classes or `[[section]]` tables in the `sections.toml` file
+  in the directory where the template files are. These settings dictate
+  which contents of the `datapackage.json`
+  (**not individual properties**) are included in each section of the
+  documentation and where those sections are output.
 
 The configuration files are read in and directly mapped to the Python
 classes. So, we'll describe most of the design details in the Python
@@ -69,13 +70,13 @@ are used to create the output (more about this file is in the
 indicates which folder the output should be sent to.
 
 We include two attributes for output paths: the `output_dir` attribute
-in `Config` and the `output_path` attribute in the [`Section`
-class](#section-class). We use two paths so that when using a built-in
-style, where the internal `Section.output_path` values are set and can't
-be changed, the user can still specify the final output folder using the
-`Config.output_dir` attribute. This provides flexibility in how
-individual styles are structured internally while not restricting the
-final location of those outputs.
+in `Config` and the `output_path` attribute in the
+[`Section` class](#section-class). We use two paths so that when using a
+built-in style, where the internal `Section.output_path` values are set
+and can't be changed, the user can still specify the final output folder
+using the `Config.output_dir` attribute. This provides flexibility in
+how individual styles are structured internally while not restricting
+the final location of those outputs.
 
 Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/) to
 generate more human-friendly documentation from a `datapackage.json`
@@ -275,8 +276,8 @@ class Section:
 ### {{< var planned >}} `Content`
 
 The `Content` class provides a precise description of the path to the
-Jinja2 template, which [JSON
-Path](https://en.wikipedia.org/wiki/JSONPath) of the Data Package
+Jinja2 template, which
+[JSON Path](https://en.wikipedia.org/wiki/JSONPath) of the Data Package
 property will be sent to the template, what the name of the Jinja2
 variable is within the template, and whether the content represents one
 or many files for properties that are arrays. We designed this class to
@@ -354,8 +355,8 @@ is explicitly defined and reproducible whenever someone uses the
 `seedcase-flower build` command. This way, anyone who has access to the
 Data Package and the configuration file can re-build the documentation
 in the same way with that simple command. We use TOML for the file
-format since there are [many advantages to it for storing configuration
-settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
+format since there are
+[many advantages to it for storing configuration settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
 especially in contrast to YAML. The two biggest advantages of TOML for
 us are that you can use comments (with `#`) and that the content is
 treated purely as data (whereas YAML can contain content that can be
@@ -367,21 +368,21 @@ described above. The configuration can be put either in a separate
 `[tool.seedcase-flower]` table. The ordering of which configurations are
 used is as follows:
 
-1.  If an argument is given to `style` in the `build` CLI command, use
-    that.
-2.  If not, search for a `.flower.toml` file in the working directory
-    and, if found, read the configurations within that file.
-3.  If `.flower.toml` does not exist, search for a `pyproject.toml` file
-    in the working directory and, if found, read the configurations
-    under the `[tool.seedcase-flower]` table.
-4.  If neither file exists, use the default configurations defined in
-    the `Config` class, which represent the default built-in style.
+1. If an argument is given to `style` in the `build` CLI command, use
+   that.
+2. If not, search for a `.flower.toml` file in the working directory
+   and, if found, read the configurations within that file.
+3. If `.flower.toml` does not exist, search for a `pyproject.toml` file
+   in the working directory and, if found, read the configurations under
+   the `[tool.seedcase-flower]` table.
+4. If neither file exists, use the default configurations defined in the
+   `Config` class, which represent the default built-in style.
 
 The `sections.toml` configuration file kept within the template
 directory (`Config.template_dir`) is used to create the style. This maps
-directly to the `Section` and `Content` classes. For any given style, the
-template directory must have this `sections.toml` file, which contains
-the settings for the `Section` class. For built-in styles, this
+directly to the `Section` and `Content` classes. For any given style,
+the template directory must have this `sections.toml` file, which
+contains the settings for the `Section` class. For built-in styles, this
 `sections.toml` file is kept internally in Flower while for custom
 styles, the user must provide it in their template directory. This file
 maps to one or more `Section` classes.
