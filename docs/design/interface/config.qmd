@@ -100,77 +100,12 @@ below for more details.
 `Config` also represents a one-to-one mapping of the settings provided
 in the `.flower.toml` or `pyproject.toml` file.
 
+See
+[`help(Config)`](/docs/reference/Config.qmd) for more details.
+
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
 <!-- TODO: Include a setting for Data Package version? -->
-
-::: {.callout-tip collapse="true" appearance="minimal"}
-### Pseudocode: `Config` class
-
-```` python
-from dataclasses import dataclass
-from typing import Optional
-from enum import Enum
-
-# Allows for strict checking of built-in styles, as this is a sum type.
-class Style(Enum):
-    """Built-in styles for documentation output."""
-    quarto_one_page = "quarto-one-page"
-    # Not sure how to handle terminal style yet in implementation.
-    terminal_default = "terminal-default"
-    custom = "custom"
-
-# TODO: Might have to use pydantic instead to run basic checks when creating the class...?
-@dataclass(frozen=True)
-class Config:
-    """Configuration settings for styling the metadata.
-
-    TODO: Include link when implemented
-
-    See the [design](LINK) for an explanation of how Config is
-    designed. See the [guide](LINK) on how to set up custom styles and sections.
-    See `Section` and `Content` help for more details on how to set up the sections.
-
-    Attributes:
-        style (Style): Whether to use a built-in style or a custom one. Default is
-           `Style.quarto_one_page`. If you want to use a custom style, set
-            this to `Style.custom` and provide the path to the templates in `template_dir`.
-        template_dir (Optional[Path]): If `style` is `Style.custom`, this should be
-            the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
-            template files. The directory **must** contain at least one template Jinja2 file and
-            a `sections.toml` file that contains attributes for the `Section` classes.
-        output_dir (Optional[Path]): The directory where output files will be saved.
-            If `None`, defaults to the current working directory.
-
-    Examples:
-        ``` python
-        # A config using the built-in `quarto-book` style and outputting to the
-        # `docs/` folder.
-        config = Config(
-            style=Style.quarto_one_page,
-            output_dir=Path("docs/")
-        )
-
-        # A custom style that points to a template folder.
-        config = Config(
-            style=Style.custom,
-            template_dir=Path("templates")
-        )
-
-        # A custom style that points to a template folder and outputs
-        # to the `docs/` folder.
-        config = Config(
-            style=Style.custom,
-            template_dir=Path("templates"),
-            output_dir=Path("docs/")
-        )
-        ```
-    """
-    style: Style = Style.quarto_one_page
-    template_dir: Optional[Path] = None
-    output_dir: Optional[Path] = None
-````
-:::
 
 ### {{< var planned >}} `Section` {#section-class}
 
