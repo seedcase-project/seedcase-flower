@@ -85,7 +85,6 @@ look for templates in the directory `my-templates`, you can write the
 following line to `.flower.toml`:
 
 ``` {.toml filename=".flower.toml"}
-style = "custom"
 template-dir = "my-templates/"
 ```
 
