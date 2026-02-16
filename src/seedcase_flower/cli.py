@@ -2,7 +2,7 @@
 
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from seedcase_flower.internals import _read_properties, _resolve_uri
 
@@ -61,7 +61,7 @@ def build(
             # TODO Raise error
 
     path: Path = _resolve_uri(uri)
-    properties: dict = _read_properties(path)
+    properties: dict[str, Any] = _read_properties(path)
 
     if verbose:
         print(output_dir, properties)  # Placeholder to ensure no unused args
