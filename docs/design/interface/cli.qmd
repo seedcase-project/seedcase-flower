@@ -112,22 +112,31 @@ work for `build`.
 ```{mermaid}
 %%| label: fig-cli-build-flow
 %%| fig-cap: "The flow of input and output through the CLI `build` command."
+%%| fig-alt: "Diagram showing the flow of input and output through the CLI `build` command. The user provides a URI to the `datapackage.json` file and an optional style, which are used by the `build` command to generate output files and folders."
 flowchart LR
     uri("datapackage.json<br>[URI: file, https,<br>gh/github]")
-    config_file["_flower.toml or<br>pyproject.toml<br>[file]"]
+    config_file[".flower.toml or<br>pyproject.toml<br>[file]"]
+    config_sections_file["sections.toml<br>[file]"]
     build("build")
     style_opt("--style<br>[option]")
     verbose_opt("--verbose<br>[option]")
     output_dir_opt("--output-dir<br>[option]")
+    template_dir_opt("--template-dir<br>[option]")
     templates["Templates<br>[folder with<br>Jinja files]"]
     output["Output<br>[files and<br>folders]"]
-    config{"config"}
+    file{"file"}
+    cli{"cli"}
 
     uri --> build
-    templates --> config_file
-    config_file -- "either" --> config
-    style_opt -- "or" --> config
-    output_dir_opt --> config
+    config_file --> file
+    output_dir_opt --> cli
+    template_dir_opt --> cli
+    style_opt --> cli
+
+    templates --> config_sections_file
+    config_sections_file --> config
+    cli -- "either" --> config
+    file -- "or" --> config
     verbose_opt --> build
     config --> build
     build --> output
@@ -135,13 +144,8 @@ flowchart LR
 
 Configuration can be provided either as command-line arguments (as shown
 in the signature) or through a configuration file. The CLI command will
-first look for a configuration file named `_flower.toml` (or
-`pyproject.toml`) in the current directory. We name it with a leading
-`_` rather than `.` to make it more visible in file listings, as it's
-intended to be visible to the user unlike other types of configuration
-files that are usually hidden. This follows the style used by
-[Quarto](https://quarto.org/), where they name their configuration file
-`_quarto.yml`.
+first look for a configuration file named `.flower.toml` (or
+`pyproject.toml`) in the current directory.
 
 The main argument to `build` is the location of the Data Package file as
 a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
@@ -151,7 +155,7 @@ build the documentation from. We'll support the following URIs:
 -   {{< var planned >}} `https://`
 -   {{< var planned >}} `gh:` or `github:`
 
-Depending which URI is given, there are different behaviours:
+Depending on which URI is given, there are different behaviours:
 
 -   If nothing is given, `build` will by default use the URI
     `file://CURRENT_DIRECTORY/datapackage.json`.
@@ -181,14 +185,15 @@ locations in the future, e.g. remote files.
 
 <!-- TODO: Maybe also at some point allow using `doi:` URI? -->
 
-If you want to customise the output, you need to create a `_flower.toml`
-configuration file in the current directory or put the configurations in
-the `pyproject.toml` for Python projects. The design of the
+If you want to customise the output, you need to create a `.flower.toml`
+configuration file in the current directory, put the configurations in
+the `pyproject.toml` for Python projects, or use the CLI options. The design of the
 configuration is described in the [Configuration settings](config.qmd)
-document. The reason we don't allow customising via the CLI is to:
+document. We don't allow customising of the style sections via the CLI so that
+we can:
 
 -   Simplify the CLI implementation and avoid long commands. Especially
-    considering that customising the output can get quite complex with
+    considering that customising the style of output can get quite complex with
     multiple sections, templates, and output paths.
 -   Enforce reproducible builds by having the configuration in a file
     that can be version controlled, shared, and made visible to others,
@@ -197,7 +202,7 @@ document. The reason we don't allow customising via the CLI is to:
 This also means that if the URI is not a `file://`, we can't look for
 the configuration file in the same location as the `datapackage.json`
 file, even if it exists on the remote location. However, `build` will
-still look for a `_flower.toml` (or `pyproject.toml`) file in the
+still look for a `.flower.toml` (or `pyproject.toml`) file in the
 current directory. This way, you can keep the `datapackage.json` in a
 separate location from the generated documentation, which might be
 useful in situations where you don't own the Data Package but you still
@@ -222,12 +227,14 @@ styles of generated output. The behaviour of `--style` is as follows:
 We override the style in the configuration file if the user specifies a
 style in the CLI rather than merging the CLI option with the config file
 settings. This will allow for quicker testing of different styles as
-well as prevent the unintended side effects that might arise when a
+well as preventing the unintended side effects that might arise when a
 style is mixed with incompatible configuration settings.
 
 This overriding behaviour also applies to the other CLI options,
-`--output-dir` and `--verbose`; if they are used on the CLI, they
+`--output-dir` and `--template-dir`; if they are used on the CLI, they
 override the corresponding settings in the configuration file.
+
+<!-- TODO: This note might change if we make a `read-datapackage` Python package. -->
 
 ::: callout-important
 Flower does not check whether the `datapackage.json` file is correct or

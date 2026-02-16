@@ -123,7 +123,7 @@ tables below.
 | view | Output a Data Package's properties as human-readable text for terminal output, similar to the Unix `man` command. |
 | read | Read various files, such as a Data Package descriptor (the properties) or a configuration file. |
 
-: Actions that Flower can perform.
+: Actions used within Flower, including the CLI commands and Python API functions.
 
 ## C4 Models
 
@@ -229,32 +229,30 @@ blocks, such as classes and functions.
 Because the core Python package is relatively small and simple, and
 because both component and code diagrams include classes, we combine the
 component and code levels of the C4 model into a single diagram as shown
-below. This diagram shows the main classes and functions within the core
-Python package.
+below. This diagram shows the main classes and functions within the
+Python package that represents the CLI.
 
 ```{mermaid}
 %%| label: fig-c4-component
-%%| fig-cap: "C4 component diagram showing the parts of the Python package and their connections."
+%%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections."
 flowchart
 
-    subgraph python_package["Core Python Package"]
+    subgraph python_package["Python code"]
 
         subgraph config_file["Configuration"]
             config("Config<br>[class]")
             section("Section<br>[class]")
         end
 
-        read_config["read_config()<br>[function]"]
+        load_config["load_config()<br>[function]"]
         read_json["read_json()<br>[function]"]
         build("build()<br>[function]")
         view("view()<br>[function]")
 
-        section --"Lists metadata<br>items to include"--> config
-        config_file -- "Provides build<br>configurations" --> read_config
+        config_file -- "Sets build<br>configurations<br>from file" --> load_config
 
-        read_json --"Provides properties<br>as dict"--> build & view
-        read_config -- "Adds build<br>configurations" --> build
-        config --"Adds build<br>configurations"--> build & view
+        read_json --"Passes in<br>properties"--> build & view
+        load_config -- "Adds build<br>configurations" --> build & view
     end
 
     templates("Templates<br>[folder with<br>Jinja files]")
@@ -262,10 +260,10 @@ flowchart
     output_files("Output<br>[files and<br>folders]")
     output_screen("Output<br>[text in the Terminal]")
 
-    templates --"Provides output<br>structure and layout"--> config
-    user --"Provides datapackage.json<br>to build"--> read_json
-    user --"Provides configurations,<br>as file or Python class<br>(optional)"--> config_file
-    user --"Provides templates<br>in folder<br>(optional)"--> templates
+    templates --"Sets output<br>structure and layout"--> section
+    user --"Gives<br>datapackage.json"--> read_json
+    user --"Gives configurations,<br>as file, Python classes,<br>or from CLI<br>(optional)"--> config_file
+    user --"Gives templates<br>in folder<br>(optional)"--> templates
     build --"Populates template(s)<br>with metadata items"--> output_files
     view --"Displays output<br>to screen"--> output_screen
 
