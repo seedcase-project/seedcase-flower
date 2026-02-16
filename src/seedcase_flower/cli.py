@@ -42,7 +42,7 @@ def build(
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
-) -> str:
+) -> str:  # TODO change to None as per the design
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
@@ -52,11 +52,7 @@ def build(
             files and `sections.toml`. When set, it will override any
             built-in style specified via the `style` parameter.
         output_dir: The directory to save the generated files in.
-        verbose: If True, outputs additional information to the console.
-
-    Returns:
-        Outputs a message of the files created if verbose is True, otherwise
-            outputs nothing.
+        verbose: If True, prints additional information to the console.
     """
     path: Path = _resolve_uri(uri)
     properties: dict[str, Any] = _read_properties(path)
