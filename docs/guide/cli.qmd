@@ -107,7 +107,7 @@ The `qmd` extension means that this file is a
 [Quarto](https://quarto.org/)-flavored Markdown file. While this is the
 default text format, you can change it by
 specifying your own custom templates as detailed in [the configuration
-section of this guide](/docs/design/interface/config.qmd).
+section of this guide](custom-styles.qmd).
 Later in this guide, you will also see how you can generate
 more than one file by using different styles with `build`.
 
@@ -116,7 +116,7 @@ more than one file by using different styles with `build`.
 ### Changing input and output directory
 
 By default, `build` will look for a `datapackage.json` file in the
-current directory, but you can specify a different URI if desired (just
+current directory, but you can use a different [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) if you want (just
 like with `view`):
 
 ```{.bash filename="Terminal"}
@@ -155,10 +155,12 @@ seedcase-flower build --style quarto-resource-listing
 
 :::
 
+<!-- TODO: Add section about using `template-dir` option -->
+
 Like the default output style is `quarto-one-page`, the
 `quarto-resource-listing` style creates `docs/index.qmd` but it also
 creates a separate file for the data resource in the `docs/resources/`
 folder, for example `docs/resources/seed-beetle-metabolic-rate.qmd`. You
 can read more about the available default styles and how to create your
 own custom style in [the configuration section of the
-documentation](/docs/design/interface/outputs.html#built-in-styles).
+documentation](custom-styles.qmd).
