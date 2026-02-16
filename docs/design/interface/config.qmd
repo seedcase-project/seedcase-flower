@@ -100,8 +100,7 @@ below for more details.
 `Config` also represents a one-to-one mapping of the settings provided
 in the `.flower.toml` or `pyproject.toml` file.
 
-See
-[`help(Config)`](/docs/reference/Config.qmd) for more details.
+See [`help(Config)`](/docs/reference/Config.qmd) for more details.
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
