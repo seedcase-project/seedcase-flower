@@ -38,7 +38,7 @@ class BuildStyle(Enum):
 @app.command()
 def build(
     uri: str = "datapackage.json",
-    style: Optional[BuildStyle] = None,
+    style: Optional[BuildStyle] = BuildStyle.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
