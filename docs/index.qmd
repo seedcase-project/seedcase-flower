@@ -2,6 +2,57 @@
 title: "Overview"
 ---
 
+Do you have metadata about some data that you'd like to share or make as
+a nice website or other, more easily share-able document? Well, Flower
+is designed for you!
+
+Flower is Python package with a single purpose: Make human-friendly
+documentation from machine-friendly metadata. It takes metadata
+contained in a Data Package's](https://datapackage.org)
+`datapackage.json` file and converts them into an output that is
+designed for humans.
+
+## Why use it?
+
+There are little to no tools available that allow you to take metadata
+that describe a dataset or set of related datasets and make them into a
+format that is easy to share as, for example, a website or PDF. Even
+within the [Frictionless Data](https://frictionlessdata.io) ecosystem,
+which is the organisation responsible for initially starting and
+developing the Data Package specification, doesn't have tools for for
+doing this. There is a graphical user interface called
+[Open Data Editor](https://opendataeditor.okfn.org) that can display the
+metadata, however it isn't very flexible, isn't easy to customise, and
+mainly is designed around editing metadata.
+
+Considering that one of the biggest barriers to (re-)using data, at
+least research data, is documentation on the data itself, this is an
+area to improve on. For example, having information on how any given
+variable was collected, what are the units, or how or why the data was
+collected in the first place makes it much easier to effectively use
+data in a more reliable and accurate way. The overall aim of the
+[Seedcase Project](https://seedcase-project.org) is to build tools that
+make data more [FAIR](https://www.go-fair.org/fair-principles/), better
+documented, and more discoverable. Flower aims to help with improving
+the display of metadata, which helps with discoverability and ease of
+sharing.
+
+## Learning more
+
+This website contains documentation on Flower's design, how to use it,
+and details about the interface.
+
+- [How-to guide](/docs/guide/index.qmd): The guide section provides a
+  step-by-step introduction to Flower, including installing, using the
+  command-line interface, setting configurations, and creating
+  customised styles.
+- [Reference](/docs/reference/index.qmd): The reference section contains
+  detailed information about Flower's API, specifically the
+  documentation of individual Python classes and functions.
+- [Design](/docs/design/index.qmd): The design section describes the
+  architecture and interface of Flower, the requirements, use-cases, and
+  [C4 model](https://c4model.com/) diagrams.
+
 ## Contributors
 
 {{< include /docs/includes/_contributors.qmd >}}
