@@ -40,7 +40,7 @@ to configure Flower via `pyproject.toml`, since you likely already have
 your configuration settings for other Python tools in this file.
 Ultimately, which file you choose to use depends on if you prefer to
 have a separate configuration file for separate tools or if your prefer
-them the same configuration file.
+them in the same configuration file.
 
 ### Configurable settings
 
@@ -54,13 +54,15 @@ can be configured via the configuration file:
 : The directory where Flower will save the output files.
 
 `template-dir`
-: The directory that contains the templates files to use when `style="custom"`.
+: The directory that contains the template files to use. If you use
+  this setting because you want to create your own style, then don't
+  add a `style` setting (it must be empty).
 
-To see examples of which styles are available in flower and how they
+To see examples of which styles are available in Flower and how they
 would structure the metadata differently, see [the Outputs
 documentation](/docs/design/interface/outputs.qmd).
 <!-- TODO change to guide link when available -->
-When style is set to `"custom"`,
+When `template-dir` is used,
 the structure of the output is determined by a custom set of templates
 and configurations explained in [the documentation about custom
 styles](custom-styles.qmd).
@@ -75,12 +77,12 @@ do this by adding the following line to the configuration:
 output-dir = "my-docs/"
 ```
 
-When you run `flower build ...`, the configuration file will be read
+When you run `flower build`, the configuration file will be read
 and the output directory will be changed to `my-docs`.
 
 If you would like to change to use a custom style and instruct Flower to
-look for templates in the directory `my-templates`, you can add the
-following lines to `.flower.toml`:
+look for templates in the directory `my-templates`, you can write the
+following line to `.flower.toml`:
 
 ``` {.toml filename=".flower.toml"}
 style = "custom"
