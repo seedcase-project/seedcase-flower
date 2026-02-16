@@ -46,19 +46,13 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        uri: The URI to a datapackage.json file. Defaults to
-            `datapackage.json` in the current working directory.
-        style: The style of output to use. If None, Flower will look for a
-            config file in the same directory as the `datapackage.json` file.
-            If a config file is not found, it will use the default style
-            (`quarto-one-page`). A custom style is only configurable from
-            the config file (or via the `Config` Python class).
-        template_dir: The directory that contains the custom styling Jinja
-            template files as well as the `sections.toml` file. Defaults to None
-            as the default style is a built-in style that uses built-in templates.
-        output_dir: The directory to output the generated files to.
-            Defaults to `docs/` within the current working directory.
-        verbose: If True, outputs messages to the console.
+        uri: The URI to a datapackage.json file.
+        style: The style used to structure the output.
+        template_dir: The directory that contains the Jinja template
+            files and `sections.toml`. When set, it will override any
+            built-in style specified via the `style` parameter.
+        output_dir: The directory to save the generated files in.
+        verbose: If True, outputs additional information to the console.
 
     Returns:
         Outputs a message of the files created if verbose is True, otherwise
