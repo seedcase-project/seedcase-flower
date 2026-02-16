@@ -1,12 +1,75 @@
-"""Module containing only the functions for the exposed CLI."""
+"""Functions for the exposed CLI."""
 
+from enum import Enum
 from pathlib import Path
+from typing import Any, Optional
+
+from seedcase_flower.internals import _read_properties, _resolve_uri
 
 
-def build() -> Path:
-    """Build human-friendly documentation from a `datapackage.json` file."""
-    # mypy doesn't like returning None (design is to return None)
-    return Path(".")
+class BuildStyle(Enum):
+    """Built-in styles for outputting to file."""
+
+    quarto_one_page = "quarto_one_page"
+    quarto_resource_listing = "quarto_resource_listing"
+    quarto_resource_tables = "quarto_resource_tables"
+
+
+def build(
+    uri: str = "datapackage.json",
+    style: Optional[BuildStyle] = None,
+    template_dir: Optional[Path] = None,
+    output_dir: Path = Path("docs"),
+    verbose: bool = False,
+) -> str:
+    """Build human-readable documentation from a `datapackage.json` file.
+
+    Args:
+        uri: The URI to a datapackage.json file. Defaults to
+            `datapackage.json` in the current working directory.
+        style: The style of output to use. If None, Flower will look for a
+            config file in the same directory as the `datapackage.json` file.
+            If a config file is not found, it will use the default style
+            (`quarto-one-page`). A custom style is only configurable from
+            the config file (or via the `Config` Python class).
+        template_dir: The directory that contains the custom styling Jinja
+            template files as well as the `sections.toml` file. Defaults to None
+            as the default style is a built-in style that uses built-in templates.
+        output_dir: The directory to output the generated files to.
+            Defaults to `docs/` within the current working directory.
+        verbose: If True, outputs messages to the console.
+
+    Returns:
+        Outputs a message of the files created if verbose is True, otherwise
+            outputs nothing.
+    """
+    # Match works well when paired with enums for strictness and checking.
+    match style:
+        case _ if style in BuildStyle:
+            cli_message = "Style supported!"  # Placeholder
+            # TODO implement setting the style in the config class
+            # config: Config = Config(style=BuildStyle(style))
+
+        case None:
+            cli_message = "Setting style from config (or default if no file found)"
+            # TODO implement loading the style from the config
+            # TODO It seems appropriate to set the default value inside `load_config` if
+            # no file found since this will be a repeating pattern
+            # config: Config = load_config(style, path)
+
+        case _:
+            cli_message = (  # Placeholder
+                "Style not supported for `build`. Should be one of "
+                f"{BuildStyle._member_names_}"
+            )
+            # TODO Raise error
+
+    path: Path = _resolve_uri(uri)
+    properties: dict[str, Any] = _read_properties(path)
+
+    if verbose:
+        print(output_dir, properties, template_dir)  # Placeholder for unused args
+    return cli_message
 
 
 def view() -> str:
