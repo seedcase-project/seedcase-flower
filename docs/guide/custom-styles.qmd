@@ -209,23 +209,27 @@ file.
 
 ### Main configuration file
 
-The main configuration file is used to set the style, template folder,
-and output folder for the documentation. Flower can read the main
-configuration from the `.flower.toml` or the `pyproject.toml` file in
-the root of your Data Package. In this guide, you will use
-`.flower.toml`.
+The main configuration file is used to set the template and output
+folders for the documentation. Flower can read the main configuration
+from the `.flower.toml` or the `pyproject.toml` file in the root of your
+Data Package. In this guide, you will use `.flower.toml`.
 
 Create a `.flower.toml` file in the root of your Data Package and add
 the following settings:
 
 ``` {.toml filename=".flower.toml"}
-# Let Flower know you're using a custom style
-style = "custom"
 # Point Flower to the folder containing your templates
 template-dir = "templates/"
 # Specify where the output files should be generated
 output-dir = "docs/"
 ```
+
+::: callout-note
+The `style` field in the main configuration file is for specifying a
+built-in style and should not be used when creating a custom style. If
+you want to use a built-in style, leave `template-dir` unset and set
+`style` to the name of your chosen built-in style.
+:::
 
 ### `sections.toml` configuration file
 
@@ -299,6 +303,8 @@ jinja-variable = "package"
 # Render the selected metadata item as one output file
 mode = "one"
 
+# The contents of this section will be appended to the contents
+# of the previous section inside the `docs/index.qmd` file.
 [[section.contents]]
 jsonpath = "$.contributors"
 template-path = "contributors.qmd.jinja"
