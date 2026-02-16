@@ -4,13 +4,26 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
-from cyclopts import App, Parameter
+from cyclopts import App, Parameter, config
 
 from seedcase_flower.internals import _read_properties, _resolve_uri
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
     default_parameter=Parameter(negative=()),
+    config=[
+        config.Toml(
+            ".flower.toml",
+            search_parents=True,
+            use_commands_as_keys=False,
+        ),
+        config.Toml(
+            "pyproject.toml",
+            root_keys="flower",
+            search_parents=True,
+            use_commands_as_keys=False,
+        ),
+    ],
 )
 
 
@@ -51,27 +64,12 @@ def build(
         Outputs a message of the files created if verbose is True, otherwise
             outputs nothing.
     """
-    # Match works well when paired with enums for strictness and checking.
-    match style:
-        case None:
-            cli_message = "Setting style from config (or default if no file found)"
-            # TODO implement loading the style from the config
-            # TODO It seems appropriate to set the default value inside `load_config` if
-            # no file found since this will be a repeating pattern
-            # config: Config = load_config(style, path)
-
-        # cyclopts guarantees that any value other than None is a `BuildStyle`
-        case _:
-            cli_message = "Style supported!"  # Placeholder
-            # TODO implement setting the style in the config class
-            # config: Config = Config(style=BuildStyle(style))
-
     path: Path = _resolve_uri(uri)
     properties: dict[str, Any] = _read_properties(path)
 
     if verbose:
         print(output_dir, properties, template_dir)  # Placeholder for unused args
-    return cli_message
+    return ""
 
 
 def view() -> str:
