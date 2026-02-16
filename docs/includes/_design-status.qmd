@@ -7,10 +7,10 @@ pseudocode to clarify the design. Once the interface is implemented
 to the reference documentation instead. The symbols we use are described
 in the table below.
 
-| Status | Description |
-|:-----------------------------:|:----------------------------------------|
-| {{< var done >}} | Interface that has been implemented. |
-| {{< var wip >}} | Interface that is currently being worked on. |
+|       Status        | Description                                                     |
+|:-------------------:|:----------------------------------------------------------------|
+|  {{< var done >}}   | Interface that has been implemented.                            |
+|   {{< var wip >}}   | Interface that is currently being worked on.                    |
 | {{< var planned >}} | Interface that is planned, but isn't being worked on currently. |
 
 : A table showing the symbols used to indicate the status of interface
