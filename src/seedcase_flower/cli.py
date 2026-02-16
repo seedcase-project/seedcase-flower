@@ -1,6 +1,7 @@
 """Module containing functions for the exposed CLI."""
 
 from enum import Enum
+from typing import Optional
 from pathlib import Path
 
 from seedcase_sprout import PackageProperties, read_properties
