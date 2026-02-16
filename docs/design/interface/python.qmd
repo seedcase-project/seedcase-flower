@@ -47,12 +47,13 @@ following parameters:
   reasons why we use a URI.
 - `style` for the style of output to use, which specifies the output
   file type and the number of files created. Either `None` or one of the
-  built-in styles.
+  built-in styles. Is ignored if `template_dir` is given.
 - `template_dir` for directory that contains the custom styling Jinja
   template files as well as the `sections.toml` file. Defaults to `None`
   as the default style is a built-in style that uses built-in templates.
+  If given, `style` is ignored.
 - `output_dir` to specify where the root directory is for the output
-  files. Defaults to the current working directory.
+    files. Defaults to the current working directory.
 - `verbose` to output more messages, rather than have no output.
 
 The internal flow of this function is shown in the diagram below.
@@ -114,7 +115,8 @@ from enum import Enum
 class TerminalStyle(Enum):
     """Built-in styles for outputting to the terminal."""
     # Can add more styles later here if needed.
-    terminal_default = "terminal-default"
+    # TODO: Not sure what the exact path might be.
+    terminal_default = Path("templates/built-in/terminal-default/"
 
 def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.terminal_default):
     """Display the `datapackage.json` properties in a human-friendly way in the terminal.
@@ -135,7 +137,7 @@ def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.ter
     match style:
         # Might be a more concise way of doing this when there are more styles.
         case _ if style in TerminalStyle:
-            config: Config = Config(style=TerminalStyle(style))
+            config: Config = Config(template_dir=TerminalStyle(style))
 
         # This matches all other cases not explicitly handled above.
         case _:
