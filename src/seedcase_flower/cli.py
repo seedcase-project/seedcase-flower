@@ -7,7 +7,6 @@ from pathlib import Path
 from seedcase_sprout import PackageProperties, read_properties
 
 
-# Allows for strict checking of built-in styles, as this is a sum type.
 class BuildStyle(Enum):
     """Built-in styles for outputting to file."""
 
