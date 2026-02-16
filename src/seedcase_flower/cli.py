@@ -68,7 +68,7 @@ def build(
     properties: dict[str, Any] = _read_properties(path)
 
     if verbose:
-        print(output_dir, properties, template_dir)  # Placeholder to ensure no unused args
+        print(output_dir, properties, template_dir)  # Placeholder for unused args
     return cli_message
 
 
