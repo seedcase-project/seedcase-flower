@@ -59,15 +59,18 @@ when using `seedcase-flower build`.
 
 ### {{< var planned >}} `Config`
 
-The `Config` class specifies the top-level configurations and includes
-three attributes: `style`, `template_dir`, `output_dir`. `style` defines
-whether the documentation should use a built-in style or a custom one.
-`template_dir` is optional and defines the path to the directory
-containing the custom Jinja2 templates for custom styles and a
-`sections.toml` file with the settings that determine how the templates
-are used to create the output (more about this file is in the
-[Section](#section-class) section below). `output_dir` is optional and
-indicates which folder the output should be sent to.
+The `Config` class specifies the top-level configurations that apply to
+`build` and includes three attributes:
+
+- `style`: This optional attribute defines whether the documentation
+  should use a built-in style.
+- `template_dir`: This optional attribute defines the path to the
+  directory containing the custom Jinja2 templates for custom styles and
+  a `sections.toml` file with the settings that determine how the
+  templates are used to create the output (more about this file is in
+  the [Section](#section-class) section below).
+- `output_dir`: This optional attribute indicates which folder the
+  output should be sent to.
 
 We include two attributes for output paths: the `output_dir` attribute
 in `Config` and the `output_path` attribute in the
@@ -398,17 +401,18 @@ simple as:
 
 ``` {.toml filename=".flower.toml"}
 style = "quarto-one-page"
-output_dir = "docs/"
+output-dir = "docs/"
 ```
 
 Custom styles require `template-dir` to be included, for example:
 
 ``` toml
-style = "custom"
 # The `templates-dir` below must include at least one Jinja and the
 # `sections.toml` file.
-templates-dir = "path/to/templates/"
+template-dir = "path/to/templates/"
 ```
+
+When `template-dir` is given, any value in `style` will be ignored.
 
 ### {{< var planned >}} Main config settings: `pyproject.toml`
 
@@ -424,8 +428,8 @@ Taking the complex example from `.flower.toml` above, the
 ``` toml
 [tool.seedcase-flower]
 style = "custom"
-template_dir = "templates/"
-output_dir = "docs/"
+template-dir = "templates/"
+output-dir = "docs/"
 ```
 
 ### {{< var planned >}} Main config settings: `sections.toml`
