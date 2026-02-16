@@ -19,11 +19,9 @@ class Config(BaseModel, frozen=True):
 
     See the
     [design](https://flower.seedcase-project.org/docs/design/interface/config#config)
-    for an
-    explanation of how Config is designed. See the
+    for an explanation of how Config is designed. See the
     [guide](https://flower.seedcase-project.org/docs/guide/custom-styles) on how to
-    set up custom
-    styles and sections.
+    set up custom styles and sections.
     See `Section` and `Content` help for more details on how to set up the sections.
 
     Attributes:
