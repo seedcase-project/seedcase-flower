@@ -1,4 +1,4 @@
-"""Module containing functions for the exposed CLI."""
+"""Functions for the exposed CLI."""
 
 from enum import Enum
 from typing import Optional
