@@ -99,7 +99,6 @@ table header.
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
-style = "custom"
 template_dir = "my-templates/"
 output_dir = "my-docs/"
 ```
