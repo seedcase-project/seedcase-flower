@@ -11,7 +11,7 @@ website:
     pinned: true
     title: false
     logo: "_extensions/seedcase-project/seedcase-theme/logos/flower/navbar.svg"
-    logo-alt: "seedcase flower logo: Main page"
+    logo-alt: "Seedcase Flower logo: Main page"
     left:
       - text: "Overview"
         href: docs/index.qmd
@@ -84,8 +84,3 @@ format:
   seedcase-theme-html:
     include-before-body:
       - "docs/includes/site-counter.html"
-
-editor:
-  markdown:
-    wrap: 72
-    canonical: true

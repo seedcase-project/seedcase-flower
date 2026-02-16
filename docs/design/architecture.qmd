@@ -3,8 +3,8 @@ title: "Architecture"
 ---
 
 This document contains the architectural design for Flower. For design
-details of the Seedcase Project as a whole, see the [Seedcase
-Design](https://design.seedcase-project.org) documentation.
+details of the Seedcase Project as a whole, see the
+[Seedcase Design](https://design.seedcase-project.org) documentation.
 
 The purpose of this description is to ensure that the team shares a
 common understanding about the implementation and to outline the design
@@ -23,80 +23,76 @@ how they relate to Flower and its design.
 
 ### Producers
 
--   **Owner**: This person or role is the one responsible and
-    accountable for the Data Package's metadata. Their tasks might be to
-    ensure that the metadata is accurate, complete, and up-to-date. They
-    may act as a coordinator for the project that is structured
-    as a Data Package. They may also be responsible for maintaining the
-    Data Package itself, or at least overseeing tasks that need to
-    be done. They likely want more people to use their Data Package, so will
-    use or assign someone to use Flower to generate the metadata into
-    something that their group or collaborators can easily look through
-    to better understand the Data Package. This person may not have much
-    time or technical expertise to configure Flower or the output, so
-    will likely use Flower's default configurations, style, and
-    templates.
+- **Owner**: This person or role is the one responsible and accountable
+  for the Data Package's metadata. Their tasks might be to ensure that
+  the metadata is accurate, complete, and up-to-date. They may act as a
+  coordinator for the project that is structured as a Data Package. They
+  may also be responsible for maintaining the Data Package itself, or at
+  least overseeing tasks that need to be done. They likely want more
+  people to use their Data Package, so will use or assign someone to use
+  Flower to generate the metadata into something that their group or
+  collaborators can easily look through to better understand the Data
+  Package. This person may not have much time or technical expertise to
+  configure Flower or the output, so will likely use Flower's default
+  configurations, style, and templates.
 
--   **Manager**: This person or role, when distinct from the Owner, is
-    responsible for managing, organising, and maintaining the Data
-    Package, including how the metadata is structured and ultimately
-    presented and disseminated. They may be responsible for structuring
-    how the metadata is presented to the consumers, so will likely use
-    Flower to generate the output, potentially based on feedback and
-    instruction from the Owner. They may have some technical expertise,
-    though not necessarily too much. They will likely be quite busy with
-    other management tasks, so will likely use Flower's default
-    configurations, style, and templates. However, they may also be
-    interested in or instructed to customise the output to match the
-    project's branding or other content-specific needs. In this case,
-    they might do some small customisations to Flower's configurations
-    and final output.
+- **Manager**: This person or role, when distinct from the Owner, is
+  responsible for managing, organising, and maintaining the Data
+  Package, including how the metadata is structured and ultimately
+  presented and disseminated. They may be responsible for structuring
+  how the metadata is presented to the consumers, so will likely use
+  Flower to generate the output, potentially based on feedback and
+  instruction from the Owner. They may have some technical expertise,
+  though not necessarily too much. They will likely be quite busy with
+  other management tasks, so will likely use Flower's default
+  configurations, style, and templates. However, they may also be
+  interested in or instructed to customise the output to match the
+  project's branding or other content-specific needs. In this case, they
+  might do some small customisations to Flower's configurations and
+  final output.
 
--   **Communication or outreach**: This person or role is responsible
-    for disseminating the Data Package's metadata to a wider audience,
-    such as stakeholders, collaborators, or the general public. They
-    could be both producer and consumer. They may be involved in
-    creating reports, presentations, or other materials that showcase
-    the Data Package and its contents. They will likely use Flower to
-    generate the output, potentially with some customisations to match
-    the project's branding or for other stylistic purposes. They may
-    have some technical expertise, but not necessarily too much. They
-    will likely be quite busy with other communication tasks, and so
-   use Flower's default configurations, style, and templates
-    where possible.
+- **Communication or outreach**: This person or role is responsible for
+  disseminating the Data Package's metadata to a wider audience, such as
+  stakeholders, collaborators, or the general public. They could be both
+  producer and consumer. They may be involved in creating reports,
+  presentations, or other materials that showcase the Data Package and
+  its contents. They will likely use Flower to generate the output,
+  potentially with some customisations to match the project's branding
+  or for other stylistic purposes. They may have some technical
+  expertise, but not necessarily too much. They will likely be quite
+  busy with other communication tasks, and so use Flower's default
+  configurations, style, and templates where possible.
 
 ### Consumers
 
--   **Coordinator**: This person or role is responsible for coordinating
-    the use of the Data Package among a group of users, such as a
-    research team or project collaborators. They will be responsible for
-    ensuring that the docs generated by Flower are accessible and easy
-    to find for the people they are overseeing or coordinating. They will also
-    likely be giving feedback and advice to the Owner or Manager
-    about how others are using the docs for the Data Package. Their
-    main use case for Flower is to simplify their work of coordinating
-    the use of the Data Package, as they can direct people to the docs
-    rather than having to examine the raw metadata themselves.
+- **Coordinator**: This person or role is responsible for coordinating
+  the use of the Data Package among a group of users, such as a research
+  team or project collaborators. They will be responsible for ensuring
+  that the docs generated by Flower are accessible and easy to find for
+  the people they are overseeing or coordinating. They will also likely
+  be giving feedback and advice to the Owner or Manager about how others
+  are using the docs for the Data Package. Their main use case for
+  Flower is to simplify their work of coordinating the use of the Data
+  Package, as they can direct people to the docs rather than having to
+  examine the raw metadata themselves.
 
--   **Communication or outreach**: This is the same as the producer
-    role, but from the consumer perspective. They will be invested in
-    showing a nicely designed and aesthetically pleasing website or
-    documentation of the Data Package to others. So they will have
-    opinions and feedback on how the docs generated by Flower look and
-    feel, which will influence how the producer configures and uses
-    Flower.
+- **Communication or outreach**: This is the same as the producer role,
+  but from the consumer perspective. They will be invested in showing a
+  nicely designed and aesthetically pleasing website or documentation of
+  the Data Package to others. So they will have opinions and feedback on
+  how the docs generated by Flower look and feel, which will influence
+  how the producer configures and uses Flower.
 
--   **Researcher or analyst**: This person or role will be using the
-    Data Package for their research or analysis work. They will be
-    interested in understanding the contents of the Data Package to
-    better inform that work. They will likely use the docs
-    generated by Flower to get an overview of the Data Package and its
-    metadata, rather than examining the raw metadata themselves. Their
-    main use case for Flower is to obtain clear, concise, and
-    well-organised documentation that helps them quickly understand the
-    Data Package and its contents. If they are part of the group that
-    owns the Data Package, they may also provide feedback on how the
-    docs could be improved to better meet their needs.
+- **Researcher or analyst**: This person or role will be using the Data
+  Package for their research or analysis work. They will be interested
+  in understanding the contents of the Data Package to better inform
+  that work. They will likely use the docs generated by Flower to get an
+  overview of the Data Package and its metadata, rather than examining
+  the raw metadata themselves. Their main use case for Flower is to
+  obtain clear, concise, and well-organised documentation that helps
+  them quickly understand the Data Package and its contents. If they are
+  part of the group that owns the Data Package, they may also provide
+  feedback on how the docs could be improved to better meet their needs.
 
 ## Naming
 
@@ -105,25 +101,25 @@ used in the [Data Package standard](https://datapackage.org/). The main
 objects and actions used throughout the package can be found in the
 tables below.
 
-| Object | Description |
-|----------------------------|--------------------------------------------|
-| package | A Data Package that contains a collection of related data resources and descriptor(s). |
-| descriptor | A standalone and complete metadata structure contained in a JSON file, for example, in `datapackage.json`. |
+| Object     | Description                                                                                                                                                |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| package    | A Data Package that contains a collection of related data resources and descriptor(s).                                                                     |
+| descriptor | A standalone and complete metadata structure contained in a JSON file, for example, in `datapackage.json`.                                                 |
 | properties | Metadata fields (name-value pairs) of a descriptor loaded as a Python dictionary. This can be a subset of the original descriptor or the entire structure. |
-| config | An object containing settings for modifying the behaviour and output of Flower, e.g., output format, template paths, or style. |
-| section | A configuration unit that defines an output path and a list of metadata items to render at that path. |
-| template | A Jinja file that defines the structure, layout, and format for rendering a metadata item. |
-| style | A name for a set of templates that defines a coherent look and structure for the output, e.g., `quarto-one-page` or `quarto-resource-listings`. |
+| config     | An object containing settings for modifying the behaviour and output of Flower, e.g., output format, template paths, or style.                             |
+| section    | A configuration unit that defines an output path and a list of metadata items to render at that path.                                                      |
+| template   | A Jinja file that defines the structure, layout, and format for rendering a metadata item.                                                                 |
+| style      | A name for a set of templates that defines a coherent look and structure for the output, e.g., `quarto-one-page` or `quarto-resource-listings`.            |
 
 : Objects used throughout Flower.
 
-| Action | Description |
-|----------------------------|--------------------------------------------|
-| build | Generate structured, human-readable output from a Data Package's properties using the configuration and templates. |
-| view | Output a Data Package's properties as human-readable text for terminal output, similar to the Unix `man` command. |
-| read | Read various files, such as a Data Package descriptor (the properties) or a configuration file. |
+| Action | Description                                                                                                        |
+|--------|--------------------------------------------------------------------------------------------------------------------|
+| build  | Generate structured, human-readable output from a Data Package's properties using the configuration and templates. |
+| view   | Output a Data Package's properties as human-readable text for terminal output, similar to the Unix `man` command.  |
+| read   | Read various files, such as a Data Package descriptor (the properties) or a configuration file.                    |
 
-: Actions that Flower can perform.
+: Actions used within Flower, including the CLI commands and Python API functions.
 
 ## C4 Models
 
@@ -229,32 +225,30 @@ blocks, such as classes and functions.
 Because the core Python package is relatively small and simple, and
 because both component and code diagrams include classes, we combine the
 component and code levels of the C4 model into a single diagram as shown
-below. This diagram shows the main classes and functions within the core
-Python package.
+below. This diagram shows the main classes and functions within the
+Python package that represents the CLI.
 
 ```{mermaid}
 %%| label: fig-c4-component
-%%| fig-cap: "C4 component diagram showing the parts of the Python package and their connections."
+%%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections."
 flowchart
 
-    subgraph python_package["Core Python Package"]
+    subgraph python_package["Python code"]
 
         subgraph config_file["Configuration"]
             config("Config<br>[class]")
             section("Section<br>[class]")
         end
 
-        read_config["read_config()<br>[function]"]
+        load_config["load_config()<br>[function]"]
         read_json["read_json()<br>[function]"]
         build("build()<br>[function]")
         view("view()<br>[function]")
 
-        section --"Lists metadata<br>items to include"--> config
-        config_file -- "Provides build<br>configurations" --> read_config
+        config_file -- "Sets build<br>configurations<br>from file" --> load_config
 
-        read_json --"Provides properties<br>as dict"--> build & view
-        read_config -- "Adds build<br>configurations" --> build
-        config --"Adds build<br>configurations"--> build & view
+        read_json --"Passes in<br>properties"--> build & view
+        load_config -- "Adds build<br>configurations" --> build & view
     end
 
     templates("Templates<br>[folder with<br>Jinja files]")
@@ -262,10 +256,10 @@ flowchart
     output_files("Output<br>[files and<br>folders]")
     output_screen("Output<br>[text in the Terminal]")
 
-    templates --"Provides output<br>structure and layout"--> config
-    user --"Provides datapackage.json<br>to build"--> read_json
-    user --"Provides configurations,<br>as file or Python class<br>(optional)"--> config_file
-    user --"Provides templates<br>in folder<br>(optional)"--> templates
+    templates --"Sets output<br>structure and layout"--> section
+    user --"Gives<br>datapackage.json"--> read_json
+    user --"Gives configurations,<br>as file, Python classes,<br>or from CLI<br>(optional)"--> config_file
+    user --"Gives templates<br>in folder<br>(optional)"--> templates
     build --"Populates template(s)<br>with metadata items"--> output_files
     view --"Displays output<br>to screen"--> output_screen
 
@@ -275,5 +269,5 @@ flowchart
 ```
 
 For more details on the individual classes and functions, see the
-[interface documentation](/docs/design/interface/index.qmd) and the [reference
-documentation](/docs/reference/index.qmd).
+[interface documentation](/docs/design/interface/index.qmd) and the
+[reference documentation](/docs/reference/index.qmd).

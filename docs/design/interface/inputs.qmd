@@ -4,12 +4,12 @@ title: "Inputs"
 
 There are two main inputs to Flower:
 
--   The `datapackage.json` file, which is the machine-readable JSON file
-    that is the foundation of a [Data Package](https://datapackage.org).
-    This file contains metadata on the package (like title, description,
-    and contributors) as well as metadata on the data resources (like
-    column names, data types, descriptions, and a path to the file with
-    the data).
+- The `datapackage.json` file, which is the machine-readable JSON file
+  that is the foundation of a [Data Package](https://datapackage.org).
+  This file contains metadata on the package (like title, description,
+  and contributors) as well as metadata on the data resources (like
+  column names, data types, descriptions, and a path to the file with
+  the data).
 
--   The configuration settings, either provided as command-line
-    arguments, through a Python class, or contained within a configuration file.
+- The configuration settings, either provided as command-line arguments,
+  through a Python class, or contained within a configuration file.

@@ -26,18 +26,19 @@ include, and the output destination of those files.
 
 The configuration is split into two main parts:
 
--   The top-level configuration that is represented by the `Config`
-    class, the settings under the `[tool.seedcase-flower]` table in
-    `pyproject.toml`, or the settings at the top level of the
-    `_flower.toml` file. These settings dictate whether to use a
-    built-in style or a custom style, along with the location of the
-    template files for any custom style and which sections to include.
--   The lower-level configuration that is represented by one or more
-    `Section` classes, the `[[tool.seedcase-flower.section]]` tables in
-    `pyproject.toml`, or the `[[section]]` tables in `_flower.toml`.
-    These settings dictate which contents of the `datapackage.json`
-    (**not individual properties**) are included in each section of the
-    documentation and where those sections are output.
+- The top-level configuration that is represented by the `Config` class,
+  the settings under the `[tool.seedcase-flower]` table in
+  `pyproject.toml`, or the settings at the top level of the
+  `.flower.toml` file. These settings dictate whether to use a built-in
+  style or a custom style, along with the location of the template files
+  for any custom style and which sections to include. These
+  configurations are only used by `build` and not `view`.
+- The style-level configuration that is represented by one or more
+  `Section` classes or `[[section]]` tables in the `sections.toml` file
+  in the directory where the template files are. These settings dictate
+  which contents of the `datapackage.json`
+  (**not individual properties**) are included in each section of the
+  documentation and where those sections are output.
 
 The configuration files are read in and directly mapped to the Python
 classes. So, we'll describe most of the design details in the Python
@@ -59,22 +60,23 @@ when using `seedcase-flower build`.
 ### {{< var planned >}} `Config`
 
 The `Config` class specifies the top-level configurations and includes
-four attributes: `style`, `template_dir`, `output_dir`, and `sections`.
-`style` defines whether the documentation should use a built-in style or
-a custom one. `template_dir` is optional and defines path to the
-directory containing the custom Jinja2 templates for custom styles.
-`output_dir` is optional and indicates which folder the output should be
-sent to. `sections` specifies which sections to include.
+three attributes: `style`, `template_dir`, `output_dir`. `style` defines
+whether the documentation should use a built-in style or a custom one.
+`template_dir` is optional and defines the path to the directory
+containing the custom Jinja2 templates for custom styles and a
+`sections.toml` file with the settings that determine how the templates
+are used to create the output (more about this file is in the
+[Section](#section-class) section below). `output_dir` is optional and
+indicates which folder the output should be sent to.
 
 We include two attributes for output paths: the `output_dir` attribute
-in `Config` and the `output_path` attribute in the `Section` class
-(which would be set in the `sections` attribute of `Config`). We use two
-paths so that when using a built-in style, where the internal
-`Section.output_path` values are set and can't be changed, the user can
-still specify the final output folder using the `Config.output_dir`
-attribute. This provides flexibility in how individual styles are
-structured internally while not restricting the final location of those
-outputs.
+in `Config` and the `output_path` attribute in the
+[`Section` class](#section-class). We use two paths so that when using a
+built-in style, where the internal `Section.output_path` values are set
+and can't be changed, the user can still specify the final output folder
+using the `Config.output_dir` attribute. This provides flexibility in
+how individual styles are structured internally while not restricting
+the final location of those outputs.
 
 Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/) to
 generate more human-friendly documentation from a `datapackage.json`
@@ -88,8 +90,8 @@ itself or the content, as we let Jinja2 handle that.
 
 Theoretically, a user could create a custom style that lists all the
 metadata found in the `datapackage.json` file in a single Jinja template
-file, depending on how they set up the `sections` attribute and created
-their Jinja2 template.
+file, depending on how they set up the [`Section`](#section-class) class
+and created their Jinja2 template.
 
 Jinja2 template files listed in the `Content.template_path` are given
 only the parts of the `datapackage.json` file that are listed by the
@@ -97,7 +99,7 @@ only the parts of the `datapackage.json` file that are listed by the
 below for more details.
 
 `Config` also represents a one-to-one mapping of the settings provided
-in the `_flower.toml` or `pyproject.toml` file.
+in the `.flower.toml` or `pyproject.toml` file.
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
@@ -136,92 +138,53 @@ class Config:
             this to `Style.custom` and provide the path to the templates in `template_dir`.
         template_dir (Optional[Path]): If `style` is `Style.custom`, this should be
             the relative directory path to the [Jinja2](https://jinja.palletsprojects.com/en/stable/)
-            template files. The directory **must** contain one template file for each
-            `Section.contents` used in the `sections` attribute.
+            template files. The directory **must** contain at least one template Jinja2 file and
+            a `sections.toml` file that contains attributes for the `Section` classes.
         output_dir (Optional[Path]): The directory where output files will be saved.
             If `None`, defaults to the current working directory.
-        sections (Optional[list[Section]]): List of `Section` classes that define one or
-            more sections to create in the output, including output path and content items.
 
     Examples:
         ``` python
-        # A config using the built-in `quarto-book` style
+        # A config using the built-in `quarto-book` style and outputting to the
+        # `docs/` folder.
         config = Config(
             style=Style.quarto_one_page,
             output_dir=Path("docs/")
         )
 
-        # A custom config with only `package` contents in one section
+        # A custom style that points to a template folder.
         config = Config(
             style=Style.custom,
-            template_dir=Path("templates"),
-            output_dir=Path("docs/"),
-            sections=[
-                Section(
-                    output_path=Path("docs/index.qmd"),
-                    contents=[Content(
-                        jsonpath=".",
-                        template_path=Path("templates/package.qmd.jinja"),
-                        jinja_variable="package",
-                        mode=Mode.one
-                )]
-            ]
+            template_dir=Path("templates")
         )
 
-        # A custom config with multiple sections and content types, generated
-        # in the root folder.
+        # A custom style that points to a template folder and outputs
+        # to the `docs/` folder.
         config = Config(
             style=Style.custom,
             template_dir=Path("templates"),
-            sections=[
-                Section(
-                    output_path=Path("docs/package.qmd"),
-                    contents=[
-                        Content(
-                            jsonpath=".",
-                            template_path=Path("templates/package.qmd.jinja"),
-                            jinja_variable="package",
-                            mode=Mode.one
-                        ),
-                        Content(
-                            jsonpath=".contributors",
-                            template_path=Path("templates/contributors.qmd.jinja"),
-                            jinja_variable="contributors",
-                            mode=Mode.one
-                        )
-                    ]
-                ),
-                # Section that outputs each resource as a file in the `docs/resources/` folder
-                Section(
-                    output_path=Path("docs/resources/"),
-                    contents=[Content(
-                        jsonpath=".resources",
-                        template_path=Path("templates/resources.qmd.jinja"),
-                        jinja_variable="resources",
-                        mode=Mode.one
-                    )]
-                )
-            ]
+            output_dir=Path("docs/")
+        )
         ```
     """
     style: Style = Style.quarto_one_page
     template_dir: Optional[Path] = None
     output_dir: Optional[Path] = None
-    sections: Optional[list[Section]] = None
 ````
 :::
 
-### {{< var planned >}} `Section`
+### {{< var planned >}} `Section` {#section-class}
 
 The main purpose of `Section` is to allow creating separate "sections"
 of the documentation, in this case, separate files to display different
 parts of the `datapackage.json` metadata. It includes two attributes:
 `output_path` and `contents`.
 
-The `output_path` specifies the name of the output file or folder. But
-it isn't as simple as "this outputs content to this given file". That's
-because some Data Package properties are arrays of objects. Sometimes it
-makes sense to create a separate output file for each array item.
+The `output_path` specifies the name of the output file or folder
+relative to the `Config.output_dir`. But it isn't as simple as "this
+outputs content to this given file". That's because some Data Package
+properties are arrays of objects. Sometimes it makes sense to create a
+separate output file for each array item.
 
 For example, when a property that we want to display is a list, like
 resources, we would set the output path as a folder with the special
@@ -234,14 +197,15 @@ use as a file name, specifically that it can't have spaces and must be
 all lowercase.
 
 For example, to create one output file per resource in a `resources/`
-folder you would use the `output_path` `resources/{resource-name}.qmd`.
-You can also provide the folder as a path like `resources/`, which would
-be equivalent to the above. Why `resource-name` and not `name`? Because
-it allows for the creation of multiple files and folders with custom
-names when multiple `name` properties exist at different levels in a
-nested property. For example, each schema field has a `name` property,
-as does the resource the fields belong to. So to output a file for each
-schema field for each resource, we use the `output_path`
+folder you would use the `output_path` and give it
+`resources/{resource-name}.qmd`. You can also provide the folder as a
+path like `resources/`, which would be equivalent to the above. Why
+`resource-name` and not `name`? Because it allows for the creation of
+multiple files and folders with custom names when multiple `name`
+properties exist at different levels in a nested property. For example,
+each schema field has a `name` property, as does the resource the fields
+belong to. So to output a file for each schema field for each resource,
+we use the `output_path` and give it
 `docs/resources/{resource-name}/fields/{resource-schema-field-name}.qmd`.
 
 When setting a multi-file output, you can customise what properties get
@@ -271,7 +235,7 @@ class Section:
             when a style outputs to the terminal such as when using `view()`.
             If a directory is provided, files will be created for each content item that has
             a `name` property (e.g. `resources` or `resource-schema-fields`) For example,
-            if `output_path` is `Path("docs/")` and `contents` is `["resources"]`,
+            if `output_path` is `Path("docs/")` and the content item relates to the array of resources,
             then each resource will be output to `docs/{resource_name}.md` (or whichever output
             format is used in the Jinja2 template files). If a file path is provided, all contents
             within the `Section` will be output to that single file.
@@ -312,8 +276,8 @@ class Section:
 ### {{< var planned >}} `Content`
 
 The `Content` class provides a precise description of the path to the
-Jinja2 template, which [JSON
-Path](https://en.wikipedia.org/wiki/JSONPath) of the Data Package
+Jinja2 template, which
+[JSON Path](https://en.wikipedia.org/wiki/JSONPath) of the Data Package
 property will be sent to the template, what the name of the Jinja2
 variable is within the template, and whether the content represents one
 or many files for properties that are arrays. We designed this class to
@@ -365,7 +329,8 @@ class Content:
         jsonpath (str): The [JSON path syntax](https://en.wikipedia.org/wiki/JSONPath)
             to the Data Package property that should be sent to the `template_path`
             Jinja2 file.
-        template_path (Path): The path to the Jinja2 template file for this content item.
+        template_path (Path): The path to the Jinja2 template file for this content item,
+            relative to the template directory given in `Config.template_dir`.
         jinja_variable (str): The Jinja2 variable name that will be used in the template
             to reference this content item.
         mode (Mode): Whether this content item is used to output one file or many files.
@@ -385,63 +350,93 @@ class Content:
 
 <!-- TODO: Replace link with our own decision "why TOML" post -->
 
-We use a configuration file to ensure that how the documentation is
-built is explicitly defined and reproducible whenever someone uses the
+We use configuration files to ensure that how the documentation is built
+is explicitly defined and reproducible whenever someone uses the
 `seedcase-flower build` command. This way, anyone who has access to the
 Data Package and the configuration file can re-build the documentation
 in the same way with that simple command. We use TOML for the file
-format since there are [many advantages to it for storing configuration
-settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
+format since there are
+[many advantages to it for storing configuration settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
 especially in contrast to YAML. The two biggest advantages of TOML for
 us are that you can use comments (with `#`) and that the content is
 treated purely as data (whereas YAML can contain content that can be
 parsed as code and executed).
 
-The configuration file maps one-to-one to the `Config` and `Section`
-classes described above. The configuration can be put either in a
-separate `_flower.toml` file or in the `pyproject.toml` file under the
+The main configuration file maps one-to-one to the `Config` class
+described above. The configuration can be put either in a separate
+`.flower.toml` file or in the `pyproject.toml` file under the
 `[tool.seedcase-flower]` table. The ordering of which configurations are
 used is as follows:
 
-1.  If an argument is given to `style` in the `build` CLI command, use
-    that.
-2.  If not, search for a `_flower.toml` file in the working directory
-    and, if found, read the configurations within that file.
-3.  If `_flower.toml` does not exist, search for a `pyproject.toml` file
-    in the working directory and, if found, read the configurations
-    under the `[tool.seedcase-flower]` table.
-4.  If neither file exists, use the default configurations defined in
-    the `Config` class, which represent the default built-in style.
+1. If an argument is given to `style` in the `build` CLI command, use
+   that.
+2. If not, search for a `.flower.toml` file in the working directory
+   and, if found, read the configurations within that file.
+3. If `.flower.toml` does not exist, search for a `pyproject.toml` file
+   in the working directory and, if found, read the configurations under
+   the `[tool.seedcase-flower]` table.
+4. If neither file exists, use the default configurations defined in the
+   `Config` class, which represent the default built-in style.
+
+The `sections.toml` configuration file kept within the template
+directory (`Config.template_dir`) is used to create the style. This maps
+directly to the `Section` and `Content` classes. For any given style,
+the template directory must have this `sections.toml` file, which
+contains the settings for the `Section` class. For built-in styles, this
+`sections.toml` file is kept internally in Flower while for custom
+styles, the user must provide it in their template directory. This file
+maps to one or more `Section` classes.
 
 To provide a clear precedence for applying settings, we decided that
 styles specified on the CLI override settings in the configuration file.
-Though, using `"custom"` style on the CLI won't do anything, as the
-custom style requires a path to the template directory as well as the
-different sections for the content, which can't be provided on the CLI.
 
-### {{< var planned >}} `_flower.toml`
+### {{< var planned >}} Main config settings: `.flower.toml`
 
-The `_flower.toml` file contains the configuration settings for Flower.
+The `.flower.toml` file contains the configuration settings for Flower.
 For a simple configuration using a built-in style, the file can be as
 simple as:
 
-``` {.toml filename="_flower.toml"}
+``` {.toml filename=".flower.toml"}
 style = "quarto-one-page"
 output_dir = "docs/"
 ```
 
-The configuration file becomes necessary with more complex
-customisations. For example:
+Custom styles require `template-dir` to be included, for example:
 
 ``` toml
 style = "custom"
-# The `templates-dir` below must include the files:
-# -   package.qmd.jinja
-# -   contributors.qmd.jinja
-# -   resources.qmd.jinja
-# -   resource-schema-fields.yml.jinja
+# The `templates-dir` below must include at least one Jinja and the
+# `sections.toml` file.
 templates-dir = "path/to/templates/"
+```
 
+### {{< var planned >}} Main config settings: `pyproject.toml`
+
+We allow the configuration settings to be set in the `pyproject.toml`
+file under the `[tool.seedcase-flower]` table for convenience, which is
+particularly useful if the Data Package is a Python project that uses
+`pyproject.toml`. This way, no additional configuration file is needed
+just for Flower.
+
+Taking the complex example from `.flower.toml` above, the
+`pyproject.toml` version would look like:
+
+``` toml
+[tool.seedcase-flower]
+style = "custom"
+template_dir = "templates/"
+output_dir = "docs/"
+```
+
+### {{< var planned >}} Main config settings: `sections.toml`
+
+The `sections.toml` file contains the configuration settings for a given
+style of output. The `sections.toml` is kept in the root of the
+`Config.template_dir` and is used to create the `Section` and `Content`
+classes. This file allows creating a wide variety of styles, from simple
+to complex. For example:
+
+``` toml
 # This creates an `index.qmd` containing the combined `package` and `contributors`
 # contents from the Jinja2 templates.
 [[section]]
@@ -476,53 +471,6 @@ mode = "many"
 [[section]]
 output-path = "docs/resources/{resource-name}/schema-fields.yml"
 [[section.contents]]
-jsonpath = ".resources[*].schema.fields"
-template-path = "path/to/templates/resource-schema-fields.yml.jinja"
-jinja-variable = "fields"
-mode = "many"
-```
-
-### {{< var planned >}} `pyproject.toml`
-
-We allow the configuration settings to be set in the `pyproject.toml`
-file under the `[tool.seedcase-flower]` table for convenience, which is
-particularly useful if the Data Package is a Python project that uses
-`pyproject.toml`. This way, no additional configuration file is needed
-just for Flower.
-
-Taking the complex example from `_flower.toml` above, the
-`pyproject.toml` version would look like:
-
-``` toml
-[tool.seedcase-flower]
-style = "custom"
-template_dir = "templates/"
-output_dir = "docs/"
-
-[[tool.seedcase-flower.section]]
-output_path = "docs/package.qmd"
-[[tool.seedcase-flower.section.contents]]
-jsonpath = "."
-template-path = "path/to/templates/package.qmd.jinja"
-jinja-variable = "package"
-mode = "one"
-[[tool.seedcase-flower.section.contents]]
-jsonpath = ".contributors"
-template-path = "path/to/templates/contributors.qmd.jinja"
-jinja-variable = "contributors"
-mode = "one"
-
-[[tool.seedcase-flower.section]]
-output_path = "docs/resources/"
-[[tool.seedcase-flower.section.contents]]
-jsonpath = ".resources"
-template-path = "path/to/templates/resources.qmd.jinja"
-jinja-variable = "resources"
-mode = "many"
-
-[[tool.seedcase-flower.section]]
-output_path = "docs/resources/{resource-name}/schema-fields.yml"
-[[tool.seedcase-flower.section.contents]]
 jsonpath = ".resources[*].schema.fields"
 template-path = "path/to/templates/resource-schema-fields.yml.jinja"
 jinja-variable = "fields"
