@@ -1,8 +1,8 @@
 """Functions for the exposed CLI."""
 
 from enum import Enum
-from typing import Optional
 from pathlib import Path
+from typing import Optional
 
 from seedcase_flower.internals import _read_properties, _resolve_uri
 
