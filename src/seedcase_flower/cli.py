@@ -18,6 +18,7 @@ class BuildStyle(Enum):
 def build(
     uri: str = "datapackage.json",
     style: Optional[BuildStyle] = None,
+    template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
 ) -> str:
@@ -29,10 +30,13 @@ def build(
         style: The style of output to use. If None, Flower will look for a
             config file in the same directory as the `datapackage.json` file.
             If a config file is not found, it will use the default style
-            (`quarto-one-page`). The `custom` style is only configurable from
+            (`quarto-one-page`). A custom style is only configurable from
             the config file (or via the `Config` Python class).
+        template_dir: The directory that contains the custom styling Jinja
+            template files as well as the `sections.toml` file. Defaults to None
+            as the default style is a built-in style that uses built-in templates.
         output_dir: The directory to output the generated files to.
-            Defaults to the current working directory.
+            Defaults to `docs/` within the current working directory.
         verbose: If True, outputs messages to the console.
 
     Returns:
@@ -64,7 +68,7 @@ def build(
     properties: dict[str, Any] = _read_properties(path)
 
     if verbose:
-        print(output_dir, properties)  # Placeholder to ensure no unused args
+        print(output_dir, properties, template_dir)  # Placeholder to ensure no unused args
     return cli_message
 
 

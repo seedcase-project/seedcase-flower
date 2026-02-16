@@ -40,8 +40,7 @@ def test_build(
     expected: str,
 ) -> None:
     """Test the build CLI function."""
-    path = datapackage_path
-    result = build(path, style=style)
+    result = build(datapackage_path, style=style)
     assert result == expected
 
 
