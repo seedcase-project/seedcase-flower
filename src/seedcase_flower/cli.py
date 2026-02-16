@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Optional
 from pathlib import Path
 
-from seedcase_sprout import PackageProperties, read_properties
+from seedcase_flower.internals import _read_properties, _resolve_uri
 
 
 class BuildStyle(Enum):
@@ -60,15 +60,8 @@ def build(
             )
             # TODO Raise error
 
-    # Able to read from URI, e.g. `https` or `file` or `gh`
-    # Output maybe str? Path?
-    # Use `match` inside for strictness on URI types?
-    # TODO implement resolve_uri
-    # path: str = resolve_uri(uri)
-
-    # TODO temp workaround since sprout only handles reading file paths currently
-    path: Path = Path(uri)
-    properties: PackageProperties = read_properties(path)
+    path: Path = _resolve_uri(uri)
+    properties: dict = _read_properties(path)
 
     print(output_dir, verbose, properties)  # Placeholder to ensure no unused args
     return cli_message
