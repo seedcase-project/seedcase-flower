@@ -58,6 +58,7 @@ website:
             - docs/guide/installation.qmd
             - docs/guide/cli.qmd
             - docs/guide/config.qmd
+            - docs/guide/custom-styles.qmd
 
 quartodoc:
   sidebar: "docs/reference/_sidebar.yml"
