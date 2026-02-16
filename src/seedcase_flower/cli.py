@@ -63,7 +63,8 @@ def build(
     path: Path = _resolve_uri(uri)
     properties: dict = _read_properties(path)
 
-    print(output_dir, verbose, properties)  # Placeholder to ensure no unused args
+    if verbose:
+        print(output_dir, properties)  # Placeholder to ensure no unused args
     return cli_message
 
 
