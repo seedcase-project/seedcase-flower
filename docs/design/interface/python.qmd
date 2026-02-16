@@ -19,16 +19,16 @@ interface via the Terminal (CLI) and the functions that implement the
 behaviour of the CLI functions. We will call them "CLI" and "non-CLI"
 functions. We have this split for a few reasons:
 
--   To create a clear separation between code that is exposed through
-    the CLI and code that could be used on its own as a Python package
-    library.
--   To apply functional programming practices to the non-CLI functions,
-    and restrict the use of side effects and other non-functional
-    practices to CLI functions.
--   To write unit tests for the non-CLI functions and integration tests
-    for the CLI functions.
--   To keep the CLI functions small by building them from functional
-    units of non-CLI code.
+- To create a clear separation between code that is exposed through the
+  CLI and code that could be used on its own as a Python package
+  library.
+- To apply functional programming practices to the non-CLI functions,
+  and restrict the use of side effects and other non-functional
+  practices to CLI functions.
+- To write unit tests for the non-CLI functions and integration tests
+  for the CLI functions.
+- To keep the CLI functions small by building them from functional units
+  of non-CLI code.
 
 ## Python CLI functions
 
@@ -60,18 +60,21 @@ This class is used instead of a dictionary for a few reasons:
 
 ### {{< var planned >}} `build()`
 
-As already described in the CLI design page, this function has four
-parameters:
+As already described in the CLI design page, this function has the
+following parameters:
 
--   `uri` for the URI argument. The default is the `datapackage.json`
-    file found in the working directory. See the [CLI design](cli.qmd)
-    for reasons why we use a URI.
--   `style` for the style of output to use, which specifies the output
-    file type and the number of files created. Either `None` or one of
-    the built-in styles.
--   `output_dir` to specify where the root directory is for the output
-    files. Defaults to the current working directory.
--   `verbose` to output more messages, rather than have no output.
+- `uri` for the URI argument. The default is the `datapackage.json` file
+  found in the working directory. See the [CLI design](cli.qmd) for
+  reasons why we use a URI.
+- `style` for the style of output to use, which specifies the output
+  file type and the number of files created. Either `None` or one of the
+  built-in styles.
+- `template_dir` for directory that contains the custom styling Jinja
+  template files as well as the `sections.toml` file. Defaults to `None`
+  as the default style is a built-in style that uses built-in templates.
+- `output_dir` to specify where the root directory is for the output
+  files. Defaults to the current working directory.
+- `verbose` to output more messages, rather than have no output.
 
 The internal flow of this function is shown in the diagram below.
 
@@ -82,8 +85,9 @@ flowchart TD
     uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
     path --> load_config{{"load_config()"}} --> Config
     style_cfg[style]:::input --> load_config
-    path --> read_properties{{"read_properties()"}} --> properties
-    properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
+    template_dir_cfg[template_dir]:::input --> load_config
+    path --> read_properties{{"read_properties()"}} --> metadata
+    metadata & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
     output --> write_sections{{"write_sections()"}}
     output_dir:::input --> write_sections
     write_sections --> files["list[Path]"]
@@ -117,6 +121,7 @@ def build(
     # TODO: This could also be a URI object instead of a string.
     uri: str = "datapackage.json",
     style: Optional[Style] = None,
+    template_dir: Optional[Path] = None,
     output_dir: Path = Path("."),
     verbose: bool = False
     ):
@@ -131,6 +136,9 @@ def build(
             not found, it will use the default style (`Style.quarto_one_page`).
             The `Style.custom` option is only available to use in the config
             file (or directly via `Config`).
+        template_dir: The directory that contains the custom styling Jinja
+            template files as well as the `sections.toml` file. Defaults to None
+            as the default style is a built-in style that uses built-in templates.
         output_dir: The directory to output the generated files to.
             Defaults to the current working directory.
         verbose: If True, outputs messages to the console.
@@ -146,25 +154,121 @@ def build(
     path: str = resolve_uri(uri)
 
     # TODO: Use match inside of load_config to have strict checks?
-    # If style is provided, use that, not the config file.
-    # If style is None, look for config file in same dir as datapackage.json.
-    # If style is None and no config path found, use default style.
-    config: Config = load_config(style, path)
+    # TODO: I believe cylcopts can handle the config loading of CLI options, so
+    # we might not need to implement this ourselves.
+
+    # If any config option is provided, use that, not the config file.
+    # If there is no config option, look for config file in same dir as
+    # `datapackage.json`. Lastly, if none of the above, use the default style.
+    config: Config = Config(
+        style=style,
+        template_dir=template_dir,
+        output_dir=output_dir
+    )
+    # Pseudocode, this might not be necessary.
+    if Config is all None:
+        # if `template_dir` is given.
+        config: Config = load_config(path)
 
     # Able to read from URI, e.g. `https` or `file` or `gh`
     # Will need to customise read function to fit needs of Flower.
     properties: PackageProperties = read_properties(path)
 
     # One item per section, rendered from template.
-    # Internally uses Jinja2 to render templates with metadata
+    # Internally uses Jinja2 to render templates with metadata, which
+    # are loaded within `build_sections()`. The Jinja2 templates and
+    # and the `sections.toml` file are loaded from the template directory,
+    # given by the `template_dir` arg or by the built-in styles (which points
+    # to a Flower internal template directory).
     output: list[BuiltSection] = build_sections(
         properties,
         config
     )
 
-    output_files: list[Path] = write_sections(output, output_dir)
+    output_files: list[Path] = write_sections(output, config.output_dir)
 
     if verbose:
         cli_message(output_files) #?
+```
+:::
+
+### {{< var planned >}} `view()`
+
+As mentioned in the CLI design page, this function has two parameters
+that are both the same as those in the `build()` function: `uri` and
+`style`. The only difference with the `style` parameter is that it can
+only accept built-in terminal styles and does not allow a custom style.
+It also doesn't read from the configuration file.
+
+The internal flow of this function is shown in the diagram below.
+
+```{mermaid}
+%%| label: fig-python-view-flow
+%%| fig-cap: "Diagram of the internal flow of functions and objects in the `view()` CLI function."
+flowchart TD
+    uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
+    style_cfg[style]:::input --> Config
+    path --> read_dp{{"read_properties()"}} --> PackageProperties
+    PackageProperties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
+    output --> pretty_print{{"pretty_print()"}}
+
+    classDef input fill:#FFF
+```
+
+::: {.callout-tip collapse="true" icon="false"}
+## Pseudocode: `view()`
+
+``` {.python filename="src/seedcase_flower/cli.py"}
+from typing import Optional
+from seedcase_flower.config import Style
+from seedcase_sprout import read_properties, PackageProperties
+from pathlib import Path
+from enum import Enum
+
+# Allows for strict checking of built-in styles, as this is a sum type.
+# The specific terminal style needs to also exist in the Style enum.
+class TerminalStyle(Enum):
+    """Built-in styles for outputting to the terminal."""
+    # Can add more styles later here if needed.
+    terminal_default = "terminal-default"
+
+def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.terminal_default):
+    """Display the `datapackage.json` properties in a human-friendly way in the terminal.
+
+    Args:
+        uri: The URI to a datapackage.json file. Defaults to
+            `datapackage.json` in the current working directory.
+        style: The style of output to use. Must be one of built-in terminal
+            styles in `TerminalStyle` or None.
+    """
+    # Potential implementation steps:
+
+    # Output maybe str? Path?
+    # Use `match` inside for strictness on URI types?
+    path: str = resolve_uri(uri)
+
+    # Match works well when paired with enums for strictness and checking.
+    match style:
+        # Might be a more concise way of doing this when there are more styles.
+        case _ if style in TerminalStyle:
+            config: Config = Config(style=TerminalStyle(style))
+
+        # This matches all other cases not explicitly handled above.
+        case _:
+            # Or however we implement error handling here.
+            error("Style not supported for terminal output. Should be one of ...")
+
+    # Able to read from URI, e.g. `https` or `file` or `gh`
+    properties: PackageProperties = read_properties(path)
+
+    # One item per section, rendered from template.
+    # Internally uses Jinja2 to render templates with metadata.
+    output: list[BuiltSection] = build_sections(
+        properties,
+        config
+    )
+
+    # Pretty printing here.
+    return print(output)
 ```
 :::
