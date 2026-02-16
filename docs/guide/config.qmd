@@ -1,0 +1,103 @@
+---
+title: "Configuration"
+description: "Configuring Flower with different settings and output options."
+order: 3
+---
+
+There are three ways to configure Flower:
+
+1. Via the command line interface (CLI), as described in [the CLI
+   guide](/docs/guide/cli.qmd).
+2. Via the Python interface, as described in [the Python
+   guide](/docs/guide/python.qmd).
+3. Via a configuration file, as described below.
+<!-- TODO the python file does not exist yet, make sure link is uptaded
+if name is different -->
+
+If you use the CLI (or the Python interface) to
+configure Flower's output, Flower **will not** use the settings in the
+configuration file. If there are no configuration settings given in
+either the CLI, the Python interface, or in the configuration file,
+Flower will use it's defaults.
+
+::: callout-note
+The URI can only be specified via the CLI or the Python interface, not
+from the configuration file. Similarly, you can only configure the
+`view` command from the CLI or the Python interface, not from the
+configuration file.
+:::
+
+## The configuration file
+
+Flower will read the configurations from **either** `.flower.toml` or
+`pyproject.toml` (not both) in this order of preference:
+
+1. `.flower.toml`
+2. `pyproject.toml`
+
+If your Data Package is already a Python package, it might be convenient
+to configure Flower via `pyproject.toml`, since you likely already have
+your configuration settings for other Python tools in this file.
+Ultimately, which file you choose to use depends on if you prefer to
+have a separate configuration file for separate tools or if your prefer
+them in the same configuration file.
+
+### Configurable settings
+
+Before diving into editing your configuration, let's see which settings
+can be configured via the configuration file:
+
+`style`
+: The style decides how the metadata is structured in the output files.
+
+`output-dir`
+: The directory where Flower will save the output files.
+
+`template-dir`
+: The directory that contains the template files to use. If you use
+  this setting because you want to create your own style, then don't
+  add a `style` setting (it must be empty).
+
+To see examples of which styles are available in Flower and how they
+would structure the metadata differently, see [the Outputs
+documentation](/docs/design/interface/outputs.qmd).
+<!-- TODO change to guide link when available -->
+When `template-dir` is used,
+the structure of the output is determined by a custom set of templates
+and configurations explained in [the documentation about custom
+styles](custom-styles.qmd).
+
+### Configuration file syntax
+
+To configure settings in Flower, open up `.flower.toml` in your favorite
+text editor. Let's change the output directory to `'my-docs'`. You can
+do this by adding the following line to the configuration:
+
+``` {.toml filename=".flower.toml"}
+output-dir = "my-docs/"
+```
+
+When you run `flower build`, the configuration file will be read
+and the output directory will be changed to `my-docs`.
+
+If you would like to change to use a custom style and instruct Flower to
+look for templates in the directory `my-templates`, you can write the
+following line to `.flower.toml`:
+
+``` {.toml filename=".flower.toml"}
+template-dir = "my-templates/"
+```
+
+If you prefer to configure Flower via `pyproject.toml` instead, the
+syntax will be the same as we have seen above. The only difference is
+that a heading needs to be included to indicate where in the file Flower
+can find the settings. Open up `pyproject.toml` and add a new table
+header to the end as `[tool.seedcase-flower]`. Then put the same
+configuration settings as you used above in `.flower.toml` below this
+table header.
+
+``` {.toml filename="pyproject.toml"}
+[tool.seedcase-flower]
+template_dir = "my-templates/"
+output_dir = "my-docs/"
+```
