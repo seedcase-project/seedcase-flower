@@ -111,7 +111,6 @@ section of this guide](custom-styles.qmd).
 Later in this guide, you will also see how you can generate
 more than one file by using different styles with `build`.
 
-<!--TODO change link when how-to section exists -->
 
 ### Changing input and output directory
 
