@@ -182,16 +182,20 @@ The reason we use a URI is to allow flexibility in specifying the
 location of the Data Package file and to allow us to extend to other
 locations in the future, e.g. remote files.
 
+<!-- TODO: Unhide when we use a `read-datapackage` package instead. -->
 
-<!-- TODO: We might need to update this based on whether we use Sprout or not -->
+::: content-hidden
+::: callout-note
+Flower reads the `datapackage.json` file using the `read-datapackage`
+package, which also outputs a structured `Properties` class.
+:::
+:::
 
 ::: callout-note
-Flower reads the `datapackage.json` file with the
-[Sprout](https://sprout.seedcase-project.org) function
-`read_properties()`. This function will check whether the properties
-comply with the Data Package specification and will output an error if
-there are any issues using
-[`check-datapackage`](https://check-datapackage.seedcase-project.org).
+When Flower reads in the `datapackage.json` file, it checks whether it
+comply with the Data Package specification using
+[`check-datapackage`](https://check-datapackage.seedcase-project.org)
+and will output an error if there are any issues.
 :::
 
 <!-- TODO: Maybe also at some point allow using `doi:` URI? -->
