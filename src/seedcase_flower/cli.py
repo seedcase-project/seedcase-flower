@@ -65,7 +65,3 @@ def build(
 def view() -> str:
     """Display the contents of a `datapackage.json` in a human-friendly way."""
     return ""
-
-
-if __name__ == "__main__":
-    app()

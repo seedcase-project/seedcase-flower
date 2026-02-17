@@ -37,6 +37,9 @@ repository = "https://github.com/seedcase-project/seedcase-flower"
 changelog = "https://github.com/seedcase-project/seedcase-flower/blob/main/CHANGELOG.md"
 issues = "https://github.com/seedcase-project/seedcase-flower/issues"
 
+[project.scripts]
+seedcase-flower = "seedcase_flower.cli:app"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
