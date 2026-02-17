@@ -57,8 +57,8 @@ class Config(BaseModel, frozen=True):
     def _style_with_template_dir(self) -> Self:
         if self.template_dir and self.style:
             raise ValueError(
-                "Cannot specify both `style` and `template_dir`. "
-                "When using a custom style, leave `style` unset and "
+                "Cannot use both `style` and `template_dir`. "
+                "If you want to use a custom style, leave `style` unset and "
                 "provide the template directory in `template_dir`."
             )
         return self
