@@ -1,17 +1,9 @@
-from enum import Enum
 from pathlib import Path
 from typing import Optional, Self
 
 from pydantic import BaseModel, model_validator
 
-
-# TODO: share with `build()`
-class BuildStyle(Enum):
-    """Built-in styles for outputting to file."""
-
-    quarto_one_page = "quarto_one_page"
-    quarto_resource_listing = "quarto_resource_listing"
-    quarto_resource_tables = "quarto_resource_tables"
+from seedcase_flower.internals import BuildStyle
 
 
 class Config(BaseModel, frozen=True):

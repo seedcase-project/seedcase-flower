@@ -2,7 +2,8 @@ from pathlib import Path
 
 from pytest import raises
 
-from seedcase_flower.config import BuildStyle, Config
+from seedcase_flower.config import Config
+from seedcase_flower.internals import BuildStyle
 
 
 def test_creates_config():
