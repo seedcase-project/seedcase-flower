@@ -42,7 +42,7 @@ def build(
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
-) -> str:  # TODO change to None as per the design
+) -> None:
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
@@ -59,7 +59,6 @@ def build(
 
     if verbose:
         print(output_dir, properties, template_dir)  # Placeholder for unused args
-    return ""
 
 
 def view() -> str:

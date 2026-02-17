@@ -30,14 +30,14 @@ def datapackage_path(tmp_path):
 @mark.parametrize(
     "style, expected",
     [
-        (None, ""),
-        (BuildStyle.quarto_one_page, ""),
+        (None, None),
+        (BuildStyle.quarto_one_page, None),
     ],
 )
 def test_build(
     datapackage_path: str,
     style: BuildStyle | None,
-    expected: str,
+    expected: None,
 ) -> None:
     """Test the build CLI function."""
     result = build(datapackage_path, style=style)
