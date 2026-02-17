@@ -19,8 +19,8 @@ website:
         href: docs/guide/index.qmd
       - text: "Design"
         href: docs/design/index.qmd
-      # - text: "Reference"
-      #   href: docs/reference/index.qmd
+      - text: "Reference"
+        href: docs/reference/index.qmd
     tools:
       - icon: github
         href: "https://github.com/seedcase-project/seedcase-flower"
@@ -75,6 +75,11 @@ quartodoc:
       contents:
         - build
         - view
+    - title: Configuration
+      desc: Classes to configure the behaviour of Flower.
+      contents:
+      - name: Section
+      - name: Content
 
 metadata-files:
   - docs/reference/_sidebar.yml
