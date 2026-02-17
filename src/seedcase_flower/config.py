@@ -1,7 +1,7 @@
 from pathlib import Path
-from typing import Optional, Self
+from typing import Optional
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel
 
 from seedcase_flower.internals import BuildStyle
 
@@ -18,8 +18,7 @@ class Config(BaseModel, frozen=True):
 
     Attributes:
         style (Optional[BuildStyle]): The built-in style to use for outputting the
-            documentation. When using a custom style, leave this unset and provide the
-            template directory in `template_dir`.
+            documentation. Ignored when `template_dir` is set.
         template_dir (Optional[Path]): When using a custom style, this should be the
             relative directory path to the
             [Jinja2](https://jinja.palletsprojects.com/en/stable/) template files.
@@ -33,10 +32,10 @@ class Config(BaseModel, frozen=True):
         import seedcase_flower as fl
         from pathlib import Path
 
-        # A config using the built-in `quarto-one-page` style and outputting to the
-        # `my-docs/` folder.
+        # A config using the built-in `quarto-resource-listing` style and outputting
+        # to the `my-docs/` folder.
         config = fl.Config(
-            style=fl.BuildStyle.quarto_one_page, output_dir=Path("my-docs/")
+            style=fl.BuildStyle.quarto_resource_listing, output_dir=Path("my-docs/")
         )
 
         # A custom style that points to a template folder and outputs
@@ -49,16 +48,6 @@ class Config(BaseModel, frozen=True):
         ```
     """
 
-    style: Optional[BuildStyle] = None
+    style: Optional[BuildStyle] = BuildStyle.quarto_one_page
     template_dir: Optional[Path] = None
     output_dir: Path = Path("docs")
-
-    @model_validator(mode="after")
-    def _style_with_template_dir(self) -> Self:
-        if self.template_dir and self.style:
-            raise ValueError(
-                "Cannot use both `style` and `template_dir`. "
-                "If you want to use a custom style, leave `style` unset and "
-                "provide the template directory in `template_dir`."
-            )
-        return self
