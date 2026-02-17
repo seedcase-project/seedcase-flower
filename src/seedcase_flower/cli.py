@@ -27,7 +27,7 @@ app = App(
 )
 
 
-class Style(Enum):
+class BuildStyle(Enum):
     """Built-in styles for outputting to file."""
 
     quarto_one_page = "quarto_one_page"
@@ -38,7 +38,7 @@ class Style(Enum):
 @app.command()
 def build(
     uri: str = "datapackage.json",
-    style: Optional[Style] = Style.quarto_one_page,
+    style: Optional[BuildStyle] = BuildStyle.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,

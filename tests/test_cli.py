@@ -4,7 +4,7 @@ import json
 
 from pytest import fixture, mark
 
-from seedcase_flower.cli import Style, build, view
+from seedcase_flower.cli import BuildStyle, build, view
 
 
 # Create a file at tmp_path that is automatically cleaned up after tests finish
@@ -31,12 +31,12 @@ def datapackage_path(tmp_path):
     "style, expected",
     [
         (None, ""),
-        (Style.quarto_one_page, ""),
+        (BuildStyle.quarto_one_page, ""),
     ],
 )
 def test_build(
     datapackage_path: str,
-    style: Style | None,
+    style: BuildStyle | None,
     expected: str,
 ) -> None:
     """Test the build CLI function."""
