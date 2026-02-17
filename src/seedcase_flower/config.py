@@ -41,11 +41,11 @@ class Config(BaseModel, frozen=True):
 
         # A custom style that points to a template folder and outputs
         # to the default `docs/` folder.
-        config = fl.Config(template_dir=Path("templates"))
+        config = fl.Config(template_dir=Path("templates/"))
 
         # A custom style that points to a template folder and outputs
         # to the `my-docs/` folder.
-        config = fl.Config(template_dir=Path("templates"), output_dir=Path("my-docs/"))
+        config = fl.Config(template_dir=Path("templates/"), output_dir=Path("my-docs/"))
         ```
     """
 
