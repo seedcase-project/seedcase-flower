@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.2.0 (2026-02-16)
+
+### Feat
+
+- :sparkles: add skeleton of `build()` (#112)
+
 ## 0.1.1 (2026-01-08)
 
 ### Fix
