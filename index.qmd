@@ -6,16 +6,16 @@ page-layout: custom
 ::::: landing-page-block
 :::: hero-text
 ::: text-center
-![](_extensions/seedcase-project/seedcase-theme/logos/flower/icon.svg){fig-alt="Seedcase Flower logo."
-width="150px"}
+![](_extensions/seedcase-project/seedcase-theme/logos/flower/icon.svg){fig-alt="Seedcase
+Flower logo." width="150px"}
 
-![](_extensions/seedcase-project/seedcase-theme/logos/flower/font.svg){fig-alt="Seedcase Flower font."
-height="50px"}
+![](_extensions/seedcase-project/seedcase-theme/logos/flower/font.svg){fig-alt="Seedcase
+Flower font." height="50px"}
 
 ## Turn your Data Package metadata into human-readable documentation
 
-[Overview](/docs/index.qmd){.btn .about-link} [Explore
-guide](/docs/guide/index.qmd){.btn .about-link}
+[Overview](/docs/index.qmd){.btn .about-link}
+[Explore guide](/docs/guide/index.qmd){.btn .about-link}
 :::
 ::::
 :::::
@@ -30,20 +30,20 @@ guide](/docs/guide/index.qmd){.btn .about-link}
 :::: landing-page-block
 ::: hero-text
 Flower is a Python package and command-line interface (CLI) that
-generates human-readable documentation from your [Data
-Package](https://datapackage.org/) metadata.
+generates human-readable documentation from your
+[Data Package](https://datapackage.org/) metadata.
 
 ## :sparkles: Key features
 
--   Create structured and human-friendly documents from a Data Package's
-    `datapackage.json` file.
--   Display the contents of a `datapackage.json` file in a
-    human-friendly way directly in the terminal.
--   Use through the command line for convenience, speed, and automation.
--   Comes with multiple built-in styles and supports custom styles with
-    [Jinja2](https://jinja.palletsprojects.com/en/stable/) templates.
--   Configurable through the `.flower.toml` file for reproducible
-    document generation for your Data Package.
+- Create structured and human-friendly documents from a Data Package's
+  `datapackage.json` file.
+- Display the contents of a `datapackage.json` file in a human-friendly
+  way directly in the terminal.
+- Use through the command line for convenience, speed, and automation.
+- Comes with multiple built-in styles and supports custom styles with
+  [Jinja2](https://jinja.palletsprojects.com/en/stable/) templates.
+- Configurable through the `.flower.toml` file for reproducible document
+  generation for your Data Package.
 
 Flower focuses on generating documents. For rendering, publishing, or
 deploying, see our
@@ -56,9 +56,9 @@ deploying, see our
 :::: hero-text
 ## About the Seedcase Project
 
-Flower is part of the [**Seedcase
-Project**](https://seedcase-project.org), which helps research projects
-manage and process data in line with the
+Flower is part of the
+[**Seedcase Project**](https://seedcase-project.org), which helps
+research projects manage and process data in line with the
 [FAIR](https://www.go-fair.org/fair-principles/) principles.
 
 This package works as a standalone tool but is also integrated into our
@@ -68,8 +68,7 @@ Package.
 
 ::: text-center
 [Check out Seedcase](https://seedcase-project.org/){.btn .about-link}
-[Explore the
-template](https://template-data-package.seedcase-project.org/){.btn
+[Explore the template](https://template-data-package.seedcase-project.org/){.btn
 .about-link}
 :::
 ::::
@@ -80,9 +79,9 @@ template](https://template-data-package.seedcase-project.org/){.btn
 ::: hero-text
 ## Want to contribute?
 
-We would love your feedback or contributions! Head over to the [GitHub
-repository]({{< meta links.github >}}) to share your ideas or contribute
-code. Your input makes us better!
+We would love your feedback or contributions! Head over to the
+[GitHub repository]({{< meta links.github >}}) to share your ideas or
+contribute code. Your input makes us better!
 :::
 ::::
 :::::

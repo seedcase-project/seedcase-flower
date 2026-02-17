@@ -4,12 +4,12 @@ subtitle: "species_catalog"
 description: "This resource contains a catalog of flora species."
 ---
 
--   Path: resources/species_catalog/data.parquet
--   Primary key: `species_id`
+- Path: resources/species_catalog/data.parquet
+- Primary key: `species_id`
 
-| Title | Name | Type | Description |
-|------------------|------------------|------------------|------------------|
-| Species ID | `species_id` | integer | The unique identifier for each species. |
-| Scientific name | `scientific_name` | string | The Latin name of the species. |
-| Common name | `common_name` | string | The common name of the species. |
-| Family | `family` | string | The Latin family to which the species belongs. |
+| Title           | Name              | Type    | Description                                    |
+|-----------------|-------------------|---------|------------------------------------------------|
+| Species ID      | `species_id`      | integer | The unique identifier for each species.        |
+| Scientific name | `scientific_name` | string  | The Latin name of the species.                 |
+| Common name     | `common_name`     | string  | The common name of the species.                |
+| Family          | `family`          | string  | The Latin family to which the species belongs. |

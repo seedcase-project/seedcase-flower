@@ -45,11 +45,11 @@ same name reduces confusion.
 
 There will be two commands available:
 
--   `build`: Build the documentation from the metadata in the
-    `datapackage.json` file.
+- `build`: Build the documentation from the metadata in the
+  `datapackage.json` file.
 
--   `view`: Display the `datapackage.json` metadata in a human-friendly
-    way in the Terminal.
+- `view`: Display the `datapackage.json` metadata in a human-friendly
+  way in the Terminal.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ### Pseudocode: CLI entry point
@@ -58,8 +58,8 @@ This is the potential implementation of the CLI entry point in
 `src/seedcase_flower/cli.py`. This will be deleted once the CLI is
 implemented. We'll build the CLI using
 [Typer](https://typer.tiangolo.com/). Details on the interface as Python
-code for the individual CLI commands is found in the [Python
-interface](python.qmd) design document.
+code for the individual CLI commands is found in the
+[Python interface](python.qmd) design document.
 
 ``` {.python filename="src/seedcase_flower/cli.py"}
 import typer
@@ -151,53 +151,68 @@ The main argument to `build` is the location of the Data Package file as
 a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
 build the documentation from. We'll support the following URIs:
 
--   {{< var planned >}} `file://` or a path without `file://`
--   {{< var planned >}} `https://`
--   {{< var planned >}} `gh:` or `github:`
+- {{< var planned >}} `file://` or a path without `file://`
+- {{< var planned >}} `https://`
+- {{< var planned >}} `gh:` or `github:`
 
 Depending on which URI is given, there are different behaviours:
 
--   If nothing is given, `build` will by default use the URI
-    `file://CURRENT_DIRECTORY/datapackage.json`.
--   If a relative path to a folder is given, it will resolve it to the
-    absolute path and append `datapackage.json`, so that the URI becomes
-    `file://ABSOLUTE_PATH/datapackage.json`.
--   If no URI prefix is given, it defaults to adding `file://FILE`. In
-    this situation, if the file path is relative, it will be resolved to
-    an absolute path before being prefixed with `file://`.
--   `https://` URIs must point to a raw file. We won't support using
-    `http://` URIs for security reasons.
--   `gh:` or `github:` URIs must be in the format `gh:OWNER/REPO` or
-    `github:OWNER/REPO`. Add either `[@BRANCH]` or `[@TAG]` to the end
-    to specify a specific branch or tag. `build` will resolve this URI
-    to the raw URL of the `datapackage.json` file in the repository,
-    assuming the `datapackage.json` file is in the root of the
-    repository. For example:
-    -   A URI of `gh:seedcase-project/seedcase-project` will resolve to
-        `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/heads/main/datapackage.json`.
-    -   A URI of `github:seedcase-project/seedcase-flower@0.1.0` will
-        resolve to
-        `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/tags/0.1.0/datapackage.json`.
+- If nothing is given, `build` will by default use the URI
+  `file://CURRENT_DIRECTORY/datapackage.json`.
+- If a relative path to a folder is given, it will resolve it to the
+  absolute path and append `datapackage.json`, so that the URI becomes
+  `file://ABSOLUTE_PATH/datapackage.json`.
+- If no URI prefix is given, it defaults to adding `file://FILE`. In
+  this situation, if the file path is relative, it will be resolved to
+  an absolute path before being prefixed with `file://`.
+- `https://` URIs must point to a raw file. We won't support using
+  `http://` URIs for security reasons.
+- `gh:` or `github:` URIs must be in the format `gh:OWNER/REPO` or
+  `github:OWNER/REPO`. Add either `[@BRANCH]` or `[@TAG]` to the end to
+  specify a specific branch or tag. `build` will resolve this URI to the
+  raw URL of the `datapackage.json` file in the repository, assuming the
+  `datapackage.json` file is in the root of the repository. For example:
+  - A URI of `gh:seedcase-project/seedcase-project` will resolve to
+    `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/heads/main/datapackage.json`.
+  - A URI of `github:seedcase-project/seedcase-flower@0.1.0` will
+    resolve to
+    `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/tags/0.1.0/datapackage.json`.
 
 The reason we use a URI is to allow flexibility in specifying the
 location of the Data Package file and to allow us to extend to other
 locations in the future, e.g. remote files.
 
+<!-- TODO: Unhide when we use a `read-datapackage` package instead. -->
+
+::: content-hidden
+::: callout-note
+Flower reads the `datapackage.json` file using the `read-datapackage`
+package, which also outputs a structured `Properties` class.
+:::
+:::
+
+::: callout-note
+When Flower reads in the `datapackage.json` file, it checks whether it
+comply with the Data Package specification using
+[`check-datapackage`](https://check-datapackage.seedcase-project.org)
+and will output an error if there are any issues.
+:::
+
 <!-- TODO: Maybe also at some point allow using `doi:` URI? -->
 
 If you want to customise the output, you need to create a `.flower.toml`
 configuration file in the current directory, put the configurations in
-the `pyproject.toml` for Python projects, or use the CLI options. The design of the
-configuration is described in the [Configuration settings](config.qmd)
-document. We don't allow customising of the style sections via the CLI so that
-we can:
+the `pyproject.toml` for Python projects, or use the CLI options. The
+design of the configuration is described in the
+[Configuration settings](config.qmd) document. We don't allow
+customising of the style sections via the CLI so that we can:
 
--   Simplify the CLI implementation and avoid long commands. Especially
-    considering that customising the style of output can get quite complex with
-    multiple sections, templates, and output paths.
--   Enforce reproducible builds by having the configuration in a file
-    that can be version controlled, shared, and made visible to others,
-    such as collaborators.
+- Simplify the CLI implementation and avoid long commands. Especially
+  considering that customising the style of output can get quite complex
+  with multiple sections, templates, and output paths.
+- Enforce reproducible builds by having the configuration in a file that
+  can be version controlled, shared, and made visible to others, such as
+  collaborators.
 
 This also means that if the URI is not a `file://`, we can't look for
 the configuration file in the same location as the `datapackage.json`
@@ -214,15 +229,15 @@ to have different styles of documentation generated. The `--style`
 option allows you to quickly switch between several different built-in
 styles of generated output. The behaviour of `--style` is as follows:
 
--   If no style is given *and* no configuration file is found, it
-    defaults to `quarto-one-page`.
--   If a style is given *and* no configuration file is found, it uses
-    the style given.
--   If no style is given *and* a configuration file is found, the style
-    specified in the configuration file is used.
--   If a style is given *and* a configuration file is found, the style
-    given in the command line overrides the style in the configuration
-    file.
+- If no style is given *and* no configuration file is found, it defaults
+  to `quarto-one-page`.
+- If a style is given *and* no configuration file is found, it uses the
+  style given.
+- If no style is given *and* a configuration file is found, the style
+  specified in the configuration file is used.
+- If a style is given *and* a configuration file is found, the style
+  given in the command line overrides the style in the configuration
+  file.
 
 We override the style in the configuration file if the user specifies a
 style in the CLI rather than merging the CLI option with the config file
@@ -233,16 +248,6 @@ style is mixed with incompatible configuration settings.
 This overriding behaviour also applies to the other CLI options,
 `--output-dir` and `--template-dir`; if they are used on the CLI, they
 override the corresponding settings in the configuration file.
-
-<!-- TODO: This note might change if we make a `read-datapackage` Python package. -->
-
-::: callout-important
-Flower does not check whether the `datapackage.json` file is correct or
-not, it will only read and parse it. If an error happens during reading
-or parsing, it might not be very informative. Use
-[`check-datapackage`](https://check-datapackage.seedcase-project.org)
-first to check that the `datapackage.json` is correct.
-:::
 
 ## {{< var planned >}} `view`
 
@@ -280,10 +285,10 @@ to the Data Package file and a `--style` option to specify how the
 metadata should be displayed in the Terminal. There are a few
 differences:
 
--   No output files are generated, it only displays the metadata in a
-    human-friendly way in the Terminal.
--   No configuration file is used or looked for. The only way to change
-    the output is to use the `--style` option with our built-in styles.
+- No output files are generated, it only displays the metadata in a
+  human-friendly way in the Terminal.
+- No configuration file is used or looked for. The only way to change
+  the output is to use the `--style` option with our built-in styles.
 
 The reason we don't use a configuration file for `view` is to keep it
 simple and lightweight, as it's primarily meant for quick inspection of
