@@ -17,7 +17,7 @@ class Config(BaseModel, frozen=True):
     See `Section` and `Content` help for more details on how to set up the sections.
 
     Attributes:
-        style (Optional[BuildStyle]): The built-in style to use for outputting the
+        style (BuildStyle): The built-in style to use for outputting the
             documentation. Ignored when `template_dir` is set.
         template_dir (Optional[Path]): When using a custom style, this should be the
             relative directory path to the
@@ -25,7 +25,6 @@ class Config(BaseModel, frozen=True):
             The directory **must** contain at least one template Jinja2 file and
             a `sections.toml` file that contains attributes for the `Section` classes.
         output_dir (Path): The directory where output files will be saved.
-            Defaults to `docs/` within the current working directory.
 
     Examples:
         ```{python}
@@ -48,6 +47,6 @@ class Config(BaseModel, frozen=True):
         ```
     """
 
-    style: Optional[BuildStyle] = BuildStyle.quarto_one_page
+    style: BuildStyle = BuildStyle.quarto_one_page
     template_dir: Optional[Path] = None
     output_dir: Path = Path("docs")
