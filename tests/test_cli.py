@@ -35,7 +35,7 @@ def datapackage_path(tmp_path):
 )
 def test_build(
     datapackage_path: str,
-    style: BuildStyle | None,
+    style: BuildStyle,
     expected: None,
 ) -> None:
     """Test the build CLI function."""
