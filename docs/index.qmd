@@ -33,7 +33,7 @@ research data, is the lack of well-documented metadata.
 For example, having information on how any given
 variable was collected, what are the units, and why the data was
 collected in the first place makes it much easier to effectively use
-data in a reliable and accurate way. 
+data in a reliable and accurate way.
 
 ## Learning more
 
