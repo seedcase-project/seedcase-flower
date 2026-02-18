@@ -1,6 +1,6 @@
 [project]
 name = "seedcase-flower"
-version = "0.2.0"
+version = "0.3.0"
 # TODO: Add a description of the package.
 description = ""
 authors = [
@@ -27,13 +27,18 @@ keywords = [
   "data package website",
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "cyclopts>=4.5.3",
+]
 
 [project.urls]
 homepage = "https://flower.seedcase-project.org"
 repository = "https://github.com/seedcase-project/seedcase-flower"
 changelog = "https://github.com/seedcase-project/seedcase-flower/blob/main/CHANGELOG.md"
 issues = "https://github.com/seedcase-project/seedcase-flower/issues"
+
+[project.scripts]
+seedcase-flower = "seedcase_flower.cli:app"
 
 [build-system]
 requires = ["hatchling"]
