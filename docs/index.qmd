@@ -10,30 +10,29 @@ designed for humans and can be shared as a website or plain text files.
 
 ## Why use Flower?
 
-There are little to no tools available that allow you to take metadata
-that describe a dataset or set of related datasets and make them into a
-format that is easy to share as, for example, a website or PDF. Even
-within the [Frictionless Data](https://frictionlessdata.io) ecosystem,
-which is the organisation responsible for initially starting and
-developing the Data Package specification, there are no tools for
-doing this. The closest match is a graphical user interface called
+The overall aim of the [Seedcase Project](https://seedcase-project.org)
+is to build tools that make data more
+[FAIR](https://www.go-fair.org/fair-principles/), better documented, and
+more discoverable. Towards this goal, Flower improves the display of
+metadata, which helps with discoverability and ease of sharing. This is
+an important part in making data FAIR, considering that one of the
+biggest barriers to (re-)using data, particularly research data, is the
+lack of well-documented metadata. For example, having information on how
+any given variable was collected, what are the units, and why the data
+was collected in the first place makes it much easier to effectively use
+data in a reliable and accurate way.
+
+Especially considering that there are little to no tools available that
+allow you to take metadata that describe a dataset or set of related
+datasets and make them into a format that is easy to share and easy to
+read (for humans). Even within the
+[Frictionless Data](https://frictionlessdata.io) ecosystem, which is the
+organisation responsible for initially starting and developing the Data
+Package specification, there are no tools for doing this. The closest
+match is a graphical user interface called
 [Open Data Editor](https://opendataeditor.okfn.org) that can display the
 metadata, however it isn't very flexible, isn't easy to customise, and
 is mainly designed around editing metadata.
-
-The overall aim of the
-[Seedcase Project](https://seedcase-project.org) is to build tools that
-make data more [FAIR](https://www.go-fair.org/fair-principles/), better
-documented, and more discoverable. Towards this goal, Flower improves
-the display of metadata, which helps with discoverability and ease of
-sharing.
-This is an important part in making data FAIR,
-considering that one of the biggest barriers to (re-)using data, particularly
-research data, is the lack of well-documented metadata.
-For example, having information on how any given
-variable was collected, what are the units, and why the data was
-collected in the first place makes it much easier to effectively use
-data in a reliable and accurate way.
 
 ## Learning more
 
