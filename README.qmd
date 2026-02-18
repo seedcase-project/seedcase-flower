@@ -12,7 +12,7 @@ metadata-files:
 </p>
 ```
 
-# {{< meta gh.repo >}}: TODO add more to title
+# {{< meta gh.repo >}}: {{< meta tagline >}}
 
 {{< include /docs/includes/_badges.qmd >}}
 

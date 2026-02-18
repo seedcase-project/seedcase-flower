@@ -1,12 +1,11 @@
 """Functions for the exposed CLI."""
 
-from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 
-from seedcase_flower.internals import _read_properties, _resolve_uri
+from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
@@ -25,14 +24,6 @@ app = App(
         ),
     ],
 )
-
-
-class BuildStyle(Enum):
-    """Built-in styles for outputting to file."""
-
-    quarto_one_page = "quarto_one_page"
-    quarto_resource_listing = "quarto_resource_listing"
-    quarto_resource_tables = "quarto_resource_tables"
 
 
 @app.command()

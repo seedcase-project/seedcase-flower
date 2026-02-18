@@ -80,6 +80,7 @@ quartodoc:
     - title: Configuration
       desc: Classes to configure the behaviour of Flower.
       contents:
+      - name: Config
       - name: Section
       - name: Content
 

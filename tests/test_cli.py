@@ -4,7 +4,8 @@ import json
 
 from pytest import fixture, mark
 
-from seedcase_flower.cli import BuildStyle, build, view
+from seedcase_flower.cli import build, view
+from seedcase_flower.internals import BuildStyle
 
 
 # Create a file at tmp_path that is automatically cleaned up after tests finish
