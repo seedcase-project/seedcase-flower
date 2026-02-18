@@ -2,9 +2,9 @@
 title: "Overview"
 ---
 
-Flower is a Python package with a single purpose: Make human-friendly
+Flower is a Python package with a single purpose: to make human-friendly
 documentation from machine-friendly metadata. It takes metadata
-contained in a Data Package's](https://datapackage.org)
+contained in a [Data Package's](https://datapackage.org)
 `datapackage.json` file and converts them into an output that is
 designed for humans and can be shared as a website or plain text files.
 
@@ -13,12 +13,12 @@ designed for humans and can be shared as a website or plain text files.
 The overall aim of the [Seedcase Project](https://seedcase-project.org)
 is to build tools that make data more
 [FAIR](https://www.go-fair.org/fair-principles/), better documented, and
-more discoverable. Towards this goal, Flower improves the display of
+more discoverable. To support this goal, Flower improves the display of
 metadata, which helps with discoverability and ease of sharing. This is
 an important part in making data FAIR, considering that one of the
 biggest barriers to (re-)using data, particularly research data, is the
 lack of well-documented metadata. For example, having information on how
-any given variable was collected, what are the units, and why the data
+any given variable was collected, what the units are, and why the data
 was collected in the first place makes it much easier to effectively use
 data in a reliable and accurate way.
 
