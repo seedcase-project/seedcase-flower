@@ -6,19 +6,19 @@ order: 3
 
 There are three ways to configure Flower:
 
-1. Via the command line interface (CLI), as described in [the CLI
-   guide](/docs/guide/cli.qmd).
-2. Via the Python interface, as described in [the Python
-   guide](/docs/guide/python.qmd).
+1. Via the command line interface (CLI), as described in
+   [the CLI guide](/docs/guide/cli.qmd).
+2. Via the Python interface, as described in
+   [the Python guide](/docs/guide/python.qmd).
 3. Via a configuration file, as described below.
 <!-- TODO the python file does not exist yet, make sure link is uptaded
 if name is different -->
 
-If you use the CLI (or the Python interface) to
-configure Flower's output, Flower **will not** use the settings in the
-configuration file. If there are no configuration settings given in
-either the CLI, the Python interface, or in the configuration file,
-Flower will use it's defaults.
+If you use the CLI (or the Python interface) to configure Flower's
+output, Flower **will not** use the settings in the configuration file.
+If there are no configuration settings given in either the CLI, the
+Python interface, or in the configuration file, Flower will use it's
+defaults.
 
 ::: callout-note
 The URI can only be specified via the CLI or the Python interface, not
@@ -59,13 +59,12 @@ can be configured via the configuration file:
   add a `style` setting (it must be empty).
 
 To see examples of which styles are available in Flower and how they
-would structure the metadata differently, see [the Outputs
-documentation](/docs/design/interface/outputs.qmd).
+would structure the metadata differently, see
+[the Outputs documentation](/docs/design/interface/outputs.qmd).
 <!-- TODO change to guide link when available -->
-When `template-dir` is used,
-the structure of the output is determined by a custom set of templates
-and configurations explained in [the documentation about custom
-styles](custom-styles.qmd).
+When `template-dir` is used, the structure of the output is determined
+by a custom set of templates and configurations explained in
+[the documentation about custom styles](custom-styles.qmd).
 
 ### Configuration file syntax
 
@@ -77,8 +76,8 @@ do this by adding the following line to the configuration:
 output-dir = "my-docs/"
 ```
 
-When you run `flower build`, the configuration file will be read
-and the output directory will be changed to `my-docs`.
+When you run `flower build`, the configuration file will be read and the
+output directory will be changed to `my-docs`.
 
 If you would like to change to use a custom style and instruct Flower to
 look for templates in the directory `my-templates`, you can write the
