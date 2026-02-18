@@ -6,7 +6,7 @@
     </a>
 </p>
 
-# seedcase-flower: TODO add more to title
+# seedcase-flower: Turn your Data Package metadata into human-readable documentation
 
 <!-- TODO: Include DOI after uploading -->
 
