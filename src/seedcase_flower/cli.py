@@ -47,10 +47,11 @@ def build(
 
     Args:
         uri: The URI to a datapackage.json file.
-        style: The style used to structure the output.
+        style: The style used to structure the output. If a template directory
+            is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
             files and `sections.toml`. When set, it will override any
-            built-in style specified via the `style` parameter.
+            built-in style given by the `style` parameter.
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
