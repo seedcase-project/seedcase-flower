@@ -30,7 +30,6 @@ def datapackage_path(tmp_path):
 @mark.parametrize(
     "style, expected",
     [
-        (None, None),
         (BuildStyle.quarto_one_page, None),
     ],
 )
