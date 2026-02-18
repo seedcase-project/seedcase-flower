@@ -81,6 +81,8 @@ quartodoc:
       desc: Classes to configure the behaviour of Flower.
       contents:
       - name: Config
+      - name: Section
+      - name: Content
 
 metadata-files:
   - docs/reference/_sidebar.yml
