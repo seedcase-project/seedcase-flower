@@ -22,7 +22,7 @@ any given variable was collected, what the units are, and why the data
 was collected in the first place makes it much easier to effectively use
 data in a reliable and accurate way.
 
-Especially considering that there are little to no tools available that
+Flower is especially useful considering that there are few tools available that
 allow you to take metadata that describe a dataset or set of related
 datasets and make them into a format that is easy to share and easy to
 read (for humans). Even within the
