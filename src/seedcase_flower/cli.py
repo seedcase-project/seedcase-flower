@@ -3,64 +3,54 @@
 from pathlib import Path
 from typing import Any, Optional
 
+from cyclopts import App, Parameter, config
+
 from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
 
+app = App(
+    help="Flower generates human-readable documentation from Data Packages.",
+    default_parameter=Parameter(negative=()),
+    config=[
+        config.Toml(
+            ".flower.toml",
+            search_parents=True,
+            use_commands_as_keys=False,
+        ),
+        config.Toml(
+            "pyproject.toml",
+            root_keys="tool.seedcase-flower",
+            search_parents=True,
+            use_commands_as_keys=False,
+        ),
+    ],
+)
 
+
+@app.command()
 def build(
     uri: str = "datapackage.json",
-    style: Optional[BuildStyle] = None,
+    style: BuildStyle = BuildStyle.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
-) -> str:
+) -> None:
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        uri: The URI to a datapackage.json file. Defaults to
-            `datapackage.json` in the current working directory.
-        style: The style of output to use. If None, Flower will look for a
-            config file in the same directory as the `datapackage.json` file.
-            If a config file is not found, it will use the default style
-            (`quarto-one-page`). A custom style is only configurable from
-            the config file (or via the `Config` Python class).
-        template_dir: The directory that contains the custom styling Jinja
-            template files as well as the `sections.toml` file. Defaults to None
-            as the default style is a built-in style that uses built-in templates.
-        output_dir: The directory to output the generated files to.
-            Defaults to `docs/` within the current working directory.
-        verbose: If True, outputs messages to the console.
-
-    Returns:
-        Outputs a message of the files created if verbose is True, otherwise
-            outputs nothing.
+        uri: The URI to a datapackage.json file.
+        style: The style used to structure the output. If a template directory
+            is given, this parameter will be ignored.
+        template_dir: The directory that contains the Jinja template
+            files and `sections.toml`. When set, it will override any
+            built-in style given by the `style` parameter.
+        output_dir: The directory to save the generated files in.
+        verbose: If True, prints additional information to the console.
     """
-    # Match works well when paired with enums for strictness and checking.
-    match style:
-        case _ if style in BuildStyle:
-            cli_message = "Style supported!"  # Placeholder
-            # TODO implement setting the style in the config class
-            # config: Config = Config(style=BuildStyle(style))
-
-        case None:
-            cli_message = "Setting style from config (or default if no file found)"
-            # TODO implement loading the style from the config
-            # TODO It seems appropriate to set the default value inside `load_config` if
-            # no file found since this will be a repeating pattern
-            # config: Config = load_config(style, path)
-
-        case _:
-            cli_message = (  # Placeholder
-                "Style not supported for `build`. Should be one of "
-                f"{BuildStyle._member_names_}"
-            )
-            # TODO Raise error
-
     path: Path = _resolve_uri(uri)
     properties: dict[str, Any] = _read_properties(path)
 
     if verbose:
         print(output_dir, properties, template_dir)  # Placeholder for unused args
-    return cli_message
 
 
 def view() -> str:
