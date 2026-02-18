@@ -4,11 +4,11 @@ description: "Create custom styles for displaying the metadata of your Data Pack
 order: 2
 ---
 
-Flower comes with a number of [built-in
-styles](/docs/design/interface/outputs.qmd#built-in-styles), but it is
-also possible to create new styles that match your particular use case.
-Custom styles can only be used with the `build` command and not with
-`view`.
+Flower comes with a number of
+[built-in styles](/docs/design/interface/outputs.qmd#built-in-styles),
+but it is also possible to create new styles that match your particular
+use case. Custom styles can only be used with the `build` command and
+not with `view`.
 
 Creating a custom style involves making templates and using
 configuration files to set the layout and structure of the documentation
@@ -21,7 +21,7 @@ you will use the following Data Package about a (fake) study on flowers
 and their growing conditions.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
-### Expand to see the `datapackage.json` content
+## Expand to see the `datapackage.json` content
 
 ``` {.json filename="datapackage.json"}
 {{< include /docs/includes/datapackage.json >}}
@@ -52,8 +52,8 @@ The first step is to set up the files within the `templates/` folder.
 ## Creating the templates
 
 You can define a custom layout for your metadata (or part of your
-metadata) using a [Jinja2
-template](https://jinja.palletsprojects.com/en/stable/). In this
+metadata) using a
+[Jinja2 template](https://jinja.palletsprojects.com/en/stable/). In this
 template, you write out the structure of your desired output in your
 target language (e.g., HTML, markdown, yaml, etc.), using placeholder
 values for the metadata elements that will come from your
@@ -75,9 +75,9 @@ in this example, call the template folder `templates/` and put it inside
 the root of the Data Package folder. Inside the template folder, create
 three files, one for each type of metadata listed above.
 
--   `package.qmd.jinja` for the general metadata.
--   `contributors.qmd.jinja` for the contributor metadata.
--   `resource.qmd.jinja` for each resource's metadata.
+- `package.qmd.jinja` for the general metadata.
+- `contributors.qmd.jinja` for the contributor metadata.
+- `resource.qmd.jinja` for each resource's metadata.
 
 The `.qmd.jinja` extension indicates that the file is a `jinja` template
 that will create a `qmd` file. If you wanted to create an `html` file
@@ -119,8 +119,8 @@ keywords that describe the Data Package. An `if` statement is used to
 check if the `keywords` property exists in the package metadata. If it
 does, it will output a line with the keywords joined by commas using the
 built-in Jinja `join` filter. You can learn more about advanced Jinja
-features in the [Jinja
-documentation](https://jinja.palletsprojects.com/en/stable/templates/).
+features in the
+[Jinja documentation](https://jinja.palletsprojects.com/en/stable/templates/).
 
 ``` {.djangotemplate filename="templates/package.qmd.jinja"}
 ---
@@ -277,16 +277,16 @@ file in the order they are defined.
 
 Add content to each section, specifying the following fields:
 
--   `jsonpath`: The JSON path to the metadata that will be sent to the
-    template. The JSON path should be expressed using [JSON path
-    syntax](https://jg-rp.github.io/python-jsonpath/syntax/).
--   `template-path`: The path to the Jinja template file for this
-    content item, relative to the template folder.
--   `jinja-variable`: The variable name that will be used in the
-    template to reference the selected metadata.
--   `mode`: Whether to render the selected metadata item as one output
-    file (`one`) or to render each item in the selected metadata
-    collection as a separate output file (`many`).
+- `jsonpath`: The JSON path to the metadata that will be sent to the
+  template. The JSON path should be expressed using
+  [JSON path syntax](https://jg-rp.github.io/python-jsonpath/syntax/).
+- `template-path`: The path to the Jinja template file for this content
+  item, relative to the template folder.
+- `jinja-variable`: The variable name that will be used in the template
+  to reference the selected metadata.
+- `mode`: Whether to render the selected metadata item as one output
+  file (`one`) or to render each item in the selected metadata
+  collection as a separate output file (`many`).
 
 ``` {.toml filename="templates/sections.toml"}
 [[section]]

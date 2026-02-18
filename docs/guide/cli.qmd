@@ -87,3 +87,77 @@ flags.
 
 For more details about what you can do with `view`, see
 `seedcase-flower view --help`.
+
+## Building documentation from Data Package metadata
+
+In addition to viewing metadata in the terminal, Flower converts Data
+Package metadata into a set of plain text files that are more
+human-friendly than the `datapackage.json`. These files can be used to
+build a website for the documentation which can make your Data Package's
+metadata more easily discoverable and readable. You can generate this
+set of files with the `build` command:
+
+```{.bash filename="Terminal"}
+seedcase-flower build
+```
+
+This command generates one new file: `docs/index.qmd`. The `qmd`
+extension means that this file is a
+[Quarto](https://quarto.org/)-flavored Markdown file. While this is the
+default text format, you can change it by specifying your own custom
+templates as detailed in
+[the configuration section of this guide](custom-styles.qmd). Later in
+this guide, you will also see how you can generate more than one file by
+using different styles with `build`.
+
+### Changing input and output directory
+
+By default, `build` will look for a `datapackage.json` file in the
+current directory, but you can use a different
+[URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) if you
+want (just like with `view`):
+
+```{.bash filename="Terminal"}
+seedcase-flower build another/directory/datapackage.json
+```
+
+To generate files in a different location, use the `--output-dir` flag
+with a folder name. For example:
+
+```{.bash filename="Terminal"}
+seedcase-flower build --output-dir my-dir
+```
+
+This will generate `my-dir/index.qmd` instead of `docs/index.qmd`.
+
+### Styling the output
+
+Just like the `view` command, the `build` command accepts a `--style`
+option. This lets you choose how the metadata are organized according to
+one of the
+[built-in styles](/docs/design/interface/outputs.html#built-in-styles).
+<!-- TODO: point link above to guide for styles, or ref docs, not design -->
+For example, to split the metadata for each resource in the Data Package
+into its own file, you can use the `quarto-resource-listing` style:
+
+```{.bash filename="Terminal"}
+seedcase-flower build --style quarto-resource-listing
+```
+
+::: callout-important
+`view` and `build` support different styles, so a style that works with
+`view` may cause an error with `build` and vice versa.
+
+<!-- TODO: Add overview of this or link to an overview -->
+
+:::
+
+<!-- TODO: Add section about using `template-dir` option -->
+
+Like the default output style is `quarto-one-page`, the
+`quarto-resource-listing` style creates `docs/index.qmd` but it also
+creates a separate file for the data resource in the `docs/resources/`
+folder, for example `docs/resources/seed-beetle-metabolic-rate.qmd`. You
+can read more about the available default styles and how to create your
+own custom style in
+[the configuration section of the documentation](custom-styles.qmd).
