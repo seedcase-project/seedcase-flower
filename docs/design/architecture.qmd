@@ -228,6 +228,8 @@ component and code levels of the C4 model into a single diagram as shown
 below. This diagram shows the main classes and functions within the
 Python package that represents the CLI.
 
+<!-- TODO: Switch to using a Properties class instead of dict? -->
+
 ```{mermaid}
 %%| label: fig-c4-component
 %%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections."
@@ -241,13 +243,15 @@ flowchart
         end
 
         load_config["load_config()<br>[function]"]
-        read_json["read_json()<br>[function]"]
+        read_properties["read_properties()<br>[function]"]
+        properties["properties<br>[dict]"]
         build("build()<br>[function]")
         view("view()<br>[function]")
 
         config_file -- "Sets build<br>configurations<br>from file" --> load_config
 
-        read_json --"Passes in<br>properties"--> build & view
+        read_properties --> properties
+        properties --> build & view
         load_config -- "Adds build<br>configurations" --> build & view
     end
 
@@ -257,7 +261,7 @@ flowchart
     output_screen("Output<br>[text in the Terminal]")
 
     templates --"Sets output<br>structure and layout"--> section
-    user --"Gives<br>datapackage.json"--> read_json
+    user --"Gives<br>datapackage.json"--> read_properties
     user --"Gives configurations,<br>as file, Python classes,<br>or from CLI<br>(optional)"--> config_file
     user --"Gives templates<br>in folder<br>(optional)"--> templates
     build --"Populates template(s)<br>with metadata items"--> output_files
