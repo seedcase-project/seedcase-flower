@@ -259,11 +259,10 @@ output-path = "resources/"
 
 ::: callout-tip
 To generate more than one output file for a section, `output-path` can
-be set either to a folder (e.g., `resources/`) or to a file path
-with a placeholder for the file name (e.g.,
-`resources/{resource-name}.qmd`). See the
-[`Section`](/docs/design/interface/config.qmd#section) documentation for
-more details.
+be set either to a folder (e.g., `resources/`) or to a file path with a
+placeholder for the file name (e.g., `resources/{resource-name}.qmd`).
+See the [`Section`](/docs/design/interface/config.qmd#section)
+documentation for more details.
 :::
 
 #### Adding `[[section.contents]]`s
