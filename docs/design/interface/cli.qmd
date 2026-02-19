@@ -10,7 +10,7 @@ has been finished and what remains to be done.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
-## {{< var planned >}} `seedcase-flower`
+## {{< var wip >}} `seedcase-flower`
 
 `seedcase-flower` has the following signature:
 
@@ -92,7 +92,7 @@ seedcase-flower = "seedcase_flower.cli:app"
 Which can be tested using `uv run seedcase-flower`.
 :::
 
-## {{< var planned >}} `build`
+## {{< var wip >}} `build`
 
 The `build` command has the following signature:
 
@@ -151,7 +151,7 @@ The main argument to `build` is the location of the Data Package file as
 a [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) to
 build the documentation from. We'll support the following URIs:
 
-- {{< var planned >}} `file://` or a path without `file://`
+- {{< var wip >}} `file://` or a path without `file://`
 - {{< var planned >}} `https://`
 - {{< var planned >}} `gh:` or `github:`
 

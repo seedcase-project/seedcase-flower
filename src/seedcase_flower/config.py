@@ -17,14 +17,14 @@ class Config(BaseModel, frozen=True):
     See `Section` and `Content` help for more details on how to set up the sections.
 
     Attributes:
-        style (BuildStyle): The built-in style to use for outputting the
+        style: The built-in style to use for outputting the
             documentation. Ignored when `template_dir` is set.
-        template_dir (Optional[Path]): When using a custom style, this should be the
+        template_dir: When using a custom style, this should be the
             relative directory path to the
             [Jinja2](https://jinja.palletsprojects.com/en/stable/) template files.
             The directory **must** contain at least one template Jinja2 file and
             a `sections.toml` file that contains attributes for the `Section` classes.
-        output_dir (Path): The directory where output files will be saved.
+        output_dir: The directory where output files will be saved.
 
     Examples:
         ```{python}

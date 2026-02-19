@@ -64,7 +64,7 @@ This `Properties` class is used instead of a dictionary for a few reasons:
 
 :::
 
-### {{< var planned >}} `build()`
+### {{< var wip >}} `build()`
 
 As already described in the CLI design page, this function has the
 following parameters:
