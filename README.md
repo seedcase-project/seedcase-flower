@@ -36,7 +36,25 @@ has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 <!-- [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) -->
 
-<!-- TODO: Add description of project -->
+Create human-friendly documentation from your machine-readable Data
+Package metadata (kept within `datapackage.json`). Flower does two
+things:
+
+- Display the metadata in a nicer way on the Terminal with the `view`
+  command
+- Generate documentation files using built-in or custom styles with the
+  `build` command.
+
+For building documentation, Flower reads the metadata and outputs it
+into a nicer, more human-centric format. You can choose how you want the
+output to look and be structured by using either built-in styles or
+custom styles defined by you. By default, it outputs Markdown files that
+you can then use to create a website, a PDF, or any other format you
+want by using other tools like [Quarto](https://quarto.org/).
+
+Check out the [website](https://flower.seedcase-project.org/) for more
+information about the project, including the design of it, how to use
+it, and a reference to the API.
 
 > [!TIP]
 >
