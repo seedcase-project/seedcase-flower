@@ -1,7 +1,7 @@
 ---
 title: "Custom styles"
 description: "Create custom styles for displaying the metadata of your Data Package."
-order: 2
+order: 3
 ---
 
 Flower comes with a number of
