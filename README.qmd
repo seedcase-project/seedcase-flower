@@ -21,7 +21,7 @@ Package metadata (kept within `datapackage.json`). Flower does two
 things:
 
 - Display the metadata in a nicer way on the Terminal with the `view`
-  command
+  command.
 - Generate documentation files using built-in or custom styles with the
   `build` command.
 
