@@ -276,7 +276,7 @@ to complex. For example:
 # This creates an `index.qmd` containing the combined `package` and `contributors`
 # contents from the Jinja2 templates.
 [[section]]
-output-path = "docs/index.qmd"
+output-path = "index.qmd"
 [[section.contents]]
 jsonpath = "."
 template-path = "path/to/templates/package.qmd.jinja"
@@ -291,9 +291,9 @@ mode = "one"
 # This creates one file per resource in the `docs/resources/` folder.
 # E.g. `docs/resources/demographics.qmd`, `docs/resources/blood.qmd`, etc.
 [[section]]
-output-path = "docs/resources/"
+output-path = "resources/"
 # Or equivalently
-# output-path = "docs/resources/{resource-name}.qmd
+# output-path = "resources/{resource-name}.qmd
 [[section.contents]]
 jsonpath = ".resources"
 template-path = "path/to/templates/resources.qmd.jinja"
@@ -305,7 +305,7 @@ mode = "many"
 # In this example, this would allow you to use custom Quarto listings for the
 # fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[section]]
-output-path = "docs/resources/{resource-name}/schema-fields.yml"
+output-path = "resources/{resource-name}/schema-fields.yml"
 [[section.contents]]
 jsonpath = ".resources[*].schema.fields"
 template-path = "path/to/templates/resource-schema-fields.yml.jinja"
