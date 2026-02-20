@@ -14,6 +14,12 @@ class BuildStyle(Enum):
     quarto_resource_tables = "quarto_resource_tables"
 
 
+class ViewStyle(Enum):
+    """Built-in styles for outputting to the terminal."""
+
+    terminal_style = "terminal_style"
+
+
 # TODO Extend to parse strings and return either URL or Path
 def _resolve_uri(uri: str) -> Path:
     return Path(uri)
