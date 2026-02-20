@@ -39,7 +39,7 @@ app = App(
             ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
         )
     ),
-    default_parameter=Parameter(negative=()),
+    default_parameter=Parameter(negative=(), show_default=True),
     config=[
         config.Toml(
             ".flower.toml",
