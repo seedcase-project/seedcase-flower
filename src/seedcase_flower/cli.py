@@ -4,62 +4,38 @@ from pathlib import Path
 from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
-from cyclopts.help import (
-    ColumnSpec,
-    DefaultFormatter,
-    DescriptionRenderer,
-    NameRenderer,
-    PlainFormatter,
-)
+from cyclopts.annotations import get_hint_name
+from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 
 # from seedcase_flower.config import Config as FlowerConfig
 from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
 
 
-# Define custom column renderers
 def names_renderer(entry):
-    """Combine parameter names and shorts."""
-    # if entry.names:
-    #     names = " ".join(name for name in entry.names if name.startswith("-"))
-    # else:
-    #     names = ""
-    from cyclopts.annotations import get_hint_name
-
+    """Massage the option flags in the help into a more readable format."""
     names = []
     if entry.names:
         for name in sorted(entry.names):
             if not name.startswith("-"):
-                # breakpoint()
-                # if isinstance(entry.type, bool):
+                # Don't output redundant value placeholder for boolean flags
                 if get_hint_name(entry.type) == "bool":
                     name = ""
                 else:
+                    # Matching the `dim` used by default in cyclopts for `choices` and
+                    # `defaults` in the description
                     name = f"[dim]<{name}>[/dim]"
             else:
-                name = f"[bold red]{name}[/bold red]"
+                name = f"[bold cyan]{name}[/bold cyan]"
             names.append(name)
 
-        # hint = f"[dim]{get_hint_name(entry.type)}[/dim]"
-        # names.append(hint)
-        # names.append(get_hint_name(entry.type))
-
-    # names = " ".join(sorted(entry.names)) if entry.names else ""
-    # names = " ".join(entry.names) if entry.names else ""
-    # shorts = " ".join(entry.shorts) if entry.shorts else ""
-    # return f"{names} {shorts}".strip()
     return f"{' '.join(names)}".strip()
-    # return f"{entry}"
 
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
-    # help_formatter=PlainFormatter(),
     help_formatter=DefaultFormatter(
         column_specs=(
-            ColumnSpec(
-                renderer=names_renderer,
-            ),
-            # ColumnSpec(renderer=NameRenderer()),
+            ColumnSpec(renderer=names_renderer),
             ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
         )
     ),
