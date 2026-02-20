@@ -1,7 +1,7 @@
 ---
 title: "Custom styles"
 description: "Create custom styles for displaying the metadata of your Data Package."
-order: 2
+order: 3
 ---
 
 Flower comes with a number of
@@ -250,20 +250,19 @@ create:
 ``` {.toml filename="templates/sections.toml"}
 # One output file at docs/index.qmd
 [[section]]
-output-path = "docs/index.qmd"
+output-path = "index.qmd"
 
 # One output file for each resource in docs/resources/
 [[section]]
-output-path = "docs/resources/"
+output-path = "resources/"
 ```
 
 ::: callout-tip
 To generate more than one output file for a section, `output-path` can
-be set either to a folder (e.g., `docs/resources/`) or to a file path
-with a placeholder for the file name (e.g.,
-`docs/resources/{resource-name}.qmd`). See the
-[`Section`](/docs/design/interface/config.qmd#section) documentation for
-more details.
+be set either to a folder (e.g., `resources/`) or to a file path with a
+placeholder for the file name (e.g., `resources/{resource-name}.qmd`).
+See the [`Section`](/docs/design/interface/config.qmd#section)
+documentation for more details.
 :::
 
 #### Adding `[[section.contents]]`s
@@ -290,7 +289,7 @@ Add content to each section, specifying the following fields:
 
 ``` {.toml filename="templates/sections.toml"}
 [[section]]
-output-path = "docs/index.qmd"
+output-path = "index.qmd"
 
 [[section.contents]]
 # Select the whole metadata object
@@ -312,7 +311,7 @@ jinja-variable = "contributors"
 mode = "one"
 
 [[section]]
-output-path = "docs/resources/"
+output-path = "resources/"
 
 [[section.contents]]
 jsonpath = "$.resources"

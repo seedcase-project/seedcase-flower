@@ -57,7 +57,7 @@ when using `seedcase-flower build`.
 
 ## Python classes
 
-### {{< var planned >}} `Config`
+### {{< var done >}} `Config`
 
 The `Config` class specifies the top-level configurations that apply to
 `build` and includes three attributes:
@@ -110,7 +110,7 @@ See [`help(Config)`](/docs/reference/Config.qmd) for more details.
 
 <!-- TODO: Include a setting for Data Package version? -->
 
-### {{< var planned >}} `Section` {#section-class}
+### {{< var done >}} `Section` {#section-class}
 
 The main purpose of `Section` is to allow creating separate "sections"
 of the documentation, in this case, separate files to display different
@@ -151,7 +151,7 @@ See the section on the `Content` class below for more details.
 
 See [`help(Section)`](/docs/reference/Section.qmd) for more details.
 
-### {{< var planned >}} `Content`
+### {{< var done >}} `Content`
 
 The `Content` class provides a precise description of the path to the
 Jinja2 template, which
@@ -225,7 +225,7 @@ maps to one or more `Section` classes.
 To provide a clear precedence for applying settings, we decided that
 styles specified on the CLI override settings in the configuration file.
 
-### {{< var planned >}} Main config settings: `.flower.toml`
+### {{< var done >}} Main config settings: `.flower.toml`
 
 The `.flower.toml` file contains the configuration settings for Flower.
 For a simple configuration using a built-in style, the file can be as
@@ -246,7 +246,7 @@ template-dir = "path/to/templates/"
 
 When `template-dir` is given, any value in `style` will be ignored.
 
-### {{< var planned >}} Main config settings: `pyproject.toml`
+### {{< var done >}} Main config settings: `pyproject.toml`
 
 We allow the configuration settings to be set in the `pyproject.toml`
 file under the `[tool.seedcase-flower]` table for convenience, which is
@@ -264,7 +264,7 @@ template-dir = "templates/"
 output-dir = "docs/"
 ```
 
-### {{< var planned >}} Main config settings: `sections.toml`
+### {{< var wip >}} Main config settings: `sections.toml`
 
 The `sections.toml` file contains the configuration settings for a given
 style of output. The `sections.toml` is kept in the root of the
@@ -276,7 +276,7 @@ to complex. For example:
 # This creates an `index.qmd` containing the combined `package` and `contributors`
 # contents from the Jinja2 templates.
 [[section]]
-output-path = "docs/index.qmd"
+output-path = "index.qmd"
 [[section.contents]]
 jsonpath = "."
 template-path = "path/to/templates/package.qmd.jinja"
@@ -291,9 +291,9 @@ mode = "one"
 # This creates one file per resource in the `docs/resources/` folder.
 # E.g. `docs/resources/demographics.qmd`, `docs/resources/blood.qmd`, etc.
 [[section]]
-output-path = "docs/resources/"
+output-path = "resources/"
 # Or equivalently
-# output-path = "docs/resources/{resource-name}.qmd
+# output-path = "resources/{resource-name}.qmd
 [[section.contents]]
 jsonpath = ".resources"
 template-path = "path/to/templates/resources.qmd.jinja"
@@ -305,7 +305,7 @@ mode = "many"
 # In this example, this would allow you to use custom Quarto listings for the
 # fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[section]]
-output-path = "docs/resources/{resource-name}/schema-fields.yml"
+output-path = "resources/{resource-name}/schema-fields.yml"
 [[section.contents]]
 jsonpath = ".resources[*].schema.fields"
 template-path = "path/to/templates/resource-schema-fields.yml.jinja"
