@@ -1,26 +1,23 @@
-# `flora`: A dataset containing flora species records and their observed growth stages across different environments.
+# `flora`: Observations of flora species and seasonal development
 
-**Licenses:** [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode), [Academic Free License 3.0](https://opensource.org/licenses/AFL-3.0)
+**Licenses:**
+
+- [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+- [Academic Free License 3.0](https://opensource.org/licenses/AFL-3.0)
 
 **Version:** 1.2.3
-
-**ID:** 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
 
 A dataset containing flora species records and their observed growth stages across different environments.
 
 ## Contributors
 
-- Jane Dölitz: creator
-
-  <jane-doelitz@example.com>
-- John Smith: author, data collector
-
-  <john-smith@example.com>
+- Jane Dölitz (<jane-doelitz@example.com>): creator
+- John Smith (<john-smith@example.com>): author, data collector
 
 
 ## Resources
 
-### Flora Species (`species_catalog`)
+### `species_catalog`: Flora Species
 
 This resource contains a catalog of flora species.
 
@@ -40,7 +37,7 @@ This resource contains a catalog of flora species.
 
 : Fields in the `species_catalog` resource.
 
-### Flora Species Locations (`location_catalog`)
+### `location_catalog`: Flora Species Locations
 
 This resource contains a catalog of flora species locations.
 
@@ -56,7 +53,7 @@ This resource contains a catalog of flora species locations.
 
 : Fields in the `location_catalog` resource.
 
-### Growth Stage Records (`growth_records`)
+### `growth_records`: Growth Stage Records
 
 This resource contains records of observed growth stages for various flora species.
 
