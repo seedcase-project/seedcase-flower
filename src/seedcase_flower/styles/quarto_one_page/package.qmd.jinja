@@ -1,28 +1,24 @@
-# {{ package.name | _inline_code }}: {{ package.description }}
+# {{ package.name | _inline_code }}: {{ package.title }}
 
-**Licenses:** {% for license in package.licenses -%}
-[{{ license.title or license.name }}]({{ license.path }})
-{%- if not loop.last %}, {% endif -%}
+**Licenses:**
+
+{% for license in package.licenses -%}
+- [{{ license.title or license.name }}]({{ license.path }})
 {% endfor %}
-
 **Version:** {{ package.version }}
-
-**ID:** {{ package.id }}
 
 {{ package.description }}
 
 ## Contributors
 
 {% for contributor in package.contributors -%}
-- {{ contributor.title }}: {{ contributor.roles | join(', ') }}
-
-  <{{ contributor.email }}>
+- {{ contributor.title }} (<{{ contributor.email }}>): {{ contributor.roles | join(', ') }}
 {% endfor %}
 
 ## Resources
 
 {% for resource in package.resources -%}
-### {{ resource.title }} ({{ resource.name | _inline_code }})
+### {{ resource.name | _inline_code }}: {{ resource.title }}
 
 {{ resource.description }}
 
