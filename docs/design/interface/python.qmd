@@ -81,7 +81,7 @@ following parameters:
   as the default style is a built-in style that uses built-in templates.
   If given, `style` is ignored.
 - `output_dir` to specify where the root directory is for the output
-    files. Defaults to the current working directory.
+  files. Defaults to the current working directory.
 - `verbose` to output more messages, rather than have no output.
 
 The internal flow of this function is shown in the diagram below.
@@ -91,13 +91,13 @@ The internal flow of this function is shown in the diagram below.
 %%| fig-cap: "Diagram of the internal flow of functions and objects in the `build()` CLI function."
 flowchart TD
     uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
-    path --> load_config{{"load_config()"}} --> Config
-    style_cfg[style]:::input --> load_config
-    template_dir_cfg[template_dir]:::input --> load_config
+    style_cfg[style]:::input --> Config
+    template_dir_cfg[template_dir]:::input --> Config
     path --> read_properties{{"read_properties()"}} --> properties
     properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
     output --> write_sections{{"write_sections()"}}
-    output_dir:::input --> write_sections
+    output_dir:::input --> Config
+    Config --> write_sections
     write_sections --> files["list[Path]"]
     files --> cli_message{{"cli_message()"}} --> stdout
     verbose:::input --> cli_message
