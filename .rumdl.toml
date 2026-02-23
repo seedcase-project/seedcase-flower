@@ -22,7 +22,6 @@ allow-lazy-continuation = false
 # Reflow text
 [MD013]
 reflow = true
-reflow-mode = "normalize"
 
 # Fix tables and their separator row
 [MD060]

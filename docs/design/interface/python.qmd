@@ -46,7 +46,8 @@ files.
 <!-- TODO: Unhide after implementing a class based approach. -->
 
 ::: content-hidden
-This `Properties` class is used instead of a dictionary for a few reasons:
+This `Properties` class is used instead of a dictionary for a few
+reasons:
 
 - Provides a clear and structured way of representing the properties of
   a Data Package with defined attributes and types.

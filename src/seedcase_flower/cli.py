@@ -68,7 +68,9 @@ def build(
     # output_files: list[Path] = write_sections(output, output_dir)
 
     if verbose:
-        print(output_dir, properties, template_dir)  # Placeholder for unused args
+        print(
+            output_dir, properties, template_dir, style
+        )  # Placeholder for unused args
 
 
 def view() -> str:
