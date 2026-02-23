@@ -156,6 +156,17 @@ def build(
     _write_sections(built_sections, output_dir)
 
 
-def view() -> str:
+@app.command()
+def view(
+    uri: str = "datapackage.json",
+    style: BuildStyle = BuildStyle.quarto_one_page,
+) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way."""
-    return ""
+    path: Path = _resolve_uri(uri)
+    properties: dict[str, Any] = _read_properties(path)
+
+    config = Config(
+        style=style,
+    )
+    built_sections = _build_sections(properties, config)
+    print("".join([bs.content for bs in built_sections]))
