@@ -1,0 +1,77 @@
+{% if package.name or package.title %}
+# {{ (package.name | _inline_code) or package.title }}{{ ": " ~ package.title if package.name }}
+{% endif %}
+{% if package.licenses %}
+
+**Licenses:**
+
+{% for license in package.licenses %}
+{% if license.path %}
+-   [{{ license.title or license.name or "License" }}]({{ license.path }})
+{% else %}
+-   {{ license.title or license.name }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if package.version %}
+
+**Version:** {{ package.version }}
+{% endif %}
+{% if package.description %}
+
+{{ package.description }}
+{% endif %}
+{% if package.contributors %}
+
+## Contributors
+
+{% for contributor in package.contributors %}
+{% set label = contributor.title or (contributor.firstName ~ " " ~ contributor.lastName) | trim or contributor.organization %}
+{% set email = "<" ~ contributor.email ~ ">" if contributor.email %}
+{% set roles = contributor.roles | join(', ') %}
+{% if label or email %}
+-   {{ label or email }}{{ " (" ~ email ~ ")" if label and email }}{{ ": " ~ roles if roles }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+## Resources
+{% for resource in package.resources %}
+
+### {{ resource.name | _inline_code }}{{ ": " ~ resource.title if resource.title }}
+{% if resource.description %}
+
+{{ resource.description }}
+{% endif %}
+{% if resource.path %}
+
+-   Path: {{ resource.path | _inline_code }}
+{% endif %}
+{% if resource.schema %}
+{% set schema = resource.schema %}
+{% if schema.primaryKey %}
+-   Primary key: ({{ schema.primaryKey | _inline_code_list }})
+{% endif %}
+{% if schema.foreignKeys %}
+-   Foreign keys:
+{% for fk in schema.foreignKeys %}
+    -   From fields ({{
+        fk.fields | _inline_code_list
+    }}) to fields ({{
+        fk.reference.fields | _inline_code_list
+    }}) in resource {{
+      (fk.reference.resource or resource.name)
+      | _inline_code
+    }}
+{% endfor %}
+{% endif %}
+
+| Title | Name | Type | Description |
+|-------|------|------|-------------|
+{% for field in schema.fields %}
+| {{ field.title or "N/A" }} | {{ field.name | _inline_code}} | {{ field.type or "any" }} | {{ field.description or "N/A" }} |
+{% endfor %}
+
+: Fields in the {{ resource.name | _inline_code }} resource.
+{% endif %}
+{% endfor %}
