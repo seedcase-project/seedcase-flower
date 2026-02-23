@@ -4,38 +4,21 @@ from pathlib import Path
 from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
-from cyclopts.annotations import get_hint_name
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
-
-
-def names_renderer(entry):
-    """Massage the option flags in the help into a more readable format."""
-    names = []
-    if entry.names:
-        for name in sorted(entry.names):
-            if not name.startswith("-"):
-                # Don't output redundant value placeholder for boolean flags
-                if get_hint_name(entry.type) == "bool":
-                    name = ""
-                else:
-                    # Matching the `dim` used by default in cyclopts for `choices` and
-                    # `defaults` in the description
-                    name = f"[dim]<{name}>[/dim]"
-            else:
-                name = f"[bold cyan]{name}[/bold cyan]"
-            names.append(name)
-
-    return f"{' '.join(names)}".strip()
-
+from seedcase_flower.internals import (
+    BuildStyle,
+    _format_param_help,
+    _read_properties,
+    _resolve_uri,
+)
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
     help_formatter=DefaultFormatter(
         column_specs=(
-            ColumnSpec(renderer=names_renderer),
+            ColumnSpec(renderer=_format_param_help),
             ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
         )
     ),
