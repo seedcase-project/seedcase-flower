@@ -14,6 +14,8 @@ class BuildStyle(Enum):
     quarto_resource_tables = "quarto_resource_tables"
 
 
+# Output maybe str? Path?
+# Use `match` inside for strictness on URI types? Or use a library for URI parsing?
 # TODO Extend to parse strings and return either URL or Path
 def _resolve_uri(uri: str) -> Path:
     return Path(uri)
