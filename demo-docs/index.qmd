@@ -2,8 +2,8 @@
 
 **Licenses:**
 
-- [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
-- [Academic Free License 3.0](https://opensource.org/licenses/AFL-3.0)
+-   [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+-   [Academic Free License 3.0](https://opensource.org/licenses/AFL-3.0)
 
 **Version:** 1.2.3
 
@@ -11,9 +11,8 @@ A dataset containing flora species records and their observed growth stages acro
 
 ## Contributors
 
-- Jane Dölitz (<jane-doelitz@example.com>): creator
-- John Smith (<john-smith@example.com>): author, data collector
-
+-   Jane Dölitz (<jane-doelitz@example.com>): creator
+-   John Smith (<john-smith@example.com>): author, data collector
 
 ## Resources
 
@@ -21,11 +20,10 @@ A dataset containing flora species records and their observed growth stages acro
 
 This resource contains a catalog of flora species.
 
-- Path: `resources/species_catalog/data.parquet`
-- Primary key: (`species_id`)
-- Foreign keys:
-
-  - From fields (`parent_species_id`) to fields (`species_id`) in resource `species_catalog`
+-   Path: `resources/species_catalog/data.parquet`
+-   Primary key: (`species_id`)
+-   Foreign keys:
+    -   From fields (`parent_species_id`) to fields (`species_id`) in resource `species_catalog`
 
 | Title | Name | Type | Description |
 |-------|------|------|-------------|
@@ -41,9 +39,8 @@ This resource contains a catalog of flora species.
 
 This resource contains a catalog of flora species locations.
 
-- Path: `resources/location_catalog/data.parquet`
-- Primary key: (`region`, `country`)
-
+-   Path: `resources/location_catalog/data.parquet`
+-   Primary key: (`region`, `country`)
 
 | Title | Name | Type | Description |
 |-------|------|------|-------------|
@@ -57,12 +54,11 @@ This resource contains a catalog of flora species locations.
 
 This resource contains records of observed growth stages for various flora species.
 
-- Path: `resources/growth_records/data.parquet`
-- Primary key: (`record_id`)
-- Foreign keys:
-
-  - From fields (`species_id`) to fields (`species_id`) in resource `species_catalog`
-  - From fields (`location_region`, `location_country`) to fields (`region`, `country`) in resource `location_catalog`
+-   Path: `resources/growth_records/data.parquet`
+-   Primary key: (`record_id`)
+-   Foreign keys:
+    -   From fields (`species_id`) to fields (`species_id`) in resource `species_catalog`
+    -   From fields (`location_region`, `location_country`) to fields (`region`, `country`) in resource `location_catalog`
 
 | Title | Name | Type | Description |
 |-------|------|------|-------------|
@@ -74,4 +70,3 @@ This resource contains records of observed growth stages for various flora speci
 | Location Country | `location_country` | string | The country of the location. |
 
 : Fields in the `growth_records` resource.
-
