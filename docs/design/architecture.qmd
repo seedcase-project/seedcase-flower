@@ -233,43 +233,38 @@ Python package that represents the CLI.
 ```{mermaid}
 %%| label: fig-c4-component
 %%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections."
-flowchart
-
-    subgraph python_package["Python code"]
-
-        subgraph config_file["Configuration"]
+flowchart TB
+    subgraph package["Python code"]
+        subgraph cfg["Configuration"]
             config("Config<br>[class]")
             section("Section<br>[class]")
         end
 
-        load_config["load_config()<br>[function]"]
         read_properties["read_properties()<br>[function]"]
         properties["properties<br>[dict]"]
         build("build()<br>[function]")
         view("view()<br>[function]")
 
-        config_file -- "Sets build<br>configurations<br>from file" --> load_config
-
         read_properties --> properties
         properties --> build & view
-        load_config -- "Adds build<br>configurations" --> build & view
+        cfg --> build & view
     end
 
-    templates("Templates<br>[folder with<br>Jinja files]")
     user("User<br>[person]")
+    templates("Templates<br>[folder with<br>Jinja files]")
     output_files("Output<br>[files and<br>folders]")
-    output_screen("Output<br>[text in the Terminal]")
+    output_screen("Output<br>[text in the<br>Terminal]")
 
-    templates --"Sets output<br>structure and layout"--> section
     user --"Gives<br>datapackage.json"--> read_properties
-    user --"Gives configurations,<br>as file, Python classes,<br>or from CLI<br>(optional)"--> config_file
     user --"Gives templates<br>in folder<br>(optional)"--> templates
+    user --"Gives configurations,<br>as file, Python classes,<br>or from CLI<br>(optional)"--> config
+    templates --"Sets output<br>structure and layout"--> section
     build --"Populates template(s)<br>with metadata items"--> output_files
     view --"Displays output<br>to screen"--> output_screen
 
     %% Styling
-    style python_package fill:#FFFFFF, color:#000000
-    style config_file fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
+    style package fill:#FFFFFF, color:#000000
+    style cfg fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
 For more details on the individual classes and functions, see the
