@@ -35,6 +35,7 @@ def _read_properties(path: Path) -> dict[str, Any]:
 def _format_param_help(entry: HelpEntry) -> str:
     """Re-structure the parameter help into a more readable format."""
     if entry.names:
+        # Sort to put the flag first (eg `--uri URI` instead of the default `URI --uri`)
         names = map(_add_highlight_syntax, sorted(entry.names), repeat(entry.type))
     return f"{' '.join(names)}".strip()
 
