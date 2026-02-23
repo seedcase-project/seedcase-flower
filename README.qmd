@@ -31,7 +31,7 @@ into a nicer, more human-centric format. You can choose the output style
 and structure by using either one of the built-in styles or define a
 custom style yourself. By default, Flower outputs
 [Quarto](https://quarto.org/)-based Markdown files that you can use to
-create a website, a PDF, or any other format supported by 
+create a website, a PDF, or any other format supported by
 [Quarto](https://quarto.org/).
 
 Check out the [website](https://flower.seedcase-project.org/) for more
