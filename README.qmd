@@ -16,7 +16,7 @@ metadata-files:
 
 {{< include /docs/includes/_badges.qmd >}}
 
-Flower is a Python package and command-line interface (CLI) that generates human-friendly documentation from your machine-readable Data 
+Flower is a Python package and command-line interface (CLI) that generates human-friendly documentation from your machine-readable Data
 Package metadata (kept within `datapackage.json`). Flower does two
 things:
 
