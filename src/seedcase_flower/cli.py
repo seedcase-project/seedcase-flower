@@ -66,20 +66,20 @@ def _load_sections(template_dir: Path) -> list[Section]:
     return SectionsFile.model_validate(sections).sections
 
 
-def _inline_code(value: str | None) -> str:
-    return f"`{value}`" if value else "N/A"
+def _inline_code(value: str | None) -> str | None:
+    return f"`{value}`" if value else None
 
 
 def _inline_code_list(value: str | list[str]) -> str:
     if isinstance(value, str):
         value = [value]
-    return ", ".join(list(map(_inline_code, value)))
+    return ", ".join([f"`{val}`" for val in value])
 
 
 def _build_section(
     section: Section, properties: dict[str, Any], template_dir: Path
 ) -> str:
-    env = Environment(loader=FileSystemLoader(template_dir))
+    env = Environment(loader=FileSystemLoader(template_dir), trim_blocks=True)
     env.filters["_inline_code_list"] = _inline_code_list
     env.filters["_inline_code"] = _inline_code
     section_output = ""
