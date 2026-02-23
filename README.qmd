@@ -26,9 +26,9 @@ things:
   `build` command.
 
 For building documentation, Flower reads the metadata and outputs it
-into a nicer, more human-centric format. You can choose how you want the
-output to look and be structured by using either built-in styles or
-custom styles defined by you. By default, it outputs Markdown files that
+into a nicer, more human-centric format. You can choose the output style and structure
+by using either one of the built-in styles or
+define a custom style yourself. By default, Flower outputs Quarto-based Markdown files that
 you can use to create a website, a PDF, or any other format you
 want by using other tools like [Quarto](https://quarto.org/).
 
