@@ -105,7 +105,7 @@ check-unused:
     # - 60 %: attribute, class, function, method, property, variable
     # There are some things should be ignored though, with the allowlist.
     # Create an allowlist with `vulture --make-allowlist`
-    uv run vulture src/ tests/ **/vulture-allowlist.py
+    uv run vulture --min-confidence 100 src/ tests/ **/vulture-allowlist.py
 
 # Reformat Python code to match coding style and general structure
 format-python:

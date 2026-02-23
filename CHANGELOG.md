@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.6.0 (2026-02-23)
+
+### Feat
+
+- :sparkles: add `quarto-one-page` style (#141)
+
 ## 0.5.2 (2026-02-20)
 
 ### Refactor
