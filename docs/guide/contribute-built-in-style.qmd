@@ -4,25 +4,26 @@ description: "Add your own style as a built-in style in Flower."
 order: 4
 ---
 
-Flower comes with a number of [built-in
-styles](/docs/design/interface/outputs.qmd#built-in-styles) to use with
-the `build` or `view` commands. This guide explains how to contribute a
-new built-in style that will be available to all Flower users.
+Flower comes with a number of
+[built-in styles](/docs/design/interface/outputs.qmd#built-in-styles) to
+use with the `build` or `view` commands. This guide explains how to
+contribute a new built-in style that will be available to all Flower
+users.
 
 ## Creating a new style
 
 Built-in styles consist of the following files:
 
--   Jinja2 template files: these define the layout of the generated
-    documentation.
--   A `sections.toml` configuration file: this defines how many output
-    files will be created and which metadata will be displayed in each
-    file.
+- Jinja2 template files: these define the layout of the generated
+  documentation.
+- A `sections.toml` configuration file: this defines how many output
+  files will be created and which metadata will be displayed in each
+  file.
 
-First, [create the template
-files](/docs/guide/custom-styles.qmd#creating-the-templates) and [add
-the `sections.toml` configuration
-file](/docs/guide/custom-styles.qmd#sections.toml-configuration-file)
+First,
+[create the template files](/docs/guide/custom-styles.qmd#creating-the-templates)
+and
+[add the `sections.toml` configuration file](/docs/guide/custom-styles.qmd#sections.toml-configuration-file)
 for your style by following the guide for creating custom styles. If you
 are writing a terminal style for use with the `view` command, do not
 specify an `output-path` for your sections in `sections.toml`.
@@ -86,16 +87,15 @@ uv run seedcase-flower build --uri docs/includes/datapackage.json
 
 Before submitting a pull request with your changes, make sure you:
 
--   Run `just run-all` in the terminal.
--   Put your changes on a new branch whose name follows our [branch
-    naming
-    conventions](https://guidebook.seedcase-project.org/workflows/prs#branch-naming-conventions).
--   Commit your changes following [Conventional
-    Commits](https://guidebook.seedcase-project.org/workflows/commits#conventional-commits).
+- Run `just run-all` in the terminal.
+- Put your changes on a new branch whose name follows our
+  [branch naming conventions](https://guidebook.seedcase-project.org/workflows/prs#branch-naming-conventions).
+- Commit your changes following
+  [Conventional Commits](https://guidebook.seedcase-project.org/workflows/commits#conventional-commits).
 
-You might find it helpful to read through our [contributing
-guidelines](CONTRIBUTING.md). If you would like a more detailed
-walkthrough of creating commits and submitting pull requests, have a
-look at the
+You might find it helpful to read through our
+[contributing guidelines](/CONTRIBUTING.html). If you would like a more
+detailed walkthrough of creating commits and submitting pull requests,
+have a look at the
 [Workflows](https://guidebook.seedcase-project.org/workflows/software)
 section of our Guidebook.
