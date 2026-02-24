@@ -54,7 +54,7 @@ src/
             └── template_last.qmd.jinja
 ```
 
-Finally, add your style to the appropriate style enum in
+Finally, add your style to the appropriate style enum (`BuildStyle` or `ViewStyle`) in
 `src/seedcase_flower/internals.py`. Styles used with the `build` command
 are defined in the `BuildStyle` enum, while styles used with `view` are
 defined in `ViewStyle`. For example, if the `your_new_style` is a style
