@@ -82,8 +82,8 @@ def _check_github_uri(split_uri: parse.SplitResult) -> HttpsUrl:
 
 
 # TODO Extend to also read properties from URLs
-def _read_properties(uri: HttpsUrl | FileUrl) -> dict[str, Any]:
-    with open(str(uri)) as properties_file:
+def _read_properties(path: Path) -> dict[str, Any]:
+    with open(path) as properties_file:
         datapackage: dict[str, Any] = json.load(properties_file)
         check(datapackage)
         return datapackage

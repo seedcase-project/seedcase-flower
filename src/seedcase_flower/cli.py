@@ -47,8 +47,8 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    path = _resolve_uri(uri)
-    properties = _read_properties(path)
+    properties = _resolve_uri(uri)
+    # properties = _read_properties(path)
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which
