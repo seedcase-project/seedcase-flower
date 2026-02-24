@@ -4,9 +4,10 @@ import json
 from enum import Enum
 from pathlib import Path
 from typing import Annotated, Any
+from urllib import parse, request
 
 from check_datapackage import check
-from pydantic import AnyUrl, TypeAdapter, UrlConstraints
+from pydantic import AnyUrl, FileUrl, TypeAdapter, UrlConstraints
 
 _AnnotatedHttps = Annotated[AnyUrl, UrlConstraints(allowed_schemes=["https"])]
 _adapter = TypeAdapter(_AnnotatedHttps)
@@ -34,11 +35,44 @@ class BuildStyle(Enum):
     quarto_resource_tables = "quarto_resource_tables"
 
 
-# Output maybe str? Path?
-# Use `match` inside for strictness on URI types? Or use a library for URI parsing?
-# TODO Extend to parse strings and return either URL or Path
-def _resolve_uri(uri: str) -> Path:
-    return Path(uri)
+def _resolve_uri(path_or_url: str) -> HttpsUrl | FileUrl:
+    split_url = parse.urlsplit(path_or_url)
+    if split_url.scheme == "https":
+        uri = _check_https_uri(split_url)
+    elif split_url.scheme in ["gh", "github"]:
+        uri = _check_github_uri(split_url)
+    elif split_url.scheme == "":
+        uri = _check_path(path_or_url)
+    else:
+        raise ValueError(
+            "The URI must be either a path to an existing file/folder "
+            "or have one of the following URI prefixes: "
+            "`file://`, `https://`, `gh:`, `github:`"
+        )
+    return uri
+
+
+def _check_https_uri(split_url: parse.SplitResult) -> HttpsUrl:
+    return HttpsUrl(split_url.geturl())
+
+
+def _check_github_uri(split_url: parse.SplitResult) -> HttpsUrl:
+    return HttpsUrl(
+        split_url._replace(
+            scheme="https",
+            netloc="raw.githubusercontent.com",
+            path=f"/{split_url.path}/refs/heads/main/datapackage.json",
+        ).geturl()
+    )
+
+
+def _check_path(path_or_url: str) -> FileUrl:
+    path = Path(path_or_url).resolve()
+    if path.is_dir():
+        path = path / "datapackage.json"
+    if not path.exists():
+        raise OSError(f"{path} does not exist.")
+    return FileUrl(path.as_uri())
 
 
 # TODO Extend to also read properties from URLs
