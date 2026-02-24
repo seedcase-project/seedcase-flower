@@ -131,7 +131,7 @@ Depending on which URI is given, there are different behaviours:
   specify a specific branch or tag. `build` will resolve this URI to the
   raw URL of the `datapackage.json` file in the repository, assuming the
   `datapackage.json` file is in the root of the repository. For example:
-  - A URI of `gh:seedcase-project/seedcase-project` will resolve to
+  - A URI of `gh:seedcase-project/seedcase-flower` will resolve to
     `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/heads/main/datapackage.json`.
   - A URI of `github:seedcase-project/seedcase-flower@0.1.0` will
     resolve to
