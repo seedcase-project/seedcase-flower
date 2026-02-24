@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Annotated, Any
 from urllib import parse
 
-from check_datapackage import check
 from pydantic import AnyUrl, FileUrl, TypeAdapter, UrlConstraints
 
 _AnnotatedHttps = Annotated[AnyUrl, UrlConstraints(allowed_schemes=["https"])]
@@ -85,5 +84,4 @@ def _check_github_uri(split_uri: parse.SplitResult) -> HttpsUrl:
 def _read_properties(path: Path) -> dict[str, Any]:
     with open(path) as properties_file:
         datapackage: dict[str, Any] = json.load(properties_file)
-        check(datapackage)
         return datapackage

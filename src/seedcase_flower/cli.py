@@ -6,7 +6,7 @@ from typing import Optional
 from cyclopts import App, Parameter, config
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
+from seedcase_flower.internals import BuildStyle, _resolve_uri
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
