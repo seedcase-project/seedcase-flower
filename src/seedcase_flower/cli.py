@@ -48,7 +48,7 @@ def build(
         verbose: If True, prints additional information to the console.
     """
     path = _resolve_uri(uri)
-    properties: dict[str, Any] = _read_properties(path)
+    properties = _read_properties(path)
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which

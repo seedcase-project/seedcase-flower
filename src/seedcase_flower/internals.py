@@ -81,18 +81,9 @@ def _check_github_uri(split_uri: parse.SplitResult) -> HttpsUrl:
     )
 
 
-def _check_path(path_or_url: str) -> FileUrl:
-    path = Path(path_or_url).resolve()
-    if path.is_dir():
-        path = path / "datapackage.json"
-    if not path.exists():
-        raise OSError(f"{path} does not exist.")
-    return FileUrl(path.as_uri())
-
-
 # TODO Extend to also read properties from URLs
-def _read_properties(path: Path) -> dict[str, Any]:
-    with open(path) as properties_file:
+def _read_properties(uri: HttpsUrl | FileUrl) -> dict[str, Any]:
+    with open(str(uri)) as properties_file:
         datapackage: dict[str, Any] = json.load(properties_file)
         check(datapackage)
         return datapackage
