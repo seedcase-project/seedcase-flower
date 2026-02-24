@@ -3,9 +3,27 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from check_datapackage import check
+from pydantic import AnyUrl, TypeAdapter, UrlConstraints
+
+_AnnotatedHttps = Annotated[AnyUrl, UrlConstraints(allowed_schemes=["https"])]
+_adapter = TypeAdapter(_AnnotatedHttps)
+
+
+class HttpsUrl(str):
+    """Type and class with validation for https URLs."""
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source, handler):
+        """Initialize adapter core schema."""
+        return _adapter.core_schema
+
+    def __new__(cls, value: str):
+        """Setup validation."""
+        validated = _adapter.validate_python(value)
+        return str.__new__(cls, validated)
 
 
 class BuildStyle(Enum):
