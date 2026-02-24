@@ -41,13 +41,13 @@ def _format_param_help(entry: HelpEntry) -> str:
 
 def _add_highlight_syntax(name: str, entry_type: type | None) -> str:
     """Add markup character to highlight in colors, etc where desired."""
-    output = f"[bold cyan]{name}[/bold cyan]"
+    formatted_name = f"[bold cyan]{name}[/bold cyan]"
     if not name.startswith("-"):
         # Matching the `dim` used by default in cyclopts for `choices` and
         # `defaults` in the description
-        output = f"[dim]<{name}>[/dim]"
+        formatted_name = f"[dim]<{name}>[/dim]"
 
-        # Don't output redundant value placeholder for boolean flags
+        # Don't formatted_name redundant value placeholder for boolean flags
         if get_hint_name(entry_type) == "bool":
-            output = ""
-    return output
+            formatted_name = ""
+    return formatted_name
