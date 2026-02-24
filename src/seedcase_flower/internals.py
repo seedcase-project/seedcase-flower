@@ -35,17 +35,17 @@ class BuildStyle(Enum):
     quarto_resource_tables = "quarto_resource_tables"
 
 
-def _resolve_uri(path_or_url: str) -> HttpsUrl | FileUrl:
-    split_url = parse.urlsplit(path_or_url)
-    match split_url.scheme:
+def _resolve_uri(uri_or_path: str) -> HttpsUrl | FileUrl:
+    split_uri = parse.urlsplit(uri_or_path)
+    match split_uri.scheme:
         case "":
-            return _check_path(path_or_url)
+            return _check_path(uri_or_path)
         case "file":
-            return _check_file_uri(split_url)
+            return _check_file_uri(split_uri)
         case "https":
-            return _check_https_uri(split_url)
+            return _check_https_uri(split_uri)
         case "gh" | "github":
-            return _check_github_uri(split_url)
+            return _check_github_uri(split_uri)
         case _:
             raise ValueError(
                 "The URI must be either a path to an existing file/folder "
@@ -54,8 +54,8 @@ def _resolve_uri(path_or_url: str) -> HttpsUrl | FileUrl:
             )
 
 
-def _check_path(path_or_url: str) -> FileUrl:
-    path = Path(path_or_url).resolve()
+def _check_path(uri_or_path: str) -> FileUrl:
+    path = Path(uri_or_path).resolve()
     if path.is_dir():
         path = path / "datapackage.json"
     if not path.exists():
@@ -63,20 +63,20 @@ def _check_path(path_or_url: str) -> FileUrl:
     return FileUrl(path.as_uri())
 
 
-def _check_file_uri(split_url: parse.SplitResult) -> FileUrl:
-    return FileUrl(split_url.geturl())
+def _check_file_uri(split_uri: parse.SplitResult) -> FileUrl:
+    return FileUrl(split_uri.geturl())
 
 
-def _check_https_uri(split_url: parse.SplitResult) -> HttpsUrl:
-    return HttpsUrl(split_url.geturl())
+def _check_https_uri(split_uri: parse.SplitResult) -> HttpsUrl:
+    return HttpsUrl(split_uri.geturl())
 
 
-def _check_github_uri(split_url: parse.SplitResult) -> HttpsUrl:
+def _check_github_uri(split_uri: parse.SplitResult) -> HttpsUrl:
     return HttpsUrl(
-        split_url._replace(
+        split_uri._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
-            path=f"/{split_url.path}/refs/heads/main/datapackage.json",
+            path=f"/{split_uri.path}/refs/heads/main/datapackage.json",
         ).geturl()
     )
 
