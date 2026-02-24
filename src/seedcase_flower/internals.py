@@ -46,8 +46,8 @@ def _add_highlight_syntax(name: str, entry_type: type | None) -> str:
         # Matching the `dim` used by default in cyclopts for `choices` and
         # `defaults` in the description
         output = f"[dim]<{name}>[/dim]"
-        
+
         # Don't output redundant value placeholder for boolean flags
         if get_hint_name(entry_type) == "bool":
-            output = ""      
+            output = ""
     return output
