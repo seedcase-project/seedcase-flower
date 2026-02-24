@@ -34,22 +34,20 @@ def _read_properties(path: Path) -> dict[str, Any]:
 
 def _format_param_help(entry: HelpEntry) -> str:
     """Re-structure the parameter help into a more readable format."""
-    if entry.names:
-        # Sort to put the flag first (eg `--uri URI` instead of the default `URI --uri`)
-        names = map(_add_highlight_syntax, sorted(entry.names), repeat(entry.type))
+    # Sort to put the flag first (eg `--uri URI` instead of the default `URI --uri`)
+    names = map(_add_highlight_syntax, sorted(entry.names), repeat(entry.type))
     return f"{' '.join(names)}".strip()
 
 
 def _add_highlight_syntax(name: str, entry_type: type | None) -> str:
     """Add markup character to highlight in colors, etc where desired."""
+    output = f"[bold cyan]{name}[/bold cyan]"
     if not name.startswith("-"):
+        # Matching the `dim` used by default in cyclopts for `choices` and
+        # `defaults` in the description
+        output = f"[dim]<{name}>[/dim]"
+        
         # Don't output redundant value placeholder for boolean flags
         if get_hint_name(entry_type) == "bool":
-            name = ""
-        else:
-            # Matching the `dim` used by default in cyclopts for `choices` and
-            # `defaults` in the description
-            name = f"[dim]<{name}>[/dim]"
-    else:
-        name = f"[bold cyan]{name}[/bold cyan]"
-    return name
+            output = ""      
+    return output
