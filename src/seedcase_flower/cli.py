@@ -47,7 +47,7 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    path: Path = _resolve_uri(uri)
+    path = _resolve_uri(uri)
     properties: dict[str, Any] = _read_properties(path)
 
     # One item per section, rendered from template.

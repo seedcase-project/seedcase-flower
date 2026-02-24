@@ -17,11 +17,11 @@ class HttpsUrl(str):
     """Type and class with validation for https URLs."""
 
     @classmethod
-    def __get_pydantic_core_schema__(cls, source, handler):
+    def __get_pydantic_core_schema__(cls, source, handler):  # type: ignore[no-untyped-def]
         """Initialize adapter core schema."""
         return _adapter.core_schema
 
-    def __new__(cls, value: str):
+    def __new__(cls, value: str):  # type: ignore[no-untyped-def]
         """Setup validation."""
         validated = _adapter.validate_python(value)
         return str.__new__(cls, validated)
