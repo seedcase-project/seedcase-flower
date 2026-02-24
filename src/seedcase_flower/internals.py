@@ -4,7 +4,7 @@ import json
 from enum import Enum
 from pathlib import Path
 from typing import Annotated, Any
-from urllib import parse, request
+from urllib import parse
 
 from check_datapackage import check
 from pydantic import AnyUrl, FileUrl, TypeAdapter, UrlConstraints
