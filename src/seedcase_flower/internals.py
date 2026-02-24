@@ -37,19 +37,34 @@ class BuildStyle(Enum):
 
 def _resolve_uri(path_or_url: str) -> HttpsUrl | FileUrl:
     split_url = parse.urlsplit(path_or_url)
-    if split_url.scheme == "https":
-        uri = _check_https_uri(split_url)
-    elif split_url.scheme in ["gh", "github"]:
-        uri = _check_github_uri(split_url)
-    elif split_url.scheme == "":
-        uri = _check_path(path_or_url)
-    else:
-        raise ValueError(
-            "The URI must be either a path to an existing file/folder "
-            "or have one of the following URI prefixes: "
-            "`file://`, `https://`, `gh:`, `github:`"
-        )
-    return uri
+    match split_url.scheme:
+        case "":
+            return _check_path(path_or_url)
+        case "file":
+            return _check_file_uri(split_url)
+        case "https":
+            return _check_https_uri(split_url)
+        case "gh" | "github":
+            return _check_github_uri(split_url)
+        case _:
+            raise ValueError(
+                "The URI must be either a path to an existing file/folder "
+                "or have one of the following URI prefixes: "
+                "`file:`, `https:`, `gh:`, `github:`"
+            )
+
+
+def _check_path(path_or_url: str) -> FileUrl:
+    path = Path(path_or_url).resolve()
+    if path.is_dir():
+        path = path / "datapackage.json"
+    if not path.exists():
+        raise OSError(f"{path} does not exist.")
+    return FileUrl(path.as_uri())
+
+
+def _check_file_uri(split_url: parse.SplitResult) -> FileUrl:
+    return FileUrl(split_url.geturl())
 
 
 def _check_https_uri(split_url: parse.SplitResult) -> HttpsUrl:
