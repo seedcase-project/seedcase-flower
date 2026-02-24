@@ -1,7 +1,7 @@
 """Functions for the exposed CLI."""
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from cyclopts import App, Parameter, config
 
