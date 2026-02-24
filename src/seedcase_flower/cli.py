@@ -5,8 +5,13 @@ from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 
-# from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
+from seedcase_flower.config import Config
+from seedcase_flower.internals import (
+    BuildStyle,
+    _build_sections,
+    _read_properties,
+    _resolve_uri,
+)
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
@@ -50,27 +55,19 @@ def build(
     path: Path = _resolve_uri(uri)
     properties: dict[str, Any] = _read_properties(path)
 
-    # One item per section, rendered from template.
-    # Internally uses Jinja2 to render templates with metadata, which
-    # are loaded within `build_sections()`. The Jinja2 templates and
-    # and the `sections.toml` file are loaded from the template directory,
-    # given by the `template_dir` arg or by the built-in styles (which points
-    # to a Flower internal template directory).
-    # config = FlowerConfig(
-    #   style=style,
-    #   template_dir=template_dir,
-    #   output_dir=output_dir
-    # )
-    # output: list[BuiltSection] = build_sections(
-    #     properties,
-    #     config
-    # )
-    # output_files: list[Path] = write_sections(output, output_dir)
-
     if verbose:
         print(
             output_dir, properties, template_dir, style
         )  # Placeholder for unused args
+
+    config = Config(
+        style=style,
+        template_dir=template_dir,
+        output_dir=output_dir,
+    )
+    built_sections = _build_sections(properties, config)
+    # TODO: write built sections
+    print(built_sections)
 
 
 def view() -> str:
