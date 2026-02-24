@@ -100,10 +100,11 @@ Before submitting a pull request with your changes, make sure you:
 
 You might find it helpful to read through our
 [contributing guidelines](/CONTRIBUTING.html). If you would like a more
-detailed walkthrough of creating commits and submitting pull requests,
-have a look at the
-[Workflows](https://guidebook.seedcase-project.org/workflows/software)
-section of our Guidebook.
+detailed walkthrough of
+[creating commits](https://guidebook.seedcase-project.org/workflows/commits)
+and
+[submitting pull requests](https://guidebook.seedcase-project.org/workflows/prs),
+have a look at the relevant sections of our Guidebook.
 
 You’re now ready to open a pull request from your fork to the main
 Flower repository on GitHub.
