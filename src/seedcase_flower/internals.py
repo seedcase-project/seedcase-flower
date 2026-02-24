@@ -47,7 +47,7 @@ def _add_highlight_syntax(name: str, entry_type: type | None) -> str:
         # `defaults` in the description
         formatted_name = f"[dim]<{name}>[/dim]"
 
-        # Don't formatted_name redundant value placeholder for boolean flags
+        # Don't output redundant value placeholder for boolean flags
         if get_hint_name(entry_type) == "bool":
             formatted_name = ""
     return formatted_name
