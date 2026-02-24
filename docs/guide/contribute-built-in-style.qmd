@@ -10,6 +10,10 @@ use with the `build` or `view` commands. This guide explains how to
 contribute a new built-in style that will be available to all Flower
 users.
 
+Before you begin, fork the
+Flower repository on GitHub and clone your
+fork locally. Make the following changes in your local copy.
+
 ## Creating a new style
 
 Built-in styles consist of the following files:
@@ -28,16 +32,15 @@ for your style by following the guide for creating custom styles. If you
 are writing a terminal style for use with the `view` command, do not put
 an `output-path` for your sections in `sections.toml`.
 
+Use the name of your style as the name of the template folder. The name
+should be short, descriptive, and distinct from existing built-in
+styles. It should be given in snake case.
+
 ## Adding the style as built-in
 
-Next, in your local copy of the Flower repo, create a new folder for
-your style within the `src/seedcase_flower/styles/` folder and call it
-the name of your style. The name of your style should be short,
-descriptive, and unique among existing built-in styles. It should be
-given in snake case.
-
-Then, move your template files and the `sections.toml` file into the new
-folder. The file structure should now look like:
+Next, in your local copy of the Flower repo, place the template folder
+into the `src/seedcase_flower/styles/` folder. The file structure should
+now look like:
 
 ``` txt
 src/
@@ -55,7 +58,7 @@ src/
 Finally, add your style to the appropriate style enum in
 `src/seedcase_flower/internals.py`. Styles used with the `build` command
 are defined in the `BuildStyle` enum, while styles used with `view` are
-defined in `ViewStyle`. For example, if your `your_new_style` is a style
+defined in `ViewStyle`. For example, if the `your_new_style` is a style
 for `build`, you would include it like so:
 
 ``` {.python filename="src/seedcase_flower/internals.py"}
@@ -68,7 +71,7 @@ class BuildStyle(Enum):
     your_new_style = "your_new_style" # <1>
 ```
 
-1. Add your new style like on this line.
+1. Add your new style as shown on this line.
 
 ::: callout-important
 For the new style to work properly, the name of the enum member must be
@@ -90,10 +93,11 @@ uv run seedcase-flower build --uri docs/includes/datapackage.json --style your-n
 Before submitting a pull request with your changes, make sure you:
 
 - Run `just run-all` in the terminal.
-- Put your changes on a new branch whose name follows our
+- Put your changes on a new branch with a name that follows our
   [branch naming conventions](https://guidebook.seedcase-project.org/workflows/prs#branch-naming-conventions).
 - Commit your changes following
   [Conventional Commits](https://guidebook.seedcase-project.org/workflows/commits#conventional-commits).
+- Push your branch to GitHub.
 
 You might find it helpful to read through our
 [contributing guidelines](/CONTRIBUTING.html). If you would like a more
@@ -101,3 +105,6 @@ detailed walkthrough of creating commits and submitting pull requests,
 have a look at the
 [Workflows](https://guidebook.seedcase-project.org/workflows/software)
 section of our Guidebook.
+
+You’re now ready to open a pull request from your fork to the main
+Flower repository on GitHub.
