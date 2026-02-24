@@ -26,7 +26,7 @@ and
 [add the `sections.toml` configuration file](/docs/guide/custom-styles.qmd#sections.toml-configuration-file)
 for your style by following the guide for creating custom styles. If you
 are writing a terminal style for use with the `view` command, do not
-specify an `output-path` for your sections in `sections.toml`.
+put an `output-path` for your sections in `sections.toml`.
 
 ## Adding the style as built-in
 
@@ -65,9 +65,7 @@ class BuildStyle(Enum):
     quarto_one_page = "quarto_one_page"
     quarto_resource_listing = "quarto_resource_listing"
     quarto_resource_tables = "quarto_resource_tables"
-    your_new_style = "your_new_style" # <--
-```
-
+    your_new_style = "your_new_style" # <1>
 ::: callout-important
 For the new style to work properly, the name of the enum member must be
 exactly the same as the folder name for the new style.
