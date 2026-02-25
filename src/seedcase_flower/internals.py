@@ -3,7 +3,6 @@
 import json
 import tomllib
 from dataclasses import dataclass
-from enum import Enum
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, Callable, Iterable, Optional, TypeVar, Union
@@ -14,20 +13,7 @@ from pydantic import BaseModel, Field
 
 from seedcase_flower.config import Config
 from seedcase_flower.section import Content, RelativePath, Section
-
-
-class BuildStyle(Enum):
-    """Built-in styles for outputting to file."""
-
-    quarto_one_page = "quarto_one_page"
-    quarto_resource_listing = "quarto_resource_listing"
-    quarto_resource_tables = "quarto_resource_tables"
-
-
-class ViewStyle(Enum):
-    """Built-in styles for outputting to the terminal."""
-
-    terminal_default = "terminal_default"
+from seedcase_flower.styles import BuildStyle, ViewStyle
 
 
 # Output maybe str? Path?

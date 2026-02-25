@@ -7,11 +7,11 @@ from cyclopts import App, Parameter, config
 
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
-    BuildStyle,
     _build_sections,
     _read_properties,
     _resolve_uri,
 )
+from seedcase_flower.styles import BuildStyle
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
