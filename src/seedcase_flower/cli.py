@@ -6,7 +6,7 @@ from typing import Optional
 from cyclopts import App, Parameter, config
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, _resolve_uri
+from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
@@ -47,8 +47,8 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    properties = _resolve_uri(uri)
-    # properties = _read_properties(path)
+    resolved_uri = _resolve_uri(uri)
+    properties = _read_properties(resolved_uri)  # type: ignore
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which
