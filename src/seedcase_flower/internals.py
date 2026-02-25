@@ -116,7 +116,7 @@ def _inline_code(value: Optional[str]) -> Optional[str]:
     return f"`{value}`" if value else None
 
 
-def _inline_code_list(value: str | list[str]) -> str:
+def _inline_code_list(value: Union[str, list[str]]) -> str:
     if isinstance(value, str):
         value = [value]
     return ", ".join(_map(value, lambda item: f"`{item}`"))
@@ -127,7 +127,10 @@ def _create_jinja_env(template_dir: Path) -> Environment:
         loader=FileSystemLoader(template_dir),
         trim_blocks=True,
         autoescape=select_autoescape(
-            enabled_extensions=("html.jinja", "xml.jinja",),
+            enabled_extensions=(
+                "html.jinja",
+                "xml.jinja",
+            ),
             default=False,
         ),
     )
