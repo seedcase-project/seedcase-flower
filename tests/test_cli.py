@@ -98,9 +98,7 @@ def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
     assert bound.arguments["verbose"] is True
 
 
-# ---------------------------------------------------------------------------
-# Help output
-# ---------------------------------------------------------------------------
+# === Help output ===
 
 
 @pytest.fixture
@@ -164,9 +162,7 @@ def test_build_help_page(capsys, console):
     )
 
 
-# ---------------------------------------------------------------------------
-# view (plain function, not an app command yet)
-# ---------------------------------------------------------------------------
+# === view (placeholder) ===
 
 
 def test_view() -> None:
