@@ -7,7 +7,7 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any, Callable, Iterable, Optional, TypeVar, Union
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jsonpath import findall
 from pydantic import BaseModel, Field
 
@@ -126,6 +126,10 @@ def _create_jinja_env(template_dir: Path) -> Environment:
     env = Environment(
         loader=FileSystemLoader(template_dir),
         trim_blocks=True,
+        autoescape=select_autoescape(
+            enabled_extensions=("html.jinja", "xml.jinja",),
+            default=False,
+        ),
     )
     env.filters["_inline_code_list"] = _inline_code_list
     env.filters["_inline_code"] = _inline_code
