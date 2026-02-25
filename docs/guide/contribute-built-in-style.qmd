@@ -106,5 +106,5 @@ and
 [submitting pull requests](https://guidebook.seedcase-project.org/workflows/prs),
 have a look at the relevant sections of our Guidebook.
 
-You’re now ready to open a pull request from your fork to the main
+You're now ready to open a pull request from your fork to the main
 Flower repository on GitHub.
