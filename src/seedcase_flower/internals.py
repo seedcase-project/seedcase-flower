@@ -34,7 +34,10 @@ class BuildStyle(Enum):
     quarto_resource_tables = "quarto_resource_tables"
 
 
-def _resolve_uri(uri_or_path: str) -> HttpsUrl | FileUrl:
+type HttpsUrl_or_FileUrl = HttpsUrl | FileUrl
+
+
+def _resolve_uri(uri_or_path: str) -> HttpsUrl_or_FileUrl:
     split_uri = parse.urlsplit(uri_or_path)
     match split_uri.scheme:
         case "":
