@@ -19,7 +19,7 @@ app = App(
         ),
         config.Toml(
             "pyproject.toml",
-            root_keys="tool.seedcase-flower",
+            root_keys=["tool", "seedcase-flower"],
             search_parents=True,
             use_commands_as_keys=False,
         ),
