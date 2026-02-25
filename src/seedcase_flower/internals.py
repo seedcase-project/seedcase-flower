@@ -12,7 +12,7 @@ from jsonpath import findall
 from pydantic import BaseModel, Field
 
 from seedcase_flower.config import Config
-from seedcase_flower.section import Content, Mode, RelativePath, Section
+from seedcase_flower.section import Content, Mode, Section
 from seedcase_flower.styles import BuildStyle, ViewStyle
 
 
@@ -60,7 +60,7 @@ class BuiltSection:
     """
 
     content: str
-    output_path: Optional[RelativePath] = None
+    output_path: Optional[Path] = None
 
 
 def _get_template_dir_for_style(style: Union[BuildStyle, ViewStyle]) -> Path:
