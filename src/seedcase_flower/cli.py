@@ -9,6 +9,7 @@ from cyclopts import App, Parameter, config
 from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
 
 app = App(
+    name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
     default_parameter=Parameter(negative=()),
     config=[

@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 
@@ -97,7 +98,75 @@ def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
     assert bound.arguments["verbose"] is True
 
 
-# TODO === view placeholder ===
+# ---------------------------------------------------------------------------
+# Help output
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def console():
+    from rich.console import Console
+
+    return Console(
+        width=90,
+        force_terminal=True,
+        highlight=False,
+        color_system=None,
+        legacy_windows=False,
+    )
+
+
+def test_help_page(capsys, console):
+    """Top-level --help should match expected output."""
+    with pytest.raises(SystemExit):
+        app(["--help"], console=console)
+    assert capsys.readouterr().out == dedent(
+        """\
+        Usage: seedcase-flower COMMAND
+
+        Flower generates human-readable documentation from Data Packages.
+
+        ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
+        │ build        Build human-readable documentation from a datapackage.json file.          │
+        │ --help (-h)  Display this message and exit.                                            │
+        │ --version    Display application version.                                              │
+        ╰────────────────────────────────────────────────────────────────────────────────────────╯
+        """  # noqa
+    )
+
+
+def test_build_help_page(capsys, console):
+    """build --help should document all parameters with defaults and choices."""
+    with pytest.raises(SystemExit):
+        app(["build", "--help"], console=console)
+    assert capsys.readouterr().out == dedent(
+        """\
+        Usage: seedcase-flower build [ARGS]
+
+        Build human-readable documentation from a datapackage.json file.
+
+        ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
+        │ URI --uri                    The URI to a datapackage.json file. [default:             │
+        │                              datapackage.json]                                         │
+        │ STYLE --style                The style used to structure the output. If a template     │
+        │                              directory is given, this parameter will be ignored.       │
+        │                              [choices: quarto-one-page, quarto-resource-listing,       │
+        │                              quarto-resource-tables] [default: quarto-one-page]        │
+        │ TEMPLATE-DIR --template-dir  The directory that contains the Jinja template files and  │
+        │                              sections.toml. When set, it will override any built-in    │
+        │                              style given by the style parameter.                       │
+        │ OUTPUT-DIR --output-dir      The directory to save the generated files in. [default:   │
+        │                              docs]                                                     │
+        │ VERBOSE --verbose            If True, prints additional information to the console.    │
+        │                              [default: False]                                          │
+        ╰────────────────────────────────────────────────────────────────────────────────────────╯
+        """  # noqa
+    )
+
+
+# ---------------------------------------------------------------------------
+# view (plain function, not an app command yet)
+# ---------------------------------------------------------------------------
 
 
 def test_view() -> None:
