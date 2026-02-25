@@ -12,7 +12,7 @@ from jsonpath import findall
 from pydantic import BaseModel, Field
 
 from seedcase_flower.config import Config
-from seedcase_flower.section import Content, RelativePath, Section
+from seedcase_flower.section import Content, Mode, RelativePath, Section
 from seedcase_flower.styles import BuildStyle, ViewStyle
 
 
@@ -78,13 +78,20 @@ def _load_sections(template_dir: Path) -> list[Section]:
 def _build_content(
     content: Content, properties: dict[str, Any], template_dir: Path, env: Environment
 ) -> str:
-    selected_properties = findall(content.jsonpath, properties)
-    template = env.get_template((template_dir / content.template_path).name)
-    # Mode.one
     # TODO: handle Mode.many
+    if content.mode == Mode.many:
+        raise NotImplementedError()
+
+    selected_properties = findall(content.jsonpath, properties)
+    if len(selected_properties) > 1:
+        raise ValueError(
+            f"`Mode.one` expects at most one match. JSON path {content.jsonpath!r} "
+            f"returned {len(selected_properties)} matches. Use a more specific "
+            "JSON path or switch to `Mode.many`."
+        )
+    template = env.get_template((template_dir / content.template_path).name)
     return template.render(
         **{
-            # TODO: handle all possible selected properties
             content.jinja_variable: selected_properties[0]
             if selected_properties
             else None
