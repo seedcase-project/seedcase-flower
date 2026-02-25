@@ -101,7 +101,7 @@ def _build_section(
     )
     return BuiltSection(
         output_path=section.output_path,
-        content="".join(built_contents),
+        content="\n".join(built_contents),
     )
 
 
