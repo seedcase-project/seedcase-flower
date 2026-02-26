@@ -1,11 +1,7 @@
 """Generate the expected help-output strings used in test_cli.py.
 
 Run this script after changing a docstring or CLI parameter. Only snippets
-whose output differs from the current constants in test_cli.py are printed,
-so you can copy-paste just the changed values back into that file.
-
-Usage:
-    just generate-help-strings
+whose output differs from the current constants in test_cli.py are printed.
 """
 
 import sys
@@ -58,12 +54,9 @@ if __name__ == "__main__":
     if not changed:
         print("No changes detected. All help-output constants are up to date.")
     else:
-        print()
-        print("Review that the output below looks as expected.")
+        print("\nReview that the ouput below looks as expected.")
         print("Then, copy and paste it into tests/test_cli.py,")
         print("replacing the variable(s) with the same name.")
         for name, args in changed:
-            print()
-            print()
-            print()
+            print("\n\n")
             print(_as_constant_snippet(name, _capture_help(args)))
