@@ -58,6 +58,7 @@ def test_build_with_mocked_internals(mock_resolve_uri, mock_read_properties):
 # === Checking stdout ===
 
 
+# TODO: Update this when verbose is added.
 def test_build_verbose_prints_output(capsys, datapackage_path):
     """--verbose should print output_dir, properties, template_dir, and style."""
     app(
