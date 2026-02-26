@@ -6,7 +6,7 @@ from typing import Optional
 from cyclopts import App, Parameter, config
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, Uri, _read_properties, _resolve_uri
+from seedcase_flower.internals import BuildStyle, Uri, _parse_source, _read_properties
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
@@ -29,7 +29,7 @@ app = App(
 
 @app.command()
 def build(
-    uri: str = "datapackage.json",
+    source: str = "datapackage.json",
     style: BuildStyle = BuildStyle.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
@@ -38,7 +38,7 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        uri: The URI to a datapackage.json file.
+        source: The path or URI to a datapackage.json file.
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
@@ -47,7 +47,7 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    resolved_uri: Uri = _resolve_uri(uri)
+    resolved_uri: Uri = _parse_source(source)
     properties = _read_properties(resolved_uri)
 
     # One item per section, rendered from template.
