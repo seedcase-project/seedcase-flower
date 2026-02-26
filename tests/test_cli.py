@@ -101,6 +101,49 @@ def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
 
 # Help output ====
 
+_HELP_PAGE = dedent(
+    """\
+    Usge: seedcase-flower COMMAND
+
+    Flower generates human-readable documentation from Data Packages.
+
+    ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
+    │ build        Build human-readable documentation from a datapackage.json file.          │
+    │ --help (-h)  Display this message and exit.                                            │
+    │ --version    Display application version.                                              │
+    ╰────────────────────────────────────────────────────────────────────────────────────────╯
+    """  # noqa
+)
+
+_BUILD_HELP_PAGE = dedent(
+    """\
+    sage: seedcase-flower build [ARGS]
+
+    Build human-readable documentation from a datapackage.json file.
+
+    ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
+    │ URI --uri                    The URI to a datapackage.json file. [default:             │
+    │                              datapackage.json]                                         │
+    │ STYLE --style                The style used to structure the output. If a template     │
+    │                              directory is given, this parameter will be ignored.       │
+    │                              [choices: quarto-one-page, quarto-resource-listing,       │
+    │                              quarto-resource-tables] [default: quarto-one-page]        │
+    │ TEMPLATE-DIR --template-dir  The directory that contains the Jinja template files and  │
+    │                              sections.toml. When set, it will override any built-in    │
+    │                              style given by the style parameter.                       │
+    │ OUTPUT-DIR --output-dir      The directory to save the generated files in. [default:   │
+    │                              docs]                                                     │
+    │ VERBOSE --verbose            If True, prints additional information to the console.    │
+    │                              [default: False]                                          │
+    ╰────────────────────────────────────────────────────────────────────────────────────────╯
+    """  # noqa
+)
+
+_CHANGED_MSG = (
+    "The `{cmd}` help output changed. Run `just generate-help-strings` "
+    "and paste the updated string into the relevant test."
+)
+
 
 @pytest.fixture
 def console():
@@ -119,48 +162,14 @@ def test_help_page(capsys, console):
     """Top-level --help should match expected output."""
     with pytest.raises(SystemExit):
         app(["--help"], console=console)
-    assert capsys.readouterr().out == dedent(
-        """\
-        Usage: seedcase-flower COMMAND
-
-        Flower generates human-readable documentation from Data Packages.
-
-        ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
-        │ build        Build human-readable documentation from a datapackage.json file.          │
-        │ --help (-h)  Display this message and exit.                                            │
-        │ --version    Display application version.                                              │
-        ╰────────────────────────────────────────────────────────────────────────────────────────╯
-        """  # noqa
-    )
+    assert capsys.readouterr().out == _HELP_PAGE, _CHANGED_MSG.format(cmd="general")
 
 
 def test_build_help_page(capsys, console):
     """build --help should document all parameters with defaults and choices."""
     with pytest.raises(SystemExit):
         app(["build", "--help"], console=console)
-    assert capsys.readouterr().out == dedent(
-        """\
-        Usage: seedcase-flower build [ARGS]
-
-        Build human-readable documentation from a datapackage.json file.
-
-        ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-        │ URI --uri                    The URI to a datapackage.json file. [default:             │
-        │                              datapackage.json]                                         │
-        │ STYLE --style                The style used to structure the output. If a template     │
-        │                              directory is given, this parameter will be ignored.       │
-        │                              [choices: quarto-one-page, quarto-resource-listing,       │
-        │                              quarto-resource-tables] [default: quarto-one-page]        │
-        │ TEMPLATE-DIR --template-dir  The directory that contains the Jinja template files and  │
-        │                              sections.toml. When set, it will override any built-in    │
-        │                              style given by the style parameter.                       │
-        │ OUTPUT-DIR --output-dir      The directory to save the generated files in. [default:   │
-        │                              docs]                                                     │
-        │ VERBOSE --verbose            If True, prints additional information to the console.    │
-        │                              [default: False]                                          │
-        ╰────────────────────────────────────────────────────────────────────────────────────────╯
-        """  # noqa
-    )
+    assert capsys.readouterr().out == _BUILD_HELP_PAGE, _CHANGED_MSG.format(cmd="build")
 
 
 # view (placeholder) ====
