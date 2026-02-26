@@ -103,7 +103,7 @@ def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
 
 _HELP_PAGE = dedent(
     """\
-    Usge: seedcase-flower COMMAND
+    Usage: seedcase-flower COMMAND
 
     Flower generates human-readable documentation from Data Packages.
 
@@ -117,7 +117,7 @@ _HELP_PAGE = dedent(
 
 _BUILD_HELP_PAGE = dedent(
     """\
-    sage: seedcase-flower build [ARGS]
+    Usage: seedcase-flower build [ARGS]
 
     Build human-readable documentation from a datapackage.json file.
 
