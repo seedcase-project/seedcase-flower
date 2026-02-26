@@ -40,7 +40,7 @@ def mock_read_properties(mocker):
     return mocker.patch("seedcase_flower.cli._read_properties")
 
 
-# === Testing CLI invocation ===
+# Testing CLI invocation ====
 
 
 def test_build_with_mocked_internals(mock_resolve_uri, mock_read_properties):
@@ -55,7 +55,7 @@ def test_build_with_mocked_internals(mock_resolve_uri, mock_read_properties):
     mock_read_properties.assert_called_once_with(fake_path)
 
 
-# === Checking stdout ===
+# Checking stdout ====
 
 
 # TODO: Update this when verbose is added.
@@ -75,7 +75,7 @@ def test_build_no_verbose_produces_no_output(capsys, datapackage_path):
     assert capsys.readouterr().out == ""
 
 
-# === File-based config ===
+# File-based config ====
 
 
 def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
@@ -99,7 +99,7 @@ def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
     assert bound.arguments["verbose"] is True
 
 
-# === Help output ===
+# Help output ====
 
 
 @pytest.fixture
@@ -163,7 +163,7 @@ def test_build_help_page(capsys, console):
     )
 
 
-# === view (placeholder) ===
+# view (placeholder) ====
 
 
 def test_view() -> None:
