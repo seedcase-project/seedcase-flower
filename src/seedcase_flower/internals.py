@@ -47,8 +47,6 @@ def _convert_to_path(source: str) -> Uri:
     path = Path(source).resolve()
     if path.is_dir():
         path = path / "datapackage.json"
-    if not path.exists():
-        raise OSError(f"{path} does not exist.")
     return Uri(value=str(path), local=True)
 
 
