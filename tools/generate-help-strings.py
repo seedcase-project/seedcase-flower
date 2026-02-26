@@ -54,7 +54,7 @@ if __name__ == "__main__":
     if not changed:
         print("No changes detected. All help-output constants are up to date.")
     else:
-        print("\nReview that the ouput below looks as expected.")
+        print("\nReview that the output below looks as expected.")
         print("Then, copy and paste it into tests/test_cli.py,")
         print("replacing the variable(s) with the same name.")
         for name, args in changed:
