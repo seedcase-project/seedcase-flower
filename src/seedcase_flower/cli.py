@@ -38,7 +38,10 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        source: The path or URI to a datapackage.json file.
+        source: The path to a local `datapackage.json` file or its parent folder.
+            Can also be an `https:` URL to a remote `datapackage.json` or a
+            `github:` / `gh:` URI pointing to a repo with a `datapackage.json`
+            in the repo root (in the format `gh:org/repo`).
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
