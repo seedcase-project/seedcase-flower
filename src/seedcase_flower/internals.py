@@ -56,16 +56,11 @@ def _convert_to_https_uri(split_https_source: parse.SplitResult) -> Uri:
 
 
 def _convert_to_github_uri(split_gh_source: parse.SplitResult) -> Uri:
-    github_path = "/".join(
-        part
-        for part in (split_gh_source.netloc, split_gh_source.path.lstrip("/"))
-        if part
-    )
     return Uri(
         value=split_gh_source._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
-            path=f"/{github_path}/refs/heads/main/datapackage.json",
+            path=f"/{split_gh_source.path}/refs/heads/main/datapackage.json",
         ).geturl(),
         local=False,
     )
