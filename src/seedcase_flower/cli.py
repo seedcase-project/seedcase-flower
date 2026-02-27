@@ -1,7 +1,7 @@
 """Functions for the exposed CLI."""
 
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 
@@ -51,7 +51,7 @@ def build(
         verbose: If True, prints additional information to the console.
     """
     resolved_uri: Uri = _parse_source(source)
-    properties = _read_properties(resolved_uri)
+    properties: dict[str, Any] = _read_properties(resolved_uri)
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which
