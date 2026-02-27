@@ -73,6 +73,10 @@ def _convert_to_github_uri(split_gh_source: parse.SplitResult) -> Uri:
 
 # TODO Extend to also read properties from URLs
 def _read_properties(uri: Uri) -> dict[str, Any]:
+    if not uri.local:
+        raise NotImplementedError(
+            "Reading properties from remote URIs is not implemented yet."
+        )
     with open(uri.value) as properties_file:
         datapackage: dict[str, Any] = json.load(properties_file)
         return datapackage
