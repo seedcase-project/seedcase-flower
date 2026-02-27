@@ -25,12 +25,12 @@ class Uri:
 
 
 def _parse_source(source: str) -> Uri:
-    split_uri = parse.urlsplit(source)
-    match split_uri.scheme:
-        case "":
-            return _convert_to_path(source)
+    split_source = parse.urlsplit(source)
+    if split_source.scheme == "":
+        split_source = split_source._replace(scheme="file")
+    match split_source.scheme:
         case "file":
-            return _convert_to_file_uri(split_uri)
+            return _convert_to_file_uri(split_source)
         case "https":
             return _convert_to_https_uri(split_uri)
         case "gh" | "github":
@@ -43,11 +43,12 @@ def _parse_source(source: str) -> Uri:
             )
 
 
-def _convert_to_path(source: str) -> Uri:
-    path = Path(source).resolve()
+def _convert_to_file_uri(split_file_source: parse.SplitResult) -> Uri:
+    path = Path(split_file_source.path).resolve()
     if path.is_dir():
-        path = path / "datapackage.json"
-    return Uri(value=str(path), local=True)
+        path /= "datapackage.json"
+    split_file_source = split_file_source._replace(path=path.as_posix())
+    return Uri(value=split_file_source.geturl(), local=True)
 
 
 def _convert_to_file_uri(split_uri: parse.SplitResult) -> Uri:
