@@ -6,6 +6,7 @@ whose output differs from the current constants in test_cli.py are printed.
 
 import sys
 from io import StringIO
+from operator import itemgetter
 
 from rich.console import Console
 
@@ -35,6 +36,19 @@ def _capture_help(args: list[str]) -> str:
         sys.stdout = old_stdout
 
 
+def _is_outdated(check: tuple[str, list[str], str]) -> bool:
+    """Return True if the current help output differs from the stored constant."""
+    _, args, current = check
+    return _capture_help(args) != current
+
+
+def _find_outdated_checks(
+    checks: list[tuple[str, list[str], str]],
+) -> list[tuple[str, list[str]]]:
+    """Return checks whose current help output differs from the stored constant."""
+    return list(map(itemgetter(0, 1), filter(_is_outdated, checks)))
+
+
 def _as_constant_snippet(name: str, text: str) -> str:
     """Return a copy-pasteable constant assignment for *text*."""
     lines = text.splitlines()
@@ -47,9 +61,7 @@ if __name__ == "__main__":
         ("_HELP_PAGE", ["--help"], _HELP_PAGE),
         ("_BUILD_HELP_PAGE", ["build", "--help"], _BUILD_HELP_PAGE),
     ]
-    changed = [
-        (name, args) for name, args, current in checks if _capture_help(args) != current
-    ]
+    changed = _find_outdated_checks(checks)
 
     if not changed:
         print("No changes detected. All help-output constants are up to date.")
