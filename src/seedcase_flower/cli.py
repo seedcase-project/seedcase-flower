@@ -72,6 +72,8 @@ def build(
             output_dir, properties, template_dir, style
         )  # Placeholder for unused args
 
+    # _write_sections(built_sections, output_dir)
+
 
 def view() -> str:
     """Display the contents of a `datapackage.json` in a human-friendly way."""
