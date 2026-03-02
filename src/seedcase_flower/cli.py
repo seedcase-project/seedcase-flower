@@ -7,9 +7,10 @@ from cyclopts import App, Parameter, config
 
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
+    Uri,
     _build_sections,
+    _parse_uri,
     _read_properties,
-    _resolve_uri,
 )
 from seedcase_flower.styles import BuildStyle
 
@@ -44,7 +45,12 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        uri: The URI to a datapackage.json file.
+        uri: The path to a local `datapackage.json` file or its parent folder.
+            Can also be an `https:` URL to a remote `datapackage.json` or a
+            `github:` / `gh:` URI pointing to a repo with a `datapackage.json`
+            in the repo root (in the format `gh:org/repo`, which can also include
+            reference to a tag or branch, such as `gh:org/repo@main` or
+            `gh:org/repo@1.0.1).
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
@@ -53,14 +59,14 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    path: Path = _resolve_uri(uri)
     config = Config(
         style=style,
         template_dir=template_dir,
         output_dir=output_dir,
     )
 
-    properties: dict[str, Any] = _read_properties(path)
+    uri: Uri = _parse_uri(uri)  # type: ignore # TODO fix in read_prop PR
+    properties: dict[str, Any] = _read_properties(uri)  # type: ignore # TODO fix in read_prop PR
     built_sections = _build_sections(properties, config)  # noqa: F841
     # TODO: write built sections
     # output_files: list[Path] = write_sections(built_sections, output_dir)
