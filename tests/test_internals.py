@@ -69,7 +69,7 @@ def test_parse_uri_https_preserves_url():
 def test_parse_uri_gh_scheme_converts_to_raw_githubusercontent():
     """A gh:// URI should be converted to a raw.githubusercontent.com URL."""
     result = _parse_uri("gh://owner/repo")
-    assert "raw.githubusercontent.com" in result.value
+    assert result.value.startswith("https://raw.githubusercontent.com/")
 
 
 def test_parse_uri_gh_scheme_is_not_local():
@@ -87,7 +87,7 @@ def test_parse_uri_gh_scheme_appends_datapackage_json():
 def test_parse_uri_github_scheme_converts_to_raw_githubusercontent():
     """A github:// URI should be converted to a raw.githubusercontent.com URL."""
     result = _parse_uri("github://owner/repo")
-    assert "raw.githubusercontent.com" in result.value
+    assert result.value.startswith("https://raw.githubusercontent.com/")
 
 
 def test_parse_uri_github_scheme_is_not_local():
