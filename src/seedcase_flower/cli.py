@@ -6,7 +6,7 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, _read_properties, _resolve_uri
+from seedcase_flower.internals import BuildStyle, Uri, _parse_uri, _read_properties
 
 app = App(
     name="seedcase-flower",
@@ -39,7 +39,12 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        uri: The URI to a datapackage.json file.
+        uri: The path to a local `datapackage.json` file or its parent folder.
+            Can also be an `https:` URL to a remote `datapackage.json` or a
+            `github:` / `gh:` URI pointing to a repo with a `datapackage.json`
+            in the repo root (in the format `gh:org/repo`, which can also include
+            reference to a tag or branch, such as `gh:org/repo@main` or
+            `gh:org/repo@1.0.1).
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
@@ -48,8 +53,8 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    path: Path = _resolve_uri(uri)
-    properties: dict[str, Any] = _read_properties(path)
+    uri: Uri = _parse_uri(uri)  # type: ignore # TODO fix in read_prop PR
+    properties: dict[str, Any] = _read_properties(uri)  # type: ignore # TODO fix in read_prop PR
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which

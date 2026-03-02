@@ -7,7 +7,7 @@ from textwrap import dedent
 import pytest
 
 from seedcase_flower.cli import app, view
-from seedcase_flower.internals import BuildStyle
+from seedcase_flower.internals import BuildStyle, Uri
 
 _DATAPACKAGE_DATA = {
     "name": "placeholder",
@@ -29,9 +29,9 @@ def datapackage_path(tmp_path):
 
 
 @pytest.fixture
-def mock_resolve_uri(mocker):
-    """Mock _resolve_uri to isolate CLI tests from filesystem resolution."""
-    return mocker.patch("seedcase_flower.cli._resolve_uri")
+def mock_parse_uri(mocker):
+    """Mock _parse_uri to isolate CLI tests from filesystem resolution."""
+    return mocker.patch("seedcase_flower.cli._parse_uri")
 
 
 @pytest.fixture
@@ -43,16 +43,16 @@ def mock_read_properties(mocker):
 # Testing CLI invocation ====
 
 
-def test_build_with_mocked_internals(mock_resolve_uri, mock_read_properties):
+def test_build_with_mocked_internals(mock_parse_uri, mock_read_properties):
     """Isolate CLI behaviour by mocking internal helpers."""
-    fake_path = Path("datapackage.json")
-    mock_resolve_uri.return_value = fake_path
+    fake_uri = Uri(value="file:///datapackage.json", local=True)
+    mock_parse_uri.return_value = fake_uri
     # Simulate running the app from the command line (but without calling sys.exit())
     app(["build", "datapackage.json"], result_action="return_value")
 
     # Checking that the correct values were passed to the internal functions
-    mock_resolve_uri.assert_called_once_with("datapackage.json")
-    mock_read_properties.assert_called_once_with(fake_path)
+    mock_parse_uri.assert_called_once_with("datapackage.json")
+    mock_read_properties.assert_called_once_with(fake_uri)
 
 
 # Checking stdout ====
@@ -122,8 +122,13 @@ _BUILD_HELP_PAGE = dedent(
     Build human-readable documentation from a datapackage.json file.
 
     ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-    │ URI --uri                    The URI to a datapackage.json file. [default:             │
-    │                              datapackage.json]                                         │
+    │ URI --uri                    The path to a local datapackage.json file or its parent   │
+    │                              folder. Can also be an https: URL to a remote             │
+    │                              datapackage.json or a github: / gh: URI pointing to a     │
+    │                              repo with a datapackage.json in the repo root (in the     │
+    │                              format gh:org/repo, which can also include reference to a │
+    │                              tag or branch, such as gh:org/repo@main or                │
+    │                              `gh:org/repo@1.0.1). [default: datapackage.json]          │
     │ STYLE --style                The style used to structure the output. If a template     │
     │                              directory is given, this parameter will be ignored.       │
     │                              [choices: quarto-one-page, quarto-resource-listing,       │
