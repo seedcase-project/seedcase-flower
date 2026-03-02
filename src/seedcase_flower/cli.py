@@ -14,6 +14,7 @@ from seedcase_flower.internals import (
 from seedcase_flower.styles import BuildStyle
 
 app = App(
+    name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
     default_parameter=Parameter(negative=()),
     config=[
@@ -24,7 +25,7 @@ app = App(
         ),
         config.Toml(
             "pyproject.toml",
-            root_keys="tool.seedcase-flower",
+            root_keys=["tool", "seedcase-flower"],
             search_parents=True,
             use_commands_as_keys=False,
         ),
@@ -60,10 +61,9 @@ def build(
     )
 
     properties: dict[str, Any] = _read_properties(path)
-    built_sections = _build_sections(properties, config)
+    built_sections = _build_sections(properties, config)  # noqa: F841
     # TODO: write built sections
     # output_files: list[Path] = write_sections(built_sections, output_dir)
-    print(built_sections)
 
     if verbose:
         print(
