@@ -66,39 +66,24 @@ def test_parse_uri_https_preserves_url():
 # _parse_uri: gh:// / github:// scheme ====
 
 
-def test_parse_uri_gh_scheme_converts_to_raw_githubusercontent():
-    """A gh:// URI should be converted to a raw.githubusercontent.com URL."""
-    result = _parse_uri("gh://owner/repo")
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_uri_github_scheme_converts_to_raw_githubusercontent(scheme):
+    """GitHub  URIs should be converted to a raw.githubusercontent.com URL."""
+    result = _parse_uri(f"{scheme}://owner/repo")
     assert result.value.startswith("https://raw.githubusercontent.com/")
 
 
-def test_parse_uri_gh_scheme_is_not_local():
-    """A gh:// URI should return a non-local Uri."""
-    result = _parse_uri("gh://owner/repo")
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_uri_github_scheme_is_not_local(scheme):
+    """GitHub URIs should return a non-local Uri."""
+    result = _parse_uri(f"{scheme}://owner/repo")
     assert result.local is False
 
 
-def test_parse_uri_gh_scheme_appends_datapackage_json():
-    """A gh:// URI should point to the datapackage.json on the main branch."""
-    result = _parse_uri("gh://owner/repo")
-    assert result.value.endswith("datapackage.json")
-
-
-def test_parse_uri_github_scheme_converts_to_raw_githubusercontent():
-    """A github:// URI should be converted to a raw.githubusercontent.com URL."""
-    result = _parse_uri("github://owner/repo")
-    assert result.value.startswith("https://raw.githubusercontent.com/")
-
-
-def test_parse_uri_github_scheme_is_not_local():
-    """A github:// URI should return a non-local Uri."""
-    result = _parse_uri("github://owner/repo")
-    assert result.local is False
-
-
-def test_parse_uri_github_scheme_appends_datapackage_json():
-    """A github:// URI should point to the datapackage.json on the main branch."""
-    result = _parse_uri("github://owner/repo")
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_uri_github_scheme_appends_datapackage_json(scheme):
+    """GitHub URIs should point to the datapackage.json on the main branch."""
+    result = _parse_uri(f"{scheme}://owner/repo")
     assert result.value.endswith("datapackage.json")
 
 
