@@ -71,7 +71,7 @@ def _read_properties(uri: Uri) -> dict[str, Any]:
     if uri.local:
         path = Path(parse.urlsplit(uri.value).path)
         with open(path) as properties_file:
-            return json.load(properties_file)
+            return json.load(properties_file)  # type: ignore # TODO fix in read_prop PR
     else:
         # TODO read from remote file
         return {"placeholder": uri.value}
