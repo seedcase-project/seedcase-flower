@@ -108,9 +108,9 @@ _HELP_PAGE = dedent(
     Flower generates human-readable documentation from Data Packages.
 
     ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
-    │ build        Build human-readable documentation from a datapackage.json file.          │
-    │ --help (-h)  Display this message and exit.                                            │
-    │ --version    Display application version.                                              │
+    │ <build>    Build human-readable documentation from a datapackage.json file.            │
+    │ --help     Display this message and exit.                                              │
+    │ --version  Display application version.                                                │
     ╰────────────────────────────────────────────────────────────────────────────────────────╯
     """  # noqa
 )
@@ -122,24 +122,27 @@ _BUILD_HELP_PAGE = dedent(
     Build human-readable documentation from a datapackage.json file.
 
     ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-    │ URI --uri                    The path to a local datapackage.json file or its parent   │
-    │                              folder. Can also be an https: URL to a remote             │
-    │                              datapackage.json or a github: / gh: URI pointing to a     │
-    │                              repo with a datapackage.json in the repo root (in the     │
-    │                              format gh:org/repo, which can also include reference to a │
-    │                              tag or branch, such as gh:org/repo@main or                │
-    │                              `gh:org/repo@1.0.1). [default: datapackage.json]          │
-    │ STYLE --style                The style used to structure the output. If a template     │
-    │                              directory is given, this parameter will be ignored.       │
-    │                              [choices: quarto-one-page, quarto-resource-listing,       │
-    │                              quarto-resource-tables] [default: quarto-one-page]        │
-    │ TEMPLATE-DIR --template-dir  The directory that contains the Jinja template files and  │
-    │                              sections.toml. When set, it will override any built-in    │
-    │                              style given by the style parameter.                       │
-    │ OUTPUT-DIR --output-dir      The directory to save the generated files in. [default:   │
-    │                              docs]                                                     │
-    │ VERBOSE --verbose            If True, prints additional information to the console.    │
-    │                              [default: False]                                          │
+    │ --uri <URI>                    The path to a local datapackage.json file or its parent │
+    │                                folder. Can also be an https: URL to a remote           │
+    │                                datapackage.json or a github: / gh: URI pointing to a   │
+    │                                repo with a datapackage.json in the repo root (in the   │
+    │                                format gh:org/repo, which can also include reference to │
+    │                                a tag or branch, such as gh:org/repo@main or            │
+    │                                `gh:org/repo@1.0.1).                                    │
+    │                                [default: datapackage.json]                             │
+    │ --style <STYLE>                The style used to structure the output. If a template   │
+    │                                directory is given, this parameter will be ignored.     │
+    │                                [choices: quarto-one-page, quarto-resource-listing,     │
+    │                                quarto-resource-tables]                                 │
+    │                                [default: quarto-one-page]                              │
+    │ --template-dir <TEMPLATE-DIR>  The directory that contains the Jinja template files    │
+    │                                and sections.toml. When set, it will override any       │
+    │                                built-in style given by the style parameter.            │
+    │                                [default: None]                                         │
+    │ --output-dir <OUTPUT-DIR>      The directory to save the generated files in.           │
+    │                                [default: docs]                                         │
+    │ --verbose                      If True, prints additional information to the console.  │
+    │                                [default: False]                                        │
     ╰────────────────────────────────────────────────────────────────────────────────────────╯
     """  # noqa
 )
