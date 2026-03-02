@@ -126,7 +126,9 @@ _BUILD_HELP_PAGE = dedent(
     │                              folder. Can also be an https: URL to a remote             │
     │                              datapackage.json or a github: / gh: URI pointing to a     │
     │                              repo with a datapackage.json in the repo root (in the     │
-    │                              format gh:org/repo). [default: datapackage.json]          │
+    │                              format gh:org/repo, which can also include reference to a │
+    │                              tag or branch, such as gh:org/repo@main or                │
+    │                              `gh:org/repo@1.0.1). [default: datapackage.json]          │
     │ STYLE --style                The style used to structure the output. If a template     │
     │                              directory is given, this parameter will be ignored.       │
     │                              [choices: quarto-one-page, quarto-resource-listing,       │
