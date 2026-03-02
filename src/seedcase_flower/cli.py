@@ -9,6 +9,7 @@ from cyclopts import App, Parameter, config
 from seedcase_flower.internals import BuildStyle, Uri, _parse_uri, _read_properties
 
 app = App(
+    name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
     default_parameter=Parameter(negative=()),
     config=[
@@ -19,7 +20,7 @@ app = App(
         ),
         config.Toml(
             "pyproject.toml",
-            root_keys="tool.seedcase-flower",
+            root_keys=["tool", "seedcase-flower"],
             search_parents=True,
             use_commands_as_keys=False,
         ),
