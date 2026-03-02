@@ -180,7 +180,7 @@ def test_build_help_page(capsys, console):
     assert capsys.readouterr().out == _BUILD_HELP_PAGE, _CHANGED_MSG.format(cmd="build")
 
 
-# It was not possible to include these color markup tags direclty in the help string
+# It was not possible to include these color markup tags directly in the help string
 # test above because printing them out explicitly in the rich console messes up the
 # column widths in cyclopts
 def test_build_help_page_applies_rich_markup(capsys):
