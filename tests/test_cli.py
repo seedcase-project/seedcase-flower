@@ -122,8 +122,11 @@ _BUILD_HELP_PAGE = dedent(
     Build human-readable documentation from a datapackage.json file.
 
     ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-    │ URI --uri                    The URI to a datapackage.json file. [default:             │
-    │                              datapackage.json]                                         │
+    │ URI --uri                    The path to a local datapackage.json file or its parent   │
+    │                              folder. Can also be an https: URL to a remote             │
+    │                              datapackage.json or a github: / gh: URI pointing to a     │
+    │                              repo with a datapackage.json in the repo root (in the     │
+    │                              format gh:org/repo). [default: datapackage.json]          │
     │ STYLE --style                The style used to structure the output. If a template     │
     │                              directory is given, this parameter will be ignored.       │
     │                              [choices: quarto-one-page, quarto-resource-listing,       │
