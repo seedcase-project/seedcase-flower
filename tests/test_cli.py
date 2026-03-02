@@ -180,6 +180,33 @@ def test_build_help_page(capsys, console):
     assert capsys.readouterr().out == _BUILD_HELP_PAGE, _CHANGED_MSG.format(cmd="build")
 
 
+# It was not possible to include these color markup tags direclty in the help string
+# test above because printing them out explicitly in the rich console messes up the
+# column widths in cyclopts
+def test_build_help_page_applies_rich_markup(capsys):
+    """build --help should apply bold-cyan to flags and dim to placeholders."""
+    from rich.console import Console
+
+    markup_console = Console(
+        width=90,
+        force_terminal=False,
+        highlight=False,
+        color_system=None,
+        markup=False,
+        legacy_windows=False,
+    )
+    with pytest.raises(SystemExit):
+        app(["build", "--help"], console=markup_console)
+    output = capsys.readouterr().out
+    assert "[bold cyan]--uri[/bold cyan]" in output
+    assert "[dim]<URI>[/dim]" in output
+    assert "[bold cyan]--style[/bold cyan]" in output
+    assert "[dim]<STYLE>[/dim]" in output
+    assert "[bold cyan]--verbose[/bold cyan]" in output
+    # Boolean flags must not produce a positional placeholder
+    assert "[dim]<verbose>[/dim]" not in output
+
+
 # view (placeholder) ====
 
 
