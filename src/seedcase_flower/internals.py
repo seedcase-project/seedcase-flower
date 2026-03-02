@@ -24,43 +24,43 @@ class Uri:
     local: bool
 
 
-def _parse_source(source: str) -> Uri:
-    split_source = parse.urlsplit(source)
-    if split_source.scheme == "":
-        split_source = split_source._replace(scheme="file")
-    match split_source.scheme:
+def _parse_uri(uri: str) -> Uri:
+    split_uri = parse.urlsplit(uri)
+    if split_uri.scheme == "":
+        split_uri = split_uri._replace(scheme="file")
+    match split_uri.scheme:
         case "file":
-            return _convert_to_file_uri(split_source)
+            return _convert_to_file_uri(split_uri)
         case "https":
-            return _convert_to_https_uri(split_source)
+            return _convert_to_https_uri(split_uri)
         case "gh" | "github":
-            return _convert_to_github_uri(split_source)
+            return _convert_to_github_uri(split_uri)
         case _:
             raise ValueError(
-                "The source must be either a path to an existing file/folder "
+                "The uri must be either a path to an existing file/folder "
                 "or a URI with one of the following URI prefixes: "
                 "`file:`, `https:`, `gh:`, `github:`"
             )
 
 
-def _convert_to_file_uri(split_file_source: parse.SplitResult) -> Uri:
-    path = Path(split_file_source.path).resolve()
+def _convert_to_file_uri(split_file_uri: parse.SplitResult) -> Uri:
+    path = Path(split_file_uri.path).resolve()
     if path.is_dir():
         path /= "datapackage.json"
-    split_file_source = split_file_source._replace(path=path.as_posix())
-    return Uri(value=split_file_source.geturl(), local=True)
+    split_file_uri = split_file_uri._replace(path=path.as_posix())
+    return Uri(value=split_file_uri.geturl(), local=True)
 
 
-def _convert_to_https_uri(split_https_source: parse.SplitResult) -> Uri:
-    return Uri(value=split_https_source.geturl(), local=False)
+def _convert_to_https_uri(split_https_uri: parse.SplitResult) -> Uri:
+    return Uri(value=split_https_uri.geturl(), local=False)
 
 
-def _convert_to_github_uri(split_gh_source: parse.SplitResult) -> Uri:
+def _convert_to_github_uri(split_gh_uri: parse.SplitResult) -> Uri:
     return Uri(
-        value=split_gh_source._replace(
+        value=split_gh_uri._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
-            path=f"/{split_gh_source.path}/refs/heads/main/datapackage.json",
+            path=f"/{split_gh_uri.path}/refs/heads/main/datapackage.json",
         ).geturl(),
         local=False,
     )

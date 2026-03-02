@@ -6,7 +6,7 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, Uri, _parse_source, _read_properties
+from seedcase_flower.internals import BuildStyle, Uri, _parse_uri, _read_properties
 
 app = App(
     help="Flower generates human-readable documentation from Data Packages.",
@@ -29,7 +29,7 @@ app = App(
 
 @app.command()
 def build(
-    source: str = "datapackage.json",
+    uri: str = "datapackage.json",
     style: BuildStyle = BuildStyle.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
@@ -38,7 +38,7 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        source: The path to a local `datapackage.json` file or its parent folder.
+        uri: The path to a local `datapackage.json` file or its parent folder.
             Can also be an `https:` URL to a remote `datapackage.json` or a
             `github:` / `gh:` URI pointing to a repo with a `datapackage.json`
             in the repo root (in the format `gh:org/repo`).
@@ -50,7 +50,7 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    uri: Uri = _parse_source(source)
+    uri: Uri = _parse_uri(uri)
     properties: dict[str, Any] = _read_properties(uri)
 
     # One item per section, rendered from template.
