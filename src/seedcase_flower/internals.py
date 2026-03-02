@@ -69,7 +69,17 @@ def _get_template_dir(style: Union[BuildStyle, ViewStyle]) -> Path:
 
 
 def _load_sections(template_dir: Path) -> list[Section]:
-    with open(template_dir / "sections.toml", mode="rb") as file:
+    if not template_dir.is_dir():
+        raise NotADirectoryError(f"Template directory '{template_dir}' does not exist.")
+
+    template_path = template_dir / "sections.toml"
+    if not template_path.is_file():
+        raise FileNotFoundError(
+            f"Template directory '{template_dir}' does not contain a "
+            "sections.toml file."
+        )
+
+    with open(template_path, mode="rb") as file:
         sections_file = tomllib.load(file)
 
     return SectionsFile.model_validate(sections_file).sections
@@ -89,7 +99,15 @@ def _build_content(
             f"returned {len(selected_properties)} matches. Use a more specific "
             "JSON path or switch to `Mode.many`."
         )
-    template = env.get_template((template_dir / content.template_path).name)
+
+    template_path = template_dir / content.template_path
+    if not template_path.is_file():
+        raise FileNotFoundError(
+            f"Template file '{content.template_path}' does not exist in the template "
+            f"directory '{template_dir}'."
+        )
+
+    template = env.get_template(template_path.name)
     return template.render(
         **{
             content.jinja_variable: selected_properties[0]
