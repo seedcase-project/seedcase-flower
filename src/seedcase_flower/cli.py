@@ -42,7 +42,9 @@ def build(
         uri: The path to a local `datapackage.json` file or its parent folder.
             Can also be an `https:` URL to a remote `datapackage.json` or a
             `github:` / `gh:` URI pointing to a repo with a `datapackage.json`
-            in the repo root (in the format `gh:org/repo`). Can also take a reference to a tag or branch for `gh:` or `github:` URIs (e.g. `gh:org/repo@main` or `gh:org/repo@1.0.1).
+            in the repo root (in the format `gh:org/repo`, which can also include
+            reference to a tag or branch, such as `gh:org/repo@main` or
+            `gh:org/repo@1.0.1).
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
