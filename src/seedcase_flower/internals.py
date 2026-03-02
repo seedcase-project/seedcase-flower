@@ -69,9 +69,9 @@ def _convert_to_github_uri(split_gh_uri: parse.SplitResult) -> Uri:
 # TODO Extend to also read properties from URLs
 def _read_properties(uri: Uri) -> dict[str, Any]:
     if uri.local:
-        # TODO read from local file
-        pass
+        path = Path(parse.urlsplit(uri.value).path)
+        with open(path) as properties_file:
+            return json.load(properties_file)
     else:
         # TODO read from remote file
-        pass
-    return {"placeholder": uri.value}
+        return {"placeholder": uri.value}
