@@ -53,21 +53,22 @@ def build(
         verbose: If True, prints additional information to the console.
     """
     path: Path = _resolve_uri(uri)
-    properties: dict[str, Any] = _read_properties(path)
-
-    if verbose:
-        print(
-            output_dir, properties, template_dir, style
-        )  # Placeholder for unused args
-
     config = Config(
         style=style,
         template_dir=template_dir,
         output_dir=output_dir,
     )
+
+    properties: dict[str, Any] = _read_properties(path)
     built_sections = _build_sections(properties, config)
     # TODO: write built sections
+    # output_files: list[Path] = write_sections(built_sections, output_dir)
     print(built_sections)
+
+    if verbose:
+        print(
+            output_dir, properties, template_dir, style
+        )  # Placeholder for unused args
 
 
 def view() -> str:

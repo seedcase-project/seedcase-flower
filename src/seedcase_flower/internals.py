@@ -39,7 +39,7 @@ def _map(x: Iterable[In], fn: Callable[[In], Out]) -> list[Out]:
 
 
 class SectionsFile(BaseModel, frozen=True):
-    """Class modelling the `sections.toml` file.
+    """Data model of the contents of the `sections.toml` file.
 
     Attributes:
         sections: The sections in the config file.
@@ -63,9 +63,9 @@ class BuiltSection:
     output_path: Optional[Path] = None
 
 
-def _get_template_dir_for_style(style: Union[BuildStyle, ViewStyle]) -> Path:
-    STYLES_PATH = Path(str(files("seedcase_flower").joinpath("styles")))
-    return STYLES_PATH / style.name
+def _get_template_dir(style: Union[BuildStyle, ViewStyle]) -> Path:
+    styles_path = Path(str(files("seedcase_flower").joinpath("styles")))
+    return styles_path / style.name
 
 
 def _load_sections(template_dir: Path) -> list[Section]:
@@ -117,6 +117,7 @@ def _inline_code(value: Optional[str]) -> Optional[str]:
 
 
 def _inline_code_list(value: Union[str, list[str]]) -> str:
+    # Some Data Package fields allow either a string or a list of strings
     if isinstance(value, str):
         value = [value]
     return ", ".join(_map(value, lambda item: f"`{item}`"))
@@ -134,13 +135,15 @@ def _create_jinja_env(template_dir: Path) -> Environment:
             default=False,
         ),
     )
+    # Render a list of strings as comma-separated inline code
     env.filters["_inline_code_list"] = _inline_code_list
+    # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     return env
 
 
 def _build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSection]:
-    template_dir = config.template_dir or _get_template_dir_for_style(config.style)
+    template_dir = config.template_dir or _get_template_dir(config.style)
     sections = _load_sections(template_dir)
     env = _create_jinja_env(template_dir)
     return _map(
