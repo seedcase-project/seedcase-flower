@@ -1,8 +1,7 @@
 [project]
 name = "seedcase-flower"
 version = "0.7.0"
-# TODO: Add a description of the package.
-description = ""
+description = "Turn your Data Package metadata into human-readable documentation"
 authors = [
   {name = "Luke W. Johnston", email = "lwjohnst@gmail.com" },
   {name = "Signe Kirk Brødbæk", email = "signekb@clin.au.dk" },
