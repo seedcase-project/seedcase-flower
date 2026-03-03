@@ -72,7 +72,7 @@ work for `build`.
 ```{mermaid}
 %%| label: fig-cli-build-flow
 %%| fig-cap: "The flow of input and output through the CLI `build` command."
-%%| fig-alt: "Diagram showing the flow of input and output through the CLI `build` command. The user provides a source to the `datapackage.json` file and an optional style, which are used by the `build` command to generate output files and folders."
+%%| fig-alt: "Diagram showing the flow of input and output through the CLI `build` command. The user provides the source of the `datapackage.json` file and an optional style, which are used by the `build` command to generate output files and folders."
 flowchart LR
     source("datapackage.json<br>[SOURCE: file, https,<br>gh/github]")
     config_file[".flower.toml or<br>pyproject.toml<br>[file]"]
@@ -109,24 +109,24 @@ first look for a configuration file named `.flower.toml` (or
 
 The main argument to `build` is the location of the Data Package file as
 a `SOURCE` (e.g. a file path or a URL) to
-build the documentation from. We'll support the following sources:
+build the documentation from. Flower supports the following sources:
 
 - {{< var wip >}} `file://` or a path without `file://`
 - {{< var planned >}} `https://`
 - {{< var planned >}} `gh:` or `github:`
 
-Depending on which source is given, there are different behaviours:
+Depending on the source given, there are different behaviours:
 
-- If nothing is given, `build` will by default assume it is a file path
-  in the current directory and look for a `datapackage.json` file there,
-  so path becomes `./datapackage.json`.
+- If nothing is given, `build` will by default assume that `source` is a file path
+  to the current directory and look for a `datapackage.json` file there,
+  so the source becomes `./datapackage.json`.
 - If a relative path to a folder is given, `build` will parse it to the
   absolute path and append `datapackage.json`, so that the path becomes
   `/ABSOLUTE_PATH/datapackage.json`.
 - `https://` sources must point to a raw file. We won't support using
   `http://` for security reasons.
 - `gh:` or `github:` sources must be in the format `gh:OWNER/REPO` or
-  `github:OWNER/REPO`. Can add either `@BRANCH` or `@TAG` to the end to
+  `github:OWNER/REPO`. It's possible to add either `@BRANCH` or `@TAG` to the end to
   specify a specific branch or tag. `build` will parse this source to
   the raw `https:` of the `datapackage.json` file in the repository,
   assuming the `datapackage.json` file is in the root of the repository.
@@ -236,7 +236,7 @@ flowchart LR
 ```
 
 In many ways, `view` works similarly to `build`, as it also takes a
-source to the Data Package file and a `--style` option to specify how
+source to the Data Package metadata and a `--style` option to specify how
 the metadata should be displayed in the Terminal. There are a few
 differences:
 
