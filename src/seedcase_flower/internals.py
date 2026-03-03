@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from itertools import repeat
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from urllib import parse
 
 from cyclopts.annotations import get_hint_name
