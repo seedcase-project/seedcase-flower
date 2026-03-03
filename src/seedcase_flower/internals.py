@@ -69,12 +69,13 @@ def _convert_to_github_uri(split_gh_uri: parse.SplitResult) -> Uri:
 
 
 def _read_properties(uri: Uri) -> dict[str, Any]:
+    datapackage: dict[str, Any]
     if uri.local:
         path = Path(parse.urlsplit(uri.value).path)
         with open(path) as properties_file:
-            datapackage: dict[str, Any] = json.load(properties_file)
+            datapackage = json.load(properties_file)
     else:
         with request.urlopen(uri.value) as open_url:
-            datapackage: dict[str, Any] = json.loads(open_url.read().decode())
+            datapackage = json.loads(open_url.read().decode())
     check(datapackage, error=True)
     return datapackage
