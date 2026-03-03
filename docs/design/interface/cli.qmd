@@ -117,20 +117,20 @@ build the documentation from. Flower supports the following sources:
 
 Depending on the source given, there are different behaviours:
 
-- If nothing is given, `build` will by default assume that `source` is a file path
-  to the current directory and look for a `datapackage.json` file there,
-  so the source becomes `./datapackage.json`.
+- If nothing is given, `build` will by default assume that `source` is a
+  file path to the current directory and look for a `datapackage.json`
+  file there, so the source becomes `./datapackage.json`.
 - If a relative path to a folder is given, `build` will parse it to the
   absolute path and append `datapackage.json`, so that the path becomes
   `/ABSOLUTE_PATH/datapackage.json`.
 - `https://` sources must point to a raw file. We won't support using
   `http://` for security reasons.
 - `gh:` or `github:` sources must be in the format `gh:OWNER/REPO` or
-  `github:OWNER/REPO`. It's possible to add either `@BRANCH` or `@TAG` to the end to
-  specify a specific branch or tag. `build` will parse this source to
-  the raw `https:` of the `datapackage.json` file in the repository,
-  assuming the `datapackage.json` file is in the root of the repository.
-  For example:
+  `github:OWNER/REPO`. It's possible to add either `@BRANCH` or `@TAG`
+  to the end to specify a specific branch or tag. `build` will parse
+  this source to the raw `https:` of the `datapackage.json` file in the
+  repository, assuming the `datapackage.json` file is in the root of the
+  repository. For example:
   - `gh:seedcase-project/seedcase-flower` will parse to
     `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/refs/heads/main/datapackage.json`.
   - `github:seedcase-project/seedcase-flower@0.1.0` will parse to
@@ -236,8 +236,8 @@ flowchart LR
 ```
 
 In many ways, `view` works similarly to `build`, as it also takes a
-source to the Data Package metadata and a `--style` option to specify how
-the metadata should be displayed in the Terminal. There are a few
+source to the Data Package metadata and a `--style` option to specify
+how the metadata should be displayed in the Terminal. There are a few
 differences:
 
 - No output files are generated, it only displays the metadata in a

@@ -71,8 +71,8 @@ As already described in the CLI design page, this function has the
 following parameters:
 
 - `source` for the source argument. The default is the
-  `datapackage.json` file found in the current working directory. See the
-  [CLI design](cli.qmd) for details about `source`.
+  `datapackage.json` file found in the current working directory. See
+  the [CLI design](cli.qmd) for details about `source`.
 - `style` for the style of output to use, which specifies the output
   file type and the number of files created. Either `None` or one of the
   built-in styles. Is ignored if `template_dir` is given.
