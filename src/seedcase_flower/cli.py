@@ -80,17 +80,16 @@ def build(
     #   template_dir=template_dir,
     #   output_dir=output_dir
     # )
-    # output: list[BuiltSection] = build_sections(
+    # built_sections: list[BuiltSection] = build_sections(
     #     properties,
     #     config
     # )
+    # output_files: list[Path] = write_sections(built_sections, output_dir)
 
     if verbose:
         print(
             output_dir, properties, template_dir, style
         )  # Placeholder for unused args
-
-    # output_files: list[Path] = write_sections(built_sections, output_dir)
 
 
 def view() -> str:
