@@ -1,6 +1,5 @@
 """Tests for the CLI commands."""
 
-import json
 from pathlib import Path
 from textwrap import dedent
 
@@ -8,24 +7,6 @@ import pytest
 
 from seedcase_flower.cli import app, view
 from seedcase_flower.internals import BuildStyle, Uri
-
-_DATAPACKAGE_DATA = {
-    "name": "placeholder",
-    "created": "2026-02-12T11:25:49+01:00",
-    "description": "Placeholder",
-    "id": "Placeholder",
-    "licenses": [{"name": "Placeholder"}],
-    "title": "Placeholder",
-    "version": "0.0.0",
-}
-
-
-@pytest.fixture
-def datapackage_path(tmp_path):
-    """Create a temporary datapackage.json and return its path as a string."""
-    file_path = tmp_path / "datapackage.json"
-    file_path.write_text(json.dumps(_DATAPACKAGE_DATA))
-    return str(file_path)
 
 
 @pytest.fixture
@@ -59,13 +40,13 @@ def test_build_with_mocked_internals(mock_parse_uri, mock_read_properties):
 
 
 # TODO: Update this when verbose is added.
-def test_build_verbose_prints_output(capsys, datapackage_path):
+def test_build_verbose_prints_output(capsys, datapackage_path, datapackage):
     """--verbose should print output_dir, properties, template_dir, and style."""
     app(
         ["build", datapackage_path, "--verbose"],
         result_action="return_value",
     )
-    expected = f"docs {_DATAPACKAGE_DATA} None BuildStyle.quarto_one_page\n"
+    expected = f"docs {datapackage} None BuildStyle.quarto_one_page\n"
     assert capsys.readouterr().out == expected
 
 

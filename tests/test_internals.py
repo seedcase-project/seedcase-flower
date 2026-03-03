@@ -1,8 +1,14 @@
 """Tests for internal helper functions."""
 
-import pytest
+import json
+from email.message import Message
+from pathlib import Path
+from urllib.error import HTTPError
 
-from seedcase_flower.internals import Uri, _parse_uri
+import pytest
+from check_datapackage.check import DataPackageError
+
+from seedcase_flower.internals import Uri, _parse_uri, _read_properties
 
 # _parse_uri: plain path (no scheme) ====
 
@@ -100,3 +106,99 @@ def test_parse_uri_returns_uri_instance(tmp_path):
     """_parse_uri should always return a Uri instance."""
     result = _parse_uri(str(tmp_path / "datapackage.json"))
     assert isinstance(result, Uri)
+
+
+# _read_properties: local file ====
+
+
+def test_read_properties_local_filepath(datapackage_path, datapackage):
+    """Reading a local datapackage.json file should return its contents."""
+    uri = Uri(value=str(datapackage_path), local=True)
+    result = _read_properties(uri)
+
+    assert result == datapackage
+
+
+def test_read_properties_local_dirpath(datapackage_path, datapackage):
+    """Passing a path to a directory containing a datapackage.json should work."""
+    uri = _parse_uri(str(Path(datapackage_path).parent))
+    result = _read_properties(uri)
+
+    assert result == datapackage
+
+
+def test_read_properties_raises_on_invalid_datapackage(tmp_path):
+    """An invalid datapackage should raise a ValueError."""
+    invalid_datapackage = {"name": "invalid-package", "resources": []}
+    json_file = tmp_path / "datapackage.json"
+    json_file.write_text(json.dumps(invalid_datapackage))
+
+    uri = Uri(value=str(json_file), local=True)
+
+    with pytest.raises(DataPackageError, match="should be non-empty"):
+        _read_properties(uri)
+
+
+def test_read_properties_raises_on_file_not_found():
+    """A non-existent file should raise FileNotFoundError."""
+    uri = Uri(value="file:///nonexistent/path/datapackage.json", local=True)
+
+    with pytest.raises(FileNotFoundError):
+        _read_properties(uri)
+
+
+def test_read_properties_raises_on_malformed_json(tmp_path):
+    """A file with malformed JSON should raise JSONDecodeError."""
+    json_file = tmp_path / "datapackage.json"
+    json_file.write_text("{ invalid json }")
+
+    uri = Uri(value=str(json_file), local=True)
+
+    with pytest.raises(json.JSONDecodeError):
+        _read_properties(uri)
+
+
+# _read_properties: remote file ====
+
+
+@pytest.mark.usefixtures("mocker")
+def test_read_properties_remote_url(mocker, datapackage):
+    """Reading a remote datapackage.json URL should return its contents."""
+    mock_urlopen = mocker.patch("seedcase_flower.internals.request.urlopen")
+    mock_response = mock_urlopen.return_value.__enter__.return_value
+    mock_response.read.return_value = json.dumps(datapackage).encode()
+
+    uri = Uri(value="https://example.com/datapackage.json", local=False)
+    result = _read_properties(uri)
+
+    assert result == datapackage
+    mock_urlopen.assert_called_once_with("https://example.com/datapackage.json")
+
+
+@pytest.mark.usefixtures("mocker")
+def test_read_properties_raises_on_remote_invalid_json(mocker):
+    """A remote URL returning invalid JSON should raise JSONDecodeError."""
+    mock_urlopen = mocker.patch("seedcase_flower.internals.request.urlopen")
+    mock_response = mock_urlopen.return_value.__enter__.return_value
+    mock_response.read.return_value = b"{ invalid json }"
+
+    uri = Uri(value="https://example.com/datapackage.json", local=False)
+
+    with pytest.raises(json.JSONDecodeError):
+        _read_properties(uri)
+
+
+@pytest.mark.usefixtures("mocker")
+def test_read_properties_raises_on_remote_404(mocker):
+    """A remote URL returning 404 should raise HTTPError."""
+    mocker.patch(
+        "seedcase_flower.internals.request.urlopen",
+        side_effect=HTTPError(
+            "https://example.com/datapackage.json", 404, "Not Found", Message(), None
+        ),
+    )
+
+    uri = Uri(value="https://example.com/datapackage.json", local=False)
+
+    with pytest.raises(HTTPError):
+        _read_properties(uri)
