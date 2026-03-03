@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Any
 from urllib import parse, request
 
+from check_datapackage import check
+
 
 class BuildStyle(Enum):
     """Built-in styles for outputting to file."""
@@ -70,8 +72,9 @@ def _read_properties(uri: Uri) -> dict[str, Any]:
     if uri.local:
         path = Path(parse.urlsplit(uri.value).path)
         with open(path) as properties_file:
-            return json.load(properties_file)  # type: ignore # TODO fix in read_prop PR
+            datapackage: dict[str, Any] = json.load(properties_file)  # type: ignore # TODO fix in read_prop PR
     else:
         with request.urlopen(uri.value) as open_url:
             datapackage: dict[str, Any] = json.loads(open_url.read().decode())
+    check(datapackage, error=True)
     return datapackage
