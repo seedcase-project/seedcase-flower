@@ -53,7 +53,8 @@ There will be two commands available:
 
 ## {{< var wip >}} `build`
 
-The `build` command has the following signature, that is positional as well as keyword-based:
+The `build` command has the following signature, that is positional as
+well as keyword-based:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower build [URI] [STYLE] [TEMPLATE-DIR] [OUTPUT-DIR] [VERBOSE]
@@ -210,7 +211,8 @@ override the corresponding settings in the configuration file.
 
 ## {{< var planned >}} `view`
 
-The `view` command has the following signature, that is positional as well as keyword-based:
+The `view` command has the following signature, that is positional as
+well as keyword-based:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower view [URI] [STYLE]

@@ -4,10 +4,13 @@ import json
 import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
+from itertools import repeat
 from pathlib import Path
 from typing import Any, Callable, Iterable, Optional, TypeVar, Union
 from urllib import parse
 
+from cyclopts.annotations import get_hint_name
+from cyclopts.help import HelpEntry
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jsonpath import findall
 from pydantic import BaseModel, Field
@@ -67,7 +70,27 @@ def _convert_to_github_uri(split_gh_uri: parse.SplitResult) -> Uri:
     )
 
 
-# TODO Extend to also read properties from URLs
+def _format_param_help(entry: HelpEntry) -> str:
+    """Re-structure the parameter help into a more readable format."""
+    # Sort to put the flag first (eg `--uri URI` instead of the default `URI --uri`)
+    names = map(_add_highlight_syntax, sorted(entry.names), repeat(entry.type))
+    return f"{' '.join(names)}".strip()
+
+
+def _add_highlight_syntax(name: str, entry_type: Optional[type]) -> str:
+    """Add markup character to highlight in colors, etc where desired."""
+    formatted_name = f"[bold cyan]{name}[/bold cyan]"
+    if not name.startswith("-"):
+        # Matching the `dim` used by default in cyclopts for `choices` and
+        # `defaults` in the description
+        formatted_name = f"[dim]<{name}>[/dim]"
+
+        # Don't output redundant value placeholder for boolean flags
+        if get_hint_name(entry_type) == "bool":
+            formatted_name = ""
+    return formatted_name
+
+
 def _read_properties(uri: Uri) -> dict[str, Any]:
     if uri.local:
         path = Path(parse.urlsplit(uri.value).path)

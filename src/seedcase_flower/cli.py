@@ -4,11 +4,13 @@ from pathlib import Path
 from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
+from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
     Uri,
     _build_sections,
+    _format_param_help,
     _parse_uri,
     _read_properties,
 )
@@ -17,7 +19,13 @@ from seedcase_flower.styles import BuildStyle
 app = App(
     name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
-    default_parameter=Parameter(negative=()),
+    help_formatter=DefaultFormatter(
+        column_specs=(
+            ColumnSpec(renderer=_format_param_help),
+            ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
+        )
+    ),
+    default_parameter=Parameter(negative=(), show_default=True),
     config=[
         config.Toml(
             ".flower.toml",
