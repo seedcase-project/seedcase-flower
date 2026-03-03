@@ -37,9 +37,9 @@ def _parse_source(source: str) -> Source:
             return _convert_to_github(split_source)
         case _:
             raise ValueError(
-                "The source location must be either a path to an existing "
-                "file/folder or a source with one of the following prefixes: "
-                "`file:`, `https:`, `gh:`, `github:`"
+                "The source must be either a path to an existing file or "
+                "folder or has one of the following prefixes: `https:`, "
+                "`gh:`, `github:`"
             )
 
 

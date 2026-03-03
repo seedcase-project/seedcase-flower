@@ -8,7 +8,6 @@ from cyclopts import App, Parameter, config
 # from seedcase_flower.config import Config as FlowerConfig
 from seedcase_flower.internals import (
     BuildStyle,
-    Source,
     _parse_source,
     _read_properties,
 )
@@ -58,8 +57,7 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    source: Source = _parse_source(source)  # type: ignore # TODO fix in read_prop PR
-    properties: dict[str, Any] = _read_properties(source)  # type: ignore # TODO fix in read_prop PR
+    properties: dict[str, Any] = _read_properties(_parse_source(source))
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which
