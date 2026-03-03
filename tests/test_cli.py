@@ -7,7 +7,8 @@ from textwrap import dedent
 import pytest
 
 from seedcase_flower.cli import app, view
-from seedcase_flower.internals import BuildStyle, Uri
+from seedcase_flower.internals import Uri
+from seedcase_flower.styles import BuildStyle
 
 _DATAPACKAGE_DATA = {
     "name": "placeholder",
