@@ -4,7 +4,7 @@ import json
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Iterable, Optional, TypeVar, cast
+from typing import Any, Callable, Iterable, Optional, TypeVar
 
 
 class BuildStyle(Enum):
@@ -33,6 +33,10 @@ In = TypeVar("In")
 Out = TypeVar("Out")
 
 
+def _map(x: Iterable[In], fn: Callable[[In], Out]) -> list[Out]:
+    return list(map(fn, x))
+
+
 def _filter(x: Iterable[In], fn: Callable[[In], bool]) -> list[In]:
     return list(filter(fn, x))
 
@@ -50,16 +54,3 @@ class BuiltSection:
 
     content: str
     output_path: Optional[Path] = None
-
-
-def _write_sections(built_sections: list[BuiltSection], output_dir: Path) -> None:
-    if _filter(built_sections, lambda section: section.output_path is None):
-        raise ValueError(
-            "At least one section in `sections.toml` is missing an output path. "
-            "When using the `build` command, all sections must have an output path."
-        )
-
-    for built_section in built_sections:
-        output_path = output_dir / cast(Path, built_section.output_path)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(built_section.content)
