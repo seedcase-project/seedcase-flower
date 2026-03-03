@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from seedcase_flower.config import Config
-from seedcase_flower.internals import BuildStyle
+from seedcase_flower.styles import BuildStyle
 
 
 def test_creates_config():

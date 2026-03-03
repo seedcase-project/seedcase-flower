@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from seedcase_flower.internals import BuildStyle
+from seedcase_flower.styles import BuildStyle
 
 
 class Config(BaseModel, frozen=True):
