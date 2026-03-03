@@ -6,6 +6,7 @@ from textwrap import dedent
 import pytest
 
 from seedcase_flower.cli import app, view
+from seedcase_flower.config import Config
 from seedcase_flower.internals import Uri
 from seedcase_flower.styles import BuildStyle
 
@@ -22,10 +23,24 @@ def mock_read_properties(mocker):
     return mocker.patch("seedcase_flower.cli._read_properties")
 
 
+@pytest.fixture
+def mock_build_sections(mocker):
+    """Mock _build_sections to isolate CLI tests from template rendering."""
+    return mocker.patch("seedcase_flower.cli._build_sections")
+
+
+@pytest.fixture
+def mock_write_sections(mocker):
+    """Mock write_sections to isolate CLI tests from file I/O."""
+    return mocker.patch("seedcase_flower.cli.write_sections")
+
+
 # Testing CLI invocation ====
 
 
-def test_build_with_mocked_internals(mock_parse_uri, mock_read_properties):
+def test_build_with_mocked_internals(
+    mock_parse_uri, mock_read_properties, mock_build_sections, mock_write_sections
+):
     """Isolate CLI behaviour by mocking internal helpers."""
     fake_uri = Uri(value="file:///datapackage.json", local=True)
     mock_parse_uri.return_value = fake_uri
@@ -35,14 +50,21 @@ def test_build_with_mocked_internals(mock_parse_uri, mock_read_properties):
     # Checking that the correct values were passed to the internal functions
     mock_parse_uri.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_uri)
+    mock_build_sections.assert_called_once_with(
+        mock_read_properties.return_value, Config()
+    )
+    mock_write_sections.assert_called_once_with(
+        mock_build_sections.return_value, Path("docs")
+    )
 
 
 # Checking stdout ====
 
 
 # TODO: Update this when verbose is added.
-def test_build_verbose_prints_output(capsys, datapackage_path, datapackage):
+def test_build_verbose_prints_output(capsys, datapackage_path, tmp_path, monkeypatch):
     """--verbose should print output_dir, properties, template_dir, and style."""
+    monkeypatch.chdir(tmp_path)
     app(
         ["build", datapackage_path, "--verbose"],
         result_action="return_value",
@@ -51,8 +73,11 @@ def test_build_verbose_prints_output(capsys, datapackage_path, datapackage):
     assert capsys.readouterr().out == expected
 
 
-def test_build_no_verbose_produces_no_output(capsys, datapackage_path):
+def test_build_no_verbose_produces_no_output(
+    capsys, datapackage_path, tmp_path, monkeypatch
+):
     """Without --verbose, build should produce no stdout."""
+    monkeypatch.chdir(tmp_path)
     app(["build", datapackage_path], result_action="return_value")
     assert capsys.readouterr().out == ""
 
