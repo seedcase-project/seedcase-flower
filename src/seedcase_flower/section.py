@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 from jsonpath import JSONPathSyntaxError, compile
-from pydantic import AfterValidator, BaseModel, field_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, field_validator
 
 
 def _check_path_relative(value: Path) -> Path:
@@ -25,7 +25,16 @@ class Mode(Enum):
     many = "many"
 
 
-class Content(BaseModel, frozen=True):
+class KebabModel(BaseModel, frozen=True):
+    """Allow creating Pydantic model from kebab-case data."""
+
+    model_config = ConfigDict(
+        alias_generator=lambda string: string.replace("_", "-"),
+        populate_by_name=True,
+    )
+
+
+class Content(KebabModel, frozen=True):
     """Content to include within a `Section`.
 
     The `Content` class defines what Data Package properties and
@@ -94,7 +103,7 @@ class Content(BaseModel, frozen=True):
         return value
 
 
-class Section(BaseModel, frozen=True):
+class Section(KebabModel, frozen=True):
     """A section of the documentation with specific `datapackage.json` properties.
 
     See the [design](https://flower.seedcase-project.org/docs/design/interface/config#section)
