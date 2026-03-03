@@ -7,7 +7,7 @@ from textwrap import dedent
 import pytest
 
 from seedcase_flower.cli import app, view
-from seedcase_flower.internals import BuildStyle, Source
+from seedcase_flower.internals import Address, BuildStyle
 
 _DATAPACKAGE_DATA = {
     "name": "placeholder",
@@ -45,7 +45,7 @@ def mock_read_properties(mocker):
 
 def test_build_with_mocked_internals(mock_parse_source, mock_read_properties):
     """Isolate CLI behaviour by mocking internal helpers."""
-    fake_source = Source(value="file:///datapackage.json", local=True)
+    fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
     # Simulate running the app from the command line (but without calling sys.exit())
     app(["build", "datapackage.json"], result_action="return_value")

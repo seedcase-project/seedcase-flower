@@ -17,14 +17,14 @@ class BuildStyle(Enum):
 
 
 @dataclass(frozen=True)
-class Source:
-    """A parsed source with its normalised value and locality flag."""
+class Address:
+    """A source parsed into an actual address."""
 
     value: str
     local: bool
 
 
-def _parse_source(source: str) -> Source:
+def _parse_source(source: str) -> Address:
     split_source = parse.urlsplit(source)
     if split_source.scheme == "":
         split_source = split_source._replace(scheme="file")
@@ -43,20 +43,20 @@ def _parse_source(source: str) -> Source:
             )
 
 
-def _convert_to_path(source: parse.SplitResult) -> Source:
+def _convert_to_path(source: parse.SplitResult) -> Address:
     path = Path(source.path).resolve()
     if path.is_dir():
         path /= "datapackage.json"
     source = source._replace(path=path.as_posix())
-    return Source(value=source.geturl(), local=True)
+    return Address(value=source.geturl(), local=True)
 
 
-def _convert_to_https(source: parse.SplitResult) -> Source:
-    return Source(value=source.geturl(), local=False)
+def _convert_to_https(source: parse.SplitResult) -> Address:
+    return Address(value=source.geturl(), local=False)
 
 
-def _convert_to_github(source: parse.SplitResult) -> Source:
-    return Source(
+def _convert_to_github(source: parse.SplitResult) -> Address:
+    return Address(
         value=source._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
@@ -67,11 +67,11 @@ def _convert_to_github(source: parse.SplitResult) -> Source:
 
 
 # TODO Extend to also read properties from URLs
-def _read_properties(source: Source) -> dict[str, Any]:
-    if source.local:
-        path = Path(parse.urlsplit(source.value).path)
+def _read_properties(address: Address) -> dict[str, Any]:
+    if address.local:
+        path = Path(parse.urlsplit(address.value).path)
         with open(path) as properties_file:
             return json.load(properties_file)  # type: ignore # TODO fix in read_prop PR
     else:
         # TODO read from remote file
-        return {"placeholder": source.value}
+        return {"placeholder": address.value}

@@ -2,13 +2,13 @@
 
 import pytest
 
-from seedcase_flower.internals import Source, _parse_source
+from seedcase_flower.internals import Address, _parse_source
 
 # _parse_source: plain path (no scheme) ====
 
 
 def test_parse_source_plain_file_path_is_local(tmp_path):
-    """A plain file path with no scheme should return a local Source."""
+    """A plain file path with no scheme should return a local Address."""
     result = _parse_source(str(tmp_path / "datapackage.json"))
     assert result.local is True
 
@@ -26,7 +26,7 @@ def test_parse_source_directory_path_appends_datapackage_json(tmp_path):
 
 
 def test_parse_source_directory_path_is_local(tmp_path):
-    """Passing a directory path should return a local Source."""
+    """Passing a directory path should return a local Address."""
     result = _parse_source(str(tmp_path))
     assert result.local is True
 
@@ -35,7 +35,7 @@ def test_parse_source_directory_path_is_local(tmp_path):
 
 
 def test_parse_source_file_scheme_is_local(tmp_path):
-    """A file path should return a local Source."""
+    """A file path should return a local Address."""
     result = _parse_source(f"file://{tmp_path / 'datapackage.json'}")
     assert result.local is True
 
@@ -51,7 +51,7 @@ def test_parse_source_file_scheme_preserves_path(tmp_path):
 
 
 def test_parse_source_https_is_not_local():
-    """An https:// should return a non-local Source."""
+    """An https:// should return a non-local Address."""
     result = _parse_source("https://example.com/datapackage.json")
     assert result.local is False
 
@@ -75,7 +75,7 @@ def test_parse_source_github_scheme_converts_to_raw_githubusercontent(scheme):
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_is_not_local(scheme):
-    """GitHub sources should return a non-local Source."""
+    """GitHub sources should return a non-local Address."""
     result = _parse_source(f"{scheme}://owner/repo")
     assert result.local is False
 
@@ -99,4 +99,4 @@ def test_parse_source_unsupported_scheme_raises_value_error():
 def test_parse_source_returns_source_instance(tmp_path):
     """_parse_source should always return a source instance."""
     result = _parse_source(str(tmp_path / "datapackage.json"))
-    assert isinstance(result, Source)
+    assert isinstance(result, Address)
