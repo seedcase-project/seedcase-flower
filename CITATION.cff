@@ -1,7 +1,12 @@
-# TODO: Add title of Python package.
-title: "Seedcase Flower"
-# TODO: Add abstract of Python package.
-abstract: ""
+title: "Seedcase Flower: Turn your Data Package metadata into human-readable documentation"
+abstract: |
+  Flower is a Python package and command-line interface (CLI) that generates
+  human-friendly documentation from your machine-readable [Data
+  Package](https://datapackage.org) metadata (kept within `datapackage.json`).
+  Flower does two things: 1) Display the metadata in a nicer way on the Terminal
+  with the `view` command. 2) Generate documentation files using built-in or
+  custom styles with the `build` command. See the
+  <a href="https://flower.seedcase-project.org">website</a> for more information.
 authors:
   - family-names: Johnston
     given-names: Luke William
@@ -22,9 +27,10 @@ cff-version: 1.2.0
 # doi:
 # date-released: ""
 keywords:
-  # TODO: Add keywords relevant to the project.
   - "data package"
+  - "frictionless data"
   - "documentation"
+  - "metadata documentation"
 license: MIT
 message: "If you use this Python package, please cite it using these metadata."
 repository-code: "https://github.com/seedcase-project/seedcase-flower"
