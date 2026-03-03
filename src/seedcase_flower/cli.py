@@ -6,7 +6,12 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, Uri, _parse_uri, _read_properties
+from seedcase_flower.internals import (
+    BuildStyle,
+    Source,
+    _parse_source,
+    _read_properties,
+)
 
 app = App(
     name="seedcase-flower",
@@ -30,7 +35,7 @@ app = App(
 
 @app.command()
 def build(
-    uri: str = "datapackage.json",
+    source: str = "datapackage.json",
     style: BuildStyle = BuildStyle.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
@@ -39,12 +44,12 @@ def build(
     """Build human-readable documentation from a `datapackage.json` file.
 
     Args:
-        uri: The path to a local `datapackage.json` file or its parent folder.
-            Can also be an `https:` URL to a remote `datapackage.json` or a
-            `github:` / `gh:` URI pointing to a repo with a `datapackage.json`
+        source: The location of a `datapackage.json`, defaults to a file or folder
+            path. Can also be an `https:` source to a remote `datapackage.json` or a
+            `github:` / `gh:` pointing to a repo with a `datapackage.json`
             in the repo root (in the format `gh:org/repo`, which can also include
             reference to a tag or branch, such as `gh:org/repo@main` or
-            `gh:org/repo@1.0.1).
+            `gh:org/repo@1.0.1`).
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
         template_dir: The directory that contains the Jinja template
@@ -53,8 +58,8 @@ def build(
         output_dir: The directory to save the generated files in.
         verbose: If True, prints additional information to the console.
     """
-    uri: Uri = _parse_uri(uri)  # type: ignore # TODO fix in read_prop PR
-    properties: dict[str, Any] = _read_properties(uri)  # type: ignore # TODO fix in read_prop PR
+    source: Source = _parse_source(source)  # type: ignore # TODO fix in read_prop PR
+    properties: dict[str, Any] = _read_properties(source)  # type: ignore # TODO fix in read_prop PR
 
     # One item per section, rendered from template.
     # Internally uses Jinja2 to render templates with metadata, which

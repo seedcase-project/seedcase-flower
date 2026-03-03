@@ -70,9 +70,9 @@ reasons:
 As already described in the CLI design page, this function has the
 following parameters:
 
-- `uri` for the URI argument. The default is the `datapackage.json` file
-  found in the working directory. See the [CLI design](cli.qmd) for
-  reasons why we use a URI.
+- `source` for the source argument. The default is the
+  `datapackage.json` file found in the working directory. See the
+  [CLI design](cli.qmd) for details about `source`.
 - `style` for the style of output to use, which specifies the output
   file type and the number of files created. Either `None` or one of the
   built-in styles. Is ignored if `template_dir` is given.
@@ -90,7 +90,7 @@ The internal flow of this function is shown in the diagram below.
 %%| label: fig-python-build-flow
 %%| fig-cap: "Diagram of the internal flow of functions and objects in the `build()` CLI function."
 flowchart TD
-    uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
+    source:::input --> parse_source{{"parse_source()"}} --> path
     style_cfg[style]:::input --> Config
     template_dir_cfg[template_dir]:::input --> Config
     path --> read_properties{{"read_properties()"}} --> properties
@@ -108,7 +108,7 @@ flowchart TD
 ### {{< var planned >}} `view()`
 
 As mentioned in the CLI design page, this function has two parameters
-that are both the same as those in the `build()` function: `uri` and
+that are both the same as those in the `build()` function: `source` and
 `style`. The only difference with the `style` parameter is that it can
 only accept built-in terminal styles and does not allow a custom style.
 It also doesn't read from the configuration file.
@@ -119,7 +119,7 @@ The internal flow of this function is shown in the diagram below.
 %%| label: fig-python-view-flow
 %%| fig-cap: "Diagram of the internal flow of functions and objects in the `view()` CLI function."
 flowchart TD
-    uri:::input --> resolve_uri{{"resolve_uri()"}} --> path
+    source:::input --> parse_source{{"parse_source()"}} --> path
     style_cfg[style]:::input --> Config
     path --> read_properties{{"read_properties()"}} --> properties
     properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
@@ -145,11 +145,11 @@ class TerminalStyle(Enum):
     # TODO: Not sure what the exact path might be.
     terminal_default = Path("templates/built-in/terminal-default/"
 
-def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.terminal_default):
+def view(source: str = "datapackage.json", style: TerminalStyle = TerminalStyle.terminal_default):
     """Display the `datapackage.json` properties in a human-friendly way in the terminal.
 
     Args:
-        uri: The URI to a datapackage.json file. Defaults to
+        source: The source to a datapackage.json file. Defaults to
             `datapackage.json` in the current working directory.
         style: The style of output to use. Must be one of built-in terminal
             styles in `TerminalStyle` or None.
@@ -157,8 +157,8 @@ def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.ter
     # Potential implementation steps:
 
     # Output maybe str? Path?
-    # Use `match` inside for strictness on URI types?
-    path: str = resolve_uri(uri)
+    # Use `match` inside for strictness on source types?
+    path: str = parse_source(source)
 
     # Match works well when paired with enums for strictness and checking.
     match style:
@@ -171,7 +171,7 @@ def view(uri: str = "datapackage.json", style: TerminalStyle = TerminalStyle.ter
             # Or however we implement error handling here.
             error("Style not supported for terminal output. Should be one of ...")
 
-    # Able to read from URI, e.g. `https` or `file` or `gh`
+    # Able to read from source, e.g. `https` or `path` or `gh`
     properties: dict = read_properties(path)
 
     # One item per section, rendered from template.

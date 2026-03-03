@@ -114,7 +114,7 @@ using different styles with `build`.
 
 By default, `build` will look for a `datapackage.json` file in the
 current directory, but you can use a different
-[URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) if you
+source location if you
 want (just like with `view`):
 
 ```{.bash filename="Terminal"}
