@@ -77,7 +77,7 @@ def _format_param_help(entry: HelpEntry) -> str:
     return f"{' '.join(names)}".strip()
 
 
-def _add_highlight_syntax(name: str, entry_type: type | None) -> str:
+def _add_highlight_syntax(name: str, entry_type: Optional[type]) -> str:
     """Add markup character to highlight in colors, etc where desired."""
     formatted_name = f"[bold cyan]{name}[/bold cyan]"
     if not name.startswith("-"):
