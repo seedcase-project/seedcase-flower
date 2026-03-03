@@ -15,6 +15,7 @@ from seedcase_flower.internals import (
     _read_properties,
 )
 from seedcase_flower.styles import BuildStyle
+from seedcase_flower.write_sections import write_sections
 
 app = App(
     name="seedcase-flower",
@@ -72,12 +73,10 @@ def build(
         template_dir=template_dir,
         output_dir=output_dir,
     )
-
     uri: Uri = _parse_uri(uri)  # type: ignore # TODO fix in read_prop PR
     properties: dict[str, Any] = _read_properties(uri)  # type: ignore # TODO fix in read_prop PR
-    built_sections = _build_sections(properties, config)  # noqa: F841
-    # TODO: write built sections
-    # output_files: list[Path] = write_sections(built_sections, output_dir)
+    built_sections = _build_sections(properties, config)
+    output_files: list[Path] = write_sections(built_sections, output_dir)  # noqa: F841
 
     if verbose:
         print(

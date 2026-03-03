@@ -109,6 +109,10 @@ def _map(x: Iterable[In], fn: Callable[[In], Out]) -> list[Out]:
     return list(map(fn, x))
 
 
+def _filter(x: Iterable[In], fn: Callable[[In], bool]) -> list[In]:
+    return list(filter(fn, x))
+
+
 class SectionsFile(BaseModel, frozen=True):
     """Data model of the contents of the `sections.toml` file.
 
