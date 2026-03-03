@@ -4,14 +4,27 @@ from pathlib import Path
 from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
+from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 
 # from seedcase_flower.config import Config as FlowerConfig
-from seedcase_flower.internals import BuildStyle, Uri, _parse_uri, _read_properties
+from seedcase_flower.internals import (
+    BuildStyle,
+    Uri,
+    _format_param_help,
+    _parse_uri,
+    _read_properties,
+)
 
 app = App(
     name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
-    default_parameter=Parameter(negative=()),
+    help_formatter=DefaultFormatter(
+        column_specs=(
+            ColumnSpec(renderer=_format_param_help),
+            ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
+        )
+    ),
+    default_parameter=Parameter(negative=(), show_default=True),
     config=[
         config.Toml(
             ".flower.toml",
