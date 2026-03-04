@@ -17,12 +17,12 @@ if name is different -->
 If you use the CLI (or the Python interface) to configure Flower's
 output, Flower **will not** use the settings in the configuration file.
 If there are no configuration settings given in either the CLI, the
-Python interface, or in the configuration file, Flower will use it's
+Python interface, or in the configuration file, Flower will use its
 defaults.
 
 ::: callout-note
-The URI can only be specified via the CLI or the Python interface, not
-from the configuration file. Similarly, you can only configure the
+The source can only be specified via the CLI or the Python interface,
+not from the configuration file. Similarly, you can only configure the
 `view` command from the CLI or the Python interface, not from the
 configuration file.
 :::
