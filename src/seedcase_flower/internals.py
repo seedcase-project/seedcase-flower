@@ -102,6 +102,7 @@ def _read_properties(address: Address) -> dict[str, Any]:
     else:
         with request.urlopen(address.value) as open_url:  # nosec B310
             datapackage = json.load(open_url)
+    # TODO: Consider what to do when the config file has been implemented.
     check(datapackage, error=True)
     return datapackage
 
