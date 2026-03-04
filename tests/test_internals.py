@@ -113,16 +113,16 @@ def test_parse_source_returns_address_instance(tmp_path):
 
 def test_read_properties_local_filepath(datapackage_path, datapackage):
     """Reading a local datapackage.json file should return its contents."""
-    uri = Uri(value=str(datapackage_path), local=True)
-    result = _read_properties(uri)
+    address = Address(value=str(datapackage_path), local=True)
+    result = _read_properties(address)
 
     assert result == datapackage
 
 
 def test_read_properties_local_dirpath(datapackage_path, datapackage):
     """Passing a path to a directory containing a datapackage.json should work."""
-    uri = _parse_uri(str(Path(datapackage_path).parent))
-    result = _read_properties(uri)
+    address = _parse_source(str(Path(datapackage_path).parent))
+    result = _read_properties(address)
 
     assert result == datapackage
 
@@ -133,18 +133,18 @@ def test_read_properties_raises_on_invalid_datapackage(tmp_path):
     json_file = tmp_path / "datapackage.json"
     json_file.write_text(json.dumps(invalid_datapackage))
 
-    uri = Uri(value=str(json_file), local=True)
+    address = Address(value=str(json_file), local=True)
 
     with pytest.raises(DataPackageError, match="should be non-empty"):
-        _read_properties(uri)
+        _read_properties(address)
 
 
 def test_read_properties_raises_on_file_not_found():
     """A non-existent file should raise FileNotFoundError."""
-    uri = Uri(value="file:///nonexistent/path/datapackage.json", local=True)
+    address = Address(value="file:///nonexistent/path/datapackage.json", local=True)
 
     with pytest.raises(FileNotFoundError):
-        _read_properties(uri)
+        _read_properties(address)
 
 
 def test_read_properties_raises_on_malformed_json(tmp_path):
@@ -152,10 +152,10 @@ def test_read_properties_raises_on_malformed_json(tmp_path):
     json_file = tmp_path / "datapackage.json"
     json_file.write_text("{ invalid json }")
 
-    uri = Uri(value=str(json_file), local=True)
+    address = Address(value=str(json_file), local=True)
 
     with pytest.raises(json.JSONDecodeError):
-        _read_properties(uri)
+        _read_properties(address)
 
 
 # _read_properties: remote file ====
@@ -168,8 +168,8 @@ def test_read_properties_remote_url(mocker, datapackage):
     mock_response = mock_urlopen.return_value.__enter__.return_value
     mock_response.read.return_value = json.dumps(datapackage).encode()
 
-    uri = Uri(value="https://example.com/datapackage.json", local=False)
-    result = _read_properties(uri)
+    address = Address(value="https://example.com/datapackage.json", local=False)
+    result = _read_properties(address)
 
     assert result == datapackage
     mock_urlopen.assert_called_once_with("https://example.com/datapackage.json")
@@ -182,10 +182,10 @@ def test_read_properties_raises_on_remote_invalid_json(mocker):
     mock_response = mock_urlopen.return_value.__enter__.return_value
     mock_response.read.return_value = b"{ invalid json }"
 
-    uri = Uri(value="https://example.com/datapackage.json", local=False)
+    address = Address(value="https://example.com/datapackage.json", local=False)
 
     with pytest.raises(json.JSONDecodeError):
-        _read_properties(uri)
+        _read_properties(address)
 
 
 @pytest.mark.usefixtures("mocker")
@@ -198,7 +198,7 @@ def test_read_properties_raises_on_remote_404(mocker):
         ),
     )
 
-    uri = Uri(value="https://example.com/datapackage.json", local=False)
+    address = Address(value="https://example.com/datapackage.json", local=False)
 
     with pytest.raises(HTTPError):
-        _read_properties(uri)
+        _read_properties(address)
