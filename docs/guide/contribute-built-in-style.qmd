@@ -84,7 +84,7 @@ expected by running the `view` or `build` command as appropriate. You
 can use the example Data Package included in Flower to test:
 
 ``` {.bash filename="Terminal"}
-uv run seedcase-flower build --uri docs/includes/datapackage.json --style your-new-style
+uv run seedcase-flower build --source docs/includes/datapackage.json --style your-new-style
 ```
 
 ## Making a pull request

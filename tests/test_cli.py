@@ -7,14 +7,14 @@ import pytest
 
 from seedcase_flower.cli import app, view
 from seedcase_flower.config import Config
-from seedcase_flower.internals import Uri
+from seedcase_flower.internals import Address
 from seedcase_flower.styles import BuildStyle
 
 
 @pytest.fixture
-def mock_parse_uri(mocker):
-    """Mock _parse_uri to isolate CLI tests from filesystem resolution."""
-    return mocker.patch("seedcase_flower.cli._parse_uri")
+def mock_parse_source(mocker):
+    """Mock _parse_source to isolate CLI tests from filesystem resolution."""
+    return mocker.patch("seedcase_flower.cli._parse_source")
 
 
 @pytest.fixture
@@ -39,17 +39,17 @@ def mock_write_sections(mocker):
 
 
 def test_build_with_mocked_internals(
-    mock_parse_uri, mock_read_properties, mock_build_sections, mock_write_sections
+    mock_parse_source, mock_read_properties, mock_build_sections, mock_write_sections
 ):
     """Isolate CLI behaviour by mocking internal helpers."""
-    fake_uri = Uri(value="file:///datapackage.json", local=True)
-    mock_parse_uri.return_value = fake_uri
+    fake_source = Address(value="file:///datapackage.json", local=True)
+    mock_parse_source.return_value = fake_source
     # Simulate running the app from the command line (but without calling sys.exit())
     app(["build", "datapackage.json"], result_action="return_value")
 
     # Checking that the correct values were passed to the internal functions
-    mock_parse_uri.assert_called_once_with("datapackage.json")
-    mock_read_properties.assert_called_once_with(fake_uri)
+    mock_parse_source.assert_called_once_with("datapackage.json")
+    mock_read_properties.assert_called_once_with(fake_source)
     mock_build_sections.assert_called_once_with(
         mock_read_properties.return_value, Config()
     )
@@ -85,11 +85,11 @@ def test_build_no_verbose_produces_no_output(
 # File-based config ====
 
 
-def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
+def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
     """Build args specified in .flower.toml should overwrite the default values."""
     toml_path = tmp_path / ".flower.toml"
     toml_path.write_text(
-        'uri = "custom.json"\n'
+        'source = "custom.json"\n'
         'style = "quarto_resource_listing"\n'
         'template_dir = "my-templates/"\n'
         'output_dir = "my-docs/"\n'
@@ -99,7 +99,7 @@ def test_build_reads_uri_from_flower_toml(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
     _, bound, _ = app.parse_args(["build"])
-    assert bound.arguments["uri"] == "custom.json"
+    assert bound.arguments["source"] == "custom.json"
     assert bound.arguments["style"] == BuildStyle.quarto_resource_listing
     assert bound.arguments["template_dir"] == Path("my-templates/")
     assert bound.arguments["output_dir"] == Path("my-docs/")
@@ -129,13 +129,13 @@ _BUILD_HELP_PAGE = dedent(
     Build human-readable documentation from a datapackage.json file.
 
     ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-    │ --uri <URI>                    The path to a local datapackage.json file or its parent │
-    │                                folder. Can also be an https: URL to a remote           │
-    │                                datapackage.json or a github: / gh: URI pointing to a   │
-    │                                repo with a datapackage.json in the repo root (in the   │
+    │ --source <SOURCE>              The location of a datapackage.json, defaults to a file  │
+    │                                or folder path. Can also be an https: source to a       │
+    │                                remote datapackage.json or a github: / gh: pointing to  │
+    │                                a repo with a datapackage.json in the repo root (in the │
     │                                format gh:org/repo, which can also include reference to │
     │                                a tag or branch, such as gh:org/repo@main or            │
-    │                                `gh:org/repo@1.0.1).                                    │
+    │                                gh:org/repo@1.0.1).                                     │
     │                                [default: datapackage.json]                             │
     │ --style <STYLE>                The style used to structure the output. If a template   │
     │                                directory is given, this parameter will be ignored.     │
@@ -205,8 +205,8 @@ def test_build_help_page_applies_rich_markup(capsys):
     with pytest.raises(SystemExit):
         app(["build", "--help"], console=markup_console)
     output = capsys.readouterr().out
-    assert "[bold cyan]--uri[/bold cyan]" in output
-    assert "[dim]<URI>[/dim]" in output
+    assert "[bold cyan]--source[/bold cyan]" in output
+    assert "[dim]<SOURCE>[/dim]" in output
     assert "[bold cyan]--style[/bold cyan]" in output
     assert "[dim]<STYLE>[/dim]" in output
     assert "[bold cyan]--verbose[/bold cyan]" in output
