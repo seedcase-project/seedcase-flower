@@ -62,7 +62,9 @@ def test_build_with_mocked_internals(
 
 
 # TODO: Update this when verbose is added.
-def test_build_verbose_prints_output(capsys, datapackage_path, tmp_path, monkeypatch):
+def test_build_verbose_prints_output(
+    capsys, datapackage_path, datapackage, tmp_path, monkeypatch
+):
     """--verbose should print output_dir, properties, template_dir, and style."""
     monkeypatch.chdir(tmp_path)
     app(

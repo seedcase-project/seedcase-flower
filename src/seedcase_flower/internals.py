@@ -94,6 +94,7 @@ def _add_highlight_syntax(name: str, entry_type: Optional[type]) -> str:
 
 
 def _read_properties(address: Address) -> dict[str, Any]:
+    datapackage: dict[str, Any]
     if address.local:
         path = Path(parse.urlsplit(address.value).path)
         with open(path) as properties_file:
