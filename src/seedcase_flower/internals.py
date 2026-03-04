@@ -100,7 +100,7 @@ def _read_properties(address: Address) -> dict[str, Any]:
             datapackage = json.load(properties_file)
     else:
         with request.urlopen(address.value) as open_url:  # nosec B310
-            datapackage = json.loads(open_url.read().decode())
+            datapackage = json.load(open_url)
     check(datapackage, error=True)
     return datapackage
 
