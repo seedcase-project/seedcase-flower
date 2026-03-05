@@ -1,6 +1,5 @@
 """Helper functions for private use."""
 
-import json
 import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
@@ -90,16 +89,6 @@ def _add_highlight_syntax(name: str, entry_type: Optional[type]) -> str:
         if get_hint_name(entry_type) == "bool":
             formatted_name = ""
     return formatted_name
-
-
-def _read_properties(address: Address) -> dict[str, Any]:
-    if address.local:
-        path = Path(parse.urlsplit(address.value).path)
-        with open(path) as properties_file:
-            return json.load(properties_file)  # type: ignore # TODO fix in read_prop PR
-    else:
-        # TODO read from remote file
-        return {"placeholder": address.value}
 
 
 In = TypeVar("In")

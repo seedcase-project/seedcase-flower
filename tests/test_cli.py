@@ -1,6 +1,5 @@
 """Tests for the CLI commands."""
 
-import json
 from pathlib import Path
 from textwrap import dedent
 
@@ -11,24 +10,6 @@ from seedcase_flower.config import Config
 from seedcase_flower.internals import Address
 from seedcase_flower.styles import BuildStyle
 
-_DATAPACKAGE_DATA = {
-    "name": "placeholder",
-    "created": "2026-02-12T11:25:49+01:00",
-    "description": "Placeholder",
-    "id": "Placeholder",
-    "licenses": [{"name": "Placeholder"}],
-    "title": "Placeholder",
-    "version": "0.0.0",
-}
-
-
-@pytest.fixture
-def datapackage_path(tmp_path):
-    """Create a temporary datapackage.json and return its path as a string."""
-    file_path = tmp_path / "datapackage.json"
-    file_path.write_text(json.dumps(_DATAPACKAGE_DATA))
-    return str(file_path)
-
 
 @pytest.fixture
 def mock_parse_source(mocker):
@@ -38,8 +19,8 @@ def mock_parse_source(mocker):
 
 @pytest.fixture
 def mock_read_properties(mocker):
-    """Mock _read_properties to isolate CLI tests from file I/O."""
-    return mocker.patch("seedcase_flower.cli._read_properties")
+    """Mock read_properties to isolate CLI tests from file I/O."""
+    return mocker.patch("seedcase_flower.cli.read_properties")
 
 
 @pytest.fixture
@@ -81,14 +62,16 @@ def test_build_with_mocked_internals(
 
 
 # TODO: Update this when verbose is added.
-def test_build_verbose_prints_output(capsys, datapackage_path, tmp_path, monkeypatch):
+def test_build_verbose_prints_output(
+    capsys, datapackage_path, datapackage, tmp_path, monkeypatch
+):
     """--verbose should print output_dir, properties, template_dir, and style."""
     monkeypatch.chdir(tmp_path)
     app(
         ["build", datapackage_path, "--verbose"],
         result_action="return_value",
     )
-    expected = f"docs {_DATAPACKAGE_DATA} None BuildStyle.quarto_one_page\n"
+    expected = f"docs {datapackage} None BuildStyle.quarto_one_page\n"
     assert capsys.readouterr().out == expected
 
 

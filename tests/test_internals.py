@@ -96,7 +96,7 @@ def test_parse_source_unsupported_scheme_raises_value_error():
         _parse_source("ftp://example.com/datapackage.json")
 
 
-def test_parse_source_returns_source_instance(tmp_path):
-    """_parse_source should always return a source instance."""
+def test_parse_source_returns_address_instance(tmp_path):
+    """_parse_source should always return a address instance."""
     result = _parse_source(str(tmp_path / "datapackage.json"))
     assert isinstance(result, Address)

@@ -27,6 +27,7 @@ keywords = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "check-datapackage>=0.30.0",
     "cyclopts>=4.5.3",
     "pydantic>=2.12.5",
     "python-jsonpath>=2.0.2",

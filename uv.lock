@@ -357,6 +357,22 @@ wheels = [
 ]
 
 [[package]]
+name = "check-datapackage"
+version = "0.30.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jsonschema" },
+    { name = "pydantic" },
+    { name = "python-jsonpath" },
+    { name = "rich" },
+    { name = "types-jsonschema" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/18/13/10de153c8d5f8c00a9692819b2e20a8095931efe5d40a5a3de7a668fd60d/check_datapackage-0.30.0.tar.gz", hash = "sha256:2bf5364b2d3b5cd66ad45f017df0b8154bab71b992e459ddf71609ecf0fd4e47", size = 1153349, upload-time = "2026-01-06T14:08:47.052Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a2/3e/ed9c3da4b171432f8af12e4375286cb1c658dff704b5d734bc7de74ee87a/check_datapackage-0.30.0-py3-none-any.whl", hash = "sha256:efbf5b4208d1744e8107702a0048d203638d98c1945c1ce9cb30768489c16b4f", size = 34926, upload-time = "2026-01-06T14:08:45.51Z" },
+]
+
+[[package]]
 name = "click"
 version = "8.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2243,6 +2259,7 @@ name = "seedcase-flower"
 version = "0.10.1"
 source = { editable = "." }
 dependencies = [
+    { name = "check-datapackage" },
     { name = "cyclopts" },
     { name = "pydantic" },
     { name = "python-jsonpath" },
@@ -2268,6 +2285,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "check-datapackage", specifier = ">=0.30.0" },
     { name = "cyclopts", specifier = ">=4.5.3" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
@@ -2443,6 +2461,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/eb/79/72064e6a701c2183016abbbfedaba506d81e30e232a68c9f0d6f6fcd1574/traitlets-5.14.3.tar.gz", hash = "sha256:9ed0579d3502c94b4b3732ac120375cda96f923114522847de4b3bb98b96b6b7", size = 161621, upload-time = "2024-04-19T11:11:49.746Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/00/c0/8f5d070730d7836adc9c9b6408dec68c6ced86b304a9b26a14df072a6e8c/traitlets-5.14.3-py3-none-any.whl", hash = "sha256:b74e89e397b1ed28cc831db7aea759ba6640cb3de13090ca145426688ff1ac4f", size = 85359, upload-time = "2024-04-19T11:11:46.763Z" },
+]
+
+[[package]]
+name = "types-jsonschema"
+version = "4.26.0.20260202"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "referencing" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a1/07/68f63e715eb327ed2f5292e29e8be99785db0f72c7664d2c63bd4dbdc29d/types_jsonschema-4.26.0.20260202.tar.gz", hash = "sha256:29831baa4308865a9aec547a61797a06fc152b0dac8dddd531e002f32265cb07", size = 16168, upload-time = "2026-02-02T04:11:22.585Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/06/962d4f364f779d7389cd31a1bb581907b057f52f0ace2c119a8dd8409db6/types_jsonschema-4.26.0.20260202-py3-none-any.whl", hash = "sha256:41c95343abc4de9264e333a55e95dfb4d401e463856d0164eec9cb182e8746da", size = 15914, upload-time = "2026-02-02T04:11:21.61Z" },
 ]
 
 [[package]]
