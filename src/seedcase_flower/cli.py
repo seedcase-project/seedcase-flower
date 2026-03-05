@@ -5,6 +5,8 @@ from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
+from rich.console import Console
+from rich.theme import Theme
 
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
@@ -88,7 +90,7 @@ def build(
 @app.command()
 def view(
     source: str = "datapackage.json",
-    style: ViewStyle = ViewStyle.terminal_default,
+    style: ViewStyle = ViewStyle.quarto_one_page,
 ) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way.
 
@@ -107,5 +109,9 @@ def view(
     built_sections = _build_sections(
         properties, Config(template_dir=_get_template_dir(style))
     )
+    console = Console(theme=_CONSOLE_THEME)
     for section in built_sections:
-        print(section.content)
+        if style == ViewStyle.quarto_one_page:
+            console.print(section.content)
+        else:
+            print(section.content)
