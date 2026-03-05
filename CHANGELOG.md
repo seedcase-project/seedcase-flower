@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.11.0 (2026-03-05)
+
+### Feat
+
+- ✨ implement remote and local datapackage reading (#161)
+
 ## 0.10.1 (2026-03-04)
 
 ### Refactor
