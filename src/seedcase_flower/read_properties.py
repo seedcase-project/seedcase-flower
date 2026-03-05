@@ -11,6 +11,7 @@ from seedcase_flower.internals import Address
 
 
 def read_properties(address: Address) -> dict[str, Any]:
+    """Read properties from a local or remote datapackage."""
     datapackage: dict[str, Any]
     if address.local:
         path = Path(parse.urlsplit(address.value).path)
