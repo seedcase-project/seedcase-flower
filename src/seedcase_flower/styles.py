@@ -13,4 +13,3 @@ class ViewStyle(Enum):
     """Built-in styles for outputting to the terminal."""
 
     quarto_one_page = "quarto_one_page"
-    terminal_default = "terminal_default"

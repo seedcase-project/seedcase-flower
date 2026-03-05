@@ -117,8 +117,8 @@ def view(
             in the repo root (in the format `gh:org/repo`, which can also include
             reference to a tag or branch, such as `gh:org/repo@main` or
             `gh:org/repo@1.0.1`).
-        style: The terminal style used to display the output. Must be one of the
-            built-in terminal styles.
+        style: The style used to display the output in the terminal. Must be a
+            single-page style.
     """
     address: Address = _parse_source(source)
     properties: dict[str, Any] = read_properties(address)
@@ -127,8 +127,4 @@ def view(
     )
     console = Console(theme=_CONSOLE_THEME)
     print()  # One line separation between the command and the datapackage title
-    for section in built_sections:
-        if style == ViewStyle.quarto_one_page:
-            console.print(Markdown(section.content))
-        else:
-            print(section.content)
+    console.print(Markdown(built_sections[0].content))
