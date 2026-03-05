@@ -25,9 +25,14 @@ box.SIMPLE = box.HEAVY_HEAD
 
 _CONSOLE_THEME = Theme(
     {
-        "markdown.code": "bold cyan",
-        "markdown.table.header": "bold magenta",
-        "markdown.table.border": "magenta",
+        "markdown.h1": "bold yellow",
+        "markdown.h2": "bold yellow",
+        "markdown.h3": "italic yellow",
+        "markdown.code": "blue",
+        "markdown.link": "underline cyan",
+        "markdown.link_url": "underline cyan",
+        "markdown.table.header": "yellow",
+        "markdown.table.border": "white",
     }
 )
 
@@ -121,8 +126,9 @@ def view(
         properties, Config(template_dir=_get_template_dir(style))
     )
     console = Console(theme=_CONSOLE_THEME)
+    print()  # One line separation between the command and the datapackage title
     for section in built_sections:
         if style == ViewStyle.quarto_one_page:
-            console.print(_StyledMarkdown(section.content))
+            console.print(Markdown(section.content))
         else:
             print(section.content)
