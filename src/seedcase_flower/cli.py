@@ -11,10 +11,11 @@ from seedcase_flower.internals import (
     Address,
     _build_sections,
     _format_param_help,
+    _get_template_dir,
     _parse_source,
 )
 from seedcase_flower.read_properties import read_properties
-from seedcase_flower.styles import BuildStyle
+from seedcase_flower.styles import BuildStyle, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
 app = App(
@@ -84,6 +85,27 @@ def build(
         )  # Placeholder for unused args
 
 
-def view() -> str:
-    """Display the contents of a `datapackage.json` in a human-friendly way."""
-    return ""
+@app.command()
+def view(
+    source: str = "datapackage.json",
+    style: ViewStyle = ViewStyle.terminal_default,
+) -> None:
+    """Display the contents of a `datapackage.json` in a human-friendly way.
+
+    Args:
+        source: The location of a `datapackage.json`, defaults to a file or folder
+            path. Can also be an `https:` source to a remote `datapackage.json` or a
+            `github:` / `gh:` pointing to a repo with a `datapackage.json`
+            in the repo root (in the format `gh:org/repo`, which can also include
+            reference to a tag or branch, such as `gh:org/repo@main` or
+            `gh:org/repo@1.0.1`).
+        style: The terminal style used to display the output. Must be one of the
+            built-in terminal styles.
+    """
+    address: Address = _parse_source(source)
+    properties: dict[str, Any] = read_properties(address)
+    built_sections = _build_sections(
+        properties, Config(template_dir=_get_template_dir(style))
+    )
+    for section in built_sections:
+        print(section.content)
