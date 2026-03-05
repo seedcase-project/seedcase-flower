@@ -2,7 +2,7 @@
 
 from .cli import build, view
 from .config import Config
-from .section import Content, Mode, Section
+from .sections import Content, Many, One
 from .styles import BuildStyle, ViewStyle
 
 __all__ = [
@@ -12,6 +12,6 @@ __all__ = [
     "BuildStyle",
     "ViewStyle",
     "Content",
-    "Mode",
-    "Section",
+    "One",
+    "Many",
 ]

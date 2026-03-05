@@ -25,8 +25,8 @@ def mock_read_properties(mocker):
 
 @pytest.fixture
 def mock_build_sections(mocker):
-    """Mock _build_sections to isolate CLI tests from template rendering."""
-    return mocker.patch("seedcase_flower.cli._build_sections")
+    """Mock build_sections to isolate CLI tests from template rendering."""
+    return mocker.patch("seedcase_flower.cli.build_sections")
 
 
 @pytest.fixture

@@ -6,10 +6,10 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 
+from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
     Address,
-    _build_sections,
     _format_param_help,
     _parse_source,
 )
@@ -75,7 +75,7 @@ def build(
     )
     address: Address = _parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    built_sections = _build_sections(properties, config)
+    built_sections = build_sections(properties, config)
     output_files: list[Path] = write_sections(built_sections, output_dir)  # noqa: F841
 
     if verbose:

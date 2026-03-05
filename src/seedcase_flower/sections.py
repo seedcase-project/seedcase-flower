@@ -1,4 +1,3 @@
-from enum import Enum
 from pathlib import Path
 from typing import Annotated, Optional
 
@@ -18,13 +17,6 @@ def _check_path_relative(value: Path) -> Path:
 type RelativePath = Annotated[Path, AfterValidator(_check_path_relative)]
 
 
-class Mode(Enum):
-    """Output mode for a content item within a section."""
-
-    one = "one"
-    many = "many"
-
-
 class KebabModel(BaseModel, frozen=True):
     """Allow creating Pydantic model from kebab-case data."""
 
@@ -35,7 +27,7 @@ class KebabModel(BaseModel, frozen=True):
 
 
 class Content(KebabModel, frozen=True):
-    """Content to include within a `Section`.
+    """Content to include within a `One` or `Many` section.
 
     The `Content` class defines what Data Package properties and
     [Jinja2](https://jinja.palletsprojects.com/en/stable/) template file belong within
@@ -45,41 +37,25 @@ class Content(KebabModel, frozen=True):
     styles share similar content structures.
 
     Attributes:
-        jsonpath (str): The JSON path, expressed using
+        jsonpath: The JSON path, expressed using
             [JSON path syntax](https://jg-rp.github.io/python-jsonpath/syntax/),
             to the Data Package property that should be sent to the `template_path`
             Jinja2 file.
-        template_path (Path): The path to the Jinja2 template file for this content
+        template_path: The path to the Jinja2 template file for this content
             item, relative to `Config.template_dir`.
-        jinja_variable (str): The Jinja2 variable name that will be used in the template
+        jinja_variable: The Jinja2 variable name that will be used in the template
             to reference this content item.
-        mode (Mode): Whether this content item is used to output one file or many files.
-            This determines how the Jinja2 template should be structured and how it
-            references the Data Package property. `Mode.one` will generate one output
-            file for the whole content item, while `Mode.many` will generate one output
-            file for each element in a content item that is an array.
 
     Examples:
         ```{python}
         import seedcase_flower as fl
         from pathlib import Path
 
-        # A content item displaying the metadata of the whole package in a single
-        # output file
+        # A content item displaying the metadata of the whole package
         package_content = fl.Content(
             jsonpath="$",
             template_path=Path("package.qmd.jinja"),
             jinja_variable="package",
-            mode=fl.Mode.one,
-        )
-
-        # A content item displaying the metadata of each resource in a separate
-        # output file
-        resource_content = fl.Content(
-            jsonpath="$.resources",
-            template_path=Path("resource.qmd.jinja"),
-            jinja_variable="resource",
-            mode=fl.Mode.many,
         )
         ```
     """
@@ -87,7 +63,6 @@ class Content(KebabModel, frozen=True):
     jsonpath: str
     template_path: RelativePath
     jinja_variable: str
-    mode: Mode
 
     @field_validator("jsonpath", mode="after")
     @classmethod
@@ -103,27 +78,21 @@ class Content(KebabModel, frozen=True):
         return value
 
 
-class Section(KebabModel, frozen=True):
-    """A section of the documentation with specific `datapackage.json` properties.
+class One(KebabModel, frozen=True):
+    """A section of the documentation that outputs to one file.
 
     See the [design](https://flower.seedcase-project.org/docs/design/interface/config#section)
-    for an explanation of the design of `Section`.
+    for an explanation of the design of `One`.
     See the [guide](https://flower.seedcase-project.org/docs/guide/custom-styles) on
     how to set up custom styles and sections.
     See `Config` for more details on the top-level settings and `Content` for
     more details on the content items.
 
     Attributes:
-        output_path (Optional[Path]): The output path for the section relative to
+        output_path: The output path for the section relative to
             `Config.output_dir`. Can be `None` when a style outputs to the terminal
-            such as when using `view()`. If a directory is provided, files will be
-            created for each content item that has a `name` property (e.g. `resources`
-            or `resource-schema-fields`). For example, if `output_path` is
-            `Path("docs/")` and `contents` is `["resources"]`, then each resource will
-            be output to `docs/{resource_name}.md` (or whichever output format is used
-            in the Jinja2 template files). If a file path is provided, all contents
-            within the `Section` will be output to that single file.
-        contents (list[Content]): List of content items to include in this
+            such as when using `view()`.
+        contents: List of content items to include in this
             section. See `Content` for more details about what to include. If more than
             one content item is included, they will be concatenated in the order
             provided, so that the `output_path` file will contain the
@@ -137,20 +106,18 @@ class Section(KebabModel, frozen=True):
 
         # A section that contains only the package and contributors content items,
         # saved to the `package.qmd` file.
-        section = fl.Section(
+        section = fl.One(
             output_path=Path("package.qmd"),
             contents=[
                 fl.Content(
                     jsonpath="$",
                     template_path=Path("package.qmd.jinja"),
                     jinja_variable="package",
-                    mode=fl.Mode.one,
                 ),
                 fl.Content(
                     jsonpath="$.contributors",
                     template_path=Path("contributors.qmd.jinja"),
                     jinja_variable="contributors",
-                    mode=fl.Mode.one,
                 ),
             ],
         )
@@ -159,3 +126,46 @@ class Section(KebabModel, frozen=True):
 
     output_path: Optional[RelativePath] = None
     contents: list[Content]
+
+
+class Many(KebabModel, frozen=True):
+    """A section of the documentation that outputs to multiple files.
+
+    See the [design](https://flower.seedcase-project.org/docs/design/interface/config#section)
+    for an explanation of the design of `Many`.
+    See the [guide](https://flower.seedcase-project.org/docs/guide/custom-styles) on
+    how to set up custom styles and sections.
+    See `Config` for more details on the top-level settings and `Content` for
+    more details on the content items.
+
+    Attributes:
+        output_path: The output path for the section relative to `Config.output_dir`.
+            If a directory is provided, a file will be created for each metadata item
+            matched by `content.jsonpath`. These metadata items must have a `name`
+            property, which will be used in the filename (e.g., resources or resource
+            schema fields). For example, if `output_path` is `Path("docs/")` and
+            `jsonpath` is `$.resources`, then each resource will be output to
+            `docs/{resource_name}.md` (or whichever output format is used
+            in the Jinja2 template files).
+        content: The content item to display in this section.
+
+    Examples:
+        ```{python}
+        import seedcase_flower as fl
+        from pathlib import Path
+
+        # A section that displays each resource in a separate file within the
+        # `resources/` folder.
+        section = fl.Many(
+            output_path=Path("resources/"),
+            content=fl.Content(
+                jsonpath="$.resources",
+                template_path=Path("resource.md.jinja"),
+                jinja_variable="resource",
+            ),
+        )
+        ```
+    """
+
+    output_path: Optional[RelativePath] = None
+    content: Content

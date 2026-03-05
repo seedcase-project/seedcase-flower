@@ -2,25 +2,24 @@ from pathlib import Path
 
 from pytest import raises
 
-from seedcase_flower.section import Content, Mode, Section
+from seedcase_flower.sections import Content, One
 
 content = Content(
     jsonpath="$.resources",
     template_path=Path("resource_template.html.jinja"),
     jinja_variable="resource",
-    mode=Mode.many,
 )
 
 
 def test_create_section():
-    section = Section(
+    section = One(
         output_path=Path("resources/"),
         contents=[content],
     )
     assert section.output_path == Path("resources/")
     assert section.contents == [content]
 
-    section = Section(
+    section = One(
         contents=[content] * 2,
     )
     assert section.output_path is None
@@ -29,7 +28,7 @@ def test_create_section():
 
 def test_cannot_create_section_with_absolute_output_path():
     with raises(ValueError):
-        Section(
+        One(
             output_path=Path("/absolute/path/resources/"),
             contents=[content],
         )
@@ -41,7 +40,6 @@ def test_cannot_create_content_with_bad_jsonpath():
             jsonpath="<><>bad.path",
             template_path=Path("template.qmd.jinja"),
             jinja_variable="data",
-            mode=Mode.one,
         )
 
 
@@ -51,5 +49,4 @@ def test_cannot_create_content_with_absolute_template_path():
             jsonpath="$",
             template_path=Path("/absolute/path/template.qmd.jinja"),
             jinja_variable="data",
-            mode=Mode.one,
         )
