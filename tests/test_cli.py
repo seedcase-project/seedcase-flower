@@ -7,7 +7,7 @@ import pytest
 
 from seedcase_flower.cli import app, view
 from seedcase_flower.config import Config
-from seedcase_flower.internals import Address
+from seedcase_flower.internals import Address, BuiltSection
 from seedcase_flower.styles import BuildStyle, ViewStyle
 
 
@@ -106,6 +106,20 @@ def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
     assert bound.arguments["template_dir"] == Path("my-templates/")
     assert bound.arguments["output_dir"] == Path("my-docs/")
     assert bound.arguments["verbose"] is True
+
+
+def test_view_ignores_flower_toml(tmp_path, monkeypatch):
+    """View should ignore any .flower.toml config and always use defaults."""
+    toml_path = tmp_path / ".flower.toml"
+    toml_path.write_text(
+        'source = "custom.json\n'  # a comment to prevent ruff from wrapping this
+        'style = "quarto_one_page"\n'
+    )
+    monkeypatch.chdir(tmp_path)
+
+    _, bound, _ = app.parse_args(["view"])
+    assert "source" not in bound.arguments
+    assert "style" not in bound.arguments
 
 
 # Help output ====
@@ -235,7 +249,6 @@ def test_view_with_mocked_internals(mocker):
     mock_parse_source = mocker.patch("seedcase_flower.cli._parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mock_build_sections = mocker.patch("seedcase_flower.cli._build_sections")
-    from seedcase_flower.internals import BuiltSection
 
     mock_build_sections.return_value = [
         BuiltSection(content="# Test", output_path=None)

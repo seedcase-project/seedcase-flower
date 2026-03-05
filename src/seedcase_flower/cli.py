@@ -103,7 +103,7 @@ def build(
         )  # Placeholder for unused args
 
 
-@app.command()
+@app.command(config=[])
 def view(
     source: str = "datapackage.json",
     style: ViewStyle = ViewStyle.quarto_one_page,
