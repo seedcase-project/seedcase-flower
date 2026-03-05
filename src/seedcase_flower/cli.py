@@ -6,8 +6,7 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 from rich.console import Console
-from rich.markdown import Markdown, TableElement
-from rich import box
+from rich.markdown import Markdown, box
 from rich.theme import Theme
 
 from seedcase_flower.config import Config
@@ -22,21 +21,7 @@ from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import BuildStyle, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
-
-class _SquareTableElement(TableElement):
-    """Markdown table element rendered with a box and column separators."""
-
-    def __rich_console__(self, console: Console, options: object):  # type: ignore[override]
-        for item in super().__rich_console__(console, options):
-            item.box = box.SQUARE
-            yield item
-
-
-class _StyledMarkdown(Markdown):
-    """Markdown with a styled table (box + magenta header)."""
-
-    elements = {**Markdown.elements, "table_open": _SquareTableElement}
-
+box.SIMPLE = box.HEAVY_HEAD
 
 _CONSOLE_THEME = Theme(
     {
