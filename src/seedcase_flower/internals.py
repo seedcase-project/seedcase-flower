@@ -1,15 +1,13 @@
 """Helper functions for private use."""
 
-import json
 import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import repeat
 from pathlib import Path
 from typing import Any, Callable, Iterable, Optional, TypeVar, Union
-from urllib import parse, request
+from urllib import parse
 
-from check_datapackage import check
 from cyclopts.annotations import get_hint_name
 from cyclopts.help import HelpEntry
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -91,20 +89,6 @@ def _add_highlight_syntax(name: str, entry_type: Optional[type]) -> str:
         if get_hint_name(entry_type) == "bool":
             formatted_name = ""
     return formatted_name
-
-
-def _read_properties(address: Address) -> dict[str, Any]:
-    datapackage: dict[str, Any]
-    if address.local:
-        path = Path(parse.urlsplit(address.value).path)
-        with open(path) as properties_file:
-            datapackage = json.load(properties_file)
-    else:
-        with request.urlopen(address.value) as open_url:  # nosec B310
-            datapackage = json.load(open_url)
-    # TODO: Consider what to do when the config file has been implemented.
-    check(datapackage, error=True)
-    return datapackage
 
 
 In = TypeVar("In")

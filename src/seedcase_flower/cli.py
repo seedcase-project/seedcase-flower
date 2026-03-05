@@ -12,8 +12,8 @@ from seedcase_flower.internals import (
     _build_sections,
     _format_param_help,
     _parse_source,
-    _read_properties,
 )
+from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import BuildStyle
 from seedcase_flower.write_sections import write_sections
 
@@ -74,7 +74,7 @@ def build(
         output_dir=output_dir,
     )
     address: Address = _parse_source(source)
-    properties: dict[str, Any] = _read_properties(address)
+    properties: dict[str, Any] = read_properties(address)
     built_sections = _build_sections(properties, config)
     output_files: list[Path] = write_sections(built_sections, output_dir)  # noqa: F841
 

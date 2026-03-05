@@ -19,8 +19,8 @@ def mock_parse_source(mocker):
 
 @pytest.fixture
 def mock_read_properties(mocker):
-    """Mock _read_properties to isolate CLI tests from file I/O."""
-    return mocker.patch("seedcase_flower.cli._read_properties")
+    """Mock read_properties to isolate CLI tests from file I/O."""
+    return mocker.patch("seedcase_flower.cli.read_properties")
 
 
 @pytest.fixture
