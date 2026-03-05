@@ -5,10 +5,10 @@ from textwrap import dedent
 
 import pytest
 
-from seedcase_flower.cli import app, view
+from seedcase_flower.cli import app
 from seedcase_flower.config import Config
 from seedcase_flower.internals import Address, BuiltSection
-from seedcase_flower.styles import BuildStyle, ViewStyle
+from seedcase_flower.styles import BuildStyle
 
 
 @pytest.fixture
@@ -263,7 +263,7 @@ def test_view_with_mocked_internals(mocker):
     mock_read_properties.assert_called_once_with(fake_source)
 
 
-def test_styled_markdown_table_renders_box_and_header(capsys):
+def test_styled_markdown_table_renders_box_and_header():
     """Markdown tables should render with a heavy-head box and column separators."""
     from io import StringIO
 

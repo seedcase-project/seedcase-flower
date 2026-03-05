@@ -5,8 +5,9 @@ from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
+from rich import box
 from rich.console import Console
-from rich.markdown import Markdown, box
+from rich.markdown import Markdown
 from rich.theme import Theme
 
 from seedcase_flower.config import Config
