@@ -2261,8 +2261,10 @@ source = { editable = "." }
 dependencies = [
     { name = "check-datapackage" },
     { name = "cyclopts" },
+    { name = "jinja2" },
     { name = "pydantic" },
     { name = "python-jsonpath" },
+    { name = "rich" },
 ]
 
 [package.dev-dependencies]
@@ -2287,8 +2289,10 @@ dev = [
 requires-dist = [
     { name = "check-datapackage", specifier = ">=0.30.0" },
     { name = "cyclopts", specifier = ">=4.5.3" },
+    { name = "jinja2", specifier = ">=3.1.6" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
+    { name = "rich", specifier = ">=14.3.3" },
 ]
 
 [package.metadata.requires-dev]
