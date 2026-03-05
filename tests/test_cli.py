@@ -8,7 +8,7 @@ import pytest
 from seedcase_flower.cli import app, view
 from seedcase_flower.config import Config
 from seedcase_flower.internals import Address
-from seedcase_flower.styles import BuildStyle
+from seedcase_flower.styles import BuildStyle, ViewStyle
 
 
 @pytest.fixture
@@ -118,6 +118,7 @@ _HELP_PAGE = dedent(
 
     ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
     │ <build>    Build human-readable documentation from a datapackage.json file.            │
+    │ <view>     Display the contents of a datapackage.json in a human-friendly way.         │
     │ --help     Display this message and exit.                                              │
     │ --version  Display application version.                                                │
     ╰────────────────────────────────────────────────────────────────────────────────────────╯
@@ -216,9 +217,82 @@ def test_build_help_page_applies_rich_markup(capsys):
     assert "[dim]<verbose>[/dim]" not in output
 
 
-# view (placeholder) ====
+# view ====
 
 
-def test_view() -> None:
-    """view returns an empty string."""
-    assert view() == ""
+def test_view_prints_output(mocker, datapackage_path):
+    """view should render the datapackage contents via rich Console."""
+    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
+    mock_console = mock_console_cls.return_value
+
+    app(["view", datapackage_path], result_action="return_value")
+
+    assert mock_console.print.called
+
+
+def test_view_with_mocked_internals(mocker):
+    """Isolate view CLI behaviour by mocking internal helpers."""
+    mock_parse_source = mocker.patch("seedcase_flower.cli._parse_source")
+    mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
+    mock_build_sections = mocker.patch("seedcase_flower.cli._build_sections")
+    from seedcase_flower.internals import BuiltSection
+
+    mock_build_sections.return_value = [
+        BuiltSection(content="# Test", output_path=None)
+    ]
+
+    fake_source = Address(value="file:///datapackage.json", local=True)
+    mock_parse_source.return_value = fake_source
+
+    app(["view", "datapackage.json"], result_action="return_value")
+
+    mock_parse_source.assert_called_once_with("datapackage.json")
+    mock_read_properties.assert_called_once_with(fake_source)
+
+
+def test_styled_markdown_table_renders_box_and_header(capsys):
+    """Markdown tables should render with a heavy-head box and column separators."""
+    from io import StringIO
+
+    from rich.console import Console
+    from rich.markdown import Markdown
+
+    from seedcase_flower.cli import _CONSOLE_THEME
+
+    md = "| A | B |\n|---|---|\n| 1 | 2 |\n"
+    out = StringIO()
+    Console(file=out, theme=_CONSOLE_THEME, no_color=True).print(Markdown(md))
+    output = out.getvalue()
+    assert "┏" in output  # heavy outer box top
+    assert "┡" in output  # heavy-to-light header separator
+    assert "┴" in output  # bottom border with column joins
+    assert "A" in output
+    assert "B" in output
+
+
+def test_view_help_page(capsys, console):
+    """view --help should document source and style parameters."""
+    _VIEW_HELP_PAGE = dedent(
+        """\
+        Usage: seedcase-flower view [ARGS]
+
+        Display the contents of a datapackage.json in a human-friendly way.
+
+        ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
+        │ --source <SOURCE>  The location of a datapackage.json, defaults to a file or folder    │
+        │                    path. Can also be an https: source to a remote datapackage.json or  │
+        │                    a github: / gh: pointing to a repo with a datapackage.json in the   │
+        │                    repo root (in the format gh:org/repo, which can also include        │
+        │                    reference to a tag or branch, such as gh:org/repo@main or           │
+        │                    gh:org/repo@1.0.1).                                                 │
+        │                    [default: datapackage.json]                                         │
+        │ --style <STYLE>    The style used to display the output in the terminal. Must be a     │
+        │                    single-page style.                                                  │
+        │                    [choices: quarto-one-page]                                          │
+        │                    [default: quarto-one-page]                                          │
+        ╰────────────────────────────────────────────────────────────────────────────────────────╯
+        """  # noqa
+    )
+    with pytest.raises(SystemExit):
+        app(["view", "--help"], console=console)
+    assert capsys.readouterr().out == _VIEW_HELP_PAGE, _CHANGED_MSG.format(cmd="view")
