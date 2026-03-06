@@ -1,11 +1,14 @@
 """Tests for the CLI commands."""
 
+from io import StringIO
 from pathlib import Path
 from textwrap import dedent
 
 import pytest
+from rich.console import Console
+from rich.markdown import Markdown
 
-from seedcase_flower.cli import app
+from seedcase_flower.cli import _CONSOLE_THEME, app
 from seedcase_flower.config import Config
 from seedcase_flower.internals import Address, BuiltSection
 from seedcase_flower.styles import Style
@@ -201,8 +204,6 @@ _CHANGED_MSG = (
 
 @pytest.fixture
 def console():
-    from rich.console import Console
-
     return Console(
         width=90,
         force_terminal=True,
@@ -231,8 +232,6 @@ def test_build_help_page(capsys, console):
 # column widths in cyclopts
 def test_build_help_page_applies_rich_markup(capsys):
     """build --help should apply bold-cyan to flags and dim to placeholders."""
-    from rich.console import Console
-
     markup_console = Console(
         width=90,
         force_terminal=False,
@@ -270,21 +269,13 @@ def test_view_styles_are_one_page():
         )
 
 
-def test_view_prints_output(mocker, datapackage_path):
-    """view should render the datapackage contents via rich Console."""
-    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
-    mock_console = mock_console_cls.return_value
-
-    app(["view", datapackage_path], result_action="return_value")
-
-    assert mock_console.print.called
-
-
 def test_view_with_mocked_internals(mocker):
-    """Isolate view CLI behaviour by mocking internal helpers."""
+    """view should parse source, build sections, and render via Console."""
     mock_parse_source = mocker.patch("seedcase_flower.cli._parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mock_build_sections = mocker.patch("seedcase_flower.cli._build_sections")
+    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
+    mock_console = mock_console_cls.return_value
 
     mock_build_sections.return_value = [
         BuiltSection(content="# Test", output_path=None)
@@ -297,17 +288,15 @@ def test_view_with_mocked_internals(mocker):
 
     mock_parse_source.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_source)
+    mock_build_sections.assert_called_once_with(
+        mock_read_properties.return_value,
+        Config(style=Style.quarto_one_page),
+    )
+    assert mock_console.print.called
 
 
 def test_styled_markdown_table_renders_box_and_header():
     """Markdown tables should render with a heavy-head box and column separators."""
-    from io import StringIO
-
-    from rich.console import Console
-    from rich.markdown import Markdown
-
-    from seedcase_flower.cli import _CONSOLE_THEME
-
     md = "| A | B |\n|---|---|\n| 1 | 2 |\n"
     out = StringIO()
     Console(file=out, theme=_CONSOLE_THEME, no_color=True).print(Markdown(md))
