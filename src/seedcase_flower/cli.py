@@ -124,7 +124,7 @@ def view(
     """
     address: Address = _parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    built_sections = _build_sections(properties, Config(style=style.to_style()))
+    built_sections = _build_sections(properties, Config(style=Style[style.name]))
     console = Console(theme=_CONSOLE_THEME)
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
