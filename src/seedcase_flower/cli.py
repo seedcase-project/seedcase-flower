@@ -22,6 +22,8 @@ from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import BuildStyle, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
+# To style markdown tables with a box (pipes) surrounding each column
+# instead of only a horizontal line after the table header
 box.SIMPLE = box.HEAVY_HEAD
 
 _CONSOLE_THEME = Theme(
