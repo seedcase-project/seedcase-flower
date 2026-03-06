@@ -256,6 +256,20 @@ def test_build_help_page_applies_rich_markup(capsys):
 # view ====
 
 
+def test_view_styles_are_one_page():
+    """Every ViewStyle member must map to a single-section (one-page) style."""
+    from seedcase_flower.internals import _get_template_dir, _load_sections
+    from seedcase_flower.styles import Style, ViewStyle
+
+    for member in ViewStyle:
+        style = Style[member.name]
+        sections = _load_sections(_get_template_dir(style))
+        assert len(sections) == 1, (
+            f"ViewStyle.{member.name} has {len(sections)} sections, "
+            "but view styles must be single-page (exactly 1 section)."
+        )
+
+
 def test_view_prints_output(mocker, datapackage_path):
     """view should render the datapackage contents via rich Console."""
     mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
