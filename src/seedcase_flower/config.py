@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from seedcase_flower.styles import BuildStyle
+from seedcase_flower.styles import Style
 
 
 class Config(BaseModel, frozen=True):
@@ -34,7 +34,7 @@ class Config(BaseModel, frozen=True):
         # A config using the built-in `quarto-resource-listing` style and outputting
         # to the `my-docs/` folder.
         config = fl.Config(
-            style=fl.BuildStyle.quarto_resource_listing, output_dir=Path("my-docs/")
+            style=fl.Style.quarto_resource_listing, output_dir=Path("my-docs/")
         )
 
         # A custom style that points to a template folder and outputs
@@ -47,6 +47,6 @@ class Config(BaseModel, frozen=True):
         ```
     """
 
-    style: BuildStyle = BuildStyle.quarto_one_page
+    style: Style = Style.quarto_one_page
     template_dir: Optional[Path] = None
     output_dir: Path = Path("docs")

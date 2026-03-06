@@ -8,7 +8,7 @@ import pytest
 from seedcase_flower.cli import app
 from seedcase_flower.config import Config
 from seedcase_flower.internals import Address, BuiltSection
-from seedcase_flower.styles import BuildStyle
+from seedcase_flower.styles import Style
 
 
 @pytest.fixture
@@ -71,7 +71,7 @@ def test_build_verbose_prints_output(
         ["build", datapackage_path, "--verbose"],
         result_action="return_value",
     )
-    expected = f"docs {datapackage} None BuildStyle.quarto_one_page\n"
+    expected = f"docs {datapackage} None Style.quarto_one_page\n"
     assert capsys.readouterr().out == expected
 
 
@@ -102,7 +102,7 @@ def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
 
     _, bound, _ = app.parse_args(["build"])
     assert bound.arguments["source"] == "custom.json"
-    assert bound.arguments["style"] == BuildStyle.quarto_resource_listing
+    assert bound.arguments["style"] == Style.quarto_resource_listing
     assert bound.arguments["template_dir"] == Path("my-templates/")
     assert bound.arguments["output_dir"] == Path("my-docs/")
     assert bound.arguments["verbose"] is True

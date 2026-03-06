@@ -15,11 +15,10 @@ from seedcase_flower.internals import (
     Address,
     _build_sections,
     _format_param_help,
-    _get_template_dir,
     _parse_source,
 )
 from seedcase_flower.read_properties import read_properties
-from seedcase_flower.styles import BuildStyle, ViewStyle
+from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
 # To style markdown tables with a box (pipes) surrounding each column
@@ -68,7 +67,7 @@ app = App(
 @app.command()
 def build(
     source: str = "datapackage.json",
-    style: BuildStyle = BuildStyle.quarto_one_page,
+    style: Style = Style.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
@@ -125,9 +124,7 @@ def view(
     """
     address: Address = _parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    built_sections = _build_sections(
-        properties, Config(template_dir=_get_template_dir(style))
-    )
+    built_sections = _build_sections(properties, Config(style=style.to_style()))
     console = Console(theme=_CONSOLE_THEME)
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
