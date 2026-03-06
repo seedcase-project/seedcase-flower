@@ -11,7 +11,7 @@ from operator import itemgetter
 from rich.console import Console
 
 from seedcase_flower.cli import app
-from tests.test_cli import _BUILD_HELP_PAGE, _HELP_PAGE
+from tests.test_cli import _BUILD_HELP_PAGE, _HELP_PAGE, _VIEW_HELP_PAGE
 
 
 def _capture_help(args: list[str]) -> str:
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     checks = [
         ("_HELP_PAGE", ["--help"], _HELP_PAGE),
         ("_BUILD_HELP_PAGE", ["build", "--help"], _BUILD_HELP_PAGE),
+        ("_VIEW_HELP_PAGE", ["view", "--help"], _VIEW_HELP_PAGE),
     ]
     changed = _find_outdated_checks(checks)
 

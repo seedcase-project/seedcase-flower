@@ -171,6 +171,28 @@ _BUILD_HELP_PAGE = dedent(
     """  # noqa
 )
 
+_VIEW_HELP_PAGE = dedent(
+    """\
+    Usage: seedcase-flower view [ARGS]
+
+    Display the contents of a datapackage.json in a human-friendly way.
+
+    ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
+    │ --source <SOURCE>  The location of a datapackage.json, defaults to a file or folder    │
+    │                    path. Can also be an https: source to a remote datapackage.json or  │
+    │                    a github: / gh: pointing to a repo with a datapackage.json in the   │
+    │                    repo root (in the format gh:org/repo, which can also include        │
+    │                    reference to a tag or branch, such as gh:org/repo@main or           │
+    │                    gh:org/repo@1.0.1).                                                 │
+    │                    [default: datapackage.json]                                         │
+    │ --style <STYLE>    The style used to display the output in the terminal. Must be a     │
+    │                    single-page style.                                                  │
+    │                    [choices: quarto-one-page]                                          │
+    │                    [default: quarto-one-page]                                          │
+    ╰────────────────────────────────────────────────────────────────────────────────────────╯
+    """  # noqa
+)
+
 _CHANGED_MSG = (
     "The `{cmd}` help output changed. Run `just generate-help-strings` "
     "and paste the updated string into the relevant test."
@@ -285,27 +307,6 @@ def test_styled_markdown_table_renders_box_and_header():
 
 def test_view_help_page(capsys, console):
     """view --help should document source and style parameters."""
-    _VIEW_HELP_PAGE = dedent(
-        """\
-        Usage: seedcase-flower view [ARGS]
-
-        Display the contents of a datapackage.json in a human-friendly way.
-
-        ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-        │ --source <SOURCE>  The location of a datapackage.json, defaults to a file or folder    │
-        │                    path. Can also be an https: source to a remote datapackage.json or  │
-        │                    a github: / gh: pointing to a repo with a datapackage.json in the   │
-        │                    repo root (in the format gh:org/repo, which can also include        │
-        │                    reference to a tag or branch, such as gh:org/repo@main or           │
-        │                    gh:org/repo@1.0.1).                                                 │
-        │                    [default: datapackage.json]                                         │
-        │ --style <STYLE>    The style used to display the output in the terminal. Must be a     │
-        │                    single-page style.                                                  │
-        │                    [choices: quarto-one-page]                                          │
-        │                    [default: quarto-one-page]                                          │
-        ╰────────────────────────────────────────────────────────────────────────────────────────╯
-        """  # noqa
-    )
     with pytest.raises(SystemExit):
         app(["view", "--help"], console=console)
     assert capsys.readouterr().out == _VIEW_HELP_PAGE, _CHANGED_MSG.format(cmd="view")
