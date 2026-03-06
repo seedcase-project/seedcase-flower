@@ -1,8 +1,18 @@
+import re
+from enum import Enum
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated, Optional, Self
 
 from jsonpath import JSONPathSyntaxError, compile
-from pydantic import AfterValidator, BaseModel, ConfigDict, field_validator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    ConfigDict,
+    field_validator,
+    model_validator,
+)
+
+from seedcase_flower.internals import _filter
 
 
 def _check_path_relative(value: Path) -> Path:
@@ -15,6 +25,18 @@ def _check_path_relative(value: Path) -> Path:
 
 
 type RelativePath = Annotated[Path, AfterValidator(_check_path_relative)]
+
+
+def _check_template_extension(value: Path) -> Path:
+    if len(value.suffixes) < 2 or value.suffix != ".jinja":
+        raise ValueError(
+            f"The template name '{value.name}' must be of the form "
+            "`<name>.<ext>.jinja`."
+        )
+    return value
+
+
+type TemplatePath = Annotated[RelativePath, AfterValidator(_check_template_extension)]
 
 
 class KebabModel(BaseModel, frozen=True):
@@ -61,7 +83,7 @@ class Content(KebabModel, frozen=True):
     """
 
     jsonpath: str
-    template_path: RelativePath
+    template_path: TemplatePath
     jinja_variable: str
 
     @field_validator("jsonpath", mode="after")
@@ -128,6 +150,29 @@ class One(KebabModel, frozen=True):
     contents: list[Content]
 
 
+class ManyContent(str, Enum):
+    """Content item to include within a `Many` section."""
+
+    resources = "resources"
+    fields = "fields"
+
+    @property
+    def jsonpath(self) -> str:
+        """The JSON path that selects this content item."""
+        return {
+            self.resources: "$.resources[*]",
+            self.fields: "$.resources[*].schema.fields[*]",
+        }[self]
+
+    @property
+    def placeholder(self) -> str:
+        """The placeholder for this content item in the the output path."""
+        return {
+            self.resources: "{resource-name}",
+            self.fields: "{field-name}",
+        }[self]
+
+
 class Many(KebabModel, frozen=True):
     """A section of the documentation that outputs to multiple files.
 
@@ -140,14 +185,12 @@ class Many(KebabModel, frozen=True):
 
     Attributes:
         output_path: The output path for the section relative to `Config.output_dir`.
-            If a directory is provided, a file will be created for each metadata item
-            matched by `content.jsonpath`. These metadata items must have a `name`
-            property, which will be used in the filename (e.g., resources or resource
-            schema fields). For example, if `output_path` is `Path("docs/")` and
-            `jsonpath` is `$.resources`, then each resource will be output to
-            `docs/{resource_name}.md` (or whichever output format is used
-            in the Jinja2 template files).
-        content: The content item to display in this section.
+            If a directory is provided, the output files will be saved in that
+            directory. If the path includes a placeholder in curly brackets (e.g.
+            `resources/{resource-name}.qmd`), the output files will be named following
+            this template.
+        content: The content item to display in this section; choices are `resources`
+            and `fields`.
 
     Examples:
         ```{python}
@@ -158,15 +201,84 @@ class Many(KebabModel, frozen=True):
         # `resources/` folder.
         section = fl.Many(
             output_path=Path("resources/"),
-            content=fl.Content(
-                jsonpath="$.resources",
-                template_path=Path("resource.md.jinja"),
-                jinja_variable="resource",
-            ),
+            content=fl.ManyContent.resources,
+            template_path=Path("resource.md.jinja"),
+            jinja_variable="resource",
         )
         ```
     """
 
-    # TODO: check template name ext and output path ext match
     output_path: Optional[RelativePath] = None
-    content: Content
+    content: ManyContent
+    template_path: TemplatePath
+    jinja_variable: str
+
+    @model_validator(mode="after")
+    def _check_extensions(self) -> Self:
+        if not self.output_path or not self.output_path.suffixes:
+            return self
+        if self.output_path.suffixes != self.template_path.suffixes[:-1]:
+            raise ValueError(
+                f"The file generated from the template '{self.template_path}' must "
+                f"have the same file extension as the output path '{self.output_path}'."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _check_placeholders(self) -> Self:
+        if not self.output_path:
+            return self
+
+        posix_path = self.output_path.as_posix()
+        placeholders = re.findall(r"\{[^\}]*\}", posix_path)
+
+        if not placeholders:
+            if self.output_path.suffix:
+                raise ValueError(
+                    f"The output path '{self.output_path}' points to a file. "
+                    "Output paths without placeholders must point to a folder."
+                )
+
+            # Normalise output path to end in `{placeholder}.extension`
+            extension = "".join(self.template_path.suffixes[:-1])
+            object.__setattr__(
+                self,
+                "output_path",
+                self.output_path / (self.content.placeholder + extension),
+            )
+            return self
+
+        if _filter(
+            placeholders,
+            lambda placeholder: (
+                placeholder
+                not in {
+                    ManyContent.resources.placeholder,
+                    ManyContent.fields.placeholder,
+                }
+            ),
+        ):
+            raise ValueError(
+                f"The output path '{self.output_path}' contains unknown placeholders. "
+                f"The only placeholders allowed in file paths are "
+                f"{ManyContent.resources.placeholder!r} and "
+                f"{ManyContent.fields.placeholder!r}."
+            )
+
+        if (
+            self.content == ManyContent.resources
+            and ManyContent.fields.placeholder in posix_path
+        ):
+            raise ValueError(
+                f"The output path '{self.output_path}' contains a placeholder for a "
+                "field name. When displaying resources, you cannot use a field name "
+                "placeholder in the output path."
+            )
+
+        if not self.output_path.suffix:
+            raise ValueError(
+                f"The output path '{self.output_path}' does not have an extension. "
+                "Output paths with a placeholder must have an extension."
+            )
+
+        return self

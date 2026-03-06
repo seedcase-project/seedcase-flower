@@ -1,17 +1,16 @@
 import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
-from itertools import chain
 from pathlib import Path
 from typing import Any, Optional, Union, cast
 
 from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
-from jsonpath import findall
+from jsonpath import findall, finditer
 from pydantic import BaseModel, Field
 
 from seedcase_flower.config import Config
-from seedcase_flower.internals import _filter, _flat_map, _map
-from seedcase_flower.sections import Content, Many, One
+from seedcase_flower.internals import _flat_map, _map
+from seedcase_flower.sections import Content, Many, ManyContent, One
 from seedcase_flower.styles import BuildStyle, ViewStyle
 
 
@@ -126,42 +125,6 @@ def _build_content_one(
     )
 
 
-def _select_properties_one(jsonpath: str, properties: dict[str, Any]) -> list[Any]:
-    selected_properties = findall(jsonpath, properties)
-    if len(selected_properties) > 1:
-        raise ValueError(
-            f"`one` expects at most one match. JSON path {jsonpath!r} "
-            f"returned {len(selected_properties)} matches. Use a more specific "
-            "JSON path or switch to `many`."
-        )
-
-    return selected_properties
-
-
-def _select_properties_many(
-    jsonpath: str, properties: dict[str, Any]
-) -> list[dict[str, Any]]:
-    selected_properties = findall(jsonpath, properties)
-
-    # Flatten list of matches if all matches are lists (e.g. JSON path `$.resources`)
-    if all(_map(selected_properties, lambda match: isinstance(match, list))):
-        selected_properties = list(
-            chain.from_iterable(cast(list[list[Any]], selected_properties))
-        )
-
-    if _filter(
-        selected_properties,
-        lambda match: not isinstance(match, dict) or "name" not in match,
-    ):
-        raise ValueError(
-            "In a `many` section, each item must have a 'name' property to be used as "
-            f"the output file name. JSON path {jsonpath!r} returned at "
-            "least one match without a 'name' property."
-        )
-
-    return cast(list[dict[str, Any]], selected_properties)
-
-
 def _build_one(
     one: One, properties: dict[str, Any], template_dir: Path, env: Environment
 ) -> BuiltSection:
@@ -175,38 +138,53 @@ def _build_one(
     )
 
 
-def _build_many(
-    many: Many, properties: dict[str, Any], template_dir: Path, env: Environment
-) -> list[BuiltSection]:
-    content = many.content
-    selected_properties = _select_properties_many(content.jsonpath, properties)
-    template = _get_template(template_dir, content.template_path, env)
+@dataclass(frozen=True)
+class ManyMatch:
+    """A metadata item displayed in a `many` section.
 
+    Attributes:
+        resource_name: The name of the resource containing the metadata item.
+        properties: The metadata item.
+    """
+
+    resource_name: str
+    properties: dict[str, Any]
+
+
+def _get_many_matches(jsonpath: str, properties: dict[str, Any]) -> list[ManyMatch]:
     return _map(
-        selected_properties,
-        lambda match: BuiltSection(
-            output_path=_get_output_path_for_match(
-                match, many.output_path, content.template_path
-            ),
-            content=template.render(**{content.jinja_variable: match}),
+        finditer(jsonpath, properties),
+        lambda match: ManyMatch(
+            resource_name=properties["resources"][match.parts[1]]["name"],
+            properties=cast(dict[str, Any], match.value),
         ),
     )
 
 
-def _get_output_path_for_match(
-    match: dict[str, Any], output_path: Optional[Path], template_path: Path
-) -> Optional[Path]:
-    if not output_path:
+def _build_many(
+    many: Many, properties: dict[str, Any], template_dir: Path, env: Environment
+) -> list[BuiltSection]:
+    template = _get_template(template_dir, many.template_path, env)
+    matches = _get_many_matches(many.content.jsonpath, properties)
+
+    return _map(
+        matches,
+        lambda match: BuiltSection(
+            output_path=_get_output_path_for_match(match, many),
+            content=template.render(**{many.jinja_variable: match.properties}),
+        ),
+    )
+
+
+def _get_output_path_for_match(match: ManyMatch, many: Many) -> Optional[Path]:
+    if not many.output_path:
         return None
 
-    extension = template_path.suffixes[-2]
-    name: str = match["name"] + extension
-
-    if "{" not in output_path.name:
-        return output_path / name
-
-    # TODO: refine
-    return output_path.parent / name
+    return Path(
+        many.output_path.as_posix()
+        .replace(ManyContent.resources.placeholder, match.resource_name)
+        .replace(ManyContent.fields.placeholder, match.properties["name"])
+    )
 
 
 def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSection]:
