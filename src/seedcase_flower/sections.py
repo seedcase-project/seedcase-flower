@@ -167,5 +167,6 @@ class Many(KebabModel, frozen=True):
         ```
     """
 
+    # TODO: check template name ext and output path ext match
     output_path: Optional[RelativePath] = None
     content: Content

@@ -178,29 +178,35 @@ def _build_one(
 def _build_many(
     many: Many, properties: dict[str, Any], template_dir: Path, env: Environment
 ) -> list[BuiltSection]:
-    selected_properties = _select_properties_many(many.content.jsonpath, properties)
-    template = _get_template(template_dir, many.content.template_path, env)
+    content = many.content
+    selected_properties = _select_properties_many(content.jsonpath, properties)
+    template = _get_template(template_dir, content.template_path, env)
 
     return _map(
         selected_properties,
         lambda match: BuiltSection(
-            output_path=_get_output_path_for_match(match, many.output_path),
-            content=template.render(**{many.content.jinja_variable: match}),
+            output_path=_get_output_path_for_match(
+                match, many.output_path, content.template_path
+            ),
+            content=template.render(**{content.jinja_variable: match}),
         ),
     )
 
 
 def _get_output_path_for_match(
-    match: dict[str, Any], output_path: Optional[Path]
+    match: dict[str, Any], output_path: Optional[Path], template_path: Path
 ) -> Optional[Path]:
     if not output_path:
         return None
 
-    name: str = match["name"]
+    extension = template_path.suffixes[-2]
+    name: str = match["name"] + extension
+
+    if "{" not in output_path.name:
+        return output_path / name
+
     # TODO: refine
-    if "{" in output_path.name:
-        return output_path.parent / name
-    return output_path / name
+    return output_path.parent / name
 
 
 def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSection]:
