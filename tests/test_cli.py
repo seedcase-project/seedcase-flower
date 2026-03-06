@@ -10,8 +10,13 @@ from rich.markdown import Markdown
 
 from seedcase_flower.cli import _CONSOLE_THEME, app
 from seedcase_flower.config import Config
-from seedcase_flower.internals import Address, BuiltSection
-from seedcase_flower.styles import Style
+from seedcase_flower.internals import (
+    Address,
+    BuiltSection,
+    _get_template_dir,
+    _load_sections,
+)
+from seedcase_flower.styles import Style, ViewStyle
 
 
 @pytest.fixture
@@ -257,9 +262,6 @@ def test_build_help_page_applies_rich_markup(capsys):
 
 def test_view_styles_are_one_page():
     """Every ViewStyle member must map to a single-section (one-page) style."""
-    from seedcase_flower.internals import _get_template_dir, _load_sections
-    from seedcase_flower.styles import Style, ViewStyle
-
     for member in ViewStyle:
         style = Style[member.name]
         sections = _load_sections(_get_template_dir(style))
@@ -293,6 +295,32 @@ def test_view_with_mocked_internals(mocker):
         Config(style=Style.quarto_one_page),
     )
     assert mock_console.print.called
+
+
+# The color codes cannot easily be tested so we look at substrings
+# instead of the exact full output
+def test_view_renders_datapackage(capsys, datapackage_path):
+    """view should render all key datapackage fields to the terminal."""
+    app(["view", datapackage_path], result_action="return_value")
+    output = capsys.readouterr().out
+
+    # Package metadata
+    assert "test-package" in output
+    assert "Test Package" in output
+    assert "MIT" in output
+    assert "1.0.0" in output
+    assert "A test datapackage" in output
+
+    # Resource structure
+    assert "Resources" in output
+    assert "data" in output
+    assert "data.csv" in output
+
+    # Schema fields table
+    assert "id" in output
+    assert "integer" in output
+    assert "name" in output
+    assert "string" in output
 
 
 def test_styled_markdown_table_renders_box_and_header():
