@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field
 
 from seedcase_flower.config import Config
 from seedcase_flower.section import Content, Mode, Section
-from seedcase_flower.styles import BuildStyle, ViewStyle
+from seedcase_flower.styles import Style
 
 
 @dataclass(frozen=True)
@@ -128,7 +128,7 @@ class BuiltSection:
     output_path: Optional[Path] = None
 
 
-def _get_template_dir(style: Union[BuildStyle, ViewStyle]) -> Path:
+def _get_template_dir(style: Style) -> Path:
     styles_path = Path(str(files("seedcase_flower").joinpath("styles")))
     return styles_path / style.name
 

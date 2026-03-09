@@ -1,8 +1,8 @@
 from enum import Enum
 
 
-class BuildStyle(Enum):
-    """Built-in styles for outputting to file."""
+class Style(Enum):
+    """Built-in styles for generating documentation."""
 
     quarto_one_page = "quarto_one_page"
     quarto_resource_listing = "quarto_resource_listing"
@@ -10,6 +10,6 @@ class BuildStyle(Enum):
 
 
 class ViewStyle(Enum):
-    """Built-in styles for outputting to the terminal."""
+    """Subset of styles suitable for terminal output (single-page only)."""
 
-    terminal_default = "terminal_default"
+    quarto_one_page = "quarto_one_page"
