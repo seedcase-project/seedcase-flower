@@ -232,8 +232,9 @@ class Many(KebabModel, frozen=True):
             return self
         if "".join(self.output_path.suffixes) != self.extension:
             raise ValueError(
-                f"The file generated from the template '{self.template_path}' must "
-                f"have the same file extension as the output path '{self.output_path}'."
+                f"The output path '{self.output_path}' must have the same file "
+                "extension as the files generated from the "
+                f"template '{self.template_path}'."
             )
         return self
 
