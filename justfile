@@ -125,8 +125,19 @@ build-quartodoc:
     rm -rf docs/reference
     uv run quartodoc build
 
+# Build an examples page for each style
+build-examples:
+    #!/usr/bin/env bash
+    build_example() {
+    local style=$1
+      uv run seedcase-flower build docs/includes/datapackage.json \
+        --style $style \
+        --output-dir docs/examples/$style
+    }
+    build_example quarto-one-page
+
 # Build the documentation website using Quarto
-build-website: build-quartodoc
+build-website: build-quartodoc build-examples
     uv run quarto render --execute
 
 # Re-build the README file from the Quarto version

@@ -17,6 +17,8 @@ website:
         href: docs/index.qmd
       - text: "Guide"
         href: docs/guide/index.qmd
+      - text: "Examples"
+        href: docs/examples/index.qmd
       - text: "Design"
         href: docs/design/index.qmd
       - text: "Reference"
@@ -59,7 +61,14 @@ website:
             - docs/guide/cli.qmd
             - docs/guide/config.qmd
             - docs/guide/custom-styles.qmd
-            - docs/guide/contribute-built-in-style.qmd
+            - docs/guide/contribute-style.qmd
+    - id: examples
+      contents:
+        - section: "Examples"
+          href: docs/examples/index.qmd
+          contents:
+            - text: "Quarto one page"
+              href: docs/examples/quarto-one-page/index.qmd
 
 quartodoc:
   sidebar: "docs/reference/_sidebar.yml"
