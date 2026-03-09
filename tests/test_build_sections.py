@@ -16,7 +16,6 @@ content = """
 jsonpath = "$"
 template-path = "template.qmd.jinja"
 jinja-variable = "package"
-mode = "one"
 """
 
 one_content_toml = f"""
@@ -108,13 +107,11 @@ def test_can_use_multiple_templates_with_different_jsonpaths(tmp_path, _template
     jsonpath = "$"
     template-path = "template.qmd.jinja"
     jinja-variable = "package"
-    mode = "one"
 
     [[one.contents]]
     jsonpath = "$.resources"
     template-path = "resources.qmd.jinja"
     jinja-variable = "resources"
-    mode = "one"
     """
     (tmp_path / "sections.toml").write_text(sections_toml)
     (tmp_path / "resources.qmd.jinja").write_text("{{ resources | length }}")
@@ -182,7 +179,7 @@ def test_flags_missing_template_file(tmp_path):
         build_sections(properties, config)
 
 
-def test_flags_bad_jsonpath_for_mode_one(tmp_path, _template):
+def test_flags_bad_jsonpath_for_one_section(tmp_path, _template):
     (tmp_path / "sections.toml").write_text(
         one_content_toml.replace('jsonpath = "$"', 'jsonpath = "$.resources[*]"')
     )
@@ -356,3 +353,30 @@ def test_resolves_placeholder_for_field_files(
     built_sections = build_sections(one_field_properties, config)
 
     assert built_sections[0].output_path == Path(output_path_out)
+
+
+def test_builds_toml_with_one_and_many_sections(tmp_path, _template, datapackage):
+    toml = f"{multi_section_toml}\n{many_section_both}"
+    (tmp_path / "sections.toml").write_text(toml)
+    (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
+    (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
+    config = Config(template_dir=tmp_path)
+    package_name = datapackage["name"]
+
+    built_sections = build_sections(datapackage, config)
+
+    assert built_sections == [
+        BuiltSection(
+            output_path=Path("section1.qmd"),
+            content=f"{package_name}\n{package_name}",
+        ),
+        BuiltSection(output_path=Path("section2.qmd"), content=package_name),
+    ] + _get_resource_sections(datapackage) + _get_field_sections(datapackage)
+
+
+def test_flags_missing_template_file_in_many_section(tmp_path):
+    (tmp_path / "sections.toml").write_text(many_section_resources)
+    config = Config(template_dir=tmp_path)
+
+    with raises(FileNotFoundError):
+        build_sections(properties, config)
