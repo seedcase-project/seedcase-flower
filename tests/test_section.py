@@ -134,13 +134,13 @@ def test_creates_many_section_for_fields(output_path_in, output_path_out):
         (ManyContent.resources, "resources/{field-name}.qmd"),
         (ManyContent.resources, "{resource-name}/{resource-name}.qmd"),
         (ManyContent.resources, "points/to/file/index.qmd"),
-        (ManyContent.resources, "resources/{resource-name}"),
         (ManyContent.fields, "fields/{not-field-name}.qmd"),
         (ManyContent.fields, "{field-name}/{resource-name}/index.qmd"),
         (ManyContent.fields, "{field-name}/{field-name}/index.qmd"),
         (ManyContent.fields, "{resource-name}/{resource-name}/index.qmd"),
         (ManyContent.fields, "points/to/file/index.qmd"),
-        (ManyContent.fields, "fields/{field-name}"),
+        (ManyContent.fields, "resources/{resource-name}.qmd"),
+        (ManyContent.fields, "resources/{resource-name}/index.qmd"),
     ],
 )
 def test_cannot_create_many_section_with_bad_output_path(many_content, output_path):
