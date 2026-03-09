@@ -203,7 +203,7 @@ This overriding behaviour also applies to the other CLI options,
 `--output-dir` and `--template-dir`; if they are used on the CLI, they
 override the corresponding settings in the configuration file.
 
-## {{< var planned >}} `view`
+## {{< var wip >}} `view`
 
 The `view` command has the following signature, that is positional as
 well as keyword-based:
