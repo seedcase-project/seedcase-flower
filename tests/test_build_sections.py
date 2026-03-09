@@ -7,7 +7,7 @@ from pytest import fixture, mark, raises
 from seedcase_flower.build_sections import BuiltSection, build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import _flat_map, _map
-from seedcase_flower.styles import BuildStyle
+from seedcase_flower.styles import Style
 
 # One section ====
 
@@ -127,7 +127,7 @@ def test_can_use_multiple_templates_with_different_jsonpaths(tmp_path, _template
 
 
 def test_uses_style_when_no_template_dir_given():
-    config = Config(style=BuildStyle.quarto_one_page)
+    config = Config(style=Style.quarto_one_page)
 
     built_sections = build_sections(properties, config)
 

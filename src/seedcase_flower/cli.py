@@ -5,6 +5,10 @@ from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
+from rich import box
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.theme import Theme
 
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
@@ -14,8 +18,25 @@ from seedcase_flower.internals import (
     _parse_source,
 )
 from seedcase_flower.read_properties import read_properties
-from seedcase_flower.styles import BuildStyle
+from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
+
+# To style markdown tables with a box (pipes) surrounding each column
+# instead of only a horizontal line after the table header
+box.SIMPLE = box.HEAVY_HEAD
+
+_CONSOLE_THEME = Theme(
+    {
+        "markdown.h1": "bold yellow",
+        "markdown.h2": "bold yellow",
+        "markdown.h3": "italic yellow",
+        "markdown.code": "blue",
+        "markdown.link": "underline cyan",
+        "markdown.link_url": "underline cyan",
+        "markdown.table.header": "yellow",
+        "markdown.table.border": "white",
+    }
+)
 
 app = App(
     name="seedcase-flower",
@@ -46,7 +67,7 @@ app = App(
 @app.command()
 def build(
     source: str = "datapackage.json",
-    style: BuildStyle = BuildStyle.quarto_one_page,
+    style: Style = Style.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
@@ -84,6 +105,26 @@ def build(
         )  # Placeholder for unused args
 
 
-def view() -> str:
-    """Display the contents of a `datapackage.json` in a human-friendly way."""
-    return ""
+@app.command(config=[])
+def view(
+    source: str = "datapackage.json",
+    style: ViewStyle = ViewStyle.quarto_one_page,
+) -> None:
+    """Display the contents of a `datapackage.json` in a human-friendly way.
+
+    Args:
+        source: The location of a `datapackage.json`, defaults to a file or folder
+            path. Can also be an `https:` source to a remote `datapackage.json` or a
+            `github:` / `gh:` pointing to a repo with a `datapackage.json`
+            in the repo root (in the format `gh:org/repo`, which can also include
+            reference to a tag or branch, such as `gh:org/repo@main` or
+            `gh:org/repo@1.0.1`).
+        style: The style used to display the output in the terminal. Must be a
+            single-page style.
+    """
+    address: Address = _parse_source(source)
+    properties: dict[str, Any] = read_properties(address)
+    built_sections = build_sections(properties, Config(style=Style[style.name]))
+    console = Console(theme=_CONSOLE_THEME)
+    print()  # One line separation between the command and the datapackage title
+    console.print(Markdown(built_sections[0].content))

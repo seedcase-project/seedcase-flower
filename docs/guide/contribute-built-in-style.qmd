@@ -54,15 +54,15 @@ src/
             └── template_last.qmd.jinja
 ```
 
-Finally, add your style to the appropriate style enum (`BuildStyle` or
-`ViewStyle`) in `src/seedcase_flower/internals.py`. Styles used with the
-`build` command are defined in the `BuildStyle` enum, while styles used
-with `view` are defined in `ViewStyle`. For example, if the
-`your_new_style` is a style for `build`, you would include it like so:
+Finally, add your style to the appropriate style enum (`Style` or
+`ViewStyle`) in `src/seedcase_flower/styles.py`. All styles are
+defined in the `Style` enum, while styles suitable for terminal
+output with `view` are also added to `ViewStyle`. For example, if the
+`your_new_style` is a new style, you would include it like so:
 
-``` {.python filename="src/seedcase_flower/internals.py"}
-class BuildStyle(Enum):
-    """Built-in styles for outputting to file."""
+``` {.python filename="src/seedcase_flower/styles.py"}
+class Style(Enum):
+    """Built-in styles for generating documentation."""
 
     quarto_one_page = "quarto_one_page"
     quarto_resource_listing = "quarto_resource_listing"
