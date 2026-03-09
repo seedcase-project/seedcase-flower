@@ -8,13 +8,15 @@ import pytest
 from rich.console import Console
 from rich.markdown import Markdown
 
+from seedcase_flower.build_sections import (
+    BuiltSection,
+    _get_template_dir,
+    _load_sections,
+)
 from seedcase_flower.cli import _CONSOLE_THEME, app
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
     Address,
-    BuiltSection,
-    _get_template_dir,
-    _load_sections,
 )
 from seedcase_flower.styles import Style, ViewStyle
 
@@ -34,7 +36,7 @@ def mock_read_properties(mocker):
 @pytest.fixture
 def mock_build_sections(mocker):
     """Mock _build_sections to isolate CLI tests from template rendering."""
-    return mocker.patch("seedcase_flower.cli._build_sections")
+    return mocker.patch("seedcase_flower.cli.build_sections")
 
 
 @pytest.fixture
@@ -275,7 +277,7 @@ def test_view_with_mocked_internals(mocker):
     """view should parse source, build sections, and render via Console."""
     mock_parse_source = mocker.patch("seedcase_flower.cli._parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
-    mock_build_sections = mocker.patch("seedcase_flower.cli._build_sections")
+    mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
     mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
     mock_console = mock_console_cls.return_value
 

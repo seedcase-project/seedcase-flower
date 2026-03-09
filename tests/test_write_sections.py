@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pytest import raises
 
-from seedcase_flower.internals import BuiltSection
+from seedcase_flower.build_sections import BuiltSection
 from seedcase_flower.write_sections import write_sections
 
 
