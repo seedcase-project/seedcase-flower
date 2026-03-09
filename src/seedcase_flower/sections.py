@@ -12,8 +12,6 @@ from pydantic import (
     model_validator,
 )
 
-from seedcase_flower.internals import _filter
-
 
 def _check_path_relative(value: Path) -> Path:
     if value.is_absolute():
@@ -172,6 +170,16 @@ class ManyContent(str, Enum):
             self.fields: "{field-name}",
         }[self]
 
+    @property
+    def allowed_placeholders(self) -> list[list[str]]:
+        """The allowed placeholders in the output path for this content item."""
+        resource = ManyContent.resources.placeholder
+        field = ManyContent.fields.placeholder
+        return {
+            self.resources: [[resource]],
+            self.fields: [[resource], [field], [resource, field]],
+        }[self]
+
 
 class Many(KebabModel, frozen=True):
     """A section of the documentation that outputs to multiple files.
@@ -229,56 +237,48 @@ class Many(KebabModel, frozen=True):
         if not self.output_path:
             return self
 
-        posix_path = self.output_path.as_posix()
-        placeholders = re.findall(r"\{[^\}]*\}", posix_path)
+        extension = "".join(self.template_path.suffixes[:-1])
+        output_path = _normalise_output_path(self.output_path, self.content, extension)
 
-        if not placeholders:
-            if self.output_path.suffix:
-                raise ValueError(
-                    f"The output path '{self.output_path}' points to a file. "
-                    "Output paths without placeholders must point to a folder."
-                )
-
-            # Normalise output path to end in `{placeholder}.extension`
-            extension = "".join(self.template_path.suffixes[:-1])
-            object.__setattr__(
-                self,
-                "output_path",
-                self.output_path / (self.content.placeholder + extension),
-            )
-            return self
-
-        if _filter(
-            placeholders,
-            lambda placeholder: (
-                placeholder
-                not in {
-                    ManyContent.resources.placeholder,
-                    ManyContent.fields.placeholder,
-                }
-            ),
-        ):
-            raise ValueError(
-                f"The output path '{self.output_path}' contains unknown placeholders. "
-                f"The only placeholders allowed in file paths are "
-                f"{ManyContent.resources.placeholder!r} and "
-                f"{ManyContent.fields.placeholder!r}."
-            )
-
-        if (
-            self.content == ManyContent.resources
-            and ManyContent.fields.placeholder in posix_path
-        ):
-            raise ValueError(
-                f"The output path '{self.output_path}' contains a placeholder for a "
-                "field name. When displaying resources, you cannot use a field name "
-                "placeholder in the output path."
-            )
-
-        if not self.output_path.suffix:
-            raise ValueError(
-                f"The output path '{self.output_path}' does not have an extension. "
-                "Output paths with a placeholder must have an extension."
-            )
+        object.__setattr__(self, "output_path", output_path)
 
         return self
+
+
+def _normalise_output_path(
+    output_path: Path, content: ManyContent, template_extension: str
+) -> Path:
+    posix_path = output_path.as_posix()
+    placeholders = re.findall(r"\{[^\}]*\}", posix_path)
+    output_extension = output_path.suffix
+
+    if placeholders and placeholders not in content.allowed_placeholders:
+        # e.g. `resources/{not-resource-name}.qmd`
+        raise ValueError(
+            f"The output path '{output_path}' contains incorrect placeholders. "
+            "Check that you're using the correct placeholders for the content "
+            # TODO: Add link
+            "type in the correct order. See LINK for more details."
+        )
+
+    if output_extension and not placeholders:
+        # e.g. `resources/concrete-file.qmd`
+        raise ValueError(
+            f"The output path '{output_path}' points to a file. Output paths in "
+            "`many` sections must point to a folder or use a placeholder for "
+            "the filename."
+        )
+
+    if output_extension:
+        return output_path
+
+    if output_path.name == content.placeholder:
+        # e.g. `resources/{resource-name}`
+        raise ValueError(
+            f"The output path '{output_path}' points to a folder. "
+            "If you meant to point to a file using a placeholder for the "
+            "filename, you must include and extension after the placeholder."
+        )
+
+    # e.g. `resources/` -> `resources/{resource-name}.qmd`
+    return output_path / (content.placeholder + template_extension)
