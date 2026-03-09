@@ -84,6 +84,8 @@ quartodoc:
       - name: Config
       - name: Section
       - name: Content
+      - name: Style
+      - name: ViewStyle
 
 metadata-files:
   - docs/reference/_sidebar.yml

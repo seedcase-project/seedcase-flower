@@ -1,6 +1,7 @@
 ---
 title: "Using the CLI"
 description: "How to use Flower on the command-line."
+engine: jupyter
 order: 1
 ---
 
@@ -65,15 +66,13 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 If you would like to customize the style of how the metadata is
 displayed, you can use the `--style` flag. This option allows you to
 format the output with any of
-[the built-in styles](/docs/design/interface/outputs.html#built-in-styles):
-
-<!-- TODO: point link above to guide for styles, or ref docs, not design -->
+[the built-in styles](/docs/reference/ViewStyle.qmd):
 
 ```{.bash filename="Terminal"}
-seedcase-flower view --style terminal-simple gh:seedcase-project/example-seed-beetle
+seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
 ```
 
-<!--TODO potentially change this depending on the name of this style when implemented -->
+The `view` styles use the same one-page styles as `build` uses.
 
 ::: callout-important
 If you have set the `style` option in a configuration file read by
@@ -85,8 +84,20 @@ options passed to `view`. You can only configure `view` via command line
 flags.
 :::
 
-For more details about what you can do with `view`, see
-`seedcase-flower view --help`.
+For more details about what you can do with `view`, see:
+
+```{.bash filename="Terminal"}
+seedcase-flower view --help
+```
+
+::: {.callout-tip collapse="true" icon="false"}
+### Help output
+
+```{python}
+#| echo: false
+!uv run seedcase-flower view --help
+```
+:::
 
 ## Building documentation from Data Package metadata
 
@@ -134,8 +145,7 @@ This will generate `my-dir/index.qmd` instead of `docs/index.qmd`.
 Just like the `view` command, the `build` command accepts a `--style`
 option. This lets you choose how the metadata are organized according to
 one of the
-[built-in styles](/docs/design/interface/outputs.html#built-in-styles).
-<!-- TODO: point link above to guide for styles, or ref docs, not design -->
+[built-in styles](/docs/reference/Style.qmd).
 For example, to split the metadata for each resource in the Data Package
 into its own file, you can use the `quarto-resource-listing` style:
 
@@ -145,10 +155,9 @@ seedcase-flower build --style quarto-resource-listing
 
 ::: callout-important
 `view` and `build` support different styles, so a style that works with
-`view` may cause an error with `build` and vice versa.
-
-<!-- TODO: Add overview of this or link to an overview -->
-
+`view` may cause an error with `build` and vice versa. See the
+[output design documentation](/docs/design/interface/outputs.qmd) for an
+explanation on why.
 :::
 
 <!-- TODO: Add section about using `template-dir` option -->
