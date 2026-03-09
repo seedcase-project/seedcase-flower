@@ -1,11 +1,15 @@
 from pathlib import Path
+from typing import Any
 
 from pydantic import ValidationError
 from pytest import fixture, mark, raises
 
 from seedcase_flower.build_sections import BuiltSection, build_sections
 from seedcase_flower.config import Config
+from seedcase_flower.internals import _flat_map, _map
 from seedcase_flower.styles import BuildStyle
+
+# One section ====
 
 content = """
 [[one.contents]]
@@ -36,7 +40,7 @@ output-path = "section2.qmd"
 {content}
 """
 
-properties = {
+properties: dict[str, Any] = {
     "name": "example-datapackage",
     "resources": [
         {
@@ -199,3 +203,156 @@ def test_flags_bad_jsonpath_for_mode_one(tmp_path, _template):
 
     with raises(ValueError):
         build_sections(multi_resource_properties, config)
+
+
+# Many section ====
+
+many_section_resources = """
+[[many]]
+output-path = "resources/"
+content = "resources"
+template-path = "resource.qmd.jinja"
+jinja-variable = "resource"
+"""
+
+many_section_fields = """
+[[many]]
+output-path = "fields/"
+content = "fields"
+template-path = "field.qmd.jinja"
+jinja-variable = "field"
+"""
+
+many_section_both = f"""
+{many_section_resources}
+{many_section_fields}
+"""
+
+
+def _get_resource_sections(properties: dict[str, Any]) -> list[BuiltSection]:
+    return _map(
+        properties["resources"],
+        lambda resource: BuiltSection(
+            content=resource["name"],
+            output_path=Path(f"resources/{resource['name']}.qmd"),
+        ),
+    )
+
+
+def _get_field_sections(properties: dict[str, Any]) -> list[BuiltSection]:
+    return _map(
+        _flat_map(
+            properties["resources"], lambda resource: resource["schema"]["fields"]
+        ),
+        lambda field: BuiltSection(
+            content=field["name"], output_path=Path(f"fields/{field['name']}.qmd")
+        ),
+    )
+
+
+@mark.parametrize(
+    "sections_toml, get_expected_sections",
+    [
+        (many_section_resources, lambda props: _get_resource_sections(props)),
+        (many_section_fields, lambda props: _get_field_sections(props)),
+        (
+            many_section_both,
+            lambda props: _get_resource_sections(props) + _get_field_sections(props),
+        ),
+    ],
+)
+def test_builds_many_section(
+    sections_toml, get_expected_sections, tmp_path, datapackage
+):
+    (tmp_path / "sections.toml").write_text(sections_toml)
+    (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
+    (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
+    config = Config(template_dir=tmp_path)
+
+    built_sections = build_sections(datapackage, config)
+
+    assert built_sections == get_expected_sections(datapackage)
+
+
+def test_handles_no_fields_gracefully(tmp_path):
+    (tmp_path / "sections.toml").write_text(many_section_fields)
+    (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
+    (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
+    config = Config(template_dir=tmp_path)
+
+    built_sections = build_sections(properties, config)
+
+    assert built_sections == []
+
+
+@mark.parametrize(
+    ("output_path_in, output_path_out"),
+    [
+        ("resources/{resource-name}.qmd", "resources/example-resource.qmd"),
+        ("resources/my-{resource-name}.qmd", "resources/my-example-resource.qmd"),
+        ("resources/{resource-name}/index.qmd", "resources/example-resource/index.qmd"),
+        (
+            "resources/{resource-name}/folder",
+            "resources/example-resource/folder/example-resource.qmd",
+        ),
+    ],
+)
+def test_resolves_placeholder_for_resource_files(
+    tmp_path, output_path_in, output_path_out
+):
+    (tmp_path / "sections.toml").write_text(
+        many_section_resources.replace("resources/", output_path_in)
+    )
+    (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
+    config = Config(template_dir=tmp_path)
+
+    built_sections = build_sections(properties, config)
+
+    assert built_sections[0].output_path == Path(output_path_out)
+
+
+@mark.parametrize(
+    ("output_path_in, output_path_out"),
+    [
+        ("fields/", "fields/example-field.qmd"),
+        ("fields/{field-name}.qmd", "fields/example-field.qmd"),
+        (
+            "resources/{resource-name}/fields/",
+            "resources/example-resource/fields/example-field.qmd",
+        ),
+        (
+            "resources/{resource-name}/fields/{field-name}.qmd",
+            "resources/example-resource/fields/example-field.qmd",
+        ),
+        (
+            "resources/{resource-name}/{field-name}/index.qmd",
+            "resources/example-resource/example-field/index.qmd",
+        ),
+        (
+            "resources/{resource-name}/{field-name}/folder",
+            "resources/example-resource/example-field/folder/example-field.qmd",
+        ),
+    ],
+)
+def test_resolves_placeholder_for_field_files(
+    tmp_path, output_path_in, output_path_out
+):
+    (tmp_path / "sections.toml").write_text(
+        many_section_fields.replace("fields/", output_path_in)
+    )
+    (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
+    config = Config(template_dir=tmp_path)
+    one_field_properties = {
+        "name": "example-datapackage",
+        "resources": [
+            {
+                "name": "example-resource",
+                "path": "data/example-resource.csv",
+                "schema": {"fields": [{"name": "example-field", "type": "integer"}]},
+            }
+        ],
+    }
+
+    built_sections = build_sections(one_field_properties, config)
+
+    assert built_sections[0].output_path == Path(output_path_out)

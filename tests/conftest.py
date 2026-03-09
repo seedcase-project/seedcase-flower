@@ -24,7 +24,17 @@ def datapackage():
                         {"name": "name", "type": "string"},
                     ]
                 },
-            }
+            },
+            {
+                "name": "data2",
+                "path": "data2.csv",
+                "schema": {
+                    "fields": [
+                        {"name": "id", "type": "integer"},
+                        {"name": "age", "type": "integer"},
+                    ]
+                },
+            },
         ],
     }
 
