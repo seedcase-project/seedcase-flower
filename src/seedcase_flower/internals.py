@@ -57,15 +57,14 @@ def _convert_to_github(source: parse.SplitResult) -> Address:
     full_path = f"{source.netloc}{source.path}"
     if "@" in full_path:
         owner_repo, ref = full_path.rsplit("@", 1)
-        ref_path = f"refs/tags/{ref}"
     else:
         owner_repo = full_path
-        ref_path = "refs/heads/main"
+        ref = "main"
     return Address(
         value=source._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
-            path=f"/{owner_repo}/{ref_path}/datapackage.json",
+            path=f"/{owner_repo}/{ref}/datapackage.json",
         ).geturl(),
         local=False,
     )
