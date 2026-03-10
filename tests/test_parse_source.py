@@ -31,23 +31,23 @@ def test_parse_source_directory_path_is_local(tmp_path):
     assert result.local is True
 
 
-# parse_source: file:// scheme ====
+# parse_source: `file:` scheme ====
 
 
 def test_parse_source_file_scheme_is_local(tmp_path):
     """A file path should return a local Address."""
-    result = parse_source(f"file://{tmp_path / 'datapackage.json'}")
+    result = parse_source(f"file:{tmp_path / 'datapackage.json'}")
     assert result.local is True
 
 
 def test_parse_source_file_scheme_preserves_path(tmp_path):
     """A file path pointing to a file should preserve the path."""
     file = tmp_path / "datapackage.json"
-    result = parse_source(f"file://{file}")
+    result = parse_source(f"file:{file}")
     assert str(file) in result.value
 
 
-# parse_source: https:// scheme ====
+# parse_source: `https://` scheme ====
 
 
 def test_parse_source_https_is_not_local():
@@ -63,27 +63,27 @@ def test_parse_source_https_preserves_url():
     assert result.value == url
 
 
-# parse_source: gh:// / github:// scheme ====
+# parse_source: `gh:` and `github:` scheme ====
 
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_converts_to_raw_githubusercontent(scheme):
     """GitHub sources should be converted to a raw.githubusercontent.com URL."""
-    result = parse_source(f"{scheme}://owner/repo")
+    result = parse_source(f"{scheme}:owner/repo")
     assert result.value.startswith("https://raw.githubusercontent.com/")
 
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_is_not_local(scheme):
     """GitHub sources should return a non-local Address."""
-    result = parse_source(f"{scheme}://owner/repo")
+    result = parse_source(f"{scheme}:owner/repo")
     assert result.local is False
 
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_appends_datapackage_json(scheme):
     """GitHub sources should point to the datapackage.json on the main branch."""
-    result = parse_source(f"{scheme}://owner/repo")
+    result = parse_source(f"{scheme}:owner/repo")
     assert result.value.endswith("datapackage.json")
 
 
@@ -93,7 +93,7 @@ def test_parse_source_github_scheme_appends_datapackage_json(scheme):
 def test_parse_source_unsupported_scheme_raises_value_error():
     """An unsupported source scheme should raise a ValueError."""
     with pytest.raises(ValueError, match="source must be either"):
-        parse_source("ftp://example.com/datapackage.json")
+        parse_source("ftp:example.com/datapackage.json")
 
 
 def test_parse_source_returns_address_instance(tmp_path):
