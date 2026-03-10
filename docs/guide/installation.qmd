@@ -32,6 +32,19 @@ uv tool install "seedcase_flower @ git+https://github.com/seedcase-project/seedc
 You can now run Flower from any location on your computer by typing
 `seedcase-flower` in the Terminal.
 
+If you want to include shell auto-completions for Flower, you can
+install them by running:
+
+<!-- TODO: Confirm this installs it correctly after we officially publish -->
+
+```{.bash filename="Terminal"}
+seedcase-flower --install-completion
+```
+
+::: callout-note
+Completions only work for bash, fish, and zsh shells.
+:::
+
 ## Install in a Python project
 
 If you only want to use Flower in within Python projects rather than

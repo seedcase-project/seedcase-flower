@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import cast
 
-from seedcase_flower.internals import BuiltSection, _filter, _map
+from seedcase_flower.build_sections import BuiltSection
+from seedcase_flower.internals import _filter, _map
 
 
 def write_sections(built_sections: list[BuiltSection], output_dir: Path) -> list[Path]:
