@@ -1,5 +1,6 @@
 # Development files and folders
 _ignore
+_temp
 bin/
 dev/
 
