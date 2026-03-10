@@ -139,13 +139,16 @@ _HELP_PAGE = dedent(
     Flower generates human-readable documentation from Data Packages.
 
     ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
-    │ <build>    Build human-readable documentation from a datapackage.json file.            │
-    │ <view>     Display the contents of a datapackage.json in a human-friendly way.         │
-    │ --help     Display this message and exit.                                              │
-    │ --version  Display application version.                                                │
+    │ <build>               Build human-readable documentation from a datapackage.json file. │
+    │ <view>                Display the contents of a datapackage.json in a human-friendly   │
+    │                       way.                                                             │
+    │ --help                Display this message and exit.                                   │
+    │ --install-completion  Install shell completion for this application.                   │
+    │ --version             Display application version.                                     │
     ╰────────────────────────────────────────────────────────────────────────────────────────╯
     """  # noqa
 )
+
 
 _BUILD_HELP_PAGE = dedent(
     """\

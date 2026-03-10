@@ -61,6 +61,7 @@ app = App(
         ),
     ],
 )
+app.register_install_completion_command()
 
 
 @app.command()
