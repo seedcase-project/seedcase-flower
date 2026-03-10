@@ -7,7 +7,7 @@ from urllib import parse, request
 
 from check_datapackage import check
 
-from seedcase_flower.internals import Address
+from seedcase_flower.parse_source import Address
 
 
 def read_properties(address: Address) -> dict[str, Any]:

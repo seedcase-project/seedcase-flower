@@ -2256,7 +2256,7 @@ wheels = [
 
 [[package]]
 name = "seedcase-flower"
-version = "0.12.0"
+version = "0.12.2"
 source = { editable = "." }
 dependencies = [
     { name = "check-datapackage" },
