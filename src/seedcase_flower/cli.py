@@ -16,7 +16,7 @@ from seedcase_flower.internals import (
     _format_param_help,
     _map,
     _number,
-    _print,
+    _pretty_print,
 )
 from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
@@ -99,10 +99,12 @@ def build(
     )
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    _print(verbose, f"Read Data Package {properties['name']!r} from {address.value!r}.")
+    _pretty_print(
+        verbose, f"Read Data Package {properties['name']!r} from {address.value!r}."
+    )
 
     built_sections = build_sections(properties, config)
-    _print(
+    _pretty_print(
         verbose,
         (
             f"Created {_number('section', built_sections)} "
@@ -111,8 +113,10 @@ def build(
     )
 
     output_files: list[Path] = write_sections(built_sections, output_dir)
-    _print(verbose, f"Created {_number('file', output_files)} in '{output_dir}/':")
-    _print(verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'")))
+    _pretty_print(
+        verbose, f"Created {_number('file', output_files)} in '{output_dir}/':"
+    )
+    _pretty_print(verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'")))
 
 
 @app.command(config=[])

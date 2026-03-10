@@ -42,7 +42,7 @@ def _filter(x: Iterable[In], fn: Callable[[In], bool]) -> list[In]:
     return list(filter(fn, x))
 
 
-def _print(verbose: bool, message: str) -> None:
+def _pretty_print(verbose: bool, message: str) -> None:
     if verbose:
         rprint(message)
 
