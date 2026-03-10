@@ -58,8 +58,7 @@ def _convert_to_github(source: parse.SplitResult) -> Address:
     if "@" in full_path:
         owner_repo, ref = full_path.rsplit("@", 1)
     else:
-        owner_repo = full_path
-        ref = "main"
+        owner_repo, ref = full_path, "main"
     return Address(
         value=source._replace(
             scheme="https",
