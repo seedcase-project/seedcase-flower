@@ -87,21 +87,6 @@ def test_parse_source_github_scheme_appends_datapackage_json(scheme):
     assert result.value.endswith("datapackage.json")
 
 
-# parse_source: unsupported scheme ====
-
-
-def test_parse_source_unsupported_scheme_raises_value_error():
-    """An unsupported source scheme should raise a ValueError."""
-    with pytest.raises(ValueError, match="source must be either"):
-        parse_source("ftp://example.com/datapackage.json")
-
-
-def test_parse_source_returns_address_instance(tmp_path):
-    """parse_source should always return a address instance."""
-    result = parse_source(str(tmp_path / "datapackage.json"))
-    assert isinstance(result, Address)
-
-
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_uses_main_by_default(scheme):
     """GitHub sources without @ref should use main."""
@@ -127,3 +112,18 @@ def test_parse_source_github_scheme_with_branch(scheme):
     assert result.value == (
         "https://raw.githubusercontent.com/owner/repo/develop/datapackage.json"
     )
+
+
+# parse_source: unsupported scheme ====
+
+
+def test_parse_source_unsupported_scheme_raises_value_error():
+    """An unsupported source scheme should raise a ValueError."""
+    with pytest.raises(ValueError, match="source must be either"):
+        parse_source("ftp://example.com/datapackage.json")
+
+
+def test_parse_source_returns_address_instance(tmp_path):
+    """parse_source should always return a address instance."""
+    result = parse_source(str(tmp_path / "datapackage.json"))
+    assert isinstance(result, Address)
