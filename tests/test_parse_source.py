@@ -127,3 +127,27 @@ def test_parse_source_returns_address_instance(tmp_path):
     """parse_source should always return a address instance."""
     result = parse_source(str(tmp_path / "datapackage.json"))
     assert isinstance(result, Address)
+
+
+# parse_source: GitHub validation errors ====
+
+
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_source_github_missing_repo_raises_error(scheme):
+    """GitHub source without repo should raise ValueError."""
+    with pytest.raises(ValueError, match="must be in format"):
+        parse_source(f"{scheme}:owner")
+
+
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_source_github_missing_owner_raises_error(scheme):
+    """GitHub source without owner should raise ValueError."""
+    with pytest.raises(ValueError, match="must be in format"):
+        parse_source(f"{scheme}:/repo")
+
+
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_source_github_empty_ref_raises_error(scheme):
+    """GitHub source with empty @ref should raise ValueError."""
+    with pytest.raises(ValueError, match="ref after '@' cannot be empty"):
+        parse_source(f"{scheme}:owner/repo@")
