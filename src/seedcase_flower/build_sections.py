@@ -1,3 +1,5 @@
+"""Build sections from templates."""
+
 import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
