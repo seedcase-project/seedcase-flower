@@ -1,4 +1,4 @@
-"""Helper functions for private use."""
+"""Build sections from templates."""
 
 import tomllib
 from dataclasses import dataclass
