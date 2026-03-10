@@ -12,6 +12,7 @@ from cyclopts.help import HelpEntry
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jsonpath import findall
 from pydantic import BaseModel, Field
+from rich import print as rprint
 
 from seedcase_flower.config import Config
 from seedcase_flower.section import Content, Mode, Section
@@ -182,3 +183,13 @@ def _build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSec
         sections,
         lambda section: _build_section(section, properties, template_dir, env),
     )
+
+
+def _print(verbose: bool, message: str) -> None:
+    if verbose:
+        rprint(message)
+
+
+def _number(value: str, items: list[Any]) -> str:
+    suffix = "" if len(items) == 1 else "s"
+    return f"{len(items)} {value}{suffix}"
