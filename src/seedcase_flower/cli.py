@@ -10,9 +10,9 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.theme import Theme
 
+from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
-    _build_sections,
     _format_param_help,
     _map,
     _number,
@@ -64,6 +64,7 @@ app = App(
         ),
     ],
 )
+app.register_install_completion_command()
 
 
 @app.command()
@@ -100,7 +101,7 @@ def build(
     properties: dict[str, Any] = read_properties(address)
     _print(verbose, f"Read Data Package {properties['name']!r} from {address.value!r}.")
 
-    built_sections = _build_sections(properties, config)
+    built_sections = build_sections(properties, config)
     _print(
         verbose,
         (
@@ -133,7 +134,7 @@ def view(
     """
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    built_sections = _build_sections(properties, Config(style=Style[style.name]))
+    built_sections = build_sections(properties, Config(style=Style[style.name]))
     console = Console(theme=_CONSOLE_THEME)
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
