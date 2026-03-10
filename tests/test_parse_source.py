@@ -87,6 +87,33 @@ def test_parse_source_github_scheme_appends_datapackage_json(scheme):
     assert result.value.endswith("datapackage.json")
 
 
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_source_github_scheme_uses_main_by_default(scheme):
+    """GitHub sources without @ref should use main."""
+    result = parse_source(f"{scheme}:owner/repo")
+    assert result.value == (
+        "https://raw.githubusercontent.com/owner/repo/main/datapackage.json"
+    )
+
+
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_source_github_scheme_with_tag(scheme):
+    """GitHub sources with @tag should use the tag as the ref."""
+    result = parse_source(f"{scheme}:owner/repo@v1.0.0")
+    assert result.value == (
+        "https://raw.githubusercontent.com/owner/repo/v1.0.0/datapackage.json"
+    )
+
+
+@pytest.mark.parametrize("scheme", ["gh", "github"])
+def test_parse_source_github_scheme_with_branch(scheme):
+    """GitHub sources with @branch should use the branch as the ref."""
+    result = parse_source(f"{scheme}:owner/repo@develop")
+    assert result.value == (
+        "https://raw.githubusercontent.com/owner/repo/develop/datapackage.json"
+    )
+
+
 # parse_source: unsupported scheme ====
 
 

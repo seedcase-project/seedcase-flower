@@ -65,11 +65,16 @@ def _convert_to_https(source: parse.SplitResult) -> Address:
 
 
 def _convert_to_github(source: parse.SplitResult) -> Address:
+    full_path = f"{source.netloc}{source.path}"
+    if "@" in full_path:
+        owner_repo, ref = full_path.rsplit("@", 1)
+    else:
+        owner_repo, ref = full_path, "main"
     return Address(
         value=source._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
-            path=f"/{source.path}/refs/heads/main/datapackage.json",
+            path=f"/{owner_repo}/{ref}/datapackage.json",
         ).geturl(),
         local=False,
     )
