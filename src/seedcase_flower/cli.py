@@ -13,10 +13,9 @@ from rich.theme import Theme
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
-    Address,
     _format_param_help,
-    _parse_source,
 )
+from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
@@ -94,7 +93,7 @@ def build(
         template_dir=template_dir,
         output_dir=output_dir,
     )
-    address: Address = _parse_source(source)
+    address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     built_sections = build_sections(properties, config)
     output_files: list[Path] = write_sections(built_sections, output_dir)  # noqa: F841
@@ -122,7 +121,7 @@ def view(
         style: The style used to display the output in the terminal. Must be a
             single-page style.
     """
-    address: Address = _parse_source(source)
+    address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     built_sections = build_sections(properties, Config(style=Style[style.name]))
     console = Console(theme=_CONSOLE_THEME)
