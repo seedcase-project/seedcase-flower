@@ -72,7 +72,7 @@ format the output with any of
 seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
 ```
 
-The `view` styles use the same one-page styles as `build` uses.
+The `view` command can use any of [built-in styles](/docs/reference/Style.qmd) that includes all output on a single page. It is not compatible with multi-page styles.
 
 ::: callout-important
 If you have set the `style` option in a configuration file read by
