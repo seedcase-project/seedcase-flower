@@ -1,7 +1,6 @@
 ---
 title: "Using the CLI"
 description: "How to use Flower on the command-line."
-engine: jupyter
 order: 1
 ---
 
@@ -20,6 +19,11 @@ same as invoking the `--help` flag and will show the following text:
 
 ```{.bash filename="Terminal"}
 seedcase-flower
+```
+
+```{python}
+#| echo: false
+!uv run seedcase-flower
 ```
 
 ## Viewing Data Package metadata
@@ -41,7 +45,8 @@ We show this so you have an idea of what it will look like.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower view ../includes/datapackage.json
+# Needs root of Quarto project for path.
+!uv run seedcase-flower view docs/includes/datapackage.json
 ```
 :::
 
@@ -86,8 +91,6 @@ shortened to the following:
 seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
 
-<!-- TODO: Unhide and execute when this is implemented -->
-::: content-hidden
 ::: {.callout-tip collapse="true" icon="false"}
 ### Example of output
 
@@ -97,10 +100,8 @@ show this so you have an idea of what it will look like.
 
 ```{python}
 #| echo: false
-#| eval: false
-!uv run seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
+!uv run seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
-:::
 :::
 
 ### Styling the output
@@ -153,7 +154,7 @@ output directory to be `_temp/` (for website build purposes).
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build ../includes/datapackage.json --output-dir _temp/ --verbose
+!uv run seedcase-flower build docs/includes/datapackage.json --output-dir _temp/
 ```
 :::
 
@@ -210,7 +211,7 @@ output directory to be `_temp/` (for website build purposes).
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build ../includes/datapackage.json --output-dir _temp/ --verbose --style quarto-one-page
+!uv run seedcase-flower build docs/includes/datapackage.json --output-dir _temp/ --style quarto-one-page
 ```
 :::
 
