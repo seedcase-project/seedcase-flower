@@ -71,7 +71,7 @@ def _convert_to_github(source: parse.SplitResult) -> Address:
     else:
         owner_repo, ref = full_path, "main"
 
-    _validate_github_source(owner_repo, ref, full_path)
+    _check_github_source(owner_repo, ref, full_path)
 
     return Address(
         value=source._replace(
@@ -83,7 +83,7 @@ def _convert_to_github(source: parse.SplitResult) -> Address:
     )
 
 
-def _validate_github_source(owner_repo: str, ref: str, original: str) -> None:
+def _check_github_source(owner_repo: str, ref: str, original: str) -> None:
     parts = owner_repo.split("/")
     if len(parts) != 2 or not all(parts):
         raise ValueError(
