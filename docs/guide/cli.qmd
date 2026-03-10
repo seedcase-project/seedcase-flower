@@ -21,6 +21,11 @@ same as invoking the `--help` flag and will show the following text:
 seedcase-flower
 ```
 
+```{python}
+#| echo: false
+!uv run seedcase-flower
+```
+
 ## Viewing Data Package metadata
 
 To view the metadata of a Data Package directly in the terminal, you can
@@ -29,6 +34,21 @@ use the `view` command like so:
 ```{.bash filename="Terminal"}
 seedcase-flower view
 ```
+
+::: {.callout-tip collapse="true" icon="false"}
+### Example of output
+
+This is what the above code chunk will output, assuming there is a file
+called `datapackage.json` in the working directory. Since it is designed
+for the terminal, it doesn't look so nice when rendered on the website.
+We show this so you have an idea of what it will look like.
+
+```{python}
+#| echo: false
+# Needs root of Quarto project for path.
+!uv run seedcase-flower view docs/includes/datapackage.json
+```
+:::
 
 The `view` command displays the metadata in an easy to read format that
 is optimized for display directly in the Terminal.
@@ -50,6 +70,19 @@ online. To do this, you can provide the full URL to the remote
 seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
 ```
 
+::: {.callout-tip collapse="true" icon="false"}
+### Example of output
+
+This is what the above code chunk will output. Since it is designed for
+the terminal, it doesn't look so nice when rendered on the website. We
+show this so you have an idea of what it will look like.
+
+```{python}
+#| echo: false
+!uv run seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
+```
+:::
+
 For Data Packages on GitHub (like for the URL used above), you can use
 the `gh:` prefix as a shortcut. For example, the long URL above can be
 shortened to the following:
@@ -58,7 +91,18 @@ shortened to the following:
 seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
 
-<!--TODO should we include output for all of these commands? collapsed by default -->
+::: {.callout-tip collapse="true" icon="false"}
+### Example of output
+
+This is what the above code chunk will output. Since it is designed for
+the terminal, it doesn't look so nice when rendered on the website. We
+show this so you have an idea of what it will look like.
+
+```{python}
+#| echo: false
+!uv run seedcase-flower view gh:seedcase-project/example-seed-beetle
+```
+:::
 
 ### Styling the output
 
@@ -101,6 +145,19 @@ set of files with the `build` command:
 seedcase-flower build
 ```
 
+::: {.callout-tip collapse="true" icon="false"}
+### Example of output
+
+This is what the above code chunk will output, assuming there is a file
+called `datapackage.json` in the working directory and changing the
+output directory to be `_temp/` (for website build purposes).
+
+```{python}
+#| echo: false
+!uv run seedcase-flower build docs/includes/datapackage.json --output-dir _temp/
+```
+:::
+
 This command generates one new file: `docs/index.qmd`. The `qmd`
 extension means that this file is a
 [Quarto](https://quarto.org/)-flavored Markdown file. While this is the
@@ -142,6 +199,21 @@ into its own file, you can use the `quarto-resource-listing` style:
 ```{.bash filename="Terminal"}
 seedcase-flower build --style quarto-resource-listing
 ```
+
+<!-- TODO: Update this after another style is added. -->
+
+::: {.callout-tip collapse="true" icon="false"}
+### Example of output
+
+This is what the above code chunk will output, assuming there is a file
+called `datapackage.json` in the working directory and changing the
+output directory to be `_temp/` (for website build purposes).
+
+```{python}
+#| echo: false
+!uv run seedcase-flower build docs/includes/datapackage.json --output-dir _temp/ --style quarto-one-page
+```
+:::
 
 ::: callout-important
 `view` and `build` support different styles, so a style that works with
