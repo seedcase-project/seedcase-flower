@@ -127,12 +127,12 @@ Depending on the source given, there are different behaviours:
   `http://` for security reasons.
 - `gh:` or `github:` sources must be in the format `gh:OWNER/REPO` or
   `github:OWNER/REPO`. It's possible to add `@REF` to the end to specify
-  a git ref, which can be a branch name, tag, or commit hash. `build`
+  a Git ref, which can be a branch name, tag, or commit hash. `build`
   will parse this source to the raw `https:` of the `datapackage.json`
   file in the repository, assuming the `datapackage.json` file is in the
   root of the repository. For example:
   - `gh:seedcase-project/seedcase-flower` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/main/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/main/datapackage.json`.
   - `github:seedcase-project/seedcase-flower@0.1.0` will parse to
     `https://raw.githubusercontent.com/seedcase-project/seedcase-flower/0.1.0/datapackage.json`.
   - `gh:seedcase-project/seedcase-flower@develop` will parse to
