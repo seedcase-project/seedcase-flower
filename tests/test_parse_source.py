@@ -104,21 +104,21 @@ def test_parse_source_returns_address_instance(tmp_path):
 def test_parse_source_github_scheme_uses_main_by_default(scheme):
     """GitHub sources without @ref should use main."""
     result = _parse_source(f"{scheme}://owner/repo")
-    assert "/owner/repo/main/datapackage.json" in result.value
+    assert result.value.endswith("/owner/repo/main/datapackage.json")
 
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_with_tag(scheme):
     """GitHub sources with @tag should use the tag as the ref."""
     result = _parse_source(f"{scheme}://owner/repo@v1.0.0")
-    assert "/owner/repo/v1.0.0/datapackage.json" in result.value
+    assert result.value.endswith("/owner/repo/v1.0.0/datapackage.json")
 
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
 def test_parse_source_github_scheme_with_branch(scheme):
     """GitHub sources with @branch should use the branch as the ref."""
     result = _parse_source(f"{scheme}://owner/repo@develop")
-    assert "/owner/repo/develop/datapackage.json" in result.value
+    assert result.value.endswith("/owner/repo/develop/datapackage.json")
 
 
 @pytest.mark.parametrize("scheme", ["gh", "github"])
