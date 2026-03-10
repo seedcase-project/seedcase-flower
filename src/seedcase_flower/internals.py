@@ -1,6 +1,5 @@
 """Helper functions for internal use."""
 
-from dataclasses import dataclass
 from itertools import repeat
 from typing import Callable, Iterable, Optional, TypeVar
 
