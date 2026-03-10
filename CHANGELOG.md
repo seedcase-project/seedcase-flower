@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.12.2 (2026-03-10)
+
+### Refactor
+
+- :recycle: add callout note to not edit output files (#189)
+
 ## 0.12.1 (2026-03-10)
 
 ### Refactor
