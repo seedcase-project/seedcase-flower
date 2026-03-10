@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 from itertools import repeat
-from pathlib import Path
 from typing import Callable, Iterable, Optional, TypeVar
 
 from cyclopts.annotations import get_hint_name
