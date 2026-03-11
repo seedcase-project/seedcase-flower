@@ -10,7 +10,6 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.theme import Theme
 
-from seedcase_flower import errors
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (

@@ -13,6 +13,7 @@ class FileLoadError(FlowerError):
     """Error when a file cannot be loaded (local or remote)."""
 
     def __init__(self, path: str | Path, reason: str = "") -> None:
+        """Initialize FileLoadError with path and optional reason."""
         message = f"Could not load '{path}'."
         if reason:
             message += f" {reason}"
