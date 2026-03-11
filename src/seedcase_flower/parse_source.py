@@ -65,11 +65,34 @@ def _convert_to_https(source: parse.SplitResult) -> Address:
 
 
 def _convert_to_github(source: parse.SplitResult) -> Address:
+    full_path = f"{source.netloc}{source.path}"
+    if "@" in full_path:
+        owner_repo, ref = full_path.rsplit("@", 1)
+    else:
+        owner_repo, ref = full_path, "main"
+
+    _check_github_source(owner_repo, ref, full_path)
+
     return Address(
         value=source._replace(
             scheme="https",
             netloc="raw.githubusercontent.com",
-            path=f"/{source.path}/refs/heads/main/datapackage.json",
+            path=f"/{owner_repo}/{ref}/datapackage.json",
         ).geturl(),
         local=False,
     )
+
+
+def _check_github_source(owner_repo: str, ref: str, original: str) -> None:
+    parts = owner_repo.split("/")
+    if len(parts) != 2 or not all(parts):
+        raise ValueError(
+            f"Invalid GitHub source '{original}': must be in format "
+            "'gh:owner/repo', 'github:owner/repo', or with an optional "
+            "'@ref' (e.g., 'gh:owner/repo@v1.0.0')."
+        )
+
+    if not ref:
+        raise ValueError(
+            f"Invalid GitHub source '{original}': ref after '@' cannot be empty."
+        )

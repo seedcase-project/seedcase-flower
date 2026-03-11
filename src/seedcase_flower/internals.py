@@ -1,10 +1,11 @@
 """Helper functions for internal use."""
 
 from itertools import chain, repeat
-from typing import Callable, Iterable, Optional, TypeVar
+from typing import Any, Callable, Iterable, Optional, TypeVar
 
 from cyclopts.annotations import get_hint_name
 from cyclopts.help import HelpEntry
+from rich import print as rprint
 
 
 def _format_param_help(entry: HelpEntry) -> str:
@@ -44,3 +45,13 @@ def _filter(x: Iterable[In], fn: Callable[[In], bool]) -> list[In]:
 def _flat_map(items: Iterable[In], fn: Callable[[In], Iterable[Out]]) -> list[Out]:
     """Maps and flattens the items by one level."""
     return list(chain.from_iterable(map(fn, items)))
+
+
+def _pretty_print(verbose: bool, message: str) -> None:
+    if verbose:
+        rprint(message)
+
+
+def _number(value: str, items: list[Any]) -> str:
+    suffix = "" if len(items) == 1 else "s"
+    return f"{len(items)} {value}{suffix}"

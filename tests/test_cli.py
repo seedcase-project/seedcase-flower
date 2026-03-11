@@ -69,18 +69,27 @@ def test_build_with_mocked_internals(
 # Checking stdout ====
 
 
-# TODO: Update this when verbose is added.
 def test_build_verbose_prints_output(
     capsys, datapackage_path, datapackage, tmp_path, monkeypatch
 ):
-    """--verbose should print output_dir, properties, template_dir, and style."""
+    """--verbose should print package name, package path, style, output dir, and created
+    file paths."""
     monkeypatch.chdir(tmp_path)
     app(
         ["build", datapackage_path, "--verbose"],
         result_action="return_value",
     )
-    expected = f"docs {datapackage} None Style.quarto_one_page\n"
-    assert capsys.readouterr().out == expected
+
+    out = capsys.readouterr().out.replace("\n", "")  # To not break long path
+
+    for content in [
+        datapackage["name"],
+        datapackage_path,
+        Style.quarto_one_page.name,
+        "docs/",
+        "docs/index.qmd",
+    ]:
+        assert content in out, f"Expected {content!r} to be a substring in {out!r}."
 
 
 def test_build_no_verbose_produces_no_output(
