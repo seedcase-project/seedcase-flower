@@ -1,33 +1,18 @@
 """Custom exception handling for seedcase-flower."""
 
 import sys
-from types import TracebackType
-from typing import Any
 from urllib.error import HTTPError, URLError
 
-from check_datapackage.check import DataPackageError
-from rich import print as rprint
+from check_datapackage import (
+    DataPackageError,
+    create_no_traceback_hook,
+    create_no_traceback_ipython_handler,
+)
 
 
-def _pretty_print_exception(
-    exc_type: type[BaseException],
-    exc_value: BaseException,
-) -> None:
-    rprint(f"\n[red]{exc_type.__name__}[/red]: {exc_value}")
-
-
-def no_traceback_hook(
-    exc_type: type[BaseException],
-    exc_value: BaseException,
-    exc_traceback: TracebackType | None,
-) -> None:
-    if issubclass(exc_type, (DataPackageError, FileNotFoundError, HTTPError, URLError)):
-        _pretty_print_exception(exc_type, exc_value)
-    else:
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-
-
-sys.excepthook = no_traceback_hook
+sys.excepthook = create_no_traceback_hook(
+    DataPackageError, FileNotFoundError, HTTPError, URLError
+)
 
 
 def _is_running_from_ipython() -> bool:
@@ -41,22 +26,9 @@ def _is_running_from_ipython() -> bool:
 
 
 if _is_running_from_ipython():
-
-    def no_traceback_in_ipython(
-        self: Any,
-        exc_type: type[BaseException],
-        exc_value: BaseException,
-        exc_traceback: TracebackType | None,
-        tb_offset: None = None,
-    ) -> None:
-        """Hide tracebacks and correctly display rich markup in IPython."""
-        if issubclass(
-            exc_type, (DataPackageError, FileNotFoundError, HTTPError, URLError)
-        ):
-            _pretty_print_exception(exc_type, exc_value)
-        else:
-            self.showtraceback(
-                (exc_type, exc_value, exc_traceback), tb_offset=tb_offset
-            )
-
-    get_ipython().set_custom_exc((Exception,), no_traceback_in_ipython)
+    get_ipython().set_custom_exc(  # type: ignore[misc]
+        (Exception,),
+        create_no_traceback_ipython_handler(
+            DataPackageError, FileNotFoundError, HTTPError, URLError
+        ),
+    )
