@@ -3,7 +3,7 @@
 import json
 from email.message import Message
 from pathlib import Path
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import pytest
 from check_datapackage.check import DataPackageError
@@ -44,21 +44,30 @@ def test_read_properties_raises_on_invalid_datapackage(tmp_path):
 
 
 def test_read_properties_raises_on_file_not_found():
-    """A non-existent file should raise FileLoadError."""
+    """A non-existent file should raise FileLoadError with clear message."""
     address = Address(value="file:///nonexistent/path/datapackage.json", local=True)
 
-    with pytest.raises(FileLoadError, match="does not exist"):
+    error_pattern = (
+        r"^Could not load '/nonexistent/path/datapackage\.json'\. "
+        r"File does not exist$"
+    )
+    with pytest.raises(FileLoadError, match=error_pattern):
         read_properties(address)
 
 
 def test_read_properties_raises_on_malformed_json(tmp_path):
-    """A file with malformed JSON should raise FileLoadError."""
+    """A file with malformed JSON should raise FileLoadError with location details."""
     json_file = tmp_path / "datapackage.json"
     json_file.write_text("{ invalid json }")
 
     address = Address(value=str(json_file), local=True)
 
-    with pytest.raises(FileLoadError, match="invalid JSON"):
+    error_pattern = (
+        r"^Could not load '.+\.json'\. Invalid JSON format: "
+        r"Expecting property name enclosed in double quotes: "
+        r"line 1 column 3 \(char 2\)$"
+    )
+    with pytest.raises(FileLoadError, match=error_pattern):
         read_properties(address)
 
 
@@ -81,20 +90,25 @@ def test_read_properties_remote_url(mocker, datapackage):
 
 @pytest.mark.usefixtures("mocker")
 def test_read_properties_raises_on_remote_invalid_json(mocker):
-    """A remote URL returning invalid JSON should raise FileLoadError."""
+    """Remote URL returning invalid JSON should raise FileLoadError with details."""
     mock_urlopen = mocker.patch("seedcase_flower.read_properties.request.urlopen")
     mock_response = mock_urlopen.return_value.__enter__.return_value
     mock_response.read.return_value = b"{ invalid json }"
 
     address = Address(value="https://example.com/datapackage.json", local=False)
 
-    with pytest.raises(FileLoadError, match="invalid JSON"):
+    error_pattern = (
+        r"^Could not load 'https://example\.com/datapackage\.json'\. "
+        r"Invalid JSON format: Expecting property name enclosed in double quotes: "
+        r"line 1 column 3 \(char 2\)$"
+    )
+    with pytest.raises(FileLoadError, match=error_pattern):
         read_properties(address)
 
 
 @pytest.mark.usefixtures("mocker")
 def test_read_properties_raises_on_remote_404(mocker):
-    """A remote URL returning 404 should raise FileLoadError."""
+    """A remote URL returning 404 should raise FileLoadError with HTTP error."""
     mocker.patch(
         "seedcase_flower.read_properties.request.urlopen",
         side_effect=HTTPError(
@@ -104,5 +118,29 @@ def test_read_properties_raises_on_remote_404(mocker):
 
     address = Address(value="https://example.com/datapackage.json", local=False)
 
-    with pytest.raises(FileLoadError, match="Not Found"):
+    error_pattern = (
+        r"^Could not load 'https://example\.com/datapackage\.json'\. "
+        r"HTTP Error 404: Not Found$"
+    )
+    with pytest.raises(FileLoadError, match=error_pattern):
+        read_properties(address)
+
+
+@pytest.mark.usefixtures("mocker")
+def test_read_properties_raises_on_remote_dns_failure(mocker):
+    """Remote URL with invalid domain should raise FileLoadError."""
+    mocker.patch(
+        "seedcase_flower.read_properties.request.urlopen",
+        side_effect=URLError(reason=Exception("[Errno -2] Name or service not known")),
+    )
+
+    address = Address(
+        value="https://nonexistent-domain-12345.com/datapackage.json", local=False
+    )
+
+    error_pattern = (
+        r"^Could not load 'https://nonexistent-domain-12345\.com/datapackage\.json'\. "
+        r"Unable to connect to server \(domain not found\)$"
+    )
+    with pytest.raises(FileLoadError, match=error_pattern):
         read_properties(address)
