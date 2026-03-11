@@ -4,11 +4,9 @@ import json
 from pathlib import Path
 from typing import Any
 from urllib import parse, request
-from urllib.error import HTTPError, URLError
 
 from check_datapackage import check
 
-from seedcase_flower.errors import FileNotFound
 from seedcase_flower.parse_source import Address
 
 
@@ -17,16 +15,10 @@ def read_properties(address: Address) -> dict[str, Any]:
     datapackage: dict[str, Any]
     if address.local:
         path = Path(parse.urlsplit(address.value).path)
-        try:
-            with open(path) as properties_file:
-                datapackage = json.load(properties_file)
-        except FileNotFoundError:
-            raise FileNotFound(path) from None
+        with open(path) as properties_file:
+            datapackage = json.load(properties_file)
     else:
-        try:
-            with request.urlopen(address.value) as open_url:  # nosec B310
-                datapackage = json.load(open_url)
-        except (HTTPError, URLError):
-            raise FileNotFound(address.value) from None
+        with request.urlopen(address.value) as open_url:  # nosec B310
+            datapackage = json.load(open_url)
     check(datapackage, error=True)
     return datapackage

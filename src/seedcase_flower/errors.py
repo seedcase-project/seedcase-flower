@@ -1,13 +1,12 @@
 """Custom exception handling for seedcase-flower."""
 
 import sys
-from pathlib import Path
 from types import TracebackType
 from typing import Any
+from urllib.error import HTTPError, URLError
 
+from check_datapackage.check import DataPackageError
 from rich import print as rprint
-
-from check_datapackage import check
 
 
 def _pretty_print_exception(
@@ -22,7 +21,7 @@ def no_traceback_hook(
     exc_value: BaseException,
     exc_traceback: TracebackType | None,
 ) -> None:
-    if issubclass(exc_type, FlowerError):
+    if issubclass(exc_type, (DataPackageError, FileNotFoundError, HTTPError, URLError)):
         _pretty_print_exception(exc_type, exc_value)
     else:
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
@@ -51,7 +50,9 @@ if _is_running_from_ipython():
         tb_offset: None = None,
     ) -> None:
         """Hide tracebacks and correctly display rich markup in IPython."""
-        if issubclass(exc_type, FlowerError):
+        if issubclass(
+            exc_type, (DataPackageError, FileNotFoundError, HTTPError, URLError)
+        ):
             _pretty_print_exception(exc_type, exc_value)
         else:
             self.showtraceback(
@@ -59,14 +60,3 @@ if _is_running_from_ipython():
             )
 
     get_ipython().set_custom_exc((Exception,), no_traceback_in_ipython)
-
-
-class FlowerError(Exception):
-    """Base exception for seedcase-flower errors that hides traceback."""
-
-
-class FileNotFound(FlowerError):
-    """Error when a file is not found."""
-
-    def __init__(self, path: Path | str) -> None:
-        super().__init__(f"The file '{path}' does not exist.")

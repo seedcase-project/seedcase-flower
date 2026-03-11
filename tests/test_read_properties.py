@@ -43,12 +43,10 @@ def test_read_properties_raises_on_invalid_datapackage(tmp_path):
 
 
 def test_read_properties_raises_on_file_not_found():
-    """A non-existent file should raise FileNotFound."""
+    """A non-existent file should raise FileNotFoundError."""
     address = Address(value="file:///nonexistent/path/datapackage.json", local=True)
 
-    from seedcase_flower.errors import FileNotFound
-
-    with pytest.raises(FileNotFound):
+    with pytest.raises(FileNotFoundError):
         read_properties(address)
 
 
@@ -95,7 +93,7 @@ def test_read_properties_raises_on_remote_invalid_json(mocker):
 
 @pytest.mark.usefixtures("mocker")
 def test_read_properties_raises_on_remote_404(mocker):
-    """A remote URL returning 404 should raise FileNotFound."""
+    """A remote URL returning 404 should raise HTTPError."""
     mocker.patch(
         "seedcase_flower.read_properties.request.urlopen",
         side_effect=HTTPError(
@@ -105,7 +103,5 @@ def test_read_properties_raises_on_remote_404(mocker):
 
     address = Address(value="https://example.com/datapackage.json", local=False)
 
-    from seedcase_flower.errors import FileNotFound
-
-    with pytest.raises(FileNotFound):
+    with pytest.raises(HTTPError):
         read_properties(address)
