@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from check_datapackage import DataPackageError, setup_suppressed_tracebacks
+from check_datapackage import setup_suppressed_tracebacks
 
 
 class FlowerError(Exception):
@@ -20,5 +20,6 @@ class FileLoadError(FlowerError):
         super().__init__(message)
 
 
-# Set up traceback suppression for both flower and datapackage errors
-setup_suppressed_tracebacks(FlowerError, DataPackageError)
+# Set up traceback suppression for flower errors
+# (DataPackageError is already registered by check-datapackage)
+setup_suppressed_tracebacks(FlowerError)
