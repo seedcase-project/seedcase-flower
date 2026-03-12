@@ -11,7 +11,7 @@ from rich.markdown import Markdown
 from seedcase_flower.build_sections import (
     BuiltSection,
     _get_template_dir,
-    _load_sections,
+    _load_sections_toml,
 )
 from seedcase_flower.cli import _CONSOLE_THEME, app
 from seedcase_flower.config import Config
@@ -33,7 +33,7 @@ def mock_read_properties(mocker):
 
 @pytest.fixture
 def mock_build_sections(mocker):
-    """Mock _build_sections to isolate CLI tests from template rendering."""
+    """Mock build_sections to isolate CLI tests from template rendering."""
     return mocker.patch("seedcase_flower.cli.build_sections")
 
 
@@ -276,10 +276,14 @@ def test_view_styles_are_one_page():
     """Every ViewStyle member must map to a single-section (one-page) style."""
     for member in ViewStyle:
         style = Style[member.name]
-        sections = _load_sections(_get_template_dir(style))
-        assert len(sections) == 1, (
-            f"ViewStyle.{member.name} has {len(sections)} sections, "
-            "but view styles must be single-page (exactly 1 section)."
+        sections = _load_sections_toml(_get_template_dir(style))
+        assert not sections.many_sections, (
+            f"ViewStyle.{member.name} includes `Many` sections, "
+            "but view styles must be single-page (exactly 1 `One` section)."
+        )
+        assert len(sections.one_sections) == 1, (
+            f"ViewStyle.{member.name} has {len(sections.one_sections)} sections, "
+            "but view styles must be single-page (exactly 1 `One` section)."
         )
 
 

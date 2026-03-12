@@ -82,7 +82,8 @@ quartodoc:
       desc: Classes to configure the behaviour of Flower.
       contents:
       - name: Config
-      - name: Section
+      - name: One
+      - name: Many
       - name: Content
       - name: Style
       - name: ViewStyle
