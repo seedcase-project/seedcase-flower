@@ -5,11 +5,7 @@ from pathlib import Path
 from check_datapackage import setup_suppressed_tracebacks
 
 
-class FlowerError(Exception):
-    """Base exception for seedcase-flower errors."""
-
-
-class FileLoadError(FlowerError):
+class FileLoadError(Exception):
     """Error when a file cannot be loaded (local or remote)."""
 
     def __init__(self, path: str | Path, reason: str = "") -> None:
@@ -20,6 +16,5 @@ class FileLoadError(FlowerError):
         super().__init__(message)
 
 
-# Set up traceback suppression for flower errors
-# (DataPackageError is already registered by check-datapackage)
-setup_suppressed_tracebacks(FlowerError)
+# Set up traceback suppression for FileLoadErrors
+setup_suppressed_tracebacks(FileLoadError)
