@@ -8,21 +8,21 @@ import pytest
 from rich.console import Console
 from rich.markdown import Markdown
 
-from seedcase_flower.cli import _CONSOLE_THEME, app
-from seedcase_flower.config import Config
-from seedcase_flower.internals import (
-    Address,
+from seedcase_flower.build_sections import (
     BuiltSection,
     _get_template_dir,
-    _load_sections,
+    _load_sections_toml,
 )
+from seedcase_flower.cli import _CONSOLE_THEME, app
+from seedcase_flower.config import Config
+from seedcase_flower.parse_source import Address
 from seedcase_flower.styles import Style, ViewStyle
 
 
 @pytest.fixture
 def mock_parse_source(mocker):
     """Mock _parse_source to isolate CLI tests from filesystem resolution."""
-    return mocker.patch("seedcase_flower.cli._parse_source")
+    return mocker.patch("seedcase_flower.cli.parse_source")
 
 
 @pytest.fixture
@@ -33,8 +33,8 @@ def mock_read_properties(mocker):
 
 @pytest.fixture
 def mock_build_sections(mocker):
-    """Mock _build_sections to isolate CLI tests from template rendering."""
-    return mocker.patch("seedcase_flower.cli._build_sections")
+    """Mock build_sections to isolate CLI tests from template rendering."""
+    return mocker.patch("seedcase_flower.cli.build_sections")
 
 
 @pytest.fixture
@@ -69,18 +69,27 @@ def test_build_with_mocked_internals(
 # Checking stdout ====
 
 
-# TODO: Update this when verbose is added.
 def test_build_verbose_prints_output(
     capsys, datapackage_path, datapackage, tmp_path, monkeypatch
 ):
-    """--verbose should print output_dir, properties, template_dir, and style."""
+    """--verbose should print package name, package path, style, output dir, and created
+    file paths."""
     monkeypatch.chdir(tmp_path)
     app(
         ["build", datapackage_path, "--verbose"],
         result_action="return_value",
     )
-    expected = f"docs {datapackage} None Style.quarto_one_page\n"
-    assert capsys.readouterr().out == expected
+
+    out = capsys.readouterr().out.replace("\n", "")  # To not break long path
+
+    for content in [
+        datapackage["name"],
+        datapackage_path,
+        Style.quarto_one_page.name,
+        "docs/",
+        "docs/index.qmd",
+    ]:
+        assert content in out, f"Expected {content!r} to be a substring in {out!r}."
 
 
 def test_build_no_verbose_produces_no_output(
@@ -139,13 +148,16 @@ _HELP_PAGE = dedent(
     Flower generates human-readable documentation from Data Packages.
 
     ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
-    │ <build>    Build human-readable documentation from a datapackage.json file.            │
-    │ <view>     Display the contents of a datapackage.json in a human-friendly way.         │
-    │ --help     Display this message and exit.                                              │
-    │ --version  Display application version.                                                │
+    │ <build>               Build human-readable documentation from a datapackage.json file. │
+    │ <view>                Display the contents of a datapackage.json in a human-friendly   │
+    │                       way.                                                             │
+    │ --help                Display this message and exit.                                   │
+    │ --install-completion  Install shell completion for this application.                   │
+    │ --version             Display application version.                                     │
     ╰────────────────────────────────────────────────────────────────────────────────────────╯
     """  # noqa
 )
+
 
 _BUILD_HELP_PAGE = dedent(
     """\
@@ -264,18 +276,22 @@ def test_view_styles_are_one_page():
     """Every ViewStyle member must map to a single-section (one-page) style."""
     for member in ViewStyle:
         style = Style[member.name]
-        sections = _load_sections(_get_template_dir(style))
-        assert len(sections) == 1, (
-            f"ViewStyle.{member.name} has {len(sections)} sections, "
-            "but view styles must be single-page (exactly 1 section)."
+        sections = _load_sections_toml(_get_template_dir(style))
+        assert not sections.many_sections, (
+            f"ViewStyle.{member.name} includes `Many` sections, "
+            "but view styles must be single-page (exactly 1 `One` section)."
+        )
+        assert len(sections.one_sections) == 1, (
+            f"ViewStyle.{member.name} has {len(sections.one_sections)} sections, "
+            "but view styles must be single-page (exactly 1 `One` section)."
         )
 
 
 def test_view_with_mocked_internals(mocker):
     """view should parse source, build sections, and render via Console."""
-    mock_parse_source = mocker.patch("seedcase_flower.cli._parse_source")
+    mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
-    mock_build_sections = mocker.patch("seedcase_flower.cli._build_sections")
+    mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
     mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
     mock_console = mock_console_cls.return_value
 

@@ -61,7 +61,7 @@ website:
             - docs/guide/cli.qmd
             - docs/guide/config.qmd
             - docs/guide/custom-styles.qmd
-            - docs/guide/contribute-built-in-style.qmd
+            - docs/guide/contribute-style.qmd
     - id: examples
       contents:
         - section: "Examples"
@@ -91,8 +91,11 @@ quartodoc:
       desc: Classes to configure the behaviour of Flower.
       contents:
       - name: Config
-      - name: Section
+      - name: One
+      - name: Many
       - name: Content
+      - name: Style
+      - name: ViewStyle
 
 metadata-files:
   - docs/reference/_sidebar.yml

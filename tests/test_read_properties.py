@@ -8,7 +8,7 @@ from urllib.error import HTTPError
 import pytest
 from check_datapackage.check import DataPackageError
 
-from seedcase_flower.internals import Address, _parse_source
+from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
 
 # read_properties: local file ====
@@ -24,7 +24,7 @@ def test_read_properties_local_filepath(datapackage_path, datapackage):
 
 def test_read_properties_local_dirpath(datapackage_path, datapackage):
     """Passing a path to a directory containing a datapackage.json should work."""
-    address = _parse_source(str(Path(datapackage_path).parent))
+    address = parse_source(str(Path(datapackage_path).parent))
     result = read_properties(address)
 
     assert result == datapackage

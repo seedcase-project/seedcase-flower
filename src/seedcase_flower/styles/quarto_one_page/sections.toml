@@ -1,8 +1,7 @@
-[[section]]
+[[one]]
 output-path = "index.qmd"
 
-[[section.contents]]
+[[one.contents]]
 jsonpath = "$"
 template-path = "package.qmd.jinja"
 jinja-variable = "package"
-mode = "one"
