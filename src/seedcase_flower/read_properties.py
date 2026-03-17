@@ -16,8 +16,8 @@ def _get_url_error_message(error: URLError) -> str:
     """Convert URLError to a user-friendly error message."""
     error_msg = str(error.reason)
     if "Name or service not known" in error_msg or "getaddrinfo failed" in error_msg:
-        return "Unable to connect to server (domain not found)"
-    return f"Connection failed: {error.reason}"
+        return "Couldn't connect to the server because the domain wasn't found."
+    return f"Failed to connect: {error.reason}"
 
 
 def read_properties(address: Address) -> dict[str, Any]:
@@ -29,9 +29,9 @@ def read_properties(address: Address) -> dict[str, Any]:
             with open(path) as properties_file:
                 datapackage = json.load(properties_file)
         except FileNotFoundError:
-            raise FileLoadError(path, "File does not exist")
+            raise FileLoadError(path, "The file does not exist; maybe there is a typo?")
         except json.JSONDecodeError as e:
-            raise FileLoadError(path, f"Invalid JSON format: {e}")
+            raise FileLoadError(path, f"There was a formatting issue when trying to load the JSON file: {e}")
     else:
         try:
             with request.urlopen(address.value) as open_url:  # nosec B310
@@ -43,6 +43,6 @@ def read_properties(address: Address) -> dict[str, Any]:
         except URLError as e:
             raise FileLoadError(address.value, _get_url_error_message(e)) from None
         except json.JSONDecodeError as e:
-            raise FileLoadError(address.value, f"Invalid JSON format: {e}") from None
+            raise FileLoadError(address.value, f"There was a formatting issue when trying to load the JSON file: {e}") from None
     check(datapackage, error=True)
     return datapackage
