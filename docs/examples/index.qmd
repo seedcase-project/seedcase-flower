@@ -3,6 +3,12 @@ title: "Examples"
 ---
 
 This section contains examples of what the built-in styles look like
-when rendered as a website. This is meant to demonstrate how the content would be structured, not what the entire website would like in detail. Colors, font, etc can be customized through the website generator's theming capabilities; [the Quarto theming documentation](https://quarto.org/docs/output-formats/html-themes.html) can be referred to as an example.
+when rendered as a website. This is meant to demonstrate how the content
+would be structured, not what the entire website would like in detail.
+Colors, font, etc can be customized through the website generator's
+theming capabilities;
+[the Quarto theming documentation](https://quarto.org/docs/output-formats/html-themes.html)
+can be referred to as an example. The design for these styles is also
+described in the [output interface page](/docs/design/interface/outputs.qmd).
 
 - [Style: Quarto one page](quarto-one-page/index.qmd)

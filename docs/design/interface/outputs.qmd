@@ -49,7 +49,9 @@ single page PDF (rendered by Quarto).
 
 This style is suitable for simple Data Packages with a small number of
 resources and/or resources with a small number of variables, as it keeps
-everything in one place for easy viewing.
+everything in one place for easy viewing. See the
+[Quarto one page style example](/docs/examples/quarto-one-page/index.qmd)
+for how it might look like.
 
 ### `quarto-resource-listing` {#quarto-resource-listing}
 
