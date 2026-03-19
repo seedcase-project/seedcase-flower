@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.17.1 (2026-03-19)
+
+### Fix
+
+- :bug: Use a comment instead of hidden callout to discourage manual edits (#205)
+
 ## 0.17.0 (2026-03-12)
 
 ### Feat
