@@ -20,7 +20,8 @@ each release.
 
 ### Fix
 
-- :bug: Use a comment instead of hidden callout to discourage manual edits (#205)
+- :bug: Use a comment instead of hidden callout to discourage manual
+  edits (#205)
 
 ## 0.17.0 (2026-03-12)
 

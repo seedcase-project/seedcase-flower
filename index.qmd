@@ -16,6 +16,7 @@ Flower font." height="50px"}
 
 [Overview](/docs/index.qmd){.btn .about-link}
 [Explore guide](/docs/guide/index.qmd){.btn .about-link}
+[See examples](/docs/examples/index.qmd){.btn .about-link}
 :::
 ::::
 :::::
