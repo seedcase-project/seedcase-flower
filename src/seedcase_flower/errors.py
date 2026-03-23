@@ -1,6 +1,6 @@
 """Custom exception handling for seedcase-flower."""
 
-from check_datapackage import setup_suppressed_tracebacks
+from seedcase_soil import setup_suppressed_tracebacks
 
 
 class FlowerError(Exception):
