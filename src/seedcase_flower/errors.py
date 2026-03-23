@@ -17,11 +17,13 @@ class FileLoadError(Exception):
 
 
 class FileDoesNotExistError(FileLoadError):
-    """Error when a local file does not exist."""
+    """Error when a local path does not point to an existing file."""
 
     def __init__(self, path: str | Path) -> None:
         """Initialize FileDoesNotExistError with path."""
-        super().__init__(path, "File does not exist")
+        super().__init__(
+            path, "The file cannot be found; maybe there is a typo in the path?"
+        )
 
 
 class JSONFormatError(FileLoadError):
@@ -29,7 +31,10 @@ class JSONFormatError(FileLoadError):
 
     def __init__(self, path: str | Path, json_error: str) -> None:
         """Initialize JSONFormatError with path and JSON error details."""
-        super().__init__(path, f"Invalid JSON format: {json_error}")
+        super().__init__(
+            path,
+            f"When trying to load the JSON file, a formatting issue was found: {json_error}",
+        )
 
 
 class HTTP404Error(FileLoadError):
@@ -41,12 +46,14 @@ class HTTP404Error(FileLoadError):
 
 
 class HTTPDomainError(FileLoadError):
-    """Error when unable to connect to server (domain not found)."""
+    """Error when unable to connect to server due to domain not being found."""
 
     def __init__(self, url: str) -> None:
         """Initialize HTTPDomainError with URL."""
-        super().__init__(url, "Unable to connect to server (domain not found)")
+        super().__init__(
+            url, "Couldn't connect to the server because the domain wasn't found."
+        )
 
 
 # Set up traceback suppression for all custom exceptions
-setup_no_traceback_hooks(FileLoadError)
+setup_suppressed_tracebacks(FileLoadError)
