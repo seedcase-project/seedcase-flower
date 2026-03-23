@@ -34,14 +34,14 @@ def read_properties(address: Address) -> dict[str, Any]:
             with request.urlopen(address.value) as open_url:  # nosec B310
                 datapackage = json.load(open_url)
         except HTTPError as e:
-            raise HTTP404Error(address.value, e.code, e.reason) from None
+            raise HTTP404Error(address.value, e.code, e.reason)
         except URLError as e:
             if "Name or service not known" in str(
                 e.reason
             ) or "getaddrinfo failed" in str(e.reason):
-                raise HTTPDomainError(address.value) from None
-            raise JSONFormatError(address.value, str(e)) from None
+                raise HTTPDomainError(address.value)
+            raise JSONFormatError(address.value, str(e))
         except json.JSONDecodeError as e:
-            raise JSONFormatError(address.value, str(e)) from None
+            raise JSONFormatError(address.value, str(e))
     check(datapackage, error=True)
     return datapackage
