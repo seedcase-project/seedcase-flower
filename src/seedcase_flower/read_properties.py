@@ -26,9 +26,9 @@ def read_properties(address: Address) -> dict[str, Any]:
             with open(path) as properties_file:
                 datapackage = json.load(properties_file)
         except FileNotFoundError:
-            raise FileDoesNotExistError(path)
+            raise FileDoesNotExistError(str(path))
         except json.JSONDecodeError as e:
-            raise JSONFormatError(path, str(e))
+            raise JSONFormatError(str(path), str(e))
     else:
         try:
             with request.urlopen(address.value) as open_url:  # nosec B310

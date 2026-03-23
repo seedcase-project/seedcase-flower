@@ -1,59 +1,59 @@
 """Custom exception handling for seedcase-flower."""
 
-from pathlib import Path
-
 from check_datapackage import setup_suppressed_tracebacks
 
 
-class FileLoadError(Exception):
-    """Base error when a file cannot be loaded (local or remote)."""
+class FlowerError(Exception):
+    """Base class for all seedcase-flower exceptions."""
 
-    def __init__(self, path: str | Path, reason: str = "") -> None:
-        """Initialize FileLoadError with path and optional reason."""
-        message = f"Could not load '{path}'."
+    def __init__(self, resolved_address: str, reason: str = "") -> None:
+        """Initialize FlowerError with resolved_address and optional reason."""
+        message = f"Could not load '{resolved_address}'."
         if reason:
             message += f" {reason}"
         super().__init__(message)
 
 
-class FileDoesNotExistError(FileLoadError):
+class FileDoesNotExistError(FlowerError):
     """Error when a local path does not point to an existing file."""
 
-    def __init__(self, path: str | Path) -> None:
-        """Initialize FileDoesNotExistError with path."""
+    def __init__(self, resolved_address: str) -> None:
+        """Initialize FileDoesNotExistError with resolved_address."""
         super().__init__(
-            path, "The file cannot be found; maybe there is a typo in the path?"
+            resolved_address,
+            "The file cannot be found; maybe there is a typo in the path?",
         )
 
 
-class JSONFormatError(FileLoadError):
+class JSONFormatError(FlowerError):
     """Error when a file has invalid JSON format."""
 
-    def __init__(self, path: str | Path, json_error: str) -> None:
-        """Initialize JSONFormatError with path and JSON error details."""
+    def __init__(self, resolved_address: str, json_error: str) -> None:
+        """Initialize JSONFormatError with resolved_address and JSON error details."""
         super().__init__(
-            path,
+            resolved_address,
             f"When trying to load the JSON file, a formatting issue was found: {json_error}",
         )
 
 
-class HTTP404Error(FileLoadError):
+class HTTP404Error(FlowerError):
     """Error when an HTTP request returns a 404 or other error status."""
 
-    def __init__(self, url: str, code: int, reason: str) -> None:
-        """Initialize HTTP404Error with URL, status code, and reason."""
-        super().__init__(url, f"HTTP Error {code}: {reason}")
+    def __init__(self, resolved_address: str, code: int, reason: str) -> None:
+        """Initialize HTTP404Error with resolved_address, status code, and reason."""
+        super().__init__(resolved_address, f"HTTP Error {code}: {reason}")
 
 
-class HTTPDomainError(FileLoadError):
+class HTTPDomainError(FlowerError):
     """Error when unable to connect to server due to domain not being found."""
 
-    def __init__(self, url: str) -> None:
-        """Initialize HTTPDomainError with URL."""
+    def __init__(self, resolved_address: str) -> None:
+        """Initialize HTTPDomainError with resolved_address."""
         super().__init__(
-            url, "Couldn't connect to the server because the domain wasn't found."
+            resolved_address,
+            "Couldn't connect to the server because the domain wasn't found.",
         )
 
 
 # Set up traceback suppression for all custom exceptions
-setup_suppressed_tracebacks(FileLoadError)
+setup_suppressed_tracebacks(FlowerError)
