@@ -4,26 +4,28 @@ import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, cast
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-from jsonpath import findall
+from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
+from jsonpath import findall, finditer
 from pydantic import BaseModel, Field
 
 from seedcase_flower.config import Config
-from seedcase_flower.internals import _map
-from seedcase_flower.section import Content, Mode, Section
+from seedcase_flower.internals import _flat_map, _map
+from seedcase_flower.sections import Content, Many, ManyContent, One
 from seedcase_flower.styles import Style
 
 
-class SectionsFile(BaseModel, frozen=True):
+class SectionsToml(BaseModel, frozen=True):
     """Data model of the contents of the `sections.toml` file.
 
     Attributes:
-        sections: The sections in the config file.
+        one_sections: Sections in the config file generating one file.
+        many_sections: Sections in the config file generating many files.
     """
 
-    sections: list[Section] = Field(alias="section")
+    one_sections: list[One] = Field(alias="one", default=[])
+    many_sections: list[Many] = Field(alias="many", default=[])
 
 
 @dataclass(frozen=True)
@@ -46,66 +48,21 @@ def _get_template_dir(style: Style) -> Path:
     return styles_path / style.name
 
 
-def _load_sections(template_dir: Path) -> list[Section]:
+def _load_sections_toml(template_dir: Path) -> SectionsToml:
     if not template_dir.is_dir():
         raise NotADirectoryError(f"Template directory '{template_dir}' does not exist.")
 
-    template_path = template_dir / "sections.toml"
-    if not template_path.is_file():
+    toml_path = template_dir / "sections.toml"
+    if not toml_path.is_file():
         raise FileNotFoundError(
-            f"Template directory '{template_dir}' does not contain a "
-            "sections.toml file."
+            f"Template directory '{template_dir}' does not contain a sections.toml "
+            "file."
         )
 
-    with open(template_path, mode="rb") as file:
-        sections_file = tomllib.load(file)
+    with open(toml_path, mode="rb") as file:
+        toml_file = tomllib.load(file)
 
-    return SectionsFile.model_validate(sections_file).sections
-
-
-def _build_content(
-    content: Content, properties: dict[str, Any], template_dir: Path, env: Environment
-) -> str:
-    # TODO: handle Mode.many
-    if content.mode == Mode.many:
-        raise NotImplementedError()
-
-    selected_properties = findall(content.jsonpath, properties)
-    if len(selected_properties) > 1:
-        raise ValueError(
-            f"`Mode.one` expects at most one match. JSON path {content.jsonpath!r} "
-            f"returned {len(selected_properties)} matches. Use a more specific "
-            "JSON path or switch to `Mode.many`."
-        )
-
-    template_path = template_dir / content.template_path
-    if not template_path.is_file():
-        raise FileNotFoundError(
-            f"Template file '{content.template_path}' does not exist in the template "
-            f"directory '{template_dir}'."
-        )
-
-    template = env.get_template(template_path.name)
-    return template.render(
-        **{
-            content.jinja_variable: selected_properties[0]
-            if selected_properties
-            else None
-        }
-    )
-
-
-def _build_section(
-    section: Section, properties: dict[str, Any], template_dir: Path, env: Environment
-) -> BuiltSection:
-    built_contents = _map(
-        section.contents,
-        lambda content: _build_content(content, properties, template_dir, env),
-    )
-    return BuiltSection(
-        output_path=section.output_path,
-        content="\n".join(built_contents),
-    )
+    return SectionsToml.model_validate(toml_file)
 
 
 def _inline_code(value: Optional[str]) -> Optional[str]:
@@ -138,20 +95,117 @@ def _create_jinja_env(template_dir: Path) -> Environment:
     return env
 
 
+def _get_template(
+    template_dir: Path, content_template_path: Path, env: Environment
+) -> Template:
+    template_path = template_dir / content_template_path
+    if not template_path.is_file():
+        raise FileNotFoundError(
+            f"Template file '{template_path}' does not exist in the template directory."
+        )
+    return env.get_template(template_path.name)
+
+
+def _build_content_one(
+    content: Content, properties: dict[str, Any], template_dir: Path, env: Environment
+) -> str:
+    selected_properties = findall(content.jsonpath, properties)
+    if len(selected_properties) > 1:
+        raise ValueError(
+            "A `one` section expects at most one match. JSON path "
+            f"{content.jsonpath!r} returned {len(selected_properties)} "
+            "matches. Use a more specific JSON path or switch to a `many` section."
+        )
+
+    template = _get_template(template_dir, content.template_path, env)
+    return template.render(
+        **{
+            content.jinja_variable: selected_properties[0]
+            if selected_properties
+            else None
+        }
+    )
+
+
+def _build_one(
+    one: One, properties: dict[str, Any], template_dir: Path, env: Environment
+) -> BuiltSection:
+    built_contents = _map(
+        one.contents,
+        lambda content: _build_content_one(content, properties, template_dir, env),
+    )
+    return BuiltSection(
+        output_path=one.output_path,
+        content="\n".join(built_contents),
+    )
+
+
+@dataclass(frozen=True)
+class ManyMatch:
+    """A metadata item displayed in a `many` section.
+
+    Attributes:
+        resource_name: The name of the resource containing the metadata item.
+        properties: The metadata item.
+    """
+
+    resource_name: str
+    properties: dict[str, Any]
+
+
+def _get_many_matches(jsonpath: str, properties: dict[str, Any]) -> list[ManyMatch]:
+    return _map(
+        finditer(jsonpath, properties),
+        lambda match: ManyMatch(
+            resource_name=properties["resources"][match.parts[1]]["name"],
+            properties=cast(dict[str, Any], match.value),
+        ),
+    )
+
+
+def _build_many(
+    many: Many, properties: dict[str, Any], template_dir: Path, env: Environment
+) -> list[BuiltSection]:
+    template = _get_template(template_dir, many.template_path, env)
+    matches = _get_many_matches(many.content.jsonpath, properties)
+
+    return _map(
+        matches,
+        lambda match: BuiltSection(
+            output_path=_get_output_path_for_match(match, many),
+            content=template.render(**{many.jinja_variable: match.properties}),
+        ),
+    )
+
+
+def _get_output_path_for_match(match: ManyMatch, many: Many) -> Optional[Path]:
+    if not many.output_path:
+        return None
+
+    return Path(
+        many.output_path.as_posix()
+        .replace(ManyContent.resources.placeholder, match.resource_name)
+        .replace(ManyContent.fields.placeholder, match.properties["name"])
+    )
+
+
 def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSection]:
-    """Build all sections of a style configured in the `sections.toml` file.
+    """Builds the output files based on the provided properties and configuration.
 
     Args:
-        properties: The Data Package metadata.
-        config: The `Config` class, in particular with the `template_dir` filled in.
+        properties: The Data Package properties.
+        config: The configuration.
 
     Returns:
-        A list of `BuiltSection` classes, to be used to write to files.
+        A list of built output files.
     """
     template_dir = config.template_dir or _get_template_dir(config.style)
-    sections = _load_sections(template_dir)
+    sections_toml = _load_sections_toml(template_dir)
     env = _create_jinja_env(template_dir)
     return _map(
-        sections,
-        lambda section: _build_section(section, properties, template_dir, env),
+        sections_toml.one_sections,
+        lambda one: _build_one(one, properties, template_dir, env),
+    ) + _flat_map(
+        sections_toml.many_sections,
+        lambda many: _build_many(many, properties, template_dir, env),
     )

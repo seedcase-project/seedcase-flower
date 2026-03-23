@@ -1,6 +1,6 @@
 """Helper functions for internal use."""
 
-from itertools import repeat
+from itertools import chain, repeat
 from typing import Any, Callable, Iterable, Optional, TypeVar
 
 from cyclopts.annotations import get_hint_name
@@ -40,6 +40,11 @@ def _map(x: Iterable[In], fn: Callable[[In], Out]) -> list[Out]:
 
 def _filter(x: Iterable[In], fn: Callable[[In], bool]) -> list[In]:
     return list(filter(fn, x))
+
+
+def _flat_map(items: Iterable[In], fn: Callable[[In], Iterable[Out]]) -> list[Out]:
+    """Maps and flattens the items by one level."""
+    return list(chain.from_iterable(map(fn, items)))
 
 
 def _pretty_print(verbose: bool, message: str) -> None:
