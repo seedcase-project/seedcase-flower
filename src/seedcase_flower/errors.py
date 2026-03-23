@@ -32,7 +32,7 @@ class JSONFormatError(FlowerError):
         """Initialize JSONFormatError with resolved_address and JSON error details."""
         super().__init__(
             resolved_address,
-            f"When trying to load the JSON file, a formatting issue was found: {json_error}",
+            f"When loading the file, a JSON formatting issue was found: {json_error}",
         )
 
 
