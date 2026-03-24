@@ -42,7 +42,7 @@ changelog = "https://github.com/seedcase-project/seedcase-flower/blob/main/CHANG
 issues = "https://github.com/seedcase-project/seedcase-flower/issues"
 
 [project.scripts]
-seedcase-flower = "seedcase_flower.cli:app"
+seedcase-flower = "seedcase_flower.cli:main"
 
 [build-system]
 requires = ["hatchling"]
