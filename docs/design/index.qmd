@@ -19,11 +19,11 @@ Package descriptor (i.e., the `datapackage.json` file), whose contents
 are referred to as
 ["properties"](https://datapackage.org/standard/data-package/#properties).
 
-Overall, Flower should:
+Overall, Flower:
 
-1. Read Data Package metadata and transform it into structured,
+1. Reads Data Package metadata and transform it into structured,
    human-readable documents.
-2. Be highly customisable while providing opinionated default settings.
+2. Is highly customisable while providing opinionated default settings.
 
 ## Requirements
 
