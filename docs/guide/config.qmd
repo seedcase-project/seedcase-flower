@@ -59,11 +59,10 @@ can be configured via the configuration file:
   add a `style` setting (it must be empty).
 
 To see examples of which styles are available in Flower and how they
-would structure the metadata differently, see
-[the Outputs documentation](/docs/design/interface/outputs.qmd).
-<!-- TODO change to guide link when available -->
-When `template-dir` is used, the structure of the output is determined
-by a custom set of templates and configurations explained in
+would structure the metadata differently, see the
+[examples page](/docs/examples/index.qmd). When `template-dir` is used,
+the structure of the output is determined by a custom set of templates
+and configurations explained in
 [the documentation about custom styles](custom-styles.qmd).
 
 ### Configuration file syntax
