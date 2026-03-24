@@ -37,13 +37,13 @@ Specifically, Flower must:
   functionality exposed as a Python API.
 - Support displaying generated output directly in the terminal.
 - Support writing generated output to disk as a set of files.
-- Support configuration for controlling or customising:
+- Support configuration of:
   - output content, layout, and style
   - output file format
   - output folder structure
 - Offer opinionated defaults for customisable settings.
 
-In general, Flower will not:
+Flower does not:
 
 - Modify Data Package metadata.
 - Handle rendering, publishing, or deploying the generated documents.
