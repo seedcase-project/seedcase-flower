@@ -1,7 +1,5 @@
 """Custom exception handling for seedcase-flower."""
 
-from seedcase_soil import setup_suppressed_tracebacks
-
 
 class FlowerError(Exception):
     """Base class for all seedcase-flower exceptions."""
@@ -53,7 +51,3 @@ class HTTPDomainError(FlowerError):
             resolved_address,
             "Couldn't connect to the server because the domain wasn't found.",
         )
-
-
-# Set up traceback suppression for all custom exceptions
-setup_suppressed_tracebacks(FlowerError)
