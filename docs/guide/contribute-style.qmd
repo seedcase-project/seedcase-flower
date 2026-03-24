@@ -55,9 +55,9 @@ src/
 ```
 
 Finally, add your style to the appropriate style enum (`Style` or
-`ViewStyle`) in `src/seedcase_flower/styles.py`. All styles are
-defined in the `Style` enum, while styles suitable for terminal
-output with `view` are also added to `ViewStyle`. For example, if the
+`ViewStyle`) in `src/seedcase_flower/styles.py`. All styles are defined
+in the `Style` enum, while styles suitable for terminal output with
+`view` are also added to `ViewStyle`. For example, if the
 `your_new_style` is a new style, you would include it like so:
 
 ``` {.python filename="src/seedcase_flower/styles.py"}
