@@ -15,6 +15,7 @@ list-todos:
     grep -R -n \
       --exclude="*.code-snippets" \
       --exclude-dir=.quarto \
+      --exclude-dir=_site \
       --exclude=justfile \
       --exclude=_site \
       "TODO" *
