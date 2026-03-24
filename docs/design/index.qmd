@@ -8,7 +8,7 @@ maintainable in the long term) and to ensure that the team has a shared
 understanding of the package's scope and architecture.
 
 Flower's design builds on our overall Seedcase
-[design principles and patterns](https://design.seedcase-project.org/),
+[design principles and patterns](https://design.seedcase-project.org/)
 and follows the same principles and patterns described there.
 
 ## Purpose
