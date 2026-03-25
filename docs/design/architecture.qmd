@@ -147,9 +147,9 @@ flowchart
     output("Human-readable metadata<br>[files and folders<br>or terminal output]")
 
     datapackage --"Contains metadata"--> flower
-    Producers --"Gives Data Package"--> flower
-    flower --"Generates docs"--> output
-    Consumers --"Uses docs to understand<br>Data Package contents"--> output
+    Producers --"Provide datapackage.json path<br>and optional config"--> flower
+    flower --"Generates documentation"--> output
+    Consumers --"Read documents to understand<br>Data Package contents"--> output
 
     %% Styling
     style Producers fill:#FFFFFF, color:#000000
@@ -188,8 +188,8 @@ flowchart
 
     config --"Customises behaviour<br>and output"--> seedcase-flower
     templates --"Defines output<br>structure and layout"--> config
-    user --"Renders Data Package<br>properties programmatically"--> python
-    user -- "Renders Data Package<br>properties via the CLI" --> cli
+    user --"Provides datapackage.json path<br>programmatically"--> python
+    user --"Provides datapackage.json path<br>via the CLI" --> cli
 
     seedcase-flower --"Generates documentation"--> output
 
