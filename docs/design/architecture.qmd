@@ -144,7 +144,7 @@ flowchart
     datapackage("Data Package<br>[datapackage.json]")
     flower("seedcase-flower<br>[Python package]")
 
-    output("Human-readable<br>[files and folders]")
+    output("Human-readable metadata<br>[files and folders<br>or terminal output]")
 
     datapackage --"Contains metadata"--> flower
     Producers --"Gives Data Package"--> flower
@@ -184,10 +184,14 @@ flowchart
         python -- "Provides<br>functionality" --> cli
     end
 
+    output("Human-readable metadata<br>[files and folders<br>or terminal output]")
+
     config --"Customises behaviour<br>and output"--> seedcase-flower
     templates --"Defines output<br>structure and layout"--> config
     user --"Renders Data Package<br>properties programmatically"--> python
     user -- "Renders Data Package<br>properties via the CLI" --> cli
+
+    seedcase-flower --"Generates documentation"--> output
 
     %% Styling
     style seedcase-flower fill:#FFFFFF, color:#000000
