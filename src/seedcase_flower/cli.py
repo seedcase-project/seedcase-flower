@@ -6,9 +6,11 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 from rich import box
-from rich import print as rprint
 from rich.console import Console
+from rich.highlighter import ReprHighlighter
 from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.text import Text
 from rich.theme import Theme
 
 from seedcase_flower.build_sections import build_sections
@@ -145,10 +147,26 @@ def view(
     console.print(Markdown(built_sections[0].content))
 
 
+def _pretty_print_error(e: Exception) -> None:
+    console = Console(stderr=True)
+    text = Text.from_markup(str(e))
+    # Make `text` appear as if it was printed by rich.print
+    pretty_text = ReprHighlighter()(text)
+    console.print(
+        Panel(
+            pretty_text,
+            title=type(e).__name__,
+            border_style="red",
+            box=box.ROUNDED,
+            title_align="left",
+        )
+    )
+
+
 def main() -> None:
     """Suppress traceback when running from CLI."""
     try:
         app()
     except Exception as e:
-        rprint(f"\n[red]{type(e).__name__}[/red]: {e}")
+        _pretty_print_error(e)
         raise SystemExit(1)
