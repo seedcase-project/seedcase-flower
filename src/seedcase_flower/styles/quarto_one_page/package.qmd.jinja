@@ -72,11 +72,17 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% endfor %}
 {% endif %}
 
-| Title | Name | Type | Description |
-|-------|------|------|-------------|
-{% for field in schema.fields %}
-| {{ field.title or "N/A" }} | {{ field.name | _inline_code}} | {{ field.type or "any" }} | {{ field.description or "N/A" }} |
-{% endfor %}
+{%- set headers = ["Title", "Name", "Type", "Description"] -%}
+{%- set ns = namespace(rows=[]) -%}
+{%- for field in schema.fields -%}
+  {%- set ns.rows = ns.rows + [[
+    field.title or "N/A",
+    field.name | _inline_code or "N/A",
+    field.type or "any",
+    field.description or "N/A"
+  ]] -%}
+{%- endfor -%}
+{{ _render_markdown_table(headers, ns.rows) }}
 
 : Fields in the {{ resource.name | _inline_code }} resource.
 {% endif %}

@@ -76,6 +76,30 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(_map(value, lambda item: f"`{item}`"))
 
 
+def _render_markdown_table(headers: list[str], rows: list[list[str]]) -> str:
+    """Renders a markdown table with column widths adjusted to content."""
+    if not headers:
+        return ""
+
+    num_cols = len(headers)
+    widths = [
+        max(len(headers[i]), max((len(row[i]) for row in rows), default=0))
+        for i in range(num_cols)
+    ]
+
+    def pad(value: str, width: int) -> str:
+        return value.ljust(width)
+
+    header_row = "| " + " | ".join(pad(h, w) for h, w in zip(headers, widths)) + " |"
+    sep_row = "|" + "|".join("-" * (w + 2) for w in widths) + "|"
+    data_rows = [
+        "| " + " | ".join(pad(cell, w) for cell, w in zip(row, widths)) + " |"
+        for row in rows
+    ]
+
+    return "\n".join([header_row, sep_row] + data_rows)
+
+
 def _create_jinja_env(template_dir: Path) -> Environment:
     env = Environment(
         loader=FileSystemLoader(template_dir),
@@ -92,6 +116,8 @@ def _create_jinja_env(template_dir: Path) -> Environment:
     env.filters["_inline_code_list"] = _inline_code_list
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
+    # Render a markdown table with adjusted column widths
+    env.globals["_render_markdown_table"] = _render_markdown_table
     return env
 
 
