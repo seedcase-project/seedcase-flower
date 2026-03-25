@@ -216,7 +216,7 @@ single diagram.
 
 ```{mermaid}
 %%| label: fig-c4-component
-%%| fig-cap: "C4 component diagram showing the parts of the Python package that contribute to the CLI and their connections."
+%%| fig-cap: "C4 component diagram showing the main functions and classes within the Python package and their connections."
 flowchart TB
     subgraph package["Python code"]
         subgraph cfg["Configuration"]
