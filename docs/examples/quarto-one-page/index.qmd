@@ -12,8 +12,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 
 **Version:** 1.2.3
 
-A dataset containing flora species records and their observed growth
-stages across different environments.
+A dataset containing flora species records and their observed growth stages across different environments.
 
 ## Contributors
 
@@ -29,8 +28,7 @@ This resource contains a catalog of flora species.
 - Path: `resources/species_catalog/data.parquet`
 - Primary key: (`species_id`)
 - Foreign keys:
-  - From fields (`parent_species_id`) to fields (`species_id`) in
-    resource `species_catalog`
+  - From fields (`parent_species_id`) to fields (`species_id`) in resource `species_catalog`
 
 | Title           | Name                | Type    | Description                                    |
 |-----------------|---------------------|---------|------------------------------------------------|
@@ -59,16 +57,13 @@ This resource contains a catalog of flora species locations.
 
 ### `growth_records`: Growth Stage Records
 
-This resource contains records of observed growth stages for various
-flora species.
+This resource contains records of observed growth stages for various flora species.
 
 - Path: `resources/growth_records/data.parquet`
 - Primary key: (`record_id`)
 - Foreign keys:
-  - From fields (`species_id`) to fields (`species_id`) in resource
-    `species_catalog`
-  - From fields (`location_region`, `location_country`) to fields
-    (`region`, `country`) in resource `location_catalog`
+  - From fields (`species_id`) to fields (`species_id`) in resource `species_catalog`
+  - From fields (`location_region`, `location_country`) to fields (`region`, `country`) in resource `location_catalog`
 
 | Title            | Name               | Type    | Description                                   |
 |------------------|--------------------|---------|-----------------------------------------------|
