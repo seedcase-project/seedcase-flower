@@ -132,11 +132,11 @@ flowchart
     subgraph Producers
         user_owner("Owner<br>[person]")
         user_manager("Manager<br>[person]")
-        user_communicator1("Communication or<br>outreach<br>[person]")
+        user_communicator1("Communication or<br>outreach lead<br>[person]")
     end
 
     subgraph Consumers
-        user_communicator2("Communication or<br>outreach<br>[person]")
+        user_communicator2("Communication or<br>outreach lead<br>[person]")
         user_coordinator("Coordinator<br>[person]")
         user_researcher("Researcher or<br>analyst<br>[person]")
     end
