@@ -108,8 +108,8 @@ first look for a configuration file named `.flower.toml` (or
 `pyproject.toml`) in the current directory.
 
 The main argument to `build` is the location of the Data Package file as
-a `SOURCE` (e.g. a file path or a URL) to
-build the documentation from. Flower supports the following sources:
+a `SOURCE` (e.g. a file path or a URL) to build the documentation from.
+Flower supports the following sources:
 
 - {{< var wip >}} `file://` or a path without `file://`
 - {{< var planned >}} `https://`
@@ -255,10 +255,7 @@ limited compared to generating full documentation as output. This is why
 we intentionally don't allow customisation outside of our built-in
 styles for this command.
 
-<!-- TODO: Add link to style contributing guide when created -->
-
 ::: callout-tip
-Want a different style for viewing the metadata? You can contribute a
-new style by creating a pull request on the GitHub repository with the
-implementation for the new style.
+Want a different style for viewing the metadata? Check out our
+[contribute a style](/docs/guide/contribute-style.qmd) guide.
 :::
