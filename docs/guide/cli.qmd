@@ -202,10 +202,9 @@ This will generate `my-dir/index.qmd` instead of `docs/index.qmd`.
 
 Just like the `view` command, the `build` command accepts a `--style`
 option. This lets you choose how the metadata are organized according to
-one of the
-[built-in styles](/docs/reference/Style.qmd).
-For example, to split the metadata for each resource in the Data Package
-into its own file, you can use the `quarto-resource-listing` style:
+one of the [built-in styles](/docs/reference/Style.qmd). For example, to
+split the metadata for each resource in the Data Package into its own
+file, you can use the `quarto-resource-listing` style:
 
 ```{.bash filename="Terminal"}
 seedcase-flower build --style quarto-resource-listing

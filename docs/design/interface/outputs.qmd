@@ -27,11 +27,11 @@ using different styles.
 
 ## File output: Built-in styles {#built-in-styles}
 
-We designed Flower to be extensible to make it
-easier for us to develop built-in styles and to expand them in the
-future. This extensibility also accommodates custom needs beyond what
-the built-in styles provide. With custom templates, different output
-formats can be generated to meet varying needs.
+We designed Flower to be extensible to make it easier for us to develop
+built-in styles and to expand them in the future. This extensibility
+also accommodates custom needs beyond what the built-in styles provide.
+With custom templates, different output formats can be generated to meet
+varying needs.
 
 See our [Examples](/docs/examples/index.qmd) page for a list of our
 built-in styles. The raw output files are found in the
@@ -180,8 +180,6 @@ table format instead of a listing, as shown below. With this style, the
 tables are filterable and columns can be sorted, making it easier to
 find specific resources and variables within a Data Package.
 
-<!-- TODO: Example output aren't with filterable tables yet -->
-
 ::: callout-note
 Since the resource documentation files are the same as those generated
 by the `quarto-resource-listing` style, they are not repeated here.
@@ -224,12 +222,4 @@ A dataset containing flora species records and their observed growth stages acro
 
 ## Resources
 ```
-:::
-
-<!-- TODO: We could add calculated fields, such as the number of variables in the resources? -->
-
-::: content-hidden
-## Custom styles with templates
-
-<!--TODO: To be added later-->
 :::
