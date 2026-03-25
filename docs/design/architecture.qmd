@@ -2,13 +2,14 @@
 title: "Architecture"
 ---
 
-This document contains the architectural design for Flower. For design
-details of the Seedcase Project as a whole, see the
-[Seedcase Design](https://design.seedcase-project.org) documentation.
+This document contains a description of Flower's expected user types,
+naming, and C4 models. For design details of the Seedcase Project as a
+whole, see the [Seedcase Design](https://design.seedcase-project.org)
+documentation.
 
-The purpose of this description is to ensure that the team shares a
-common understanding about the implementation and to outline the design
-to anyone else interested in the internal workings of the package.
+The purpose of this is to ensure that the team shares a common
+understanding about the implementation and to outline the design to
+anyone else interested in the internal workings of the package.
 
 ## User types {#user-types}
 
