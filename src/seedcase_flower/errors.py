@@ -30,16 +30,16 @@ class JSONFormatError(FlowerError):
         """Initialize JSONFormatError with resolved_address and JSON error details."""
         super().__init__(
             resolved_address,
-            f"When loading the file, a JSON formatting issue was found: {json_error}",
+            f"A JSON formatting issue was found: {json_error}",
         )
 
 
-class HTTP404Error(FlowerError):
-    """Error when an HTTP request returns a 404 or other error status."""
+class HTTPStatusError(FlowerError):
+    """Error when an HTTP request returns an error status code."""
 
     def __init__(self, resolved_address: str, code: int, reason: str) -> None:
-        """Initialize HTTP404Error with resolved_address, status code, and reason."""
-        super().__init__(resolved_address, f"HTTP Error {code}: {reason}")
+        """Initialize HTTPStatusError with resolved_address, status code, and reason."""
+        super().__init__(resolved_address, f"Error code {code}: {reason}")
 
 
 class HTTPDomainError(FlowerError):

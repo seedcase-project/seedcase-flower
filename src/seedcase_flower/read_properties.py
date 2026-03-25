@@ -10,8 +10,8 @@ from check_datapackage import check
 
 from seedcase_flower.errors import (
     FileDoesNotExistError,
-    HTTP404Error,
     HTTPDomainError,
+    HTTPStatusError,
     JSONFormatError,
     NotJSONError,
 )
@@ -41,7 +41,7 @@ def read_properties(address: Address) -> dict[str, Any]:
                     raise NotJSONError(address.value, main_type)
                 datapackage = json.load(open_url)
         except HTTPError as e:
-            raise HTTP404Error(address.value, e.code, e.reason)
+            raise HTTPStatusError(address.value, e.code, e.reason)
         except URLError as e:
             if "Name or service not known" in str(
                 e.reason
