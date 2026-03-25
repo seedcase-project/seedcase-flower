@@ -3,11 +3,17 @@
 import json
 from email.message import Message
 from pathlib import Path
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import pytest
 from check_datapackage.check import DataPackageError
 
+from seedcase_flower.errors import (
+    FileDoesNotExistError,
+    HTTP404Error,
+    HTTPDomainError,
+    JSONFormatError,
+)
 from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
 
@@ -43,21 +49,21 @@ def test_read_properties_raises_on_invalid_datapackage(tmp_path):
 
 
 def test_read_properties_raises_on_file_not_found():
-    """A non-existent file should raise FileNotFoundError."""
+    """A non-existent file should raise FileDoesNotExistError."""
     address = Address(value="file:///nonexistent/path/datapackage.json", local=True)
 
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(FileDoesNotExistError):
         read_properties(address)
 
 
 def test_read_properties_raises_on_malformed_json(tmp_path):
-    """A file with malformed JSON should raise JSONDecodeError."""
+    """A file with malformed JSON should raise JSONFormatError."""
     json_file = tmp_path / "datapackage.json"
     json_file.write_text("{ invalid json }")
 
     address = Address(value=str(json_file), local=True)
 
-    with pytest.raises(json.JSONDecodeError):
+    with pytest.raises(JSONFormatError):
         read_properties(address)
 
 
@@ -80,20 +86,20 @@ def test_read_properties_remote_url(mocker, datapackage):
 
 @pytest.mark.usefixtures("mocker")
 def test_read_properties_raises_on_remote_invalid_json(mocker):
-    """A remote URL returning invalid JSON should raise JSONDecodeError."""
+    """Remote URL returning invalid JSON should raise JSONFormatError."""
     mock_urlopen = mocker.patch("seedcase_flower.read_properties.request.urlopen")
     mock_response = mock_urlopen.return_value.__enter__.return_value
     mock_response.read.return_value = b"{ invalid json }"
 
     address = Address(value="https://example.com/datapackage.json", local=False)
 
-    with pytest.raises(json.JSONDecodeError):
+    with pytest.raises(JSONFormatError):
         read_properties(address)
 
 
 @pytest.mark.usefixtures("mocker")
 def test_read_properties_raises_on_remote_404(mocker):
-    """A remote URL returning 404 should raise HTTPError."""
+    """A remote URL returning 404 should raise HTTP404Error."""
     mocker.patch(
         "seedcase_flower.read_properties.request.urlopen",
         side_effect=HTTPError(
@@ -103,5 +109,21 @@ def test_read_properties_raises_on_remote_404(mocker):
 
     address = Address(value="https://example.com/datapackage.json", local=False)
 
-    with pytest.raises(HTTPError):
+    with pytest.raises(HTTP404Error):
+        read_properties(address)
+
+
+@pytest.mark.usefixtures("mocker")
+def test_read_properties_raises_on_remote_dns_failure(mocker):
+    """Remote URL with invalid domain should raise HTTPDomainError."""
+    mocker.patch(
+        "seedcase_flower.read_properties.request.urlopen",
+        side_effect=URLError(reason=Exception("[Errno -2] Name or service not known")),
+    )
+
+    address = Address(
+        value="https://nonexistent-domain-12345.com/datapackage.json", local=False
+    )
+
+    with pytest.raises(HTTPDomainError):
         read_properties(address)
