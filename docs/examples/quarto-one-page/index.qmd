@@ -29,8 +29,8 @@ This resource contains a catalog of flora species.
 - Path: `resources/species_catalog/data.parquet`
 - Primary key: (`species_id`)
 - Foreign keys:
-    - From fields (`parent_species_id`) to fields (`species_id`) in
-      resource `species_catalog`
+  - From fields (`parent_species_id`) to fields (`species_id`) in
+    resource `species_catalog`
 
 | Title           | Name                | Type    | Description                                    |
 |-----------------|---------------------|---------|------------------------------------------------|
@@ -65,10 +65,10 @@ flora species.
 - Path: `resources/growth_records/data.parquet`
 - Primary key: (`record_id`)
 - Foreign keys:
-    - From fields (`species_id`) to fields (`species_id`) in resource
-      `species_catalog`
-    - From fields (`location_region`, `location_country`) to fields
-      (`region`, `country`) in resource `location_catalog`
+  - From fields (`species_id`) to fields (`species_id`) in resource
+    `species_catalog`
+  - From fields (`location_region`, `location_country`) to fields
+    (`region`, `country`) in resource `location_catalog`
 
 | Title            | Name               | Type    | Description                                   |
 |------------------|--------------------|---------|-----------------------------------------------|

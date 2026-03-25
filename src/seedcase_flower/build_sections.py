@@ -1,8 +1,6 @@
 """Build sections from templates."""
 
 import tomllib
-import re
-import textwrap
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
@@ -78,66 +76,6 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(_map(value, lambda item: f"`{item}`"))
 
 
-def _wrap_text(value: str, width: int = 72) -> str:
-    """Wrap text to a maximum line width, preserving list indentation.
-
-    Skips headers (lines starting with #), tables (lines containing |),
-    HTML comments (lines between <!-- and -->), and markdown links.
-    """
-    if not value:
-        return value
-
-    def is_header(line: str) -> bool:
-        return line.lstrip().startswith("#")
-
-    def is_table(line: str) -> bool:
-        return "|" in line
-
-    def is_link(line: str) -> bool:
-        return bool(re.search(r"\[[^\]]+\]\([^)]+\)", line))
-
-    def is_list_item(line: str) -> bool:
-        return bool(re.match(r"^(\s*)([-*]|\d+\.)\s+", line))
-
-    def wrap_list_item(line: str) -> str:
-        match = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", line)
-        leading_spaces = match.group(1)
-        bullet = match.group(2)
-        content = match.group(3)
-        subsequent_indent = leading_spaces + " " * (len(bullet) + 1)
-
-        return textwrap.fill(
-            content,
-            width=width,
-            initial_indent=leading_spaces + bullet + " ",
-            subsequent_indent=subsequent_indent,
-        )
-
-    lines = value.split("\n")
-    result = []
-    in_comment = False
-
-    for line in lines:
-        if "<!--" in line:
-            in_comment = True
-        if in_comment:
-            result.append(line)
-            if "-->" in line:
-                in_comment = False
-            continue
-
-        if is_header(line) or is_table(line) or is_link(line):
-            result.append(line)
-        elif is_list_item(line):
-            result.append(wrap_list_item(line))
-        elif line.strip():
-            result.append(textwrap.fill(line, width=width))
-        else:
-            result.append(line)
-
-    return "\n".join(result)
-
-
 def _max_column_width(rows: list[list[str]], col: int) -> int:
     return max(map(lambda row: len(row[col]), rows), default=0)
 
@@ -189,8 +127,6 @@ def _create_jinja_env(template_dir: Path) -> Environment:
     env.filters["_inline_code_list"] = _inline_code_list
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
-    # Wrap text to a maximum line width
-    env.filters["_wrap_text"] = _wrap_text
     # Render a markdown table with adjusted column widths
     env.globals["_render_markdown_table"] = _render_markdown_table
     return env
@@ -237,7 +173,7 @@ def _build_one(
     )
     return BuiltSection(
         output_path=one.output_path,
-        content=_wrap_text("\n".join(built_contents)),
+        content="\n".join(built_contents),
     )
 
 
@@ -274,9 +210,7 @@ def _build_many(
         matches,
         lambda match: BuiltSection(
             output_path=_get_output_path_for_match(match, many),
-            content=_wrap_text(
-                template.render(**{many.jinja_variable: match.properties})
-            ),
+            content=template.render(**{many.jinja_variable: match.properties}),
         ),
     )
 
