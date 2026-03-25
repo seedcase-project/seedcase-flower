@@ -6,9 +6,9 @@ class FlowerError(Exception):
 
     def __init__(self, resolved_address: str, reason: str = "") -> None:
         """Initialize FlowerError with resolved_address and optional reason."""
-        message = f"Could not load '{resolved_address}'."
+        message = f"Could not load '{resolved_address}'.\n"
         if reason:
-            message += f" {reason}"
+            message += f"{reason}"
         super().__init__(message)
 
 
