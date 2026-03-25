@@ -3,14 +3,14 @@
 line_length = 72
 flavor = "quarto"
 exclude = [
-    # Common directories to exclude
-    ".github",
-    # This is auto-generated from the qmd version
-    "**/README.md",
-    # This has it's own structure
-    "**/LICENSE.md",
-    # Generated example output (subdirectories only)
-    "docs/examples/**"
+  # Common directories to exclude
+  ".github",
+  # This is auto-generated from the qmd version
+  "**/README.md",
+  # This has it's own structure
+  "**/LICENSE.md",
+  # Generated example output (subdirectories only)
+  "docs/examples/**"
 ]
 
 # List style: `-`
@@ -24,6 +24,7 @@ allow-lazy-continuation = false
 # Reflow text
 [MD013]
 reflow = true
+reflow-mode = "normalize"
 
 # Fix tables and their separator row
 [MD060]
