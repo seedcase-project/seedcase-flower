@@ -165,8 +165,8 @@ as web applications or databases. This diagram displays the main
 containers of Flower, their responsibilities, and how they interact,
 including the technologies used for each.
 
-Flower is primarily designed for use as a command-line interface (CLI),
-with its core functionality also exposed as a Python API.
+Flower is primarily designed for use as a CLI, but its core
+functionality is also available as a Python API.
 
 ```{mermaid}
 %%| label: fig-c4-container
