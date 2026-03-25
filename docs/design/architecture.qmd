@@ -142,7 +142,7 @@ flowchart
     end
 
     datapackage("Data Package<br>[datapackage.json]")
-    flower("seedcase-flower<br>[CLI]")
+    flower("seedcase-flower<br>[Python package]")
 
     output("Human-readable<br>[files and folders]")
 
