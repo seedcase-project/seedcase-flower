@@ -83,10 +83,8 @@ describe both types and how they relate to Flower and its design.
 
 ## Naming
 
-This section contains a naming scheme for Flower that incorporates terms
-used in the [Data Package standard](https://datapackage.org/). The main
-objects and actions used throughout the package can be found in the
-tables below.
+The following naming scheme draws on terms from the
+[Data Package standard](https://datapackage.org/).
 
 | Object     | Description                                                                                                                                                |
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
