@@ -82,7 +82,7 @@ def _wrap_text(value: str, width: int = 72) -> str:
     """Wrap text to a maximum line width, preserving list indentation.
 
     Skips headers (lines starting with #), tables (lines containing |),
-    and HTML comments (lines between <!-- and -->).
+    HTML comments (lines between <!-- and -->), and markdown links.
     """
     if not value:
         return value
@@ -92,6 +92,9 @@ def _wrap_text(value: str, width: int = 72) -> str:
 
     def is_table(line: str) -> bool:
         return "|" in line
+
+    def is_link(line: str) -> bool:
+        return bool(re.search(r"\[[^\]]+\]\([^)]+\)", line))
 
     def is_list_item(line: str) -> bool:
         return bool(re.match(r"^(\s*)([-*]|\d+\.)\s+", line))
@@ -123,7 +126,7 @@ def _wrap_text(value: str, width: int = 72) -> str:
                 in_comment = False
             continue
 
-        if is_header(line) or is_table(line):
+        if is_header(line) or is_table(line) or is_link(line):
             result.append(line)
         elif is_list_item(line):
             result.append(wrap_list_item(line))
