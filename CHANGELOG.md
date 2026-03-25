@@ -20,7 +20,8 @@ each release.
 
 ### Feat
 
-- ✨ suppress tracebacks from all errors when running from the CLI (#216)
+- ✨ suppress tracebacks from all errors when running from the CLI
+  (#216)
 
 ## 0.18.0 (2026-03-25)
 
