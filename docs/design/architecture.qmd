@@ -122,7 +122,7 @@ interact with Flower.
 ```{mermaid}
 %%| label: fig-c4-context
 %%| fig-cap: "C4 system context diagram showing the anticipated users and external systems Flower interacts with."
-flowchart LR
+flowchart
 
     subgraph Users
         Producers["Producer users"]
