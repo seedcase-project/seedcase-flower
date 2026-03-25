@@ -190,7 +190,8 @@ flowchart
     templates --"Defines output<br>structure and layout"--> config
     user --"Provides datapackage.json path<br>programmatically"--> python
     user --"Provides datapackage.json path<br>via the CLI" --> cli
-
+    user -."(Optional)<br>Provides configurations,<br>as file or Python class".-> config
+    user -."(Optional)<br>Provides custom templates<br>in folder".-> templates
     seedcase-flower --"Generates documentation"--> output
 
     %% Styling
