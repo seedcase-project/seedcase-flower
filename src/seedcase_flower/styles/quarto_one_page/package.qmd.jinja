@@ -72,7 +72,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% endfor %}
 {% endif %}
 
-{%- set headers = ["Title", "Name", "Type", "Description"] -%}
+{% set headers = ["Title", "Name", "Type", "Description"] %}
 {%- set ns = namespace(rows=[]) -%}
 {%- for field in schema.fields -%}
   {%- set ns.rows = ns.rows + [[
