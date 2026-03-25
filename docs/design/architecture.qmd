@@ -119,10 +119,6 @@ components, and code.
 The system context diagram shows the users and external systems that
 interact with Flower.
 
-The users, described in the [User types](#user-types) section, provide
-Flower with their Data Package's metadata to convert it into structured,
-human-readable documents.
-
 ```{mermaid}
 %%| label: fig-c4-context
 %%| fig-cap: "C4 system context diagram showing the anticipated users and external systems Flower interacts with."
