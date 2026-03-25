@@ -217,8 +217,10 @@ single diagram.
 ```{mermaid}
 %%| label: fig-c4-component
 %%| fig-cap: "C4 component diagram showing the main functions and classes within the Python package and their connections."
-flowchart TB
-    subgraph package["Python code"]
+flowchart
+
+    subgraph package["Core Python Package"]
+
         subgraph cfg["Configuration"]
             config("Config<br>[class]")
             section("Section<br>[class]")
