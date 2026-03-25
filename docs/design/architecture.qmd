@@ -208,11 +208,9 @@ like a class or a module, while
 [code](https://c4model.com/abstractions/code) is the basic building
 blocks, such as classes and functions.
 
-Because the core Python package is relatively small and simple, and
-because both component and code diagrams include classes, we combine the
-component and code levels of the C4 model into a single diagram as shown
-below. This diagram shows the main classes and functions within the
-Python package that represents the CLI.
+Because the core Python package is relatively small and both diagram
+levels include classes, we combine the component and code levels into a
+single diagram.
 
 <!-- TODO: Switch to using a Properties class instead of dict? -->
 
