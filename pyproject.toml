@@ -1,6 +1,6 @@
 [project]
 name = "seedcase-flower"
-version = "0.17.1"
+version = "0.18.0"
 description = "Turn your Data Package metadata into human-readable documentation"
 authors = [
   {name = "Luke W. Johnston", email = "lwjohnst@gmail.com" },
@@ -42,7 +42,7 @@ changelog = "https://github.com/seedcase-project/seedcase-flower/blob/main/CHANG
 issues = "https://github.com/seedcase-project/seedcase-flower/issues"
 
 [project.scripts]
-seedcase-flower = "seedcase_flower.cli:app"
+seedcase-flower = "seedcase_flower.cli:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -6,6 +6,7 @@ from typing import Any, Optional
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 from rich import box
+from rich import print as rprint
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.theme import Theme
@@ -142,3 +143,12 @@ def view(
     console = Console(theme=_CONSOLE_THEME)
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
+
+
+def main() -> None:
+    """Suppress traceback when running from CLI."""
+    try:
+        app()
+    except Exception as e:
+        rprint(f"\n[red]{type(e).__name__}[/red]: {e}")
+        raise SystemExit(1)

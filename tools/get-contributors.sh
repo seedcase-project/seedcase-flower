@@ -19,4 +19,4 @@ contributors=$(gh api \
   sed -e 's/,/,\n/g'
 )
 
-echo "The following people have contributed to this project by submitting\npull requests :tada:\n\n${contributors}"
+echo "The following people have contributed to this project by submitting pull\nrequests :tada:\n\n${contributors}"
