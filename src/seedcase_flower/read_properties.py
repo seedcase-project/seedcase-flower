@@ -13,6 +13,7 @@ from seedcase_flower.errors import (
     HTTP404Error,
     HTTPDomainError,
     JSONFormatError,
+    NotJSONError,
 )
 from seedcase_flower.parse_source import Address
 
@@ -32,6 +33,9 @@ def read_properties(address: Address) -> dict[str, Any]:
     else:
         try:
             with request.urlopen(address.value) as open_url:  # nosec B310
+                content_type = open_url.headers.get("Content-Type", "")
+                if not content_type.startswith(("application/json", "text/plain")):
+                    raise NotJSONError(address.value, content_type)
                 datapackage = json.load(open_url)
         except HTTPError as e:
             raise HTTP404Error(address.value, e.code, e.reason)
