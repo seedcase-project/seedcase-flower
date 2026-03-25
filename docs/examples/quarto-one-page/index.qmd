@@ -5,7 +5,6 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 
 # `flora`: Observations of flora species and seasonal development
 
-
 **Licenses:**
 
 - [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
@@ -13,7 +12,8 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 
 **Version:** 1.2.3
 
-A dataset containing flora species records and their observed growth stages across different environments.
+A dataset containing flora species records and their observed growth
+stages across different environments.
 
 ## Contributors
 
@@ -58,7 +58,8 @@ This resource contains a catalog of flora species locations.
 
 ### `growth_records`: Growth Stage Records
 
-This resource contains records of observed growth stages for various flora species.
+This resource contains records of observed growth stages for various
+flora species.
 
 - Path: `resources/growth_records/data.parquet`
 - Primary key: (`record_id`)

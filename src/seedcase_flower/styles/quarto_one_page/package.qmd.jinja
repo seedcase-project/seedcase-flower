@@ -24,7 +24,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% endif %}
 {% if package.description %}
 
-{{ package.description }}
+{{ package.description | _wrap_text }}
 {% endif %}
 {% if package.contributors %}
 
@@ -46,7 +46,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 ### {{ resource.name | _inline_code }}{{ ": " ~ resource.title if resource.title }}
 {% if resource.description %}
 
-{{ resource.description }}
+{{ resource.description | _wrap_text }}
 {% endif %}
 {% if resource.path %}
 

@@ -1,6 +1,8 @@
 """Build sections from templates."""
 
 import tomllib
+import re
+import textwrap
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
@@ -76,6 +78,36 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(_map(value, lambda item: f"`{item}`"))
 
 
+def _wrap_text(value: str, width: int = 72) -> str:
+    """Wrap text to a maximum line width, preserving list indentation."""
+    if not value:
+        return value
+
+    def is_list_item(line: str) -> bool:
+        return bool(re.match(r"^(\s*)([-*]|\d+\.)\s+", line))
+
+    def wrap_list_item(line: str) -> str:
+        match = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", line)
+        leading_spaces = match.group(1)
+        bullet = match.group(2)
+        content = match.group(3)
+        subsequent_indent = leading_spaces + " " * (len(bullet) + 1)
+
+        return textwrap.fill(
+            content,
+            width=width,
+            initial_indent=leading_spaces + bullet + " ",
+            subsequent_indent=subsequent_indent,
+        )
+
+    def wrap_line(line: str) -> str:
+        if is_list_item(line):
+            return wrap_list_item(line)
+        return textwrap.fill(line, width=width) if line.strip() else line
+
+    return "\n".join(map(wrap_line, value.split("\n")))
+
+
 def _max_column_width(rows: list[list[str]], col: int) -> int:
     return max(map(lambda row: len(row[col]), rows), default=0)
 
@@ -127,6 +159,8 @@ def _create_jinja_env(template_dir: Path) -> Environment:
     env.filters["_inline_code_list"] = _inline_code_list
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
+    # Wrap text to a maximum line width
+    env.filters["_wrap_text"] = _wrap_text
     # Render a markdown table with adjusted column widths
     env.globals["_render_markdown_table"] = _render_markdown_table
     return env
