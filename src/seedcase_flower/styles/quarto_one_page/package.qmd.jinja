@@ -13,9 +13,9 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 
 {% for license in package.licenses %}
 {% if license.path %}
--   [{{ license.title or license.name or "License" }}]({{ license.path }})
+- [{{ license.title or license.name or "License" }}]({{ license.path }})
 {% else %}
--   {{ license.title or license.name }}
+- {{ license.title or license.name }}
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -36,7 +36,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% set email = "<" ~ contributor.email ~ ">" if contributor.email %}
 {% set roles = contributor.roles | join(', ') %}
 {% if label or email %}
--   {{ label or email }}{{ " (" ~ email ~ ")" if label and email }}{{ ": " ~ roles if roles }}
+- {{ label or email }}{{ " (" ~ email ~ ")" if label and email }}{{ ": " ~ roles if roles }}
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -51,17 +51,17 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% endif %}
 {% if resource.path %}
 
--   Path: {{ resource.path | _inline_code }}
+- Path: {{ resource.path | _inline_code }}
 {% endif %}
 {% if resource.schema %}
 {% set schema = resource.schema %}
 {% if schema.primaryKey %}
--   Primary key: ({{ schema.primaryKey | _inline_code_list }})
+- Primary key: ({{ schema.primaryKey | _inline_code_list }})
 {% endif %}
 {% if schema.foreignKeys %}
--   Foreign keys:
+- Foreign keys:
 {% for fk in schema.foreignKeys %}
-    -   From fields ({{
+    - From fields ({{
         fk.fields | _inline_code_list
     }}) to fields ({{
         fk.reference.fields | _inline_code_list
