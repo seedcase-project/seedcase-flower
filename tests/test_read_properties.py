@@ -13,6 +13,7 @@ from seedcase_flower.errors import (
     HTTP404Error,
     HTTPDomainError,
     JSONFormatError,
+    NotJSONError,
 )
 from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
@@ -126,4 +127,17 @@ def test_read_properties_raises_on_remote_dns_failure(mocker):
     )
 
     with pytest.raises(HTTPDomainError):
+        read_properties(address)
+
+
+@pytest.mark.usefixtures("mocker")
+def test_read_properties_raises_on_non_json_content_type(mocker):
+    """Remote URL returning non-JSON content type should raise NotJSONError."""
+    mock_urlopen = mocker.patch("seedcase_flower.read_properties.request.urlopen")
+    mock_response = mock_urlopen.return_value.__enter__.return_value
+    mock_response.headers.get.return_value = "text/html; charset=utf-8"
+
+    address = Address(value="https://example.com/datapackage.json", local=False)
+
+    with pytest.raises(NotJSONError, match="Expected JSON but received 'text/html"):
         read_properties(address)

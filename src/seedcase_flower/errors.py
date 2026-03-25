@@ -51,3 +51,14 @@ class HTTPDomainError(FlowerError):
             resolved_address,
             "Couldn't connect to the server because the domain wasn't found.",
         )
+
+
+class NotJSONError(FlowerError):
+    """Error when a URL does not return JSON content."""
+
+    def __init__(self, resolved_address: str, content_type: str) -> None:
+        """Initialize NotJSONError with resolved_address and actual content type."""
+        super().__init__(
+            resolved_address,
+            f"Expected JSON but received '{content_type}'.",
+        )
