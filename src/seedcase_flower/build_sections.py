@@ -77,7 +77,7 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
 
 
 def _escape_newline(cell: str) -> str:
-    return cell.replace("\n", " \\n ")
+    return cell.replace("\n", " ")
 
 
 def _escape_row(row: list[str]) -> list[str]:
