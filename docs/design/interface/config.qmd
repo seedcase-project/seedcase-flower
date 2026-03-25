@@ -264,7 +264,7 @@ template-dir = "templates/"
 output-dir = "docs/"
 ```
 
-### {{< var wip >}} Main config settings: `sections.toml`
+### {{< var done >}} Main config settings: `sections.toml`
 
 The `sections.toml` file contains the configuration settings for a given
 style of output. The `sections.toml` is kept in the root of the

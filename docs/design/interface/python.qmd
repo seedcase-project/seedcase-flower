@@ -65,7 +65,7 @@ reasons:
 
 :::
 
-### {{< var wip >}} `build()`
+### {{< var done >}} `build()`
 
 As already described in the CLI design page, this function has the
 following parameters:
@@ -105,7 +105,7 @@ flowchart TD
     classDef input fill:#FFF
 ```
 
-### {{< var wip >}} `view()`
+### {{< var done >}} `view()`
 
 As mentioned in the CLI design page, this function has two parameters
 that are both the same as those in the `build()` function: `source` and

@@ -10,7 +10,7 @@ has been finished and what remains to be done.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
-## {{< var wip >}} `seedcase-flower`
+## {{< var done >}} `seedcase-flower`
 
 `seedcase-flower` has the following signature:
 
@@ -51,7 +51,7 @@ There will be two commands available:
 - `view`: Display the `datapackage.json` metadata in a human-friendly
   way in the Terminal.
 
-## {{< var wip >}} `build`
+## {{< var done >}} `build`
 
 The `build` command has the following signature, that is positional as
 well as keyword-based:
@@ -111,9 +111,9 @@ The main argument to `build` is the location of the Data Package file as
 a `SOURCE` (e.g. a file path or a URL) to build the documentation from.
 Flower supports the following sources:
 
-- {{< var wip >}} `file://` or a path without `file://`
-- {{< var planned >}} `https://`
-- {{< var planned >}} `gh:` or `github:`
+- {{< var done >}} `file://` or a path without `file://`
+- {{< var done >}} `https://`
+- {{< var done >}} `gh:` or `github:`
 
 Depending on the source given, there are different behaviours:
 
@@ -205,7 +205,7 @@ This overriding behaviour also applies to the other CLI options,
 `--output-dir` and `--template-dir`; if they are used on the CLI, they
 override the corresponding settings in the configuration file.
 
-## {{< var wip >}} `view`
+## {{< var done >}} `view`
 
 The `view` command has the following signature, that is positional as
 well as keyword-based:
