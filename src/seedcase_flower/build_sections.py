@@ -79,9 +79,19 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
 
 
 def _wrap_text(value: str, width: int = 72) -> str:
-    """Wrap text to a maximum line width, preserving list indentation."""
+    """Wrap text to a maximum line width, preserving list indentation.
+
+    Skips headers (lines starting with #), tables (lines containing |),
+    and HTML comments (lines between <!-- and -->).
+    """
     if not value:
         return value
+
+    def is_header(line: str) -> bool:
+        return line.lstrip().startswith("#")
+
+    def is_table(line: str) -> bool:
+        return "|" in line
 
     def is_list_item(line: str) -> bool:
         return bool(re.match(r"^(\s*)([-*]|\d+\.)\s+", line))
@@ -100,12 +110,29 @@ def _wrap_text(value: str, width: int = 72) -> str:
             subsequent_indent=subsequent_indent,
         )
 
-    def wrap_line(line: str) -> str:
-        if is_list_item(line):
-            return wrap_list_item(line)
-        return textwrap.fill(line, width=width) if line.strip() else line
+    lines = value.split("\n")
+    result = []
+    in_comment = False
 
-    return "\n".join(map(wrap_line, value.split("\n")))
+    for line in lines:
+        if "<!--" in line:
+            in_comment = True
+        if in_comment:
+            result.append(line)
+            if "-->" in line:
+                in_comment = False
+            continue
+
+        if is_header(line) or is_table(line):
+            result.append(line)
+        elif is_list_item(line):
+            result.append(wrap_list_item(line))
+        elif line.strip():
+            result.append(textwrap.fill(line, width=width))
+        else:
+            result.append(line)
+
+    return "\n".join(result)
 
 
 def _max_column_width(rows: list[list[str]], col: int) -> int:
@@ -207,7 +234,7 @@ def _build_one(
     )
     return BuiltSection(
         output_path=one.output_path,
-        content="\n".join(built_contents),
+        content=_wrap_text("\n".join(built_contents)),
     )
 
 
@@ -244,7 +271,9 @@ def _build_many(
         matches,
         lambda match: BuiltSection(
             output_path=_get_output_path_for_match(match, many),
-            content=template.render(**{many.jinja_variable: match.properties}),
+            content=_wrap_text(
+                template.render(**{many.jinja_variable: match.properties})
+            ),
         ),
     )
 
