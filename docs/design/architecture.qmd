@@ -243,12 +243,12 @@ flowchart
         output_screen("Human-readable metadata<br>[terminal output]")
     end
 
-    user --"Gives<br>datapackage.json"--> read_properties
-    user --"Gives templates<br>in folder<br>(optional)"--> templates
-    user --"Gives configurations,<br>as file, Python classes,<br>or from CLI<br>(optional)"--> config
-    templates --"Sets output<br>structure and layout"--> section
-    build --"Populates template(s)<br>with metadata items"--> output_files
-    view --"Displays output<br>to screen"--> output_screen
+    user --"Provides datapackage.json path<br>programmatically"--> read_properties
+    user -."(Optional)<br>Provides configurations,<br>as file or Python class".-> cfg
+    user -."(Optional)<br>Provides custom templates<br>in folder".-> templates
+    templates --"Defines output<br>structure and layout"--> cfg
+    build --"Generates output files"--> output_files
+    view --"Generates terminal output"--> output_screen
 
     %% Styling
     style package fill:#FFFFFF, color:#000000
