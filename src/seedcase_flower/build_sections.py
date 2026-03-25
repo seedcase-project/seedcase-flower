@@ -85,7 +85,7 @@ def _cell_width(headers: list[str], rows: list[list[str]], col: int) -> int:
 
 
 def _column_widths(headers: list[str], rows: list[list[str]]) -> list[int]:
-    return list(map(lambda i: _cell_width(headers, rows, i), range(len(headers))))
+    return _map(range(len(headers)), lambda i: _cell_width(headers, rows, i))
 
 
 def _format_row(row: list[str], widths: list[int]) -> str:
