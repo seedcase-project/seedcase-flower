@@ -236,8 +236,10 @@ flowchart TB
 
     user("User<br>[person]")
     templates("Templates<br>[folder with<br>Jinja files]")
-    output_files("Output<br>[files and<br>folders]")
-    output_screen("Output<br>[text in the<br>Terminal]")
+    subgraph output["Output"]
+        output_files("Human-readable metadata<br>[files and folders]")
+        output_screen("Human-readable metadata<br>[terminal output]")
+    end
 
     user --"Gives<br>datapackage.json"--> read_properties
     user --"Gives templates<br>in folder<br>(optional)"--> templates
@@ -248,6 +250,7 @@ flowchart TB
 
     %% Styling
     style package fill:#FFFFFF, color:#000000
+    style output fill:#FFFFFF, color:#000000
     style cfg fill:#FFFFFF, color:#000000, stroke-dasharray: 5 5
 ```
 
