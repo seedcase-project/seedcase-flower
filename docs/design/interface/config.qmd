@@ -295,8 +295,8 @@ jinja-variable = "resource"
 # In this example, this would allow you to use custom Quarto listings for the
 # fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[many]]
-output-path = "resources/{resource-name}/schema-fields.yml"
+output-path = "resources/{resource-name}/{field-name}.yml"
 jsonpath = ".resources[*].schema.fields"
-template-path = "path/to/templates/resource-schema-fields.yml.jinja"
-jinja-variable = "fields"
+template-path = "path/to/templates/resource-schema-field.yml.jinja"
+jinja-variable = "field"
 ```
