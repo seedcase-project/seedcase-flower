@@ -63,7 +63,8 @@ check-urls:
       --exclude-all-private \
       --exclude "^file://" \
       --exclude "raw\.githubusercontent\.com" \
-      --exclude-path "_badges.qmd"
+      --exclude-path "_badges.qmd" \
+      --exclude-path "tests/*"
 
 # Check the commit messages on the current branch that are not on the main branch
 check-commits:
