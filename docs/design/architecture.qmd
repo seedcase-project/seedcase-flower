@@ -122,7 +122,7 @@ interact with Flower.
 ```{mermaid}
 %%| label: fig-c4-context
 %%| fig-cap: "C4 system context diagram showing the anticipated users and external systems Flower interacts with."
-flowchart
+flowchart TD
 
     subgraph Users
         Producers["Producer users"]
@@ -171,7 +171,7 @@ functionality is also available through the Python API.
 ```{mermaid}
 %%| label: fig-c4-container
 %%| fig-cap: "C4 container diagram showing the core Python package in Flower and the command line interface."
-flowchart
+flowchart TD
 
     user("User<br>[person]")
     config("Config<br>[toml]")
@@ -217,7 +217,7 @@ single diagram.
 ```{mermaid}
 %%| label: fig-c4-component
 %%| fig-cap: "C4 component diagram showing the main functions and classes within the Python package and their connections."
-flowchart
+flowchart TD
 
     subgraph package["Core Python Package"]
 
