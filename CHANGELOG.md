@@ -16,6 +16,24 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.21.3 (2026-03-26)
+
+### Fix
+
+- 🐛 make styles follow commonmark/rumdl format (#222)
+
+## 0.21.2 (2026-03-26)
+
+### Refactor
+
+- ♻️ clarify HTTP errors include other status codes (#227)
+
+## 0.21.1 (2026-03-26)
+
+### Refactor
+
+- ♻️ split the error message for readability (#226)
+
 ## 0.21.0 (2026-03-25)
 
 ### Feat

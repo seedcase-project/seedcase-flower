@@ -10,8 +10,8 @@ from check_datapackage.check import DataPackageError
 
 from seedcase_flower.errors import (
     FileDoesNotExistError,
-    HTTP404Error,
     HTTPDomainError,
+    HTTPStatusError,
     JSONFormatError,
     NotJSONError,
 )
@@ -100,7 +100,7 @@ def test_read_properties_raises_on_remote_invalid_json(mocker):
 
 @pytest.mark.usefixtures("mocker")
 def test_read_properties_raises_on_remote_404(mocker):
-    """A remote URL returning 404 should raise HTTP404Error."""
+    """A remote URL returning 404 should raise HTTPStatusError."""
     mocker.patch(
         "seedcase_flower.read_properties.request.urlopen",
         side_effect=HTTPError(
@@ -110,7 +110,7 @@ def test_read_properties_raises_on_remote_404(mocker):
 
     address = Address(value="https://example.com/datapackage.json", local=False)
 
-    with pytest.raises(HTTP404Error):
+    with pytest.raises(HTTPStatusError):
         read_properties(address)
 
 
