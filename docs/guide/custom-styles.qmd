@@ -246,7 +246,7 @@ The `sections.toml` file must be stored in the template folder.
 #### Adding `[[one]]` section(s)
 
 Create a `sections.toml` file in the `templates/` folder. Inside, add a
-`[[one]]` for each output file file you want to create. For this guide,
+`[[one]]` for each output file you want to create. For this guide,
 create just one `[[one]]` to save an `index.qmd`:
 
 ``` {.toml filename="templates/sections.toml"}
@@ -309,8 +309,8 @@ keep adding content items to the same `[[one]]` section.
 When you want to create a group of similar output files (e.g., one file
 for each resource), you can use the `[[many]]` section type. Here you'll
 create a `[[many]]` section to save a file for each resource in the
-`resources/` folder. The `[[many]]` section works similar to `[[one]]`
-except you can only have one content and those content attributes are
+`resources/` folder. The `[[many]]` section works similarly to `[[one]]`
+except you can only have one content and content attributes are
 included within the `[[many]]` section instead of being nested under
 `[[many.contents]]`.
 
@@ -321,7 +321,7 @@ template, you add the following `[[many]]` section to the
 ``` {.toml filename="templates/sections.toml"}
 [[many]]
 output-path = "resources/"
-jsonpath = "$.resources"
+content = "resources"
 template-path = "resource.qmd.jinja"
 jinja-variable = "resource"
 ```
@@ -337,7 +337,7 @@ You can either set a folder or a file in the `output-path` of
 placeholder for the file name. In the case above, it would be
 `resources/{resource-name}.qmd`. See the
 [design documentation on `Many`](/docs/design/interface/config.qmd#one-and-many-class)
-documentation for more details.
+for more details.
 :::
 
 <!-- TODO: Add tip on including field names nested under resource names. -->
