@@ -68,7 +68,7 @@ The `Config` class specifies the top-level configurations that apply to
   directory containing the custom Jinja2 templates for custom styles and
   a `sections.toml` file with the settings that determine how the
   templates are used to create the output (more about this file is in
-  the [`One` and `Many` classes](#one-and-many-class) below).
+  the [`One` and `Many` classes](#one-and-many-class) section below).
 - `output_dir`: This optional attribute indicates which folder the
   output should be sent to.
 
@@ -95,7 +95,7 @@ itself or the content, as we let Jinja2 handle that.
 Theoretically, a user could create a custom style that lists all the
 metadata found in the `datapackage.json` file in a single Jinja template
 file, depending on how they set up the
-[`One` and `Many`](#one-and-many-class) class and created their Jinja2
+[`One` and `Many`](#one-and-many-class) classes and created their Jinja2
 template.
 
 Jinja2 template files listed in the `Content.template_path` are given
@@ -117,22 +117,22 @@ See [`help(Config)`](/docs/reference/Config.qmd) for more details.
 The main purpose of `One` and `Many` is to allow creating separate
 "sections" of the documentation, in this case, separate files to display
 different parts of the `datapackage.json` metadata. The `One` section
-allows creating one output file but with potentially many `Content`
+allows creating one output file but with potentially many `Content` items
 inside, while the `Many` section creates many output files using a
 single `Content`.
 
 The `One` class has two attributes `output_path` and `contents`, where
 multiple `Content` classes can be included in the `contents` list. The
-`Many` class has almost the same attributes, expect rather than having a
+`Many` class has almost the same attributes, except rather than having a
 list of `Content` classes in `contents`, it includes the attributes of
-the `Content` class in it's own attributes.
+the `Content` class in its own attributes.
 
 The `output_path` specifies the name of the output file or folder
-relative to the `Config.output_dir`. For the `One.output_path`, the path
-is a file path, as it only outputs one file. For the `Many.output_path`,
-the path will be used to create many files. That's because some Data
-Package properties are arrays of objects, for example the resources. For
-example, in the resource case, we might want to create a separate output
+relative to the `Config.output_dir`. `One.output_path`
+is a file path, as it only outputs one file. `Many.output_path`
+will be used to create many files. That's because some Data
+Package properties are arrays of objects. For
+example, in the case of resources, we might want to create a separate output
 file for each resource.
 
 To expand on the `Many.output_path`, when a Data Package property that
@@ -215,7 +215,6 @@ style, the template directory must have this `sections.toml` file, which
 contains the settings for the `One` and `Many` classes. For built-in
 styles, this `sections.toml` file is kept internally in Flower while for
 custom styles, the user must provide it in their template directory.
-This file maps to one or more `One`, `Many`, and `Content` classes.
 
 To provide a clear precedence for applying settings, we decided that
 styles specified on the CLI override settings in the configuration file.
@@ -263,7 +262,7 @@ output-dir = "docs/"
 
 The `sections.toml` file contains the configuration settings for a given
 style of output. The `sections.toml` is kept in the root of the
-`Config.template_dir` and is used to create the `One` and `Many` overall
+`Config.template_dir` and is used to create the `One` and `Many`
 section classes and the `Content` classes within `One`. This file allows
 creating a wide variety of styles, from simple to complex. For example:
 
@@ -287,9 +286,9 @@ jinja-variable = "contributors"
 output-path = "resources/"
 # Or equivalently
 # output-path = "resources/{resource-name}.qmd
-jsonpath = ".resources"
-template-path = "path/to/templates/resources.qmd.jinja"
-jinja-variable = "resources"
+content = "resources"
+template-path = "path/to/templates/resource.qmd.jinja"
+jinja-variable = "resource"
 
 # This creates a YAML file for each resource containing its schema fields.
 # The `{resource-name}` variable is replaced with the name of each resource.
