@@ -24,7 +24,7 @@ describe both types and how they relate to Flower and its design.
 ### Producers
 
 - **Owner**: This role is responsible and accountable for the Data
-  Package: ensuring the metadata is accurate, complete, and up-to-date.
+  Package by ensuring the metadata is accurate, complete, and up-to-date.
   They likely want more people to be aware of and use their Data
   Package, including their group, collaborators, and a wider external
   audience. They may use Flower themselves or delegate it to someone
@@ -166,7 +166,7 @@ containers of Flower, their responsibilities, and how they interact,
 including the technologies used for each.
 
 Flower is primarily designed for use as a CLI, but its core
-functionality is also available as a Python API.
+functionality is also available through the Python API.
 
 ```{mermaid}
 %%| label: fig-c4-container
