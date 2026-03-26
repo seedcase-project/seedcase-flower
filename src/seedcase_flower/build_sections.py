@@ -76,11 +76,11 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(_map(value, lambda item: f"`{item}`"))
 
 
-def _escape_newline(cell: str) -> str:
+def _replace_newlines(cell: str) -> str:
     return cell.replace("\n", " ")
 
 
-def _escape_row(row: list[str]) -> list[str]:
+def _replace_newlines_in_row(row: list[str]) -> list[str]:
     return list(map(_escape_newline, row))
 
 
@@ -108,8 +108,8 @@ def _adjust_column_widths(header_row: list[str], data_rows: list[list[str]]) -> 
     if not header_row:
         return ""
 
-    header_row = _escape_row(header_row)
-    data_rows = list(map(_escape_row, data_rows))
+    header_row = _replace_newlines_in_row(header_row)
+    data_rows = _map(data_rows, _replace_newlines_in_row)
     widths = _column_widths(header_row, data_rows)
 
     return "\n".join(
