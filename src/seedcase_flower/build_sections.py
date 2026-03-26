@@ -81,7 +81,7 @@ def _replace_newlines(cell: str) -> str:
 
 
 def _replace_newlines_in_row(row: list[str]) -> list[str]:
-    return list(map(_escape_newline, row))
+    return _map(row, _replace_newlines)
 
 
 def _max_column_width(rows: list[list[str]], col: int) -> int:
