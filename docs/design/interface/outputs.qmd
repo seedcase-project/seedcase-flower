@@ -24,16 +24,14 @@ styles.
 
 ## File output: Built-in styles {#built-in-styles}
 
-We designed Flower to be extensible to make it easier for us to develop
+Flower is designed to be extensible to make it easier for us to develop
 built-in styles and to expand them in the future. This extensibility
-also accommodates custom needs beyond what the built-in styles provide.
-With custom templates, different output formats can be generated to meet
-varying needs.
+also accommodates users using custom
+[configurations](/docs/guide/config.qmd) and creating their own
+[custom styles](/docs/guide/custom-styles.qmd).
 
 See our [Examples](/docs/examples/index.qmd) page for a list of our
-built-in styles. The raw output files are found in the
-[GitHub repository](https://github.com/seedcase-project/seedcase-flower/tree/main/docs/examples).
-Below is an explanation of the different styles.
+built-in styles.
 
 ### `quarto-one-page` (default) {#quarto-one-page-default}
 
