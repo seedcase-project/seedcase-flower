@@ -16,10 +16,9 @@ Both output formats can be customised to suit different needs.
 ## Terminal output
 
 When outputting to the terminal, Flower generates a plain text
-representation of the Data Package metadata. This output is designed to
-be human-readable and provides a quick overview of the Data Package's
-contents. As with file outputs, the terminal output can be customised
-using different styles.
+representation of the Data Package metadata for a quick overview. As
+with file outputs, the terminal output can be customised using different
+styles.
 
 ## File output: Built-in styles {#built-in-styles}
 
