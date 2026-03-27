@@ -24,14 +24,14 @@ describe both types and how they relate to Flower and its design.
 ### Producers
 
 - **Owner**: This role is responsible and accountable for the Data
-  Package by ensuring the metadata is accurate, complete, and up-to-date.
-  They likely want more people to be aware of and use their Data
-  Package, including their group, collaborators, and a wider external
-  audience. They may use Flower themselves or delegate it to someone
-  else to generate human-readable documents from the metadata. This role
-  may not have much time or technical expertise to configure Flower, so
-  they are likely to use Flower's default configurations, style, and
-  templates.
+  Package by ensuring the metadata is accurate, complete, and
+  up-to-date. They likely want more people to be aware of and use their
+  Data Package, including their group, collaborators, and a wider
+  external audience. They may use Flower themselves or delegate it to
+  someone else to generate human-readable documents from the metadata.
+  This role may not have much time or technical expertise to configure
+  Flower, so they are likely to use Flower's default configurations,
+  style, and templates.
 
 - **Manager**: When distinct from the Owner, this role is responsible
   for managing, organising, and maintaining the Data Package, including
