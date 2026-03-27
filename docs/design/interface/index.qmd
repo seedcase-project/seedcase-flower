@@ -6,11 +6,13 @@ This section covers the design of Flower's interface and the reasoning
 behind key design decisions. It is organised into the following
 documents:
 
-- The [Inputs](inputs.qmd) accepted by Flower.
-- The [Outputs](outputs.qmd), including the different styles for
-  generating documentation from the `datapackage.json` file.
-- The [Command Line Interface](cli.qmd) that forms the main entry point.
-- The [Configuration settings](config.qmd) as a Python class and within
-  a file.
-- The [Python interface](python.qmd) that contains the Python code that
-  powers the CLI Python functions.
+- [Inputs](inputs.qmd): The data and values accepted by Flower.
+- [Outputs](outputs.qmd): The outputs produced, including files and
+  folders and terminal output generated from the `datapackage.json`
+  file.
+- [Command Line Interface](cli.qmd): The main entry point for
+  interacting with Flower.
+- [Configuration settings](config.qmd): Settings defined as a Python
+  class and within a configuration file.
+- [Python interface](python.qmd): The user-facing Python functions that
+  underpin the CLI and configuration settings.
