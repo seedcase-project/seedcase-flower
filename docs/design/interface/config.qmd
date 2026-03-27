@@ -117,23 +117,26 @@ See [`help(Config)`](/docs/reference/Config.qmd) for more details.
 The main purpose of `One` and `Many` is to allow creating separate
 "sections" of the documentation, in this case, separate files to display
 different parts of the `datapackage.json` metadata. The `One` section
-allows creating one output file but with potentially many `Content` items
-inside, while the `Many` section creates many output files using a
+allows creating one output file but with potentially many `Content`
+items inside, while the `Many` section creates many output files using a
 single `Content`.
 
 The `One` class has two attributes `output_path` and `contents`, where
 multiple `Content` classes can be included in the `contents` list. The
 `Many` class has almost the same attributes, except rather than having a
 list of `Content` classes in `contents`, it includes the attributes of
-the `Content` class in its own attributes.
+the `Content` class in its own attributes. Because there are only a few
+metadata properties that would benefit from using the `Many` section, we
+decided to not allow the use of `jsonpath` and instead restrict `Many`
+to `content` types of either `resource` or `field` (for a field in a
+resource's schema).
 
 The `output_path` specifies the name of the output file or folder
-relative to the `Config.output_dir`. `One.output_path`
-is a file path, as it only outputs one file. `Many.output_path`
-will be used to create many files. That's because some Data
-Package properties are arrays of objects. For
-example, in the case of resources, we might want to create a separate output
-file for each resource.
+relative to the `Config.output_dir`. `One.output_path` is a file path,
+as it only outputs one file. `Many.output_path` will be used to create
+many files. That's because some Data Package properties are arrays of
+objects. For example, in the case of resources, we might want to create
+a separate output file for each resource.
 
 To expand on the `Many.output_path`, when a Data Package property that
 we want to display is a list, like resources, we would set the output
@@ -161,7 +164,8 @@ When setting a multi-file output, you can customise what properties get
 sent to the Jinja2 template by using the `Section.contents` attribute.
 See the section on the `Content` class below for more details.
 
-See [`help(One)`](/docs/reference/One.qmd) or [`help(Many)`](/docs/reference/Many.qmd) for more details.
+See [`help(One)`](/docs/reference/One.qmd) or
+[`help(Many)`](/docs/reference/Many.qmd) for more details.
 
 ### {{< var done >}} `Content`
 
@@ -262,8 +266,8 @@ output-dir = "docs/"
 
 The `sections.toml` file contains the configuration settings for a given
 style of output. The `sections.toml` is kept in the root of the
-`Config.template_dir` and is used to create the `One` and `Many`
-section classes and the `Content` classes within `One`. This file allows
+`Config.template_dir` and is used to create the `One` and `Many` section
+classes and the `Content` classes within `One`. This file allows
 creating a wide variety of styles, from simple to complex. For example:
 
 ``` toml
@@ -290,13 +294,14 @@ content = "resources"
 template-path = "path/to/templates/resource.qmd.jinja"
 jinja-variable = "resource"
 
-# This creates a YAML file for each resource containing its schema fields.
-# The `{resource-name}` variable is replaced with the name of each resource.
-# In this example, this would allow you to use custom Quarto listings for the
+# This creates one YAML file for each field in a resource. The
+# `{resource-name}` variable is replaced with the name of each resource and
+# `{field-name}` is replaced with the name of each field. In this example, this
+# would allow you to use custom Quarto listings for the
 # fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[many]]
 output-path = "resources/{resource-name}/{field-name}.yml"
-jsonpath = ".resources[*].schema.fields"
+content = "field"
 template-path = "path/to/templates/resource-schema-field.yml.jinja"
 jinja-variable = "field"
 ```
