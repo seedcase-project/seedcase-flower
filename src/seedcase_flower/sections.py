@@ -199,6 +199,8 @@ class Many(KebabModel, frozen=True):
             this template.
         content: The content item to display in this section; choices are `resources`
             and `fields`.
+        template_path: See `Content.template_path` for more details.
+        jinja_variable: See `Content.jinja_variable` for more details.
 
     Examples:
         ```{python}
