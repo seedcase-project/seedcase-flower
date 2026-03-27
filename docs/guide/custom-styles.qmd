@@ -310,9 +310,9 @@ When you want to create a group of similar output files (e.g., one file
 for each resource), you can use the `[[many]]` section type. Here you'll
 create a `[[many]]` section to save a file for each resource in the
 `resources/` folder. The `[[many]]` section works similarly to `[[one]]`
-except you can only have one content and content attributes are
-included within the `[[many]]` section instead of being nested under
-`[[many.contents]]`.
+except you can only have one `content` type (either `"resource"` or
+`"field"`) that is used in place of `jsonpath`, with the other `Content`
+attributes being included within the `[[many]]` section.
 
 To create one file for each resource using the `resource.qmd.jinja`
 template, you add the following `[[many]]` section to the
@@ -321,7 +321,7 @@ template, you add the following `[[many]]` section to the
 ``` {.toml filename="templates/sections.toml"}
 [[many]]
 output-path = "resources/"
-content = "resources"
+content = "resource"
 template-path = "resource.qmd.jinja"
 jinja-variable = "resource"
 ```
