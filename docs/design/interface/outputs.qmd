@@ -108,13 +108,12 @@ A dataset containing flora species records and their observed growth stages acro
 ::: callout-note
 The `index.qmd` file uses Quarto's
 [listing feature](https://quarto.org/docs/websites/website-listings.html)
-to generate a table listing of the resources in the Data Package,
-including their titles and descriptions. This table is appended to the
-file and will appear after the "\## Resources" heading when rendered.
+to generate a table listing of the resources in the Data Package, with
+their titles and descriptions.
 
 The table is interactive, allowing users to search for specific
-resources based on their titles. Clicking on the title, takes the user
-to the corresponding resource documentation file.
+resources based on their titles. Clicking on the title takes the user to
+the corresponding resource documentation file.
 :::
 
 ``` {.md filename="resources/species_catalog.qmd"}
