@@ -35,18 +35,15 @@ built-in styles.
 
 ### `quarto-one-page` (default) {#quarto-one-page-default}
 
-The `quarto-one-page` style generates a Quarto book structure, where
-everything, including the resources, is organized into a single Quarto
-Markdown file, `index.qmd`. This is the default style used by Flower. We
-use this as the default style because it's simple, keeps everything
-together, and it can be used to create a simple, single-page website or
-single page PDF (rendered by Quarto).
+The `quarto-one-page` style generates a single Quarto Markdown file,
+`index.qmd`, suitable for simpler Data Packages with a small number of
+resources and/or resources with a small number of variables. This is the
+default style, since it keeps the metadata together. It can be used to
+create a single-page website or PDF (rendered by Quarto).
 
-This style is suitable for simple Data Packages with a small number of
-resources and/or resources with a small number of variables, as it keeps
-everything in one place for easy viewing. See the
-[Quarto one page style example](/docs/examples/quarto-one-page/index.qmd)
-for how it might look like.
+For an example, see the
+[Quarto one page style](/docs/examples/quarto-one-page/index.qmd)
+example.
 
 ### `quarto-resource-listing` {#quarto-resource-listing}
 
