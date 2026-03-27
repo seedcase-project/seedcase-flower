@@ -20,6 +20,8 @@ representation of the Data Package metadata for a quick overview. As
 with file outputs, the terminal output can be customised using different
 styles.
 
+<!-- TODO: Add examples of terminal output here or under Examples? -->
+
 ## File output: Built-in styles {#built-in-styles}
 
 We designed Flower to be extensible to make it easier for us to develop
