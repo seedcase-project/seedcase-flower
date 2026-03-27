@@ -14,7 +14,8 @@ class Config(BaseModel, frozen=True):
     for an explanation of how Config is designed. See the
     [guide](https://flower.seedcase-project.org/docs/guide/custom-styles) on how to
     set up custom styles and sections.
-    See `Section` and `Content` help for more details on how to set up the sections.
+    See `One`, `Many`, and `Content` help for more details on how to set up the
+    sections.
 
     Attributes:
         style: The built-in style to use for outputting the
@@ -23,7 +24,8 @@ class Config(BaseModel, frozen=True):
             relative directory path to the
             [Jinja2](https://jinja.palletsprojects.com/en/stable/) template files.
             The directory **must** contain at least one template Jinja2 file and
-            a `sections.toml` file that contains attributes for the `Section` classes.
+            a `sections.toml` file that contains attributes for the `One` and `Many`
+            classes.
         output_dir: The directory where output files will be saved.
 
     Examples:

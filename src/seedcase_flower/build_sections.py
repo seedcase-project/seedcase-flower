@@ -76,16 +76,24 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(_map(value, lambda item: f"`{item}`"))
 
 
+def _replace_newlines(cell: str) -> str:
+    return cell.replace("\n", " ")
+
+
+def _replace_newlines_in_row(row: list[str]) -> list[str]:
+    return _map(row, _replace_newlines)
+
+
 def _max_column_width(rows: list[list[str]], col: int) -> int:
     return max(map(lambda row: len(row[col]), rows), default=0)
 
 
-def _cell_width(headers: list[str], rows: list[list[str]], col: int) -> int:
-    return max(len(headers[col]), _max_column_width(rows, col))
+def _cell_width(header_row: list[str], data_rows: list[list[str]], col: int) -> int:
+    return max(len(header_row[col]), _max_column_width(data_rows, col))
 
 
-def _column_widths(headers: list[str], rows: list[list[str]]) -> list[int]:
-    return _map(range(len(headers)), lambda i: _cell_width(headers, rows, i))
+def _column_widths(header_row: list[str], data_rows: list[list[str]]) -> list[int]:
+    return _map(range(len(header_row)), lambda i: _cell_width(header_row, data_rows, i))
 
 
 def _format_row(row: list[str], widths: list[int]) -> str:
@@ -96,17 +104,19 @@ def _separator_row(widths: list[int]) -> str:
     return "|" + "|".join(map(lambda w: "-" * (w + 2), widths)) + "|"
 
 
-def _render_markdown_table(headers: list[str], rows: list[list[str]]) -> str:
-    if not headers:
+def _adjust_column_widths(header_row: list[str], data_rows: list[list[str]]) -> str:
+    if not header_row:
         return ""
 
-    widths = _column_widths(headers, rows)
+    header_row = _replace_newlines_in_row(header_row)
+    data_rows = _map(data_rows, _replace_newlines_in_row)
+    widths = _column_widths(header_row, data_rows)
 
     return "\n".join(
         [
-            _format_row(headers, widths),
+            _format_row(header_row, widths),
             _separator_row(widths),
-            *map(lambda row: _format_row(row, widths), rows),
+            *map(lambda row: _format_row(row, widths), data_rows),
         ]
     )
 
@@ -128,7 +138,7 @@ def _create_jinja_env(template_dir: Path) -> Environment:
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     # Render a markdown table with adjusted column widths
-    env.globals["_render_markdown_table"] = _render_markdown_table
+    env.globals["_adjust_column_widths"] = _adjust_column_widths
     return env
 
 

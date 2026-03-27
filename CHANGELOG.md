@@ -16,6 +16,18 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.21.5 (2026-03-26)
+
+### Fix
+
+- 🐛 escape newlines to prevent tables breaking (#223)
+
+## 0.21.4 (2026-03-26)
+
+### Refactor
+
+- :pencil2: more explanatory names for args and functions (#233)
+
 ## 0.21.3 (2026-03-26)
 
 ### Fix

@@ -81,7 +81,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
     field.description or "N/A"
   ]] -%}
 {%- endfor -%}
-{{ _render_markdown_table(headers, ns.rows) }}
+{{ _adjust_column_widths(headers, ns.rows) }}
 
 : Fields in the {{ resource.name | _inline_code }} resource.
 {% endif %}
