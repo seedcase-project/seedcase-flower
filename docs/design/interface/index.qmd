@@ -2,9 +2,9 @@
 title: "Interface"
 ---
 
-This section of the documentation focuses on the design of the interface
-and some of the reasons for these decisions. It is split into the
-following documents:
+This section covers the design of Flower's interface and the reasoning
+behind key design decisions. It is organised into the following
+documents:
 
 - The [Inputs](inputs.qmd) accepted by Flower.
 - The [Outputs](outputs.qmd), including the different styles for
