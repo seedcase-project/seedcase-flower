@@ -128,7 +128,7 @@ list of `Content` classes in `contents`, it includes the attributes of
 the `Content` class in its own attributes. Because there are only a few
 metadata properties that would benefit from using the `Many` section, we
 decided to not allow the use of `jsonpath` and instead restrict `Many`
-to `content` types of either `resource` or `field` (for a field in a
+to `content` types of either `resources` or `fields` (for fields in a
 resource's schema).
 
 The `output_path` specifies the name of the output file or folder
@@ -301,7 +301,7 @@ jinja-variable = "resource"
 # fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[many]]
 output-path = "resources/{resource-name}/{field-name}.yml"
-content = "field"
+content = "fields"
 template-path = "path/to/templates/resource-schema-field.yml.jinja"
 jinja-variable = "field"
 ```
