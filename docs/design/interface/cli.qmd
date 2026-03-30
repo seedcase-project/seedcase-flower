@@ -15,20 +15,18 @@ development reference for tracking implementation status.
 seedcase-flower <COMMAND> [PARAMETERS]
 ```
 
-When used on its own it will show the help message with available
-commands:
+`seedcase-flower` has two commands, `build` and `view`, described in the
+following sections.
+
+When used on its own `seedcase-flower` will show the help message with
+available commands to prevent accidental execution and serve as a quick
+alternative to `--help`:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower
 ```
 
-The default behavior shows the help message to prevent accidental
-execution of commands without the user intending to invoke them. Plus,
-it helps as a quick way of listing what the available commands are
-without having to use `--help`.
-
-If the command is used regularly, it might be useful to set up an alias
-in the Terminal for it, e.g.:
+If the command is used regularly, it might be useful to set up an alias, like `flower`, in the terminal, e.g.:
 
 ``` {.bash filename="Terminal"}
 alias flower="seedcase-flower"
@@ -36,17 +34,7 @@ alias flower="seedcase-flower"
 
 We intentionally use the same name as the Python package and repository,
 `seedcase-flower`, to give a consistent experience when installing and
-using the package. Some other projects use different names for the CLI,
-e.g. `cz` for the `commitizen` package, but we believe that using the
-same name reduces confusion.
-
-There will be two commands available:
-
-- `build`: Build the documentation from the metadata in the
-  `datapackage.json` file.
-
-- `view`: Display the `datapackage.json` metadata in a human-friendly
-  way in the Terminal.
+using the package.
 
 ## {{< var done >}} `build`
 
