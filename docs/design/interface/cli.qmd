@@ -2,8 +2,8 @@
 title: "Command line"
 ---
 
-This document describes the command-line interface (CLI), primarily as a
-development reference for tracking implementation status.
+This document describes the command-line interface (CLI) as a
+development reference and to track implementation status.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
