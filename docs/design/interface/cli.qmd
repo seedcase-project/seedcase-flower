@@ -36,23 +36,23 @@ We intentionally use the same name as the Python package and repository,
 `seedcase-flower`, to give a consistent experience when installing and
 using the package.
 
-## {{< var done >}} `build`
+### {{< var done >}} `build`
 
-The `build` command has the following signature, that is positional as
-well as keyword-based:
+The `build` command builds documentation files from the metadata in the
+`datapackage.json` file. It has the following signature that is
+positional as well as keyword-based:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower build [SOURCE] [STYLE] [TEMPLATE-DIR] [OUTPUT-DIR] [VERBOSE]
 ```
 
-And when used, it would look like this:
+For example:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower build SOURCE --style STYLE
 ```
 
-The diagram below shows a simple flow for how the inputs and outputs
-work for `build`.
+The diagram below shows the flow of inputs and outputs for `build`:
 
 ```{mermaid}
 %%| label: fig-cli-build-flow
@@ -87,9 +87,8 @@ flowchart LR
     build --> output
 ```
 
-Configuration can be provided either as command-line arguments (as shown
-in the signature) or through a configuration file. The CLI command will
-first look for a configuration file named `.flower.toml` (or
+Configuration can be provided as command-line arguments or through a
+configuration file. `build` first looks for `.flower.toml` (or
 `pyproject.toml`) in the current directory.
 
 The main argument to `build` is the location of the Data Package file as
@@ -100,22 +99,22 @@ Flower supports the following sources:
 - {{< var done >}} `https://`
 - {{< var done >}} `gh:` or `github:`
 
-Depending on the source given, there are different behaviours:
+`build`'s behaviour depends on the `SOURCE` format given:
 
-- If nothing is given, `build` will by default assume that `source` is a
-  file path to the current directory and look for a `datapackage.json`
-  file there, so the source becomes `./datapackage.json`.
+- If nothing is given, `build` by default assumes that `source` is a
+  file path to the current directory and looks for a `datapackage.json`
+  file there, corresponding to `./datapackage.json`.
 - If a relative path to a folder is given, `build` will parse it to the
   absolute path and append `datapackage.json`, so that the path becomes
   `/ABSOLUTE_PATH/datapackage.json`.
 - `https://` sources must point to a raw file. We won't support using
   `http://` for security reasons.
 - `gh:` or `github:` sources must be in the format `gh:OWNER/REPO` or
-  `github:OWNER/REPO`. It's possible to add `@REF` to the end to specify
-  a Git ref, which can be a branch name, tag, or commit hash. `build`
-  will parse this source to the raw `https:` of the `datapackage.json`
-  file in the repository, assuming the `datapackage.json` file is in the
-  root of the repository. For example:
+  `github:OWNER/REPO`. It's possible to add `@REF` to specify a Git ref,
+  like a branch name, tag, or commit hash. `build` will parse this
+  source to the raw `https:` of the `datapackage.json` file in the
+  repository, assuming the `datapackage.json` file is in the root of the
+  repository. For example:
   - `gh:seedcase-project/seedcase-flower` will parse to
     `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/main/datapackage.json`.
   - `github:seedcase-project/example-seed-beetle@0.2.0` will parse to
@@ -134,66 +133,52 @@ package, which also outputs a structured `Properties` class.
 
 ::: callout-note
 When Flower reads in the `datapackage.json` file, it checks whether it
-comply with the Data Package specification using
+complies with the Data Package specification using
 [`check-datapackage`](https://check-datapackage.seedcase-project.org)
 and will output an error if there are any issues.
 :::
 
 <!-- TODO: Maybe also at some point allow using `doi:` source? -->
 
-If you want to customise the output, you need to create a `.flower.toml`
-configuration file in the current directory, put the configurations in
-the `pyproject.toml` for Python projects, or use the CLI options. The
-design of the configuration is described in the
-[Configuration settings](config.qmd) document. We don't allow
-customising of the style sections via the CLI so that we can:
+Output can be customised via `.flower.toml`, `pyproject.toml`, or CLI
+options. The design of the configuration is described in
+[Configuration settings](config.qmd). We don't allow customising the
+sections via the CLI to:
 
-- Simplify the CLI implementation and avoid long commands. Especially
-  considering that customising the style of output can get quite complex
-  with multiple sections, templates, and output paths.
+- Simplify the CLI implementation
+- Avoid long commands. Customising the style of output can get quite
+  complex with multiple sections, templates, and output paths.
 - Enforce reproducible builds by having the configuration in a file that
-  can be version controlled, shared, and made visible to others, such as
-  collaborators.
+  can be version controlled and shared.
 
-This also means that if the source is not a file path, we can't look for
-the configuration file in the same location as the `datapackage.json`
-file, even if it exists on the remote location. However, `build` will
-still look for a `.flower.toml` (or `pyproject.toml`) file in the
-current directory. This way, you can keep the `datapackage.json` in a
-separate location from the generated documentation, which might be
-useful in situations where you don't own the Data Package but you still
-want to or need to generate documentation for it, e.g. when it's in a
-GitHub repository not owned by you.
+`build` always looks for `.flower.toml` (or `pyproject.toml`) in the
+current directory, not the source location. This means the
+`datapackage.json` can live elsewhere, which is useful when you don't
+own the Data Package, e.g. when it's in an external GitHub repository.
 
-However, you don't need to create or have a configuration file in order
-to have different styles of documentation generated. The `--style`
-option allows you to quickly switch between several different built-in
-styles of generated output. The behaviour of `--style` is as follows:
+A configuration file isn't required; the `--style` option lets you
+switch between several built-in styles:
 
-- If no style is given *and* no configuration file is found, it defaults
-  to `quarto-one-page`.
-- If a style is given *and* no configuration file is found, it uses the
-  style given.
+::: callout-tip
+For examples of the built-in style, see the [Examples](/docs/examples/index.qmd) page.
+:::
+
+The behaviour of `--style` is as follows:
+
+- If no style is given *and* no configuration file is found, the default
+  style is `quarto-one-page`.
+- If a style is given *and* no configuration file is found, the style
+  given is used.
 - If no style is given *and* a configuration file is found, the style
   specified in the configuration file is used.
 - If a style is given *and* a configuration file is found, the style
   given in the command line overrides the style in the configuration
   file.
 
-We override the style in the configuration file if the user specifies a
-style in the CLI rather than merging the CLI option with the config file
-settings. This will allow for quicker testing of different styles as
-well as preventing the unintended side effects that might arise when a
-style is mixed with incompatible configuration settings.
-
-This overriding behaviour also applies to the other CLI options,
-`--output-dir` and `--template-dir`; if they are used on the CLI, they
-override the corresponding settings in the configuration file.
-
-## {{< var done >}} `view`
-
-The `view` command has the following signature, that is positional as
-well as keyword-based:
+The CLI options `--style`, `--output-dir`, and `--template-dir` override
+the corresponding configuration file settings, which allows for easier
+testing of the styles and prevents unintended side effects from mixing
+incompatible configurations.
 
 ``` {.bash filename="Terminal"}
 seedcase-flower view [SOURCE] [STYLE]
