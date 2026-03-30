@@ -116,11 +116,14 @@ Flower supports the following sources:
   repository, assuming the `datapackage.json` file is in the root of the
   repository. For example:
   - `gh:seedcase-project/seedcase-flower` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/main/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/`
+    `main/datapackage.json`.
   - `github:seedcase-project/example-seed-beetle@0.2.0` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/0.2.0/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/`
+    `0.2.0/datapackage.json`.
   - `gh:seedcase-project/seedcase-flower@main` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/main/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/`
+    `main/datapackage.json`.
 
 <!-- TODO: Unhide when we use a `read-datapackage` package instead. -->
 
