@@ -183,18 +183,23 @@ the corresponding configuration file settings, which allows for easier
 testing of the styles and prevents unintended side effects from mixing
 incompatible configurations.
 
+### {{< var done >}} `view`
+
+The `view` command displays the `datapackage.json` metadata in a
+human-friendly way in the terminal. It has the following signature that
+is positional as well as keyword-based:
+
 ``` {.bash filename="Terminal"}
 seedcase-flower view [SOURCE] [STYLE]
 ```
 
-And when used, it would look like this:
+For example:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower view SOURCE --style STYLE
 ```
 
-The diagram below shows a simple flow for how the inputs and outputs
-work for `view`.
+The diagram below shows the flow of inputs and outputs for `view`.
 
 ```{mermaid}
 %%| label: fig-cli-view-flow
@@ -210,23 +215,17 @@ flowchart LR
     view --> output
 ```
 
-In many ways, `view` works similarly to `build`, as it also takes a
-source to the Data Package metadata and a `--style` option to specify
-how the metadata should be displayed in the Terminal. There are a few
+`view` takes a `SOURCE` and `--style` argument like `build`, with two
 differences:
 
-- No output files are generated, it only displays the metadata in a
-  human-friendly way in the Terminal.
-- No configuration file is used or looked for. The only way to change
-  the output is to use the `--style` option with our built-in styles.
+- No output files are generated — `view` only displays the metadata in
+  the terminal.
+- No configuration file is used. The only way to change the output is
+  via `--style` with one of the built-in styles.
 
-The reason we don't use a configuration file for `view` is to keep it
-simple and lightweight, as it's primarily meant for quick inspection of
-a Data Package's metadata. Likewise, the types of customisations that
-are possible given the constraint of displaying in a Terminal are
-limited compared to generating full documentation as output. This is why
-we intentionally don't allow customisation outside of our built-in
-styles for this command.
+`view` intentionally has no configuration file support; it's meant for
+quick, lightweight inspection of a Data Package's metadata and terminal
+display also limits customisation options.
 
 ::: callout-tip
 Want a different style for viewing the metadata? Check out our
