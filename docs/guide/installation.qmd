@@ -30,7 +30,7 @@ uv tool install "seedcase_flower @ git+https://github.com/seedcase-project/seedc
 ```
 
 You can now run Flower from any location on your computer by typing
-`seedcase-flower` (or the short-form `flower`) in the Terminal.
+`seedcase-flower` (or the short-form `flower`) in the terminal.
 
 If you want to include shell auto-completions for Flower, you can
 install them by running:
