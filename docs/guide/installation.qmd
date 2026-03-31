@@ -9,7 +9,7 @@ Before installing Flower, you need to have
 [uv](https://docs.astral.sh/uv/) installed.
 
 To check that these programs are installed, run the following commands
-in your Terminal:
+in your terminal:
 
 ``` {.bash filename="Terminal"}
 python3 --version
@@ -30,8 +30,9 @@ uv tool install seedcase_flower
 ```
 
 You can now run Flower from any location on your computer by typing
-`seedcase-flower` in the Terminal. Alternatively, use `uvx` to always
-install and run the latest version of Flower:
+`seedcase-flower` (or the short-form `flower`) in the terminal.
+Alternatively, use `uvx` to always install and run the latest version of
+Flower:
 
 ``` {.bash filename="Terminal"}
 uvx seedcase_flower
@@ -60,7 +61,7 @@ We assume you've already created a Python project that has a
 `pyproject.toml` file. If not, review uv's guide on making
 [projects](https://docs.astral.sh/uv/guides/projects/).
 
-While in the Terminal and in the project's directory, add Flower to your
+While in the terminal and in the project's directory, add Flower to your
 project's virtual environment by running:
 
 ``` {.bash filename="Terminal"}
