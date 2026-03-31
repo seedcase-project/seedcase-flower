@@ -26,7 +26,6 @@ alternative to `--help`:
 seedcase-flower
 ```
 
-
 We use the same name as the Python package and repository for the CLI,
 `seedcase-flower`, to give a consistent experience when installing and
 using the package. However, we've also included the short-form `flower`.
