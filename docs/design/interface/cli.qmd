@@ -19,8 +19,8 @@ seedcase-flower <COMMAND> [PARAMETERS]
 following sections.
 
 When used on its own `seedcase-flower` will show the help message with
-available commands to prevent accidental execution and serve as a quick
-alternative to `--help`:
+the available commands to prevent accidental execution and serve as a 
+convenient shorthand for `--help`:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower
@@ -110,14 +110,11 @@ Flower supports the following sources:
   repository, assuming the `datapackage.json` file is in the root of the
   repository. For example:
   - `gh:seedcase-project/seedcase-flower` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/`
-    `main/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/main/datapackage.json`.
   - `github:seedcase-project/example-seed-beetle@0.2.0` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/`
-    `0.2.0/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/0.2.0/datapackage.json`.
   - `gh:seedcase-project/seedcase-flower@main` will parse to
-    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/`
-    `main/datapackage.json`.
+    `https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/main/datapackage.json`.
 
 <!-- TODO: Unhide when we use a `read-datapackage` package instead. -->
 
