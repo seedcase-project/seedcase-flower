@@ -20,7 +20,7 @@ each release.
 
 ### Feat
 
-- :sparkles:  improve colors used in the CLI help (#245)
+- :sparkles: improve colors used in the CLI help (#245)
 
 ## 0.22.0 (2026-03-31)
 
