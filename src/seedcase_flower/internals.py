@@ -18,7 +18,7 @@ def _format_param_help(entry: HelpEntry) -> str:
 
 def _add_highlight_syntax(name: str, entry_type: Optional[type]) -> str:
     """Add markup character to highlight in colors, etc where desired."""
-    formatted_name = f"[bold cyan]{name}[/bold cyan]"
+    formatted_name = f"[bold blue]{name}[/bold blue]"
     if not name.startswith("-"):
         # Matching the `dim` used by default in cyclopts for `choices` and
         # `defaults` in the description
