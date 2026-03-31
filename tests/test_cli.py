@@ -260,11 +260,11 @@ def test_build_help_page_applies_rich_markup(capsys):
     with pytest.raises(SystemExit):
         app(["build", "--help"], console=markup_console)
     output = capsys.readouterr().out
-    assert "[bold cyan]--source[/bold cyan]" in output
+    assert "[bold blue]--source[/bold blue]" in output
     assert "[dim]<SOURCE>[/dim]" in output
-    assert "[bold cyan]--style[/bold cyan]" in output
+    assert "[bold blue]--style[/bold blue]" in output
     assert "[dim]<STYLE>[/dim]" in output
-    assert "[bold cyan]--verbose[/bold cyan]" in output
+    assert "[bold blue]--verbose[/bold blue]" in output
     # Boolean flags must not produce a positional placeholder
     assert "[dim]<verbose>[/dim]" not in output
 
