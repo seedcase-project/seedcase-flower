@@ -311,8 +311,8 @@ for each resource), you can use the `[[many]]` section type. Here you'll
 create a `[[many]]` section to save a file for each resource in the
 `resources/` folder. The `[[many]]` section works similarly to `[[one]]`
 except you can only have one `content` type (either `"resources"` or
-`"fields"`) that is used in place of `jsonpath`, with the other `Content`
-attributes being included within the `[[many]]` section.
+`"fields"`) that is used in place of `jsonpath`, with the other
+`Content` attributes being included within the `[[many]]` section.
 
 To create one file for each resource using the `resource.qmd.jinja`
 template, you add the following `[[many]]` section to the

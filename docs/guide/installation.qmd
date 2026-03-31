@@ -9,7 +9,7 @@ Before installing Flower, you need to have
 [uv](https://docs.astral.sh/uv/) installed.
 
 To check that these programs are installed, run the following commands
-in your Terminal:
+in your terminal:
 
 ``` {.bash filename="Terminal"}
 python3 --version
@@ -26,16 +26,20 @@ Installing Flower globally allows you to use it via the command line
 from any location on your machine. You can install it globally with uv:
 
 ``` {.bash filename="Terminal"}
-uv tool install "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flower"
+uv tool install seedcase_flower
 ```
 
 You can now run Flower from any location on your computer by typing
 `seedcase-flower` (or the short-form `flower`) in the terminal.
+Alternatively, use `uvx` to always install and run the latest version of
+Flower:
+
+``` {.bash filename="Terminal"}
+uvx seedcase_flower
+```
 
 If you want to include shell auto-completions for Flower, you can
 install them by running:
-
-<!-- TODO: Confirm this installs it correctly after we officially publish -->
 
 ```{.bash filename="Terminal"}
 seedcase-flower --install-completion
@@ -47,7 +51,7 @@ Completions only work for bash, fish, and zsh shells.
 
 ## Install in a Python project
 
-If you only want to use Flower in within Python projects rather than
+If you only want to use Flower within Python projects rather than
 globally, it's generally recommended to install it in a project's
 virtual environment to keep the project's dependencies isolated from the
 system-wide Python setup and avoid conflicts. We use (and recommend)
@@ -57,14 +61,12 @@ We assume you've already created a Python project that has a
 `pyproject.toml` file. If not, review uv's guide on making
 [projects](https://docs.astral.sh/uv/guides/projects/).
 
-While in the Terminal and in the project's directory, add Flower to your
+While in the terminal and in the project's directory, add Flower to your
 project's virtual environment by running:
 
 ``` {.bash filename="Terminal"}
-uv add "seedcase_flower @ git+https://github.com/seedcase-project/seedcase-flower"
+uv add seedcase_flower
 ```
-
-<!-- TODO: Change to `uv add seedcase_flower` when we've released it on PyPI -->
 
 You can check that Flower has been installed correctly by running this
 command:
