@@ -15,20 +15,20 @@ development reference and to track implementation status.
 seedcase-flower <COMMAND> [PARAMETERS]
 ```
 
-`seedcase-flower` has two commands, `build` and `view`, described in the
-following sections.
-
-When used on its own `seedcase-flower` will show the help message with
-the available commands to prevent accidental execution and serve as a 
-convenient shorthand for `--help`:
+When used on its own, `seedcase-flower` shows the help message as a shorthand for `--help`:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower
 ```
 
-We use the same name as the Python package and repository for the CLI,
-`seedcase-flower`, to give a consistent experience when installing and
-using the package. However, we've also included the short-form `flower`.
+::: callout-note
+As a convenience, we provide the command `flower` as a shorthand for
+`seedcase-flower`. It can be used in place of `seedcase-flower` in all
+instances.
+:::
+
+`seedcase-flower` has two commands, `build` and `view`, which are
+described in the following sections.
 
 ### {{< var done >}} `build`
 
