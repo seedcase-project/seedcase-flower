@@ -43,6 +43,12 @@ _CONSOLE_THEME = Theme(
     }
 )
 
+_HELP_CONSOLE_THEME = Theme(
+    {
+        "markdown.code": "yellow not reverse",
+    }
+)
+
 app = App(
     name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
@@ -53,6 +59,7 @@ app = App(
         )
     ),
     default_parameter=Parameter(negative=(), show_default=True),
+    console=Console(theme=_HELP_CONSOLE_THEME),
     config=[
         config.Toml(
             ".flower.toml",
