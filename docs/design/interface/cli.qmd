@@ -26,15 +26,10 @@ alternative to `--help`:
 seedcase-flower
 ```
 
-If the command is used regularly, it might be useful to set up an alias, like `flower`, in the terminal, e.g.:
 
-``` {.bash filename="Terminal"}
-alias flower="seedcase-flower"
-```
-
-We intentionally use the same name as the Python package and repository,
+We use the same name as the Python package and repository for the CLI,
 `seedcase-flower`, to give a consistent experience when installing and
-using the package.
+using the package. However, we've also included the short-form `flower`.
 
 ### {{< var done >}} `build`
 
@@ -218,7 +213,7 @@ flowchart LR
 `view` takes a `SOURCE` and `--style` argument like `build`, with two
 differences:
 
-- No output files are generated — `view` only displays the metadata in
+- No output files are generated---`view` only displays the metadata in
   the terminal.
 - No configuration file is used. The only way to change the output is
   via `--style` with one of the built-in styles.
