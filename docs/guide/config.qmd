@@ -8,11 +8,10 @@ There are three ways to configure Flower:
 
 1. Via the command line interface (CLI), as described in
    [the CLI guide](/docs/guide/cli.qmd).
-2. Via the Python interface, as described in
-   [the Python guide](/docs/guide/python.qmd).
+2. Via the Python interface, if using Flower as a Python library, which
+   we don't cover in any guide as we built Flower to be used as a CLI
+   tool.
 3. Via a configuration file, as described below.
-<!-- TODO the python file does not exist yet, make sure link is uptaded
-if name is different -->
 
 If you use the CLI (or the Python interface) to configure Flower's
 output, Flower **will not** use the settings in the configuration file.

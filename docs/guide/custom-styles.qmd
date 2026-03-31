@@ -235,46 +235,39 @@ you want to use a built-in style, leave `template-dir` unset and set
 
 The `sections.toml` file is used to define how many output files will be
 created and which metadata will be displayed in each file. Documentation
-is split into sections, where each section corresponds to one output
-file (e.g., an index file) or a group of similar output files (e.g., a
-file for each resource).
+is split into two section types: `one` and `many`.
+
+- `one` is for one output file (e.g., an index file).
+- `many` is for a group of similar output files (e.g., a file for each
+  resource).
 
 The `sections.toml` file must be stored in the template folder.
 
-#### Adding `[[section]]`s
+#### Adding `[[one]]` section(s)
 
 Create a `sections.toml` file in the `templates/` folder. Inside, add a
-`[[section]]` for each output file or group of output files you want to
-create:
+`[[one]]` for each output file you want to create. For this guide,
+create just one `[[one]]` to save an `index.qmd`:
 
 ``` {.toml filename="templates/sections.toml"}
 # One output file at docs/index.qmd
-[[section]]
+[[one]]
 output-path = "index.qmd"
-
-# One output file for each resource in docs/resources/
-[[section]]
-output-path = "resources/"
 ```
 
-::: callout-tip
-To generate more than one output file for a section, `output-path` can
-be set either to a folder (e.g., `resources/`) or to a file path with a
-placeholder for the file name (e.g., `resources/{resource-name}.qmd`).
-See the [`Section`](/docs/design/interface/config.qmd#section)
-documentation for more details.
-:::
-
-#### Adding `[[section.contents]]`s
-
-Each section contains one or more content items, with each content item
-corresponding to a specific part of the metadata (e.g., the
+Each `[[one]]` section contains one or more content items, with each
+content item corresponding to a specific part of the metadata (e.g., the
 contributors). A content item links this specific part of the metadata
 to the template that will be used to render it. In the rendered output,
 content items in the same section will be combined into the same output
 file in the order they are defined.
 
-Add content to each section, specifying the following fields:
+This section will output the `index.qmd` file, which would be considered
+the "landing page" for the Data Package documentation. In this case, add
+a content for the general Data Package properties (like `title` and
+`description`) and a content for the contributors.
+
+Add one or more contents to each `[[one]]` section, you need to include these fields:
 
 - `jsonpath`: The JSON path to the metadata that will be sent to the
   template. The JSON path should be expressed using
@@ -283,15 +276,14 @@ Add content to each section, specifying the following fields:
   item, relative to the template folder.
 - `jinja-variable`: The variable name that will be used in the template
   to reference the selected metadata.
-- `mode`: Whether to render the selected metadata item as one output
-  file (`one`) or to render each item in the selected metadata
-  collection as a separate output file (`many`).
+
+Update the `sections.toml` file to include the content items for the `[[one]]` section:
 
 ``` {.toml filename="templates/sections.toml"}
-[[section]]
+[[one]]
 output-path = "index.qmd"
 
-[[section.contents]]
+[[one.contents]]
 # Select the whole metadata object
 jsonpath = "$"
 # Render the selected metadata with this template
@@ -299,28 +291,56 @@ template-path = "package.qmd.jinja"
 # Reference the selected metadata in the template with this
 # variable name
 jinja-variable = "package"
-# Render the selected metadata item as one output file
-mode = "one"
 
 # The contents of this section will be appended to the contents
 # of the previous section inside the `docs/index.qmd` file.
-[[section.contents]]
+[[one.contents]]
 jsonpath = "$.contributors"
 template-path = "contributors.qmd.jinja"
 jinja-variable = "contributors"
-mode = "one"
+```
 
-[[section]]
+You can do the same thing to add more `[[one]]` sections if you want to
+create more output files that contain different metadata. Or you can
+keep adding content items to the same `[[one]]` section.
+
+#### Adding `[[many]]` section(s)
+
+When you want to create a group of similar output files (e.g., one file
+for each resource), you can use the `[[many]]` section type. Here you'll
+create a `[[many]]` section to save a file for each resource in the
+`resources/` folder. The `[[many]]` section works similarly to `[[one]]`
+except you can only have one `content` type (either `"resources"` or
+`"fields"`) that is used in place of `jsonpath`, with the other `Content`
+attributes being included within the `[[many]]` section.
+
+To create one file for each resource using the `resource.qmd.jinja`
+template, you add the following `[[many]]` section to the
+`sections.toml` file:
+
+``` {.toml filename="templates/sections.toml"}
+[[many]]
 output-path = "resources/"
-
-[[section.contents]]
-jsonpath = "$.resources"
+content = "resources"
 template-path = "resource.qmd.jinja"
 jinja-variable = "resource"
-# Render each item in the selected metadata collection as a
-# separate output file
-mode = "many"
 ```
+
+This will place the created files in the `resources/` folder inside the
+output directory (`docs/` in this example). Each created file will be
+named using the `name` metadata of the resource (e.g.,
+`species_catalog.qmd` and `growth_records.qmd`).
+
+::: callout-tip
+You can either set a folder or a file in the `output-path` of
+`[[many]]`. If you use a file path, you need to include the `{}`
+placeholder for the file name. In the case above, it would be
+`resources/{resource-name}.qmd`. See the
+[design documentation on `Many`](/docs/design/interface/config.qmd#one-and-many-class)
+for more details.
+:::
+
+<!-- TODO: Add tip on including field names nested under resource names. -->
 
 ## Running the `build` command
 
