@@ -7,6 +7,7 @@ from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 from rich.console import Console
 from rich.markdown import Markdown
+from seedcase_soil import CONSOLE_THEME, HELP_CONSOLE_THEME, run_without_tracebacks
 
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
@@ -21,29 +22,6 @@ from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
-# To style markdown tables with a box (pipes) surrounding each column
-# instead of only a horizontal line after the table header
-box.SIMPLE = box.HEAVY_HEAD
-
-_CONSOLE_THEME = Theme(
-    {
-        "markdown.h1": "bold yellow",
-        "markdown.h2": "bold yellow",
-        "markdown.h3": "italic yellow",
-        "markdown.code": "blue",
-        "markdown.link": "underline cyan",
-        "markdown.link_url": "underline cyan",
-        "markdown.table.header": "yellow",
-        "markdown.table.border": "white",
-    }
-)
-
-_HELP_CONSOLE_THEME = Theme(
-    {
-        "markdown.code": "yellow not reverse",
-    }
-)
-
 app = App(
     name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
@@ -54,7 +32,7 @@ app = App(
         )
     ),
     default_parameter=Parameter(negative=(), show_default=True),
-    console=Console(theme=_HELP_CONSOLE_THEME),
+    console=Console(theme=HELP_CONSOLE_THEME),
     config=[
         config.Toml(
             ".flower.toml",

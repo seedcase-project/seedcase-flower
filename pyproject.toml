@@ -33,6 +33,7 @@ dependencies = [
   "pydantic>=2.12.5",
   "python-jsonpath>=2.0.2",
   "rich>=14.3.3",
+  "seedcase-soil",
 ]
 
 [project.urls]
@@ -66,3 +67,6 @@ dev = [
   "typos>=1.40.0",
   "vulture>=2.14",
 ]
+
+[tool.uv.sources]
+seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", rev = "feat/beautify-cli" }
