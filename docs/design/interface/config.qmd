@@ -96,16 +96,14 @@ See [`One`](/docs/reference/One.qmd) or
 
 ### {{< var done >}} `Content`
 
-The `Content` class provides a precise description of the path to the
-Jinja2 template, which
-[JSON Path](https://en.wikipedia.org/wiki/JSONPath) of the Data Package
-property will be sent to the template, what the name of the Jinja2
-variable is within the template, and whether the content represents one
-or many files for properties that are arrays. We designed this class to
-allow for flexibly creating complex custom documentation structures for
-both the user and for us when we develop built-in styles.
+The `Content` class maps specific properties to a Jinja2 template via
+three attributes: `jsonpath`, `template_path`, and `jinja_variable`.
+This class is used within the `One` section class. `Content` allows
+flexible documentation structures for both built-in and custom styles.
+Only the properties specified by `Content.jsonpath` are passed to the
+template (i.e., not the entire `datapackage.json` file).
 
-See [`help(Content)`](/docs/reference/Content.qmd) for more details.
+See [`Content`](/docs/reference/Content.qmd) for more details.
 
 ## Configuration file
 
