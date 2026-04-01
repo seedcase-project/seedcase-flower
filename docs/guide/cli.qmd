@@ -18,11 +18,15 @@ following command, which is equivalent to using the `--help` flag:
 ```{.bash filename="Terminal"}
 seedcase-flower
 ```
+::: {.callout-tip collapse="true" icon="false"}
+
+## Output
 
 ```{python}
 #| echo: false
 !uv run seedcase-flower
 ```
+:::
 
 ## Viewing Data Package metadata
 
