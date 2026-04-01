@@ -2,10 +2,9 @@
 title: Configuration
 ---
 
-This document describes the configuration settings for both the Python
-classes and the configuration file. It primarily serves as a reference
-for us to develop from and track what has been finished and what remains
-to be done.
+This document describes the design of the configuration settings for the
+Python classes and configuration files and tracks their implementation
+status.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
