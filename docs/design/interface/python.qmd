@@ -22,16 +22,13 @@ and **non-CLI functions** (the underlying implementation) to:
 
 ## Python CLI functions
 
-These functions are the direct Python equivalents of the CLI commands
+The Python CLI functions are the direct equivalents of the CLI commands
 described on the [CLI design page](cli.qmd): `build()` and `view()`.
-This page focuses on the Python design and decisions made to avoid too
-much overlap with the content of the CLI design page.
-
-Both the `build()` and `view()` functions read in the `datapackage.json`
-file into a Python dictionary object that gets checked using
-[`check-datapackage`](https://check-datapackage.seedcase-project.org).
-This is the main input for the non-CLI functions that build the output
-files.
+Both functions read `datapackage.json` into a Python dictionary, check
+it with
+[`check-datapackage`](https://check-datapackage.seedcase-project.org),
+and pass this dictionary as input to the non-CLI functions that produce
+the output.
 
 <!-- TODO: Unhide after implementing a class based approach. -->
 
