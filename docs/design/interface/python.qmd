@@ -2,13 +2,8 @@
 title: Python functions
 ---
 
-This document describes the Python functions that form the CLI and
-non-CLI functions. Non-CLI functions are those used by the CLI
-functions. We include function signatures, documentation, some
-pseudocode, and diagrams that represent the interface along with
-explanations for these design decisions. It primarily serves as a
-reference for us to develop from and track what has been finished and
-what remains to be done.
+This document describes for the Python functions forming the CLI and
+supporting non-CLI layer and tracks implementation status.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
