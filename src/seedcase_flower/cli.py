@@ -5,13 +5,8 @@ from typing import Any, Optional
 
 from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
-from rich import box
 from rich.console import Console
-from rich.highlighter import ReprHighlighter
 from rich.markdown import Markdown
-from rich.panel import Panel
-from rich.text import Text
-from rich.theme import Theme
 
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
@@ -149,31 +144,9 @@ def view(
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     built_sections = build_sections(properties, Config(style=Style[style.name]))
-    console = Console(theme=_CONSOLE_THEME)
+    console = Console(theme=CONSOLE_THEME)
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
 
 
-def _pretty_print_error(e: Exception) -> None:
-    console = Console(stderr=True)
-    text = Text.from_markup(str(e))
-    # Make `text` appear as if it was printed by rich.print
-    pretty_text = ReprHighlighter()(text)
-    console.print(
-        Panel(
-            pretty_text,
-            title=type(e).__name__,
-            border_style="red",
-            box=box.ROUNDED,
-            title_align="left",
-        )
-    )
-
-
-def main() -> None:
-    """Suppress traceback when running from CLI."""
-    try:
-        app()
-    except Exception as e:
-        _pretty_print_error(e)
-        raise SystemExit(1)
+run_without_tracebacks(app)
