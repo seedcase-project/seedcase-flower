@@ -10,49 +10,29 @@ status.
 
 ## Overview
 
-Given that a Data Package can be very simple with only a few data
-resources or complex with many resources and detailed schemas with
-hundreds of resource fields, Flower needs to be configurable to
-accommodate different use cases for displaying the wide range of
-metadata in `datapackage.json`. Displaying all the metadata in a single
-file may be sufficient for a simple Data Package, but it is impractical
-for more complex ones. The configuration makes it possible to customise
-the generated documentation output accordingly.
+Data Packages range from simple (a few resources) to complex (many
+resources with detailed schemas). Therefore, Flower's configuration lets
+you customise output file types, content and structure (via templates),
+and the output destination to fit different needs.
 
-Flower's configurations controls the type of output files, the content
-structure of those files (determined by the templates), what content to
-include, and the output destination of those files.
+Configuration is split into two main levels:
 
-The configuration is split into two main parts:
-
-- The top-level configuration that is represented by the `Config` class,
-  the settings under the `[tool.seedcase-flower]` table in
-  `pyproject.toml`, or the settings at the top level of the
-  `.flower.toml` file. These settings dictate whether to use a built-in
-  style or a custom style, along with the location of the template files
-  for any custom style and which sections to include. These
-  configurations are only used by `build` and not `view`.
-- The style-level configuration that is represented by one or more `One`
-  and `Many` section classes or `[[one]]` and `[[many]]` tables in the
-  `sections.toml` file in the directory where the template files are.
-  These settings dictate which contents of the `datapackage.json`
-  (**not individual properties**) are included in each section of the
-  documentation and where those sections are output.
-
-The configuration files are read in and directly mapped to the Python
-classes. So, we'll describe most of the design details in the Python
-classes below.
-
-As mentioned in the [CLI design document](cli.qmd), configuration can
-only happen either directly in the Python classes or in the
-configuration files, not on the CLI. This keeps the CLI simpler,
-especially considering that some configuration options can be complex
-(e.g. multiple sections with different content types), which would make
-the CLI complex, more difficult to implement and parse, and less
-reproducible for those wanting to re-build the documentation later (or
-if a collaborator wants to re-build it). By keeping the configuration in
-a file in the project, the same documentation can be built consistently
-when using `seedcase-flower build`.
+- The top-level configuration dictates whether to use a built-in style
+  or a custom style, the location of the template files for a custom
+  style, and which sections to include (see
+  [One and Many section classes](#one-and-many-class) for a definition
+  of sections). This is represented by the `Config` class, the settings
+  under the `[tool.seedcase-flower]` table in `pyproject.toml`, or the
+  settings at the top level of the `.flower.toml` file. These
+  configurations are only used by the `build` command and cannot be set
+  on the CLI.
+- The style-level configuration dictates which contents of the
+  `datapackage.json` (**not individual properties**) are included in
+  each section of the documentation and where those sections are
+  outputted. This is represented by one or more `One` and `Many` section
+  classes or `[[one]]` and `[[many]]` tables in the `sections.toml` file
+  in the template directory and cannot be set in `pyproject.toml` or
+  `.flower.toml`.
 
 ## Python classes
 
