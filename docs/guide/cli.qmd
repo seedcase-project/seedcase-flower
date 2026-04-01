@@ -4,18 +4,16 @@ description: "How to use Flower on the command-line."
 order: 1
 ---
 
-Flower is designed to provide a friendly user experience from the
-command line. The CLI has commands for both viewing and building
-documentation from a Data Package's metadata. The general pattern for
-how to use Flower from the CLI is:
+Flower's CLI has two commands: `view` which displays a Data Package's
+metadata in the terminal, and `build` which generates plain text
+documentation files from it. The general pattern for the CLI is:
 
 ```{.bash filename="Terminal"}
 seedcase-flower COMMAND [ARGS] [OPTIONS]
 ```
 
-To get started, try calling the program without any commands, arguments,
-or options by typing `seedcase-flower` and pressing enter. This is the
-same as invoking the `--help` flag and will show the following text:
+To get an overview of the available commands and flags, run the
+following command, which is equivalent to using the `--help` flag:
 
 ```{.bash filename="Terminal"}
 seedcase-flower
