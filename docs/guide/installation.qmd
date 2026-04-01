@@ -13,7 +13,7 @@ uv --version
 ```
 
 The command should print a version number. If you get an error instead,
-install the uv before continuing.
+install uv before continuing.
 
 ## Install globally
 
