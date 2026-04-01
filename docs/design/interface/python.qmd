@@ -2,7 +2,7 @@
 title: Python functions
 ---
 
-This document describes for the Python functions forming the CLI and
+This document describes the design of the Python functions forming the CLI and
 supporting non-CLI layer and tracks implementation status.
 
 {{< include /docs/includes/_design-status.qmd >}}
@@ -54,7 +54,9 @@ reasons:
 
 ### {{< var done >}} `build()`
 
-`build()` takes the parameters `source`, `style`, `template_dir`, `output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd) for details.
+`build()` takes the parameters `source`, `style`, `template_dir`,
+`output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd)
+for details.
 
 The internal flow of `build()` is shown in the diagram below.
 
