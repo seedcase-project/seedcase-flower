@@ -30,20 +30,20 @@ seedcase-flower
 
 ## Viewing Data Package metadata
 
-To view the metadata of a Data Package directly in the terminal, you can
-use the `view` command like so:
+To view the metadata in an easy-to-read format optimised for the
+terminal, use the `view` command:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Example of output
+### Output example
 
-This is what the above code chunk will output, assuming there is a file
-called `datapackage.json` in the working directory. Since it is designed
-for the terminal, it doesn't look so nice when rendered on the website.
-We show this so you have an idea of what it will look like.
+The example below shows the output of running `seedcase-flower view` in
+a directory containing a `datapackage.json` for an example Data Package,
+`flora`. Terminal output is not optimised for web rendering, so it might
+look different here.
 
 ```{python}
 #| echo: false
@@ -52,32 +52,27 @@ We show this so you have an idea of what it will look like.
 ```
 :::
 
-The `view` command displays the metadata in an easy to read format that
-is optimized for display directly in the Terminal.
-
-### Working with a Data Package in a custom location
+### Viewing metadata in a custom location
 
 By default, `view` looks for a `datapackage.json` file in the current
-directory, but you can specify a different path if desired:
+directory, but you can specify a different path if needed:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view another/directory/datapackage.json
 ```
 
-It also is possible to point Flower to a Data Package that is available
-online. To do this, you can provide the full URL to the remote
-`datapackage.json`, e.g.
+You can also point Flower to a remote Data Package by providing the full
+URL to the `datapackage.json`. For example:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Example of output
+### Output
 
-This is what the above code chunk will output. Since it is designed for
-the terminal, it doesn't look so nice when rendered on the website. We
-show this so you have an idea of what it will look like.
+Terminal output is not optimised for web rendering, so it might look
+different here.
 
 ```{python}
 #| echo: false
@@ -85,20 +80,18 @@ show this so you have an idea of what it will look like.
 ```
 :::
 
-For Data Packages on GitHub (like for the URL used above), you can use
-the `gh:` prefix as a shortcut. For example, the long URL above can be
-shortened to the following:
+For Data Packages on GitHub, use the `gh:` prefix as a shortcut instead
+of the full URL:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Example of output
+### Output
 
-This is what the above code chunk will output. Since it is designed for
-the terminal, it doesn't look so nice when rendered on the website. We
-show this so you have an idea of what it will look like.
+Terminal output is not optimised for web rendering, so it might look
+different here.
 
 ```{python}
 #| echo: false
@@ -106,45 +99,47 @@ show this so you have an idea of what it will look like.
 ```
 :::
 
-### Styling the output
+### Styling terminal output
 
-If you would like to customize the style of how the metadata is
-displayed, you can use the `--style` flag. This option allows you to
-format the output with any of
-[the built-in styles](/docs/reference/ViewStyle.qmd):
+Use the `--style` flag to format the terminal output with any of the
+[built-in view styles](/docs/reference/ViewStyle.qmd). For example:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
 ```
 
-The `view` command can use any of
-[built-in styles](/docs/reference/Style.qmd) that includes all output on
-a single page. It is not compatible with multi-page styles.
+<!-- TODO: Update this after another style is added so it doesn't use the default style. -->
 
-::: callout-important
-If you have set the `style` option in a configuration file read by
-Flower, you might be confused as to why it does not have an effect when
-calling `seedcase-flower view --style ...`. The reason for this is that
-the `view` command by design completely ignores any configuration read
-from Flower's configuration file, even those with the same name as the
-options passed to `view`. You can only configure `view` via command line
-flags.
+This output will look identical to the output above, since
+`quarto-one-page` is the default style for `view`.
+
+::: {.callout-tip collapse="true" icon="false"}
+### Output
+
+Terminal output is not optimised for web rendering, so it might look
+different here.
+
+```{python}
+#| echo: false
+!uv run seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
+```
 :::
 
-For more details about what you can do with `view`, see:
+`view` only works with single-page
+[built-in styles](/docs/reference/Style.qmd); multi-page styles are not
+supported.
+
+::: callout-important
+`view` is only configurable via command line flags. This means that any
+options set in Flower's configuration file are ignored, even those with
+the same name as the options passed to `view`.
+:::
+
+For more details, see the [view](/docs/reference/view.qmd) reference or run:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --help
 ```
-
-::: {.callout-tip collapse="true" icon="false"}
-### Help output
-
-```{python}
-#| echo: false
-!uv run seedcase-flower view --help
-```
-:::
 
 ## Building documentation from Data Package metadata
 
