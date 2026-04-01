@@ -38,54 +38,19 @@ Configuration is split into two main levels:
 
 ### {{< var done >}} `Config`
 
-The `Config` class specifies the top-level configurations that apply to
-`build` and includes three attributes:
+The `Config` class specifies the top-level configurations used by
+`build` via three attributes: `style`, `template_dir`, and `output_dir`.
+See the [Config](/docs/reference/Config.qmd) for details on each
+attribute.
 
-- `style`: This optional attribute defines whether the documentation
-  should use a built-in style.
-- `template_dir`: This optional attribute defines the path to the
-  directory containing the custom Jinja2 templates for custom styles and
-  a `sections.toml` file with the settings that determine how the
-  templates are used to create the output (more about this file is in
-  the [`One` and `Many` classes](#one-and-many-class) section below).
-- `output_dir`: This optional attribute indicates which folder the
-  output should be sent to.
-
-We include two attributes for output paths: the `output_dir` attribute
-in `Config` and the `output_path` attribute in the
-[`One` and `Many` classes](#one-and-many-class). We use two paths so
-that when using a built-in style, where the internal `One.output_path`
-or `Many.output_path` values are set and can't be changed, the user can
-still specify the final output folder using the `Config.output_dir`
-attribute. This provides flexibility in how individual styles are
-structured internally while not restricting the final location of those
-outputs.
+`output_dir` allows users to set the output location independently of
+how a style structures its files internally. It defaults to `docs/`.
 
 Flower uses [Jinja2](https://jinja.palletsprojects.com/en/stable/) to
-generate more human-friendly documentation from a `datapackage.json`
-file. The advantage of using Jinja2 is that you can create any type of
-file output as long as it's a plain text file. For example, you can
-create `.qmd` files if the Jinja2 template ends in `.qmd.jinja`. This
-gives a lot of flexibility in the types of outputs a user can create. It
-also makes it easier for us to develop Flower and to add new built-in
-styles, as we don't need to do any checks on the type of output file
-itself or the content, as we let Jinja2 handle that.
-
-Theoretically, a user could create a custom style that lists all the
-metadata found in the `datapackage.json` file in a single Jinja template
-file, depending on how they set up the
-[`One` and `Many`](#one-and-many-class) classes and created their Jinja2
-template.
-
-Jinja2 template files listed in the `Content.template_path` are given
-only the parts of the `datapackage.json` file that are listed by the
-`Content.jsonpath`. See the `One` and `Many` section classes and the
-`Content` design description below for more details.
-
-`Config` also represents a one-to-one mapping of the settings provided
-in the `.flower.toml` or `pyproject.toml` file.
-
-See [`help(Config)`](/docs/reference/Config.qmd) for more details.
+generate documentation from `datapackage.json`. Because Jinja2 supports
+any plain text output format (e.g., `.qmd` via `.qmd.jinja` templates),
+output file types require no special handling when adding new built-in
+styles.
 
 <!-- TODO: How might we make this more robust to changes in the Data Package standard? -->
 
