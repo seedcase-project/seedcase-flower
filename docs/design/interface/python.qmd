@@ -54,24 +54,9 @@ reasons:
 
 ### {{< var done >}} `build()`
 
-As already described in the CLI design page, this function has the
-following parameters:
+The `build()` function has the parameters `source`, `style`, `template_dir`, `output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd) for details about these parameters.
 
-- `source` for the source argument. The default is the
-  `datapackage.json` file found in the current working directory. See
-  the [CLI design](cli.qmd) for details about `source`.
-- `style` for the style of output to use, which specifies the output
-  file type and the number of files created. Either `None` or one of the
-  built-in styles. Is ignored if `template_dir` is given.
-- `template_dir` for directory that contains the custom styling Jinja
-  template files as well as the `sections.toml` file. Defaults to `None`
-  as the default style is a built-in style that uses built-in templates.
-  If given, `style` is ignored.
-- `output_dir` to specify where the root directory is for the output
-  files. Defaults to the current working directory.
-- `verbose` to output more messages, rather than have no output.
-
-The internal flow of this function is shown in the diagram below.
+The internal flow of `build()` is shown in the diagram below.
 
 ```{mermaid}
 %%| label: fig-python-build-flow
