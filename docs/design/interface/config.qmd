@@ -11,7 +11,7 @@ status.
 ## Overview
 
 Data Packages range from simple (a few resources) to complex (many
-resources with detailed schemas). Therefore, Flower's configuration lets
+resources with detailed schemas). So we designed Flower's configuration to let
 you customise output file types, content and structure (via templates),
 and the output destination to fit different needs.
 
@@ -67,7 +67,7 @@ one section, while a set of per-resource files (e.g.,
 `resources/growth_records.qmd`) is another. The `One` and `Many` classes
 handle the configuration of these sections: `One` creates one output
 file from multiple `Content` items, while `Many` creates one file per
-data item (e.g., per resource) from a single `Content` item.
+metadata item (e.g., per resource) from a single `Content` item.
 
 `One` has the attributes `output_path` and `contents`, where `contents`
 is a list of `Content` items. `Many` shares `output_path` but instead of
@@ -153,7 +153,6 @@ template-dir = "path/to/templates/"
 output-dir = "docs/"
 ```
 
-<!-- TODO: Do we need "style = 'custom'" above? -->
 
 The `template-dir` above must include at least one Jinja and a
 `sections.toml` file. When `template-dir` is given, any value in `style`
