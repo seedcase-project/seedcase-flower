@@ -4,42 +4,37 @@ description: "Install Flower to use on the command-line and in Python projects."
 order: 0
 ---
 
-Before installing Flower, you need to have
+Before installing Flower, you need
 [Python](https://www.python.org/downloads/) and
-[uv](https://docs.astral.sh/uv/) installed.
-
-To check that these programs are installed, run the following commands
-in your terminal:
+[uv](https://docs.astral.sh/uv/) installed. To check that both are
+available, run:
 
 ``` {.bash filename="Terminal"}
 python3 --version
 uv --version
 ```
 
-If Python and uv are installed, these commands will show you the
-versions installed on your system. If you get an error, you need to
-install them before continuing.
+Each command should print a version number. If you get an error instead,
+install the missing tool before continuing.
 
 ## Install globally
 
-Installing Flower globally allows you to use it via the command line
-from any location on your machine. You can install it globally with uv:
+Installing Flower globally lets you run it from any directory on your
+machine. To install Flower globally, run:
 
 ``` {.bash filename="Terminal"}
 uv tool install seedcase_flower
 ```
 
-You can now run Flower from any location on your computer by typing
-`seedcase-flower` (or the short-form `flower`) in the terminal.
-Alternatively, use `uvx` to always install and run the latest version of
-Flower:
+Once installed, you can run Flower with `seedcase-flower` (or `flower`
+for short). Alternatively, use `uvx` to run Flower without installing it
+first---this always fetches the latest version:
 
 ``` {.bash filename="Terminal"}
 uvx seedcase_flower
 ```
 
-If you want to include shell auto-completions for Flower, you can
-install them by running:
+To enable shell auto-completions, run:
 
 ```{.bash filename="Terminal"}
 seedcase-flower --install-completion
@@ -51,30 +46,25 @@ Completions only work for bash, fish, and zsh shells.
 
 ## Install in a Python project
 
-If you only want to use Flower within Python projects rather than
-globally, it's generally recommended to install it in a project's
-virtual environment to keep the project's dependencies isolated from the
-system-wide Python setup and avoid conflicts. We use (and recommend)
-[uv](https://docs.astral.sh/uv/).
+Installing Flower in a project's virtual environment keeps its
+dependencies isolated from your system-wide Python setup and avoids
+conflicts. We use (and recommend) [uv](https://docs.astral.sh/uv/) for
+this.
 
-We assume you've already created a Python project that has a
-`pyproject.toml` file. If not, review uv's guide on making
-[projects](https://docs.astral.sh/uv/guides/projects/).
+We assume you've already created a Python project with a
+`pyproject.toml` file. If not, review uv's
+[projects](https://docs.astral.sh/uv/guides/projects/) guide.
 
-While in the terminal and in the project's directory, add Flower to your
-project's virtual environment by running:
+From your project's directory, run:
 
 ``` {.bash filename="Terminal"}
 uv add seedcase_flower
 ```
 
-You can check that Flower has been installed correctly by running this
-command:
+To verify the installation, run:
 
 ``` {.bash filename="Terminal"}
 uv pip show seedcase_flower
 ```
 
-If Flower has been installed successfully, the output will show details
-about Flower, and you're now ready to start using Flower to format your
-metadata.
+If successful, the output will show details about the installed package and you're now ready to use Flower in your project!
