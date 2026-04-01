@@ -2,46 +2,33 @@
 title: Python functions
 ---
 
-This document describes the Python functions that form the CLI and
-non-CLI functions. Non-CLI functions are those used by the CLI
-functions. We include function signatures, documentation, some
-pseudocode, and diagrams that represent the interface along with
-explanations for these design decisions. It primarily serves as a
-reference for us to develop from and track what has been finished and
-what remains to be done.
+This document describes the design of the Python functions forming the CLI and
+supporting non-CLI layer and tracks implementation status.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
 ## Overview
 
-The Python interface has two parts: the functions that represent the
-interface via the Terminal (CLI) and the functions that implement the
-behaviour of the CLI functions. We will call them "CLI" and "non-CLI"
-functions. We have this split for a few reasons:
+The Python interface is split into **CLI functions** (the CLI interface)
+and **non-CLI functions** (the underlying implementation) to:
 
-- To create a clear separation between code that is exposed through the
-  CLI and code that could be used on its own as a Python package
-  library.
-- To apply functional programming practices to the non-CLI functions,
-  and restrict the use of side effects and other non-functional
-  practices to CLI functions.
-- To write unit tests for the non-CLI functions and integration tests
-  for the CLI functions.
-- To keep the CLI functions small by building them from functional units
-  of non-CLI code.
+- Separate functions exposed via the CLI from those usable as a
+  standalone Python library.
+- Apply functional programming practices to non-CLI functions, confining
+  side effects and other non-functional practices to the CLI functions.
+- Test non-CLI functions with unit tests and CLI functions with
+  integration tests.
+- Keep CLI functions small by building them from non-CLI functions.
 
 ## Python CLI functions
 
-These functions are the direct Python equivalents of the CLI commands
+The Python CLI functions are the direct equivalents of the CLI commands
 described on the [CLI design page](cli.qmd): `build()` and `view()`.
-This page focuses on the Python design and decisions made to avoid too
-much overlap with the content of the CLI design page.
-
-Both the `build()` and `view()` functions read in the `datapackage.json`
-file into a Python dictionary object that gets checked using
-[`check-datapackage`](https://check-datapackage.seedcase-project.org).
-This is the main input for the non-CLI functions that build the output
-files.
+Both functions read `datapackage.json` into a Python dictionary, check
+it with
+[`check-datapackage`](https://check-datapackage.seedcase-project.org),
+and pass this dictionary as input to the non-CLI functions that produce
+the output.
 
 <!-- TODO: Unhide after implementing a class based approach. -->
 
@@ -67,24 +54,11 @@ reasons:
 
 ### {{< var done >}} `build()`
 
-As already described in the CLI design page, this function has the
-following parameters:
+`build()` takes the parameters `source`, `style`, `template_dir`,
+`output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd)
+for details.
 
-- `source` for the source argument. The default is the
-  `datapackage.json` file found in the current working directory. See
-  the [CLI design](cli.qmd) for details about `source`.
-- `style` for the style of output to use, which specifies the output
-  file type and the number of files created. Either `None` or one of the
-  built-in styles. Is ignored if `template_dir` is given.
-- `template_dir` for directory that contains the custom styling Jinja
-  template files as well as the `sections.toml` file. Defaults to `None`
-  as the default style is a built-in style that uses built-in templates.
-  If given, `style` is ignored.
-- `output_dir` to specify where the root directory is for the output
-  files. Defaults to the current working directory.
-- `verbose` to output more messages, rather than have no output.
-
-The internal flow of this function is shown in the diagram below.
+The internal flow of `build()` is shown in the diagram below.
 
 ```{mermaid}
 %%| label: fig-python-build-flow
@@ -107,14 +81,13 @@ flowchart TD
 
 ### {{< var done >}} `view()`
 
-As mentioned in the CLI design page, this function has two parameters
-that are both the same as those in the `build()` function: `source` and
-`style`. The only difference with the `style` parameter is that it can
-only accept built-in styles that are one-page (as the terminal is only a
-single page itself) and does not allow a custom style. It also doesn't
-read from the configuration file.
+`view()` takes the same parameters as `build()`: `source` and `style`.
+Unlike `build()`, `view()`'s `style` parameter only accepts built-in
+one-page styles (the terminal displays a single page) and ignores custom
+styles and the configuration file. For details about the parameters, see
+[`view()`](/docs/reference/view.qmd).
 
-The internal flow of this function is shown in the diagram below.
+The internal flow of `view()` is shown in the diagram below.
 
 ```{mermaid}
 %%| label: fig-python-view-flow
