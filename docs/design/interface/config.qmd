@@ -175,17 +175,14 @@ template-dir = "templates/"
 output-dir = "docs/"
 ```
 
-### {{< var done >}} Main config settings: `sections.toml`
+### {{< var done >}} Style config settings: `sections.toml`
 
-The `sections.toml` file contains the configuration settings for a given
-style of output. The `sections.toml` is kept in the root of the
-`Config.template_dir` and is used to create the `One` and `Many` section
-classes and the `Content` classes within `One`. This file allows
-creating a wide variety of styles, from simple to complex. For example:
+`sections.toml` is kept at the root of `Config.template_dir` and defines
+the `One`, `Many`, and `Content` classes for a given style. For example:
 
 ``` toml
-# This creates an `index.qmd` containing the combined `package` and `contributors`
-# contents from the Jinja2 templates.
+#  Creates an `index.qmd` with `package` and `contributors`
+# contents from Jinja2 templates.
 [[one]]
 output-path = "index.qmd"
 [[one.contents]]
@@ -197,21 +194,21 @@ jsonpath = ".contributors"
 template-path = "path/to/templates/contributors.qmd.jinja"
 jinja-variable = "contributors"
 
-# This creates one file per resource in the `docs/resources/` folder.
-# E.g. `docs/resources/demographics.qmd`, `docs/resources/blood.qmd`, etc.
+# Creates one file per resource in a `docs/resources/` folder.
+# E.g. `docs/resources/growth-records.qmd`,
+# `docs/resources/species-catalog.qmd`, etc.
 [[many]]
 output-path = "resources/"
 # Or equivalently
-# output-path = "resources/{resource-name}.qmd
+# output-path = "resources/{resource-name}.qmd"
 content = "resources"
 template-path = "path/to/templates/resource.qmd.jinja"
 jinja-variable = "resource"
 
-# This creates one YAML file for each field in a resource. The
-# `{resource-name}` variable is replaced with the name of each resource and
-# `{field-name}` is replaced with the name of each field. In this example, this
-# would allow you to use custom Quarto listings for the
-# fields: https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
+#  Creates one YAML file per field in each resource.
+# `{resource-name}` and `{field-name}` are replaced with the resource
+# and field names. This allows you to use custom Quarto listings:
+# https://quarto.org/docs/websites/website-listings.html#yaml-listing-content
 [[many]]
 output-path = "resources/{resource-name}/{field-name}.yml"
 content = "fields"
