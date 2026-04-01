@@ -229,4 +229,8 @@ create your own custom style in the
 
 <!-- TODO: Add section about using `template-dir` option -->
 
+For more details, see the [build](/docs/reference/build.qmd) reference or run:
 
+```{.bash filename="Terminal"}
+seedcase-flower build --help
+```
