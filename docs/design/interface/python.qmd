@@ -79,14 +79,13 @@ flowchart TD
 
 ### {{< var done >}} `view()`
 
-As mentioned in the CLI design page, this function has two parameters
-that are both the same as those in the `build()` function: `source` and
-`style`. The only difference with the `style` parameter is that it can
-only accept built-in styles that are one-page (as the terminal is only a
-single page itself) and does not allow a custom style. It also doesn't
-read from the configuration file.
+It takes the same parameters as `build()`: `source` and `style`. Unlike
+`build()`, `view()`'s `style` parameter only accepts built-in one-page
+styles (the terminal displays a single page) and ignores custom styles
+and the configuration file. For details about the parameters, see
+[`view()`](/docs/reference/view.qmd).
 
-The internal flow of this function is shown in the diagram below.
+The internal flow of `view()` is shown in the diagram below.
 
 ```{mermaid}
 %%| label: fig-python-view-flow
