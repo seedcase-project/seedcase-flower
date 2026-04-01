@@ -54,7 +54,7 @@ reasons:
 
 ### {{< var done >}} `build()`
 
-The `build()` function has the parameters `source`, `style`, `template_dir`, `output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd) for details about these parameters.
+`build()` takes the parameters `source`, `style`, `template_dir`, `output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd) for details.
 
 The internal flow of `build()` is shown in the diagram below.
 
@@ -79,10 +79,10 @@ flowchart TD
 
 ### {{< var done >}} `view()`
 
-It takes the same parameters as `build()`: `source` and `style`. Unlike
-`build()`, `view()`'s `style` parameter only accepts built-in one-page
-styles (the terminal displays a single page) and ignores custom styles
-and the configuration file. For details about the parameters, see
+`view()` takes the same parameters as `build()`: `source` and `style`.
+Unlike `build()`, `view()`'s `style` parameter only accepts built-in
+one-page styles (the terminal displays a single page) and ignores custom
+styles and the configuration file. For details about the parameters, see
 [`view()`](/docs/reference/view.qmd).
 
 The internal flow of `view()` is shown in the diagram below.
