@@ -137,35 +137,36 @@ style.
 
 ### {{< var done >}} Main config settings: `.flower.toml`
 
-The `.flower.toml` file contains the configuration settings for Flower.
-For a simple configuration using a built-in style, the file can be as
-simple as:
+The `.flower.toml` file contains the main configuration settings for
+Flower. For a simple configuration using a built-in style, the file can
+be as simple as:
 
 ``` {.toml filename=".flower.toml"}
 style = "quarto-one-page"
 output-dir = "docs/"
 ```
 
-Custom styles require `template-dir` to be included, for example:
+Custom styles require a `template-dir`. For example:
 
-``` toml
-# The `templates-dir` below must include at least one Jinja and the
-# `sections.toml` file.
+``` {.toml filename=".flower.toml"}
 template-dir = "path/to/templates/"
+output-dir = "docs/"
 ```
 
-When `template-dir` is given, any value in `style` will be ignored.
+<!-- TODO: Do we need "style = 'custom'" above? -->
+
+The `template-dir` above must include at least one Jinja and a
+`sections.toml` file. When `template-dir` is given, any value in `style`
+is ignored.
 
 ### {{< var done >}} Main config settings: `pyproject.toml`
 
-We allow the configuration settings to be set in the `pyproject.toml`
-file under the `[tool.seedcase-flower]` table for convenience, which is
-particularly useful if the Data Package is a Python project that uses
-`pyproject.toml`. This way, no additional configuration file is needed
-just for Flower.
+The main configuration settings can also go in the `pyproject.toml` file
+under `[tool.seedcase-flower]`. This avoids an extra configuration file
+if the project already includes a `pyproject.toml` file.
 
-Taking the complex example from `.flower.toml` above, the
-`pyproject.toml` version would look like:
+The custom example from `.flower.toml` above would look like this in
+`pyproject.toml`:
 
 ``` toml
 [tool.seedcase-flower]
