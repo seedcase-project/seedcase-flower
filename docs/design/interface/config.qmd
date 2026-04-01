@@ -109,44 +109,31 @@ See [`Content`](/docs/reference/Content.qmd) for more details.
 
 <!-- TODO: Replace link with our own decision "why TOML" post -->
 
-We use configuration files to ensure that how the documentation is built
-is explicitly defined and reproducible whenever someone uses the
-`seedcase-flower build` command. This way, anyone who has access to the
-Data Package and the configuration file can re-build the documentation
-in the same way with that simple command. We use TOML for the file
-format since there are
-[many advantages to it for storing configuration settings](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
-especially in contrast to YAML. The two biggest advantages of TOML for
-us are that you can use comments (with `#`) and that the content is
-treated purely as data (whereas YAML can contain content that can be
-parsed as code and executed).
+Configuration files make documentation creation explicitly defined and
+reproducible with `seedcase-flower build`. Flower uses two types: the
+main configuration file and `sections.toml`.
 
-The main configuration file maps one-to-one to the `Config` class
-described above. The configuration can be put either in a separate
-`.flower.toml` file or in the `pyproject.toml` file under the
-`[tool.seedcase-flower]` table. The ordering of which configurations are
-used is as follows:
+We use TOML since it has
+[many advantages for configuration](https://www.anbowell.com/blog/an-in-depth-comparison-of-json-yaml-and-toml/),
+most notably comment support (`#`) and content treated as pure data
+(unlike YAML, which can contain executable code).
 
-1. If an argument is given to `style` in the `build` CLI command, use
-   that.
-2. If not, search for a `.flower.toml` file in the working directory
-   and, if found, read the configurations within that file.
-3. If `.flower.toml` does not exist, search for a `pyproject.toml` file
-   in the working directory and, if found, read the configurations under
-   the `[tool.seedcase-flower]` table.
-4. If neither file exists, use the default configurations defined in the
-   `Config` class, which represent the default built-in style.
+The main configuration maps one-to-one to the `Config` class. It can be
+placed in a standalone `.flower.toml` file or in `pyproject.toml` under
+the `[tool.seedcase-flower]` table. Flower resolves the configuration in
+this order, falling back to the next if not provided or found:
 
-The `sections.toml` configuration file kept within the template
-directory (`Config.template_dir`) is used to create the style. This maps
-directly to the `One`, `Many`, and `Content` classes. For any given
-style, the template directory must have this `sections.toml` file, which
-contains the settings for the `One` and `Many` classes. For built-in
-styles, this `sections.toml` file is kept internally in Flower while for
-custom styles, the user must provide it in their template directory.
+1. The `style` argument passed to the `build` CLI command.
+2. The `.flower.toml` file in the working directory.
+3. The `[tool.seedcase-flower]` table in `pyproject.toml`.
+4. The default `Config` values, which represent the default built-in
+   style.
 
-To provide a clear precedence for applying settings, we decided that
-styles specified on the CLI override settings in the configuration file.
+The `sections.toml` file defines the style by configuring the `One` and
+`Many` classes, and must be present in the template directory
+(`Config.template_dir`). Built-in styles include this file internally
+while users must provide it in the template directory for their custom
+style.
 
 ### {{< var done >}} Main config settings: `.flower.toml`
 
