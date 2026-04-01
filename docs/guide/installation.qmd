@@ -10,7 +10,6 @@ Before installing Flower, you need
 available, run:
 
 ``` {.bash filename="Terminal"}
-python3 --version
 uv --version
 ```
 
