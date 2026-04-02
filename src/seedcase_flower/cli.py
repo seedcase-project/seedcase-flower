@@ -7,15 +7,19 @@ from cyclopts import App, Parameter, config
 from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 from rich.console import Console
 from rich.markdown import Markdown
-from seedcase_soil import CONSOLE_THEME, HELP_CONSOLE_THEME, run_without_tracebacks
+from seedcase_soil import (
+    CONSOLE_THEME,
+    HELP_CONSOLE_THEME,
+    format_param_help,
+    pretty_print,
+    run_without_tracebacks,
+)
 
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
-    _format_param_help,
     _map,
     _number,
-    _pretty_print,
 )
 from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
@@ -27,7 +31,7 @@ app = App(
     help="Flower generates human-readable documentation from Data Packages.",
     help_formatter=DefaultFormatter(
         column_specs=(
-            ColumnSpec(renderer=_format_param_help),
+            ColumnSpec(renderer=format_param_help),
             ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
         )
     ),
@@ -82,12 +86,12 @@ def build(
     )
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    _pretty_print(
+    pretty_print(
         verbose, f"Read Data Package {properties['name']!r} from {address.value!r}."
     )
 
     built_sections = build_sections(properties, config)
-    _pretty_print(
+    pretty_print(
         verbose,
         (
             f"Created {_number('section', built_sections)} "
@@ -96,10 +100,10 @@ def build(
     )
 
     output_files: list[Path] = write_sections(built_sections, output_dir)
-    _pretty_print(
+    pretty_print(
         verbose, f"Created {_number('file', output_files)} in '{output_dir}/':"
     )
-    _pretty_print(verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'")))
+    pretty_print(verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'")))
 
 
 @app.command(config=[])
