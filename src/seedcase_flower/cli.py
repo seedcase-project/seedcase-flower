@@ -3,16 +3,13 @@
 from pathlib import Path
 from typing import Any, Optional
 
-from cyclopts import App, Parameter, config
-from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
 from rich.console import Console
 from rich.markdown import Markdown
 from seedcase_soil import (
     CONSOLE_THEME,
-    HELP_CONSOLE_THEME,
-    format_param_help,
     pretty_print,
     run_without_tracebacks,
+    setup_cli,
 )
 
 from seedcase_flower.build_sections import build_sections
@@ -26,32 +23,11 @@ from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
-app = App(
+app = setup_cli(
     name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
-    help_formatter=DefaultFormatter(
-        column_specs=(
-            ColumnSpec(renderer=format_param_help),
-            ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
-        )
-    ),
-    default_parameter=Parameter(negative=(), show_default=True),
-    console=Console(theme=HELP_CONSOLE_THEME),
-    config=[
-        config.Toml(
-            ".flower.toml",
-            search_parents=True,
-            use_commands_as_keys=False,
-        ),
-        config.Toml(
-            "pyproject.toml",
-            root_keys=["tool", "seedcase-flower"],
-            search_parents=True,
-            use_commands_as_keys=False,
-        ),
-    ],
+    config_name=".flower.toml",
 )
-app.register_install_completion_command()
 
 
 @app.command()
@@ -127,10 +103,11 @@ def view(
     properties: dict[str, Any] = read_properties(address)
     built_sections = build_sections(properties, Config(style=Style[style.name]))
     console = Console(theme=CONSOLE_THEME)
+    # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
 
 
 def main() -> None:
-    """Create an entry points to run app without tracebacks."""
+    """Create an entry point to run the cli without tracebacks."""
     run_without_tracebacks(app)
