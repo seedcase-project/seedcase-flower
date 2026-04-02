@@ -131,4 +131,6 @@ def view(
     console.print(Markdown(built_sections[0].content))
 
 
-run_without_tracebacks(app)
+def main() -> None:
+    """Create an entry points to run app without tracebacks."""
+    run_without_tracebacks(app)
