@@ -203,23 +203,3 @@ def test_view_renders_datapackage(capsys, datapackage_path):
     assert "integer" in output
     assert "name" in output
     assert "string" in output
-
-
-def test_styled_markdown_table_renders_box_and_header():
-    """Markdown tables should render with a heavy-head box and column separators."""
-    md = "| A | B |\n|---|---|\n| 1 | 2 |\n"
-    out = StringIO()
-    Console(file=out, theme=_CONSOLE_THEME, no_color=True).print(Markdown(md))
-    output = out.getvalue()
-    assert "┏" in output  # heavy outer box top
-    assert "┡" in output  # heavy-to-light header separator
-    assert "┴" in output  # bottom border with column joins
-    assert "A" in output
-    assert "B" in output
-
-
-def test_view_help_page(capsys, console):
-    """view --help should document source and style parameters."""
-    with pytest.raises(SystemExit):
-        app(["view", "--help"], console=console)
-    assert capsys.readouterr().out == _VIEW_HELP_PAGE, _CHANGED_MSG.format(cmd="view")

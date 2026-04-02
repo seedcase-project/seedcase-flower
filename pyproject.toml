@@ -69,4 +69,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-seedcase-soil = { path = "../seedcase-soil", editable = true }
+seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", rev = "feat/beautify-cli" }
