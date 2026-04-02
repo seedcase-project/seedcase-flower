@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from seedcase_soil import (
     CONSOLE_THEME,
-    pretty_print,
+    print_if_verbose,
     run_without_tracebacks,
     setup_cli,
 )
@@ -62,12 +62,12 @@ def build(
     )
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    pretty_print(
+    print_if_verbose(
         verbose, f"Read Data Package {properties['name']!r} from {address.value!r}."
     )
 
     built_sections = build_sections(properties, config)
-    pretty_print(
+    print_if_verbose(
         verbose,
         (
             f"Created {_number('section', built_sections)} "
@@ -76,10 +76,12 @@ def build(
     )
 
     output_files: list[Path] = write_sections(built_sections, output_dir)
-    pretty_print(
+    print_if_verbose(
         verbose, f"Created {_number('file', output_files)} in '{output_dir}/':"
     )
-    pretty_print(verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'")))
+    print_if_verbose(
+        verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'"))
+    )
 
 
 @app.command(config=[])
