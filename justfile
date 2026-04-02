@@ -150,10 +150,6 @@ build-readme:
 build-contributors:
     sh ./tools/get-contributors.sh seedcase-project/seedcase-flower > docs/includes/_contributors.qmd
 
-# Generate updated help-output strings for copy-pasting into test_cli.py
-generate-help-strings:
-    PYTHONPATH=. uv run python tools/generate-help-strings.py
-
 # Preview the documentation website with automatic reload on changes
 preview-website: build-quartodoc
     uv run quarto preview --execute
