@@ -52,32 +52,42 @@ For examples of Flower's built-in styles, see the
 
 ### Configuration file syntax
 
-To configure settings in Flower, open up `.flower.toml` in your favorite
-text editor. Let's change the output directory to `'my-docs'`. You can
-do this by adding the following line to the configuration:
+Both configuration files use the same TOML syntax. First, we'll use
+`.flower.toml` in the examples below, then show the minor difference for
+`pyproject.toml`.
+
+In the root of your project, create a `.flower.toml` file and open it in
+your favorite text editor. To change the output directory to `my-docs`,
+you can add the following line to the file:
 
 ``` {.toml filename=".flower.toml"}
 output-dir = "my-docs/"
 ```
 
-When you run `flower build`, the configuration file will be read and the
-output directory will be changed to `my-docs`.
+Now, when you run `flower build` in your terminal, the output directory
+will be changed to `my-docs`.
 
-If you would like to change to use a custom style and instruct Flower to
-look for templates in the directory `my-templates`, you can write the
-following line to `.flower.toml`:
+If you would like to use a custom style with your own templates in a
+`my-templates` directory, add the following line to `.flower.toml`:
 
 ``` {.toml filename=".flower.toml"}
 template-dir = "my-templates/"
 ```
 
-If you prefer to configure Flower via `pyproject.toml` instead, the
-syntax will be the same as we have seen above. The only difference is
-that a heading needs to be included to indicate where in the file Flower
-can find the settings. Open up `pyproject.toml` and add a new table
-header to the end as `[tool.seedcase-flower]`. Then put the same
-configuration settings as you used above in `.flower.toml` below this
-table header.
+With both these settings, the `.flower.toml` file would look like this:
+
+``` {.toml filename=".flower.toml"}
+output-dir = "my-docs/"
+template-dir = "my-templates/"
+```
+
+If you prefer to configure Flower via `pyproject.toml`, the syntax is
+almost the same as we have seen above; the only difference is that you
+need to include a heading to indicate where in the file Flower can find
+the settings. Open up your `pyproject.toml` (or create one in the root
+of your project) and add a new table header `[tool.seedcase-flower]`.
+Then put the same configuration settings as you used above in
+`.flower.toml` below this table header.
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
