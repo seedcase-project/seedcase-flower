@@ -1,6 +1,6 @@
 ---
-title: "Configuration"
-description: "Configuring Flower with different settings and output options."
+title: "Configuration files"
+description: "How to configure Flower's settings and output options using a configuration file."
 order: 2
 ---
 
