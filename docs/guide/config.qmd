@@ -84,12 +84,12 @@ template-dir = "my-templates/"
 <!-- TODO: Add style example when other built-in styles exist -->
 
 If you prefer to configure Flower via `pyproject.toml`, the syntax is
-almost the same as we have seen above; the only difference is that you
-need to include a heading to indicate where in the file Flower can find
-the settings. Open up your `pyproject.toml` (or create one in the root
-of your project) and add a new table header `[tool.seedcase-flower]`.
-Then put the same configuration settings as you used above in
-`.flower.toml` below this table header.
+almost the same as above; the only difference is that you need to
+include a heading to indicate where in the file Flower can find the
+settings. Open up your `pyproject.toml` (or create one in the root of
+your project) and add a new table header `[tool.seedcase-flower]`. Then
+put the same configuration settings as you used above in `.flower.toml`
+below this table header.
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
