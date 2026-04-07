@@ -94,3 +94,6 @@ Then put the same configuration settings as you used above in
 template-dir = "my-templates/"
 output-dir = "my-docs/"
 ```
+
+Once your configuration file is in place, you can run `flower build` and
+Flower will pick up your settings automatically.
