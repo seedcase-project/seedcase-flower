@@ -91,6 +91,6 @@ Then put the same configuration settings as you used above in
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
-template_dir = "my-templates/"
-output_dir = "my-docs/"
+template-dir = "my-templates/"
+output-dir = "my-docs/"
 ```
