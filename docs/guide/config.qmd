@@ -4,42 +4,32 @@ description: "How to configure Flower's settings and output options using a conf
 order: 2
 ---
 
-There are three ways to configure Flower:
+Flower can be configured via the command line interface (CLI), the
+Python interface, or a configuration file. This guide covers
+configuration files---for the CLI, see the
+[CLI guide](/docs/guide/cli.qmd). We don't have a guide for the Python
+interface, as Flower is primarily designed to be used as a CLI tool. If
+you're interested in the Python interface, check out the
+[Python](/docs/design/interface/python.qmd) design document.
 
-1. Via the command line interface (CLI), as described in
-   [the CLI guide](/docs/guide/cli.qmd).
-2. Via the Python interface, if using Flower as a Python library, which
-   we don't cover in any guide as we built Flower to be used as a CLI
-   tool.
-3. Via a configuration file, as described below.
+## Configuration files
 
-If you use the CLI (or the Python interface) to configure Flower's
-output, Flower **will not** use the settings in the configuration file.
-If there are no configuration settings given in either the CLI, the
-Python interface, or in the configuration file, Flower will use its
-defaults.
+A configuration file lets you set your preferences once, so you don't
+have to repeat them every time you run `flower build`. Flower supports
+two configuration files: `.flower.toml` and `pyproject.toml`. Both
+should be placed in the root of your project — Flower will find them
+automatically.
+
+Use `.flower.toml` if you prefer a dedicated file for Flower's settings,
+or `pyproject.toml` if you already use it for other Python tools and
+prefer to keep everything in one place.
 
 ::: callout-note
-The source can only be specified via the CLI or the Python interface,
-not from the configuration file. Similarly, you can only configure the
-`view` command from the CLI or the Python interface, not from the
-configuration file.
+Settings provided via the CLI or Python interface always take priority
+over the configuration file. Some settings — like specifying a remote
+source or configuring the `view` command — can only be set via the CLI
+or Python interface, not from the configuration file.
 :::
-
-## The configuration file
-
-Flower will read the configurations from **either** `.flower.toml` or
-`pyproject.toml` (not both) in this order of preference:
-
-1. `.flower.toml`
-2. `pyproject.toml`
-
-If your Data Package is already a Python package, it might be convenient
-to configure Flower via `pyproject.toml`, since you likely already have
-your configuration settings for other Python tools in this file.
-Ultimately, which file you choose to use depends on if you prefer to
-have a separate configuration file for separate tools or if your prefer
-them in the same configuration file.
 
 ### Configurable settings
 
