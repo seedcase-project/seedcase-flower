@@ -36,23 +36,19 @@ or Python interface, not from the configuration file.
 Before diving into editing your configuration, let's see which settings
 can be configured via the configuration file:
 
-`style`
-: The style decides how the metadata is structured in the output files.
+- `style`: How metadata is structured in the output files. Defaults to
+  `quarto-one-page`.
 
-`output-dir`
-: The directory where Flower will save the output files.
+- `output-dir`: The directory where Flower will save the output files.
+  Defaults to `docs/`.
 
-`template-dir`
-: The directory that contains the template files to use. If you use
-  this setting because you want to create your own style, then don't
-  add a `style` setting (it must be empty).
+- `template-dir`: The directory that contains the template files for a
+  custom style. If `template-dir` is set, `style` is ignored. Not set by
+  default. For more information on how to create custom styles, see the
+  [custom styles](custom-styles.qmd) guide.
 
-To see examples of which styles are available in Flower and how they
-would structure the metadata differently, see the
-[examples page](/docs/examples/index.qmd). When `template-dir` is used,
-the structure of the output is determined by a custom set of templates
-and configurations explained in
-[the documentation about custom styles](custom-styles.qmd).
+For examples of Flower's built-in styles, see the
+[examples page](/docs/examples/index.qmd).
 
 ### Configuration file syntax
 
