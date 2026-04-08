@@ -4,21 +4,25 @@ description: "Create custom output from your Data Package metadata."
 order: 3
 ---
 
-Flower comes with a number of
+While Flower includes several
 [built-in styles](/docs/design/interface/outputs.qmd#built-in-styles),
-but it is also possible to create new styles that match your particular
-use case. Custom styles can only be used with the `build` command and
-not with `view`.
+you can also create custom styles for your particular use case. A custom
+style consists of Jinja templates and configuration files that define
+the structure of the documentation generated from a `datapackage.json`.
+When you run the `build` command, Flower uses these files to generate
+the documentation in your custom style.
 
-Creating a custom style involves making templates and using
-configuration files to set the layout and structure of the documentation
-generated from the `datapackage.json` file.
+::: callout-note
+Custom styles can only be used to customise the output files created
+with the `build` command and not to customise the `view` command.
+:::
 
-In this guide, you will walk through how to create a custom style that
-generates one Markdown file for the Data Package as a whole and separate
-Markdown files for each data resource. To demonstrate this custom style,
-you will use the following Data Package about a (fake) study on flowers
-and their growing conditions.
+In this guide, you will create a custom style that generates one Quarto
+Markdown file for the metadata describing the Data Package as a whole
+and separate Markdown files for each data resource. The guide uses a
+Data Package about a (fake) study on flowers and their growing
+conditions. To work through the steps yourself, copy the
+`datapackage.json` content below into a local directory.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Expand to see the `datapackage.json` content
@@ -28,8 +32,10 @@ and their growing conditions.
 ```
 :::
 
-At the end of this page and after completing all the steps, your file
-structure will look like the below:
+In this guide, the directory is called `flora/`. Once you've completed
+the guide, your file structure will look like the below with the
+`templates/` folder containing the files for your custom style, and the
+`docs/` folder containing the generated documentation files:
 
 ``` txt
 flora/
@@ -46,8 +52,6 @@ flora/
         ├── species_catalog.qmd
         └── growth_records.qmd
 ```
-
-The first step is to set up the files within the `templates/` folder.
 
 ## Creating the templates
 
