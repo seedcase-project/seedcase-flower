@@ -294,7 +294,6 @@ Create a `sections.toml` file in the `templates/` folder. Inside, add a
 guide, add just one `[[one]]` section to save an `index.qmd` file:
 
 ``` {.toml filename="templates/sections.toml"}
-# One output file at docs/index.qmd
 [[one]]
 output-path = "index.qmd"
 ```
@@ -327,21 +326,21 @@ Update the `sections.toml` file to include the content items for the `[[one]]` s
 output-path = "index.qmd"
 
 [[one.contents]]
-# Select the whole metadata object
-jsonpath = "$"
-# Render the selected metadata with this template
-template-path = "package.qmd.jinja"
-# Reference the selected metadata in the template with this
-# variable name
-jinja-variable = "package"
+jsonpath = "$" # <1>
+template-path = "package.qmd.jinja" # <2>
+jinja-variable = "package" # <3>
 
-# The contents of this section will be appended to the contents
-# of the previous section inside the `docs/index.qmd` file.
-[[one.contents]]
-jsonpath = "$.contributors"
-template-path = "contributors.qmd.jinja"
-jinja-variable = "contributors"
+[[one.contents]] # <4>
+jsonpath = "$.contributors" # <4>
+template-path = "contributors.qmd.jinja" # <4>
+jinja-variable = "contributors" # <4>
 ```
+
+1. Select the entire metadata object from `datapackage.json`
+2. Render the selected metadata with this template
+3. Reference the selected metadata with this variable name
+4. Append this section to the previous section's output in
+   `docs/index.qmd`
 
 You can add more `[[one]]` sections if you want to create more output
 files that contain different metadata. Or you can keep adding content
@@ -350,17 +349,15 @@ belongs to the `[[one]]` section defined above it in the file.
 
 #### Adding `[[many]]` section(s)
 
-When you want to create a group of similar output files (e.g., one file
-for each resource), you can use the `[[many]]` section type. Here you'll
-create a `[[many]]` section to save a file for each resource in the
-`resources/` folder. The `[[many]]` section works similarly to `[[one]]`
-except you can only have one `content` type (either `"resources"` or
-`"fields"`) that is used in place of `jsonpath`, with the other
-`Content` attributes being included within the `[[many]]` section.
+The `[[many]]` section type creates a group of similar output files, for
+example, one file per resource. It works similarly to `[[one]]`, but
+instead of `jsonpath`, it uses a `content` type (either `"resources"` or
+`"fields"`), with the other `Content` attributes defined directly in the
+`[[many]]` section.
 
-To create one file for each resource using the `resource.qmd.jinja`
-template, you add the following `[[many]]` section to the
-`sections.toml` file:
+To create one file for each resource in a `resources/` folder using the
+`resource.qmd.jinja` template, add the following `[[many]]` section to
+the `sections.toml` file:
 
 ``` {.toml filename="templates/sections.toml"}
 [[many]]
@@ -370,23 +367,23 @@ template-path = "resource.qmd.jinja"
 jinja-variable = "resource"
 ```
 
-This will place the created files in the `resources/` folder inside the
-output directory (`docs/` in this example). Each created file will be
-named using the `name` metadata of the resource (e.g.,
-`species_catalog.qmd` and `growth_records.qmd`).
+The created files will be placed in the `resources/` folder inside the
+output directory defined in the main configuration (`docs/` in this
+example). Each created file will be named using the resource's `name`
+property (in this case `species_catalog.qmd` and `growth_records.qmd`).
 
 ::: callout-tip
 You can either set a folder or a file in the `output-path` of
 `[[many]]`. If you use a file path, you need to include the `{}`
 placeholder for the file name. In the case above, it would be
-`resources/{resource-name}.qmd`. See the
-[design documentation on `Many`](/docs/design/interface/config.qmd#one-and-many-class)
-for more details.
+`resources/{resource-name}.qmd`.
 :::
 
 <!-- TODO: Add tip on including field names nested under resource names. -->
 
-## Running the `build` command
+See more about the `[[one]]` and `[[many]]` section Python classes in
+the
+[design documentation](https://flower.seedcase-project.org/docs/design/interface/config#one-and-many-class).
 
 To generate the documentation, run the `build` command in the Terminal
 from the root of your Data Package:
