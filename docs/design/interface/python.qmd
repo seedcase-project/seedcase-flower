@@ -2,8 +2,8 @@
 title: Python functions
 ---
 
-This document describes the design of the Python functions forming the CLI and
-supporting non-CLI layer and tracks implementation status.
+This document describes the design of the Python functions forming the
+CLI and supporting non-CLI layer and tracks implementation status.
 
 {{< include /docs/includes/_design-status.qmd >}}
 
