@@ -1,6 +1,6 @@
 ---
 title: "Custom styles"
-description: "Create custom styles for displaying the metadata of your Data Package."
+description: "Create custom output from your Data Package metadata."
 order: 3
 ---
 
