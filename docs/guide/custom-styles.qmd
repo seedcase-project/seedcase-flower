@@ -239,10 +239,27 @@ Create a `.flower.toml` file in the root of your Data Package and add
 the following settings:
 
 ``` {.toml filename=".flower.toml"}
-# Point Flower to the folder containing your templates
 template-dir = "templates/"
-# Specify where the output files should be generated
-output-dir = "docs/"
+```
+
+This line points Flower to the folder containing your templates. The
+`output-dir` is not set here, so the generated documentation will be
+written to the default `docs/` directory.
+
+::: callout-tip
+If you want to save the generated documentation files to a different
+folder than `docs/`, you can set the `output-dir` in the main
+configuration file as well.
+:::
+
+If you have a `pyproject.toml` file in the root of your Data Package,
+you can include the same settings there instead of in a separate
+`.flower.toml` file. The only difference is that the settings in
+`pyproject.toml` need to be nested under a header like so:
+
+``` {.toml filename="pyproject.toml"}
+[tool.seedcase-flower]
+template-dir = "templates/"
 ```
 
 ::: callout-note
