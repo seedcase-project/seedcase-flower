@@ -92,31 +92,37 @@ For the new style to work properly, the string value of the enum member
 ## Testing the new style
 
 Once the new style is in place, be sure to test that it works as
-expected by running the `view` or `build` command as appropriate. You
-can use the example Data Package included in Flower to test:
+expected by running the `view` or `build` command as appropriate.
+
+You can use the example Data Package included in Flower for your tests.
+For example, to test with `build`, run:
 
 ``` {.bash filename="Terminal"}
-uv run seedcase-flower build --source docs/includes/datapackage.json --style your-new-style
+uv run seedcase-flower build --source docs/includes/datapackage.json --style your_new_style
 ```
 
 ## Making a pull request
 
 Before submitting a pull request with your changes, make sure you:
 
-- Run `just run-all` in the terminal.
+- Run `just run-all` in the terminal to ensure that all tests and
+  linting checks pass.
 - Put your changes on a new branch with a name that follows our
   [branch naming conventions](https://guidebook.seedcase-project.org/workflows/prs#branch-naming-conventions).
 - Commit your changes following
   [Conventional Commits](https://guidebook.seedcase-project.org/workflows/commits#conventional-commits).
 - Push your branch to GitHub.
 
+::: callout-tip
 You might find it helpful to read through our
 [contributing guidelines](/CONTRIBUTING.html). If you would like a more
 detailed walkthrough of
 [creating commits](https://guidebook.seedcase-project.org/workflows/commits)
 and
 [submitting pull requests](https://guidebook.seedcase-project.org/workflows/prs),
-have a look at the relevant sections of our Guidebook.
+have a look at the relevant sections of our guidebook.
+:::
 
 You're now ready to open a pull request from your fork to the main
-Flower repository on GitHub.
+Flower repository on GitHub. We appreciate you taking the time to
+contribute and will review your pull request as soon as possible.
