@@ -13,8 +13,11 @@ When you run the `build` command, Flower uses these files to generate
 the documentation in your custom style.
 
 ::: callout-note
-Custom styles can only be used to customise the output files created
-with the `build` command and not to customise the `view` command.
+Custom styles only work with `build`, not `view`. Since `view` can be
+run from anywhere on your computer, there is no reliable way for it to
+find a custom style. If you would like your style to be available to
+`view`, consider
+[contributing it as a built-in style](/docs/guide/contribute-style.qmd).
 :::
 
 In this guide, you will create a custom style that generates one Quarto
