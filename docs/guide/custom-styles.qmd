@@ -111,8 +111,6 @@ title: "{{ package.title or package.name }}"
 subtitle: "Version: {{ package.version }}"
 date: "{{ package.created }}"
 ---
-
-{{ package.description }}
 ```
 
 Jinja syntax uses the double curly brackets `{{{...}}}` to output the
@@ -137,12 +135,20 @@ subtitle: "Version: {{ package.version }}"
 date: "{{ package.created }}"
 ---
 
-{{ package.description }}
+{{ package.description }} # <1>
 
-{% if package.keywords %}
-**Keywords:** {{ package.keywords | join(", ") }}
-{% endif %}
+{% if package.keywords %} # <2>
+**Keywords:** {{ package.keywords | join(", ") }} # <2>
+{% endif %} # <2>
 ```
+
+1. `{{ package.description }}` outputs the value of the `description`
+   property of the package metadata.
+2. The `if` statement checks if the `keywords` property exists in the
+   package metadata. If it does, it will output a line with the keywords
+   joined by commas using the built-in Jinja `join` filter. You can
+   learn more about Jinja features in the
+   [Jinja documentation](https://jinja.palletsprojects.com/en/stable/templates/).
 
 ### `contributors.qmd.jinja`
 
