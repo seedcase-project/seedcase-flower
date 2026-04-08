@@ -44,7 +44,7 @@ not needed.
 
 Next, in your local copy of the Flower repo, place the template folder
 into the `src/seedcase_flower/styles/` folder. The file structure should
-now look like:
+now look something like:
 
 ``` txt
 src/
@@ -59,11 +59,11 @@ src/
             └── template_last.qmd.jinja
 ```
 
-Finally, add your style to the appropriate style enum (`Style` or
-`ViewStyle`) in `src/seedcase_flower/styles.py`. All styles are defined
-in the `Style` enum, while styles suitable for terminal output with
-`view` are also added to `ViewStyle`. For example, if the
-`your_new_style` is a new style, you would include it like so:
+Finally, add your style to the appropriate style enum(s) in
+`src/seedcase_flower/styles.py`. All styles are defined in the `Style`
+enum, while styles for terminal output with `view` are also added to
+`ViewStyle`. For example, if `your_new_style` is your new style, you
+would include it in `Style` like so:
 
 ``` {.python filename="src/seedcase_flower/styles.py"}
 class Style(Enum):
@@ -78,8 +78,8 @@ class Style(Enum):
 1. Add your new style as shown on this line.
 
 ::: callout-important
-For the new style to work properly, the name of the enum member must be
-exactly the same as the folder name for the new style.
+For the new style to work properly, the string value of the enum member
+(e.g., `"your_new_style"`) must exactly match the folder name.
 :::
 
 ## Testing the new style
