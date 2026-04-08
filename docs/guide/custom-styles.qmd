@@ -423,3 +423,7 @@ flora/
         ├── species_catalog.qmd
         └── growth_records.qmd
 ```
+
+You can now use your custom documentation files in the `docs/` folder as
+you would with any other Quarto Markdown files, such as generating a
+website or PDF.
