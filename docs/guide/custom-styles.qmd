@@ -229,10 +229,11 @@ title: "{{ resource.title or resource.name }}"
 
 ### Main configuration file
 
-The main configuration file is used to set the template and output
-folders for the documentation. Flower can read the main configuration
-from the `.flower.toml` or the `pyproject.toml` file in the root of your
-Data Package. In this guide, you will use `.flower.toml`.
+When you define a custom style, you must set the template and output
+folder in the main configuration file. Flower can read the main
+configuration from the `.flower.toml` or the `pyproject.toml` file in
+the root of your Data Package. In this guide, you will use
+`.flower.toml`.
 
 Create a `.flower.toml` file in the root of your Data Package and add
 the following settings:
