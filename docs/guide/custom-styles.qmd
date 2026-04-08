@@ -262,11 +262,14 @@ you can include the same settings there instead of in a separate
 template-dir = "templates/"
 ```
 
-::: callout-note
-The `style` field in the main configuration file is for specifying a
+::: callout-tip
+The main configuration also includes a `style` field. This specifies a
 built-in style and should not be used when creating a custom style. If
 you want to use a built-in style, leave `template-dir` unset and set
 `style` to the name of your chosen built-in style.
+
+For examples of built-in styles, see the
+[examples](/docs/examples/index.qmd) page.
 :::
 
 ### `sections.toml` configuration file
