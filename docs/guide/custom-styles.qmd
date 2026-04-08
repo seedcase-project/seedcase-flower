@@ -355,6 +355,13 @@ instead of `jsonpath`, it uses a `content` type (either `"resources"` or
 `"fields"`), with the other `Content` attributes defined directly in the
 `[[many]]` section.
 
+::: callout-note
+The `content` field in a `[[many]]` section is restricted to
+`"resources"` or `"fields"` because these are the only Data Package
+metadata properties structured as lists, making them the only ones that
+benefit from generating one file per item.
+:::
+
 To create one file for each resource in a `resources/` folder using the
 `resource.qmd.jinja` template, add the following `[[many]]` section to
 the `sections.toml` file:
