@@ -53,11 +53,15 @@ src/
         ├── ...
         └── your_new_style/
             ├── sections.toml
-            ├── template_1.qmd.jinja
-            ├── template_2.qmd.jinja
-            ├── ...
-            └── template_last.qmd.jinja
+            ├── package.qmd.jinja
+            └── resource.qmd.jinja
 ```
+
+Your style may have fewer or more templates than shown above---and may
+use different parts of the `datapackage.json`, e.g., contributors,
+license, or schema fields. Remember to give your templates descriptive
+names. The `.qmd` extension serves as an example; Jinja2 can produce any
+plain text format (e.g., `.html`, `.md`, `.yml`).
 
 Finally, add your style to the appropriate style enum(s) in
 `src/seedcase_flower/styles.py`. All styles are defined in the `Style`
