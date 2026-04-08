@@ -1,6 +1,6 @@
 ---
 title: "Contributing a built-in style"
-description: "Add your own style as a built-in style in Flower."
+description: "Add your own style to Flower's built-in styles."
 order: 4
 ---
 
