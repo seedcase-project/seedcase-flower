@@ -156,7 +156,16 @@ In the `contributors.qmd.jinja` template, you will define the layout for
 the contributors (using the variable name `contributors`). You could
 include the contributors in the `package.qmd.jinja` template, but, to
 show how to split content across templates, you will create a separate
-template.
+template. The content of these templates will be combined via the
+`sections.toml` configuration file described in the
+[sections.toml](#sections.toml-configuration-file) section below.
+
+As with the previous template, you will use Jinja syntax to access the
+relevant metadata properties and to include control flow statements. In
+this case, you will use a for loop to iterate over the list of
+contributors and output their metadata. You will also include a
+conditional to check if the `organization` and `email` properties exist
+for each contributor:
 
 ``` {.djangotemplate filename="templates/contributors.qmd.jinja"}
 ## Contributors
@@ -178,6 +187,11 @@ template.
 No contributors listed.
 {% endif %}
 ```
+
+Notice that the template includes a conditional to check if there are
+any contributors listed in the metadata. If there are no contributors,
+it will output "No contributors listed." instead of leaving an empty
+section.
 
 ### `resource.qmd.jinja`
 
