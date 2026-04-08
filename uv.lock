@@ -2294,6 +2294,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-jsonpath" },
     { name = "rich" },
+    { name = "seedcase-soil" },
 ]
 
 [package.dev-dependencies]
@@ -2322,6 +2323,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
     { name = "rich", specifier = ">=14.3.3" },
+    { name = "seedcase-soil", git = "https://github.com/seedcase-project/seedcase-soil?rev=0.2.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -2340,6 +2342,15 @@ dev = [
     { name = "types-tabulate", specifier = ">=0.9.0.20241207" },
     { name = "typos", specifier = ">=1.40.0" },
     { name = "vulture", specifier = ">=2.14" },
+]
+
+[[package]]
+name = "seedcase-soil"
+version = "0.2.0"
+source = { git = "https://github.com/seedcase-project/seedcase-soil?rev=0.2.0#7a63c3700a3c271cba6d7b119fdcfafdf393bfbc" }
+dependencies = [
+    { name = "cyclopts" },
+    { name = "rich" },
 ]
 
 [[package]]
