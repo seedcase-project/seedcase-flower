@@ -274,15 +274,18 @@ For examples of built-in styles, see the
 
 ### `sections.toml` configuration file
 
-The `sections.toml` file is used to define how many output files will be
-created and which metadata will be displayed in each file. Documentation
-is split into two section types: `one` and `many`.
+The `sections.toml` file defines how many output files will be created
+and which metadata will be displayed in each file. Flower splits
+documentation into two section types: `one` and `many`.
 
 - `one` is for one output file (e.g., an index file).
-- `many` is for a group of similar output files (e.g., a file for each
-  resource).
+- `many` is for a group of similar output files (a file for each
+  resource or a file for each resource field).
 
-The `sections.toml` file must be stored in the template folder.
+::: callout-note
+The `sections.toml` file must be stored in the same folder as the Jinja
+templates.
+:::
 
 #### Adding `[[one]]` section(s)
 
