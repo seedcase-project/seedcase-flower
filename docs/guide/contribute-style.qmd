@@ -18,23 +18,27 @@ and clone your fork locally.
 
 Built-in styles consist of the following files:
 
-- Jinja2 template files: these define the layout of the generated
+- Jinja2 template files: These define the layout of the generated
   documentation.
-- A `sections.toml` configuration file: this defines how many output
-  files will be created and which metadata will be displayed in each
-  file.
+- A `sections.toml` configuration file: This defines how many output
+  files the style creates and which metadata is displayed in each file.
 
-First,
-[create the template files](/docs/guide/custom-styles.qmd#creating-the-templates)
+First, follow the [custom style guide](/docs/guide/custom-styles.qmd) to
+[create the templates](/docs/guide/custom-styles.qmd#creating-the-templates)
 and
-[add the `sections.toml` configuration file](/docs/guide/custom-styles.qmd#sections.toml-configuration-file)
-for your style by following the guide for creating custom styles. If you
-are writing a terminal style for use with the `view` command, do not put
-an `output-path` for your sections in `sections.toml`.
+[add the `sections.toml`](/docs/guide/custom-styles.qmd#sections.toml-configuration-file)
+locally.
 
 Use the name of your style as the name of the template folder. The name
 should be short, descriptive, and distinct from existing built-in
-styles. It should be given in snake case.
+styles. It should be given in snake case (e.g., `my_new_style`).
+
+::: callout-note
+If you are writing a terminal style for the `view` command, do not set
+`output-path` for any sections in `sections.toml`. Since `view` renders
+directly to the terminal rather than writing files, an output path is
+not needed.
+:::
 
 ## Adding the style as built-in
 
