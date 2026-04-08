@@ -392,18 +392,19 @@ See more about the `[[one]]` and `[[many]]` section Python classes in
 the
 [design documentation](https://flower.seedcase-project.org/docs/design/interface/config#one-and-many-class).
 
-To generate the documentation, run the `build` command in the Terminal
-from the root of your Data Package:
+## Build the custom style documentation
+
+To generate your custom style documentation, run the `build` command in
+the terminal from the root of your Data Package:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower build
 ```
 
-This will read the configuration files (`.flower.toml` and
-`sections.toml`), populate the templates (in the `templates/` folder)
-with metadata from `datapackage.json`, and output the generated
-documentation files to the specified output directory (`docs/` in this
-example).
+Flower then reads the configuration files (`.flower.toml` and
+`sections.toml`), populates the templates (in the `templates/` folder)
+with metadata from `datapackage.json`, and outputs the generated
+documentation files to the specified output directory.
 
 Your file structure should now look like:
 
