@@ -290,8 +290,8 @@ templates.
 #### Adding `[[one]]` section(s)
 
 Create a `sections.toml` file in the `templates/` folder. Inside, add a
-`[[one]]` for each output file you want to create. For this guide,
-create just one `[[one]]` to save an `index.qmd`:
+`[[one]]` section for each output file you want to create. For this
+guide, add just one `[[one]]` section to save an `index.qmd` file:
 
 ``` {.toml filename="templates/sections.toml"}
 # One output file at docs/index.qmd
@@ -299,27 +299,26 @@ create just one `[[one]]` to save an `index.qmd`:
 output-path = "index.qmd"
 ```
 
-Each `[[one]]` section contains one or more content items, with each
-content item corresponding to a specific part of the metadata (e.g., the
-contributors). A content item links this specific part of the metadata
-to the template that will be used to render it. In the rendered output,
-content items in the same section will be combined into the same output
-file in the order they are defined.
+This will generate an `index.qmd` file in the output directory (`docs/`
+in this example, since this is the default output directory).
 
-This section will output the `index.qmd` file, which would be considered
-the "landing page" for the Data Package documentation. In this case, add
-a content for the general Data Package properties (like `title` and
-`description`) and a content for the contributors.
+Each `[[one]]` section contains one or more content items, each linking
+a specific part of the metadata to a template. Content items in the same
+section are combined into one output file in the order they are defined.
 
-Add one or more contents to each `[[one]]` section, you need to include these fields:
+The section below outputs `index.qmd`, the "landing page" for the Data
+Package documentation, with content items for the general package
+properties (like `title` and `description`) and the contributors.
 
-- `jsonpath`: The JSON path to the metadata that will be sent to the
-  template. The JSON path should be expressed using
-  [JSON path syntax](https://jg-rp.github.io/python-jsonpath/syntax/).
-- `template-path`: The path to the Jinja template file for this content
-  item, relative to the template folder.
-- `jinja-variable`: The variable name that will be used in the template
-  to reference the selected metadata.
+Each content item requires the following fields:
+
+- `jsonpath`: A
+  [JSON path](https://jg-rp.github.io/python-jsonpath/syntax/) pointing
+  to the metadata property or properties to send to the template.
+- `template-path`: The path to the Jinja template file, relative to the
+  template folder.
+- `jinja-variable`: The variable name used in the template to reference
+  the metadata selected by the `jsonpath`.
 
 Update the `sections.toml` file to include the content items for the `[[one]]` section:
 
@@ -344,9 +343,10 @@ template-path = "contributors.qmd.jinja"
 jinja-variable = "contributors"
 ```
 
-You can do the same thing to add more `[[one]]` sections if you want to
-create more output files that contain different metadata. Or you can
-keep adding content items to the same `[[one]]` section.
+You can add more `[[one]]` sections if you want to create more output
+files that contain different metadata. Or you can keep adding content
+items to the same `[[one]]` section. Each `[[one.contents]]` item
+belongs to the `[[one]]` section defined above it in the file.
 
 #### Adding `[[many]]` section(s)
 
