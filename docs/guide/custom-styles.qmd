@@ -55,18 +55,25 @@ flora/
 
 ## Creating the templates
 
-You can define a custom layout for your metadata (or part of your
-metadata) using a
-[Jinja2 template](https://jinja.palletsprojects.com/en/stable/). In this
-template, you write out the structure of your desired output in your
-target language (e.g., HTML, markdown, yaml, etc.), using placeholder
+The first step is to set up the files within the `templates/` folder.
+With Flower, you define a custom layout for your metadata (or part of
+your metadata) using one or more
+[Jinja2 templates](https://jinja.palletsprojects.com/en/stable/). In
+these templates, you write out the structure of the desired output in
+your target language (e.g., HTML, markdown, or YAML), using placeholder
 values for the metadata elements that will come from your
 `datapackage.json`.
 
 In this guide, you will create template files containing the Data
 Package's general metadata, the contributor metadata, and metadata for
-each resource contained in the Data Package. To start, create a new
-directory for the templates and give it a descriptive name:
+each resource contained in the Data Package. The general metadata and
+contributor metadata templates will be combined into a single
+`index.qmd` file, while the resource metadata template will split
+resources into separate files.
+
+First, create a new directory for the templates in the root of your
+project. You can store your templates wherever it makes sense for your
+project, but for this guide, call the folder `templates/`:
 
 ``` txt
 flora/
@@ -74,20 +81,18 @@ flora/
 └── templates/
 ```
 
-You can store your templates wherever it makes sense for your project;
-in this example, call the template folder `templates/` and put it inside
-the root of the Data Package folder. Inside the template folder, create
-three files, one for each type of metadata listed above.
+Inside the template folder, create three files, one for each type of
+metadata listed above.
 
 - `package.qmd.jinja` for the general metadata.
 - `contributors.qmd.jinja` for the contributor metadata.
 - `resource.qmd.jinja` for each resource's metadata.
 
-The `.qmd.jinja` extension indicates that the file is a `jinja` template
+The `.qmd.jinja` extension indicates that the file is a Jinja template
 that will create a `qmd` file. If you wanted to create an `html` file
 instead, the extension would be `.html.jinja`.
 
-Next, set your desired layout for the generated documentation in each
+Next, you will set the layout for the generated documentation in each
 template. Since Flower uses Jinja2 as its templating engine, you need to
 use Jinja syntax when accessing values from the Data Package metadata.
 
