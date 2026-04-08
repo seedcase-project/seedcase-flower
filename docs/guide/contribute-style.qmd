@@ -10,8 +10,9 @@ use with the `build` or `view` commands. This guide explains how to
 contribute a new built-in style that will be available to all Flower
 users.
 
-Before you begin, fork the Flower repository on GitHub and clone your
-fork locally. Make the following changes in your local copy.
+Before you begin, fork the
+[Flower repository](https://github.com/seedcase-project/seedcase-flower)
+and clone your fork locally.
 
 ## Creating a new style
 
