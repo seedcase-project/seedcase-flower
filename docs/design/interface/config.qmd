@@ -11,9 +11,9 @@ status.
 ## Overview
 
 Data Packages range from simple (a few resources) to complex (many
-resources with detailed schemas). So we designed Flower's configuration to let
-you customise output file types, content and structure (via templates),
-and the output destination to fit different needs.
+resources with detailed schemas). So we designed Flower's configuration
+to let you customise output file types, content and structure (via
+templates), and the output destination to fit different needs.
 
 Configuration is split into two main levels:
 
@@ -152,7 +152,6 @@ Custom styles require a `template-dir`. For example:
 template-dir = "path/to/templates/"
 output-dir = "docs/"
 ```
-
 
 The `template-dir` above must include at least one Jinja and a
 `sections.toml` file. When `template-dir` is given, any value in `style`
