@@ -41,11 +41,11 @@ the guide, your file structure will look like the below with the
 flora/
 ├── datapackage.json
 ├── .flower.toml
-└── templates/
-    ├── sections.toml
-    ├── package.qmd.jinja
-    ├── contributors.qmd.jinja
-    └── resource.qmd.jinja
+├── templates/
+│   ├── sections.toml
+│   ├── package.qmd.jinja
+│   ├── contributors.qmd.jinja
+│   └── resource.qmd.jinja
 └── docs/
     ├── index.qmd
     └── resources/
@@ -412,11 +412,11 @@ Your file structure should now look like:
 flora/
 ├── datapackage.json
 ├── .flower.toml
-└── templates/
-    ├── sections.toml
-    ├── package.qmd.jinja
-    ├── contributors.qmd.jinja
-    └── resource.qmd.jinja
+├── templates/
+│   ├── sections.toml
+│   ├── package.qmd.jinja
+│   ├── contributors.qmd.jinja
+│   └── resource.qmd.jinja
 └── docs/
     ├── index.qmd
     └── resources/
