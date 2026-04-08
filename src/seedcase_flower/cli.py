@@ -3,78 +3,31 @@
 from pathlib import Path
 from typing import Any, Optional
 
-from cyclopts import App, Parameter, config
-from cyclopts.help import ColumnSpec, DefaultFormatter, DescriptionRenderer
-from rich import box
 from rich.console import Console
-from rich.highlighter import ReprHighlighter
 from rich.markdown import Markdown
-from rich.panel import Panel
-from rich.text import Text
-from rich.theme import Theme
+from seedcase_soil import (
+    CONSOLE_THEME,
+    print_if_verbose,
+    run_without_tracebacks,
+    setup_cli,
+)
 
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import (
-    _format_param_help,
     _map,
     _number,
-    _pretty_print,
 )
 from seedcase_flower.parse_source import Address, parse_source
 from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
-# To style markdown tables with a box (pipes) surrounding each column
-# instead of only a horizontal line after the table header
-box.SIMPLE = box.HEAVY_HEAD
-
-_CONSOLE_THEME = Theme(
-    {
-        "markdown.h1": "bold yellow",
-        "markdown.h2": "bold yellow",
-        "markdown.h3": "italic yellow",
-        "markdown.code": "blue",
-        "markdown.link": "underline cyan",
-        "markdown.link_url": "underline cyan",
-        "markdown.table.header": "yellow",
-        "markdown.table.border": "white",
-    }
-)
-
-_HELP_CONSOLE_THEME = Theme(
-    {
-        "markdown.code": "yellow not reverse",
-    }
-)
-
-app = App(
+app = setup_cli(
     name="seedcase-flower",
     help="Flower generates human-readable documentation from Data Packages.",
-    help_formatter=DefaultFormatter(
-        column_specs=(
-            ColumnSpec(renderer=_format_param_help),
-            ColumnSpec(renderer=DescriptionRenderer(newline_metadata=True)),
-        )
-    ),
-    default_parameter=Parameter(negative=(), show_default=True),
-    console=Console(theme=_HELP_CONSOLE_THEME),
-    config=[
-        config.Toml(
-            ".flower.toml",
-            search_parents=True,
-            use_commands_as_keys=False,
-        ),
-        config.Toml(
-            "pyproject.toml",
-            root_keys=["tool", "seedcase-flower"],
-            search_parents=True,
-            use_commands_as_keys=False,
-        ),
-    ],
+    config_name=".flower.toml",
 )
-app.register_install_completion_command()
 
 
 @app.command()
@@ -109,12 +62,12 @@ def build(
     )
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
-    _pretty_print(
+    print_if_verbose(
         verbose, f"Read Data Package {properties['name']!r} from {address.value!r}."
     )
 
     built_sections = build_sections(properties, config)
-    _pretty_print(
+    print_if_verbose(
         verbose,
         (
             f"Created {_number('section', built_sections)} "
@@ -123,10 +76,12 @@ def build(
     )
 
     output_files: list[Path] = write_sections(built_sections, output_dir)
-    _pretty_print(
+    print_if_verbose(
         verbose, f"Created {_number('file', output_files)} in '{output_dir}/':"
     )
-    _pretty_print(verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'")))
+    print_if_verbose(
+        verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'"))
+    )
 
 
 @app.command(config=[])
@@ -149,31 +104,12 @@ def view(
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     built_sections = build_sections(properties, Config(style=Style[style.name]))
-    console = Console(theme=_CONSOLE_THEME)
+    console = Console(theme=CONSOLE_THEME)
+    # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title
     console.print(Markdown(built_sections[0].content))
 
 
-def _pretty_print_error(e: Exception) -> None:
-    console = Console(stderr=True)
-    text = Text.from_markup(str(e))
-    # Make `text` appear as if it was printed by rich.print
-    pretty_text = ReprHighlighter()(text)
-    console.print(
-        Panel(
-            pretty_text,
-            title=type(e).__name__,
-            border_style="red",
-            box=box.ROUNDED,
-            title_align="left",
-        )
-    )
-
-
 def main() -> None:
-    """Suppress traceback when running from CLI."""
-    try:
-        app()
-    except Exception as e:
-        _pretty_print_error(e)
-        raise SystemExit(1)
+    """Create an entry point to run the cli without tracebacks."""
+    run_without_tracebacks(app)

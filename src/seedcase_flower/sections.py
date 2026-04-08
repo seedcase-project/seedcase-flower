@@ -51,10 +51,9 @@ class Content(KebabModel, frozen=True):
 
     The `Content` class defines what Data Package properties and
     [Jinja2](https://jinja.palletsprojects.com/en/stable/) template file belong within
-    a specific section (an output file) in the documentation. You can use
-    this class to customise how different parts of the `datapackage.json` file
-    are displayed in the documentation and to create common presets when
-    styles share similar content structures.
+    a specific section in the documentation. Use this class to customise how different
+    parts of the `datapackage.json` file are displayed in the documentation and to
+    create common presets when styles share similar content structures.
 
     Attributes:
         jsonpath: The JSON path, expressed using
