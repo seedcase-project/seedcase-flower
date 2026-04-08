@@ -195,14 +195,14 @@ section.
 
 ### `resource.qmd.jinja`
 
-A Data Package can contain multiple data resources, and you may want to
-display the metadata of each resource in a separate file with the same
+A Data Package can contain multiple data resources and you may want to
+display each resource's metadata in a separate file with the same
 layout. To do this, you can create a template that defines the layout
 for a single resource and then use the `sections.toml` configuration
 file to indicate that this template should be applied to each resource
 in the Data Package. In the template, the variable name `resource` is
 used to refer to the metadata of any single resource that will be
-rendered with the template.
+rendered with the template:
 
 ``` {.djangotemplate filename="templates/resource.qmd.jinja"}
 ---
@@ -224,14 +224,6 @@ title: "{{ resource.title or resource.name }}"
 - **Number of fields:** 0
 {% endif %}
 ```
-
-::: callout-note
-The template variable can reference any property or collection of
-properties in the `datapackage.json` that is possible to select using
-[JSON path notation](https://jg-rp.github.io/python-jsonpath/syntax/).
-This JSON path will be defined in the `sections.toml` configuration
-file.
-:::
 
 ## Creating the configuration files
 
