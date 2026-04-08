@@ -98,8 +98,12 @@ use Jinja syntax when accessing values from the Data Package metadata.
 
 ### `package.qmd.jinja`
 
-Start with the `package.qmd.jinja` template. Define the layout for
-package properties by writing a template that looks like:
+Start with the `package.qmd.jinja` template that will include metadata
+about the Data Package as a whole. Since the output will be a Quarto
+Markdown file, you should use Markdown syntax to structure the content.
+First, add a YAML header to the template to set the title, subtitle, and
+date of the generated document, using Jinja syntax to access the
+relevant metadata properties.
 
 ``` {.djangotemplate filename="templates/package.qmd.jinja"}
 ---
@@ -111,25 +115,20 @@ date: "{{ package.created }}"
 {{ package.description }}
 ```
 
-Here, Jinja syntax is used to access properties on the metadata object
-passed to the template as `package`. Double curly brackets `{{{...}}}`
-are used to output the value of a variable or expression. In this
-example, `{{{ package.title or package.name }}}` sets the title of the
-generated document to the `title` property of the package metadata, or
-to the `name` property if `title` is not available. You can use any name
-for the metadata object passed to the template (e.g., `root` or
+Jinja syntax uses the double curly brackets `{{{...}}}` to output the
+value of a variable or expression. In the above,
+`{{{ package.title or package.name }}}` sets the title of the generated
+document to the `title` property of the package metadata, **or** to the
+`name` property if `title` is not available. You can use any name for
+the metadata object passed to the template (e.g., `root` or
 `data_package` instead of `package`); this variable name will be defined
-in the `sections.toml` configuration file.
+in the `sections.toml` configuration file described in the
+[sections.toml](#sections.toml-configuration-file) section below.
 
-Jinja also provides built-in filters and functions for processing
-values, as well as control flow statements such as conditionals and
-loops. Below, you will extend `package.qmd.jinja` to include a list of
-keywords that describe the Data Package. An `if` statement is used to
-check if the `keywords` property exists in the package metadata. If it
-does, it will output a line with the keywords joined by commas using the
-built-in Jinja `join` filter. You can learn more about advanced Jinja
-features in the
-[Jinja documentation](https://jinja.palletsprojects.com/en/stable/templates/).
+Jinja provides built-in filters and functions for processing values, as
+well as control flow statements such as conditionals and loops. Below,
+you extend `package.qmd.jinja` to include the package description and a
+list of keywords that describe the Data Package:
 
 ``` {.djangotemplate filename="templates/package.qmd.jinja"}
 ---
