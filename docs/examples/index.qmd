@@ -12,4 +12,7 @@ can be referred to as an example. The design for these styles is also
 described in the
 [output interface page](/docs/design/interface/outputs.qmd).
 
-- [Style: Quarto one page](quarto-one-page/index.qmd)
+## Styles
+
+- [Quarto one page](quarto-one-page/index.qmd)
+- [Quarto resource tables](quarto-resource-tables/index.qmd)
