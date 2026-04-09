@@ -34,10 +34,10 @@ should be short, descriptive, and distinct from existing built-in
 styles. It should be given in snake case (e.g., `my_new_style`).
 
 ::: callout-note
-If you are writing a terminal style for the `view` command, do not set
-`output-path` for any sections in `sections.toml`. Since `view` renders
-directly to the terminal rather than writing files, an output path is
-not needed.
+A terminal style for the `view` command must be a single-page output 
+style, meaning it can only use a single `[[one]]` section. `view` 
+ignores `output-path` since it doesn't output files and single-page styles can be used by
+`build` as well.
 :::
 
 ## Adding the style as built-in
