@@ -37,14 +37,14 @@ conditions. To work through the steps yourself, copy the
 
 In this guide, the directory is called `flora/`. Once you've completed
 the guide, your file structure will look like the below with the
-`templates/` folder containing the files for your custom style, and the
-`docs/` folder containing the generated documentation files:
+`custom-style/` folder containing the files for your custom style, and
+the `docs/` folder containing the generated documentation files:
 
 ``` txt
 flora/
 ├── datapackage.json
 ├── .flower.toml
-├── templates/
+├── custom-style/
 │   ├── sections.toml
 │   ├── package.qmd.jinja
 │   ├── contributors.qmd.jinja
@@ -58,7 +58,7 @@ flora/
 
 ## Creating the templates
 
-The first step is to set up the files within the `templates/` folder.
+The first step is to set up the files within the `custom-style/` folder.
 With Flower, you define a custom layout for your metadata (or part of
 your metadata) using one or more
 [Jinja2 templates](https://jinja.palletsprojects.com/en/stable/). In
@@ -76,12 +76,12 @@ resources into separate files.
 
 First, create a new directory for the templates in the root of your
 project. You can store your templates wherever it makes sense for your
-project, but for this guide, call the folder `templates/`:
+project, but for this guide, call the folder `custom-style/`:
 
 ``` txt
 flora/
 ├── datapackage.json
-└── templates/
+└── custom-style/
 ```
 
 Inside the template folder, create three files, one for each type of
@@ -108,7 +108,7 @@ First, add a YAML header to the template to set the title, subtitle, and
 date of the generated document, using Jinja syntax to access the
 relevant metadata properties.
 
-``` {.djangotemplate filename="templates/package.qmd.jinja"}
+``` {.djangotemplate filename="custom-style/package.qmd.jinja"}
 ---
 title: "{{ package.title or package.name }}"
 subtitle: "Version: {{ package.version }}"
@@ -131,7 +131,7 @@ well as control flow statements such as conditionals and loops. Below,
 you extend `package.qmd.jinja` to include the package description and a
 list of keywords that describe the Data Package:
 
-``` {.djangotemplate filename="templates/package.qmd.jinja"}
+``` {.djangotemplate filename="custom-style/package.qmd.jinja"}
 ---
 title: "{{ package.title or package.name }}"
 subtitle: "Version: {{ package.version }}"
@@ -170,7 +170,7 @@ contributors and output their metadata. You will also include a
 conditional to check if the `organization` and `email` properties exist
 for each contributor:
 
-``` {.djangotemplate filename="templates/contributors.qmd.jinja"}
+``` {.djangotemplate filename="custom-style/contributors.qmd.jinja"}
 ## Contributors
 
 {%- if contributors %}
@@ -207,7 +207,7 @@ in the Data Package. In the template, the variable name `resource` is
 used to refer to the metadata of any single resource that will be
 rendered with the template:
 
-``` {.djangotemplate filename="templates/resource.qmd.jinja"}
+``` {.djangotemplate filename="custom-style/resource.qmd.jinja"}
 ---
 title: "{{ resource.title or resource.name }}"
 ---
@@ -242,7 +242,7 @@ Create a `.flower.toml` file in the root of your Data Package and add
 the following settings:
 
 ``` {.toml filename=".flower.toml"}
-template-dir = "templates/"
+template-dir = "custom-style/"
 ```
 
 This line points Flower to the folder containing your templates. The
@@ -262,7 +262,7 @@ you can include the same settings there instead of in a separate
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
-template-dir = "templates/"
+template-dir = "custom-style/"
 ```
 
 ::: callout-tip
@@ -292,11 +292,11 @@ templates.
 
 #### Adding `[[one]]` section(s)
 
-Create a `sections.toml` file in the `templates/` folder. Inside, add a
-`[[one]]` section for each output file you want to create. For this
+Create a `sections.toml` file in the `custom-style/` folder. Inside, add
+a `[[one]]` section for each output file you want to create. For this
 guide, add just one `[[one]]` section to save an `index.qmd` file:
 
-``` {.toml filename="templates/sections.toml"}
+``` {.toml filename="custom-style/sections.toml"}
 [[one]]
 output-path = "index.qmd"
 ```
@@ -322,9 +322,10 @@ Each content item requires the following fields:
 - `jinja-variable`: The variable name used in the template to reference
   the metadata selected by the `jsonpath`.
 
-Update the `sections.toml` file to include the content items for the `[[one]]` section:
+Update the `sections.toml` file to include the content items for the
+`[[one]]` section:
 
-``` {.toml filename="templates/sections.toml"}
+``` {.toml filename="custom-style/sections.toml"}
 [[one]]
 output-path = "index.qmd"
 
@@ -369,7 +370,7 @@ To create one file for each resource in a `resources/` folder using the
 `resource.qmd.jinja` template, add the following `[[many]]` section to
 the `sections.toml` file:
 
-``` {.toml filename="templates/sections.toml"}
+``` {.toml filename="custom-style/sections.toml"}
 [[many]]
 output-path = "resources/"
 content = "resources"
@@ -405,8 +406,8 @@ seedcase-flower build
 ```
 
 Flower then reads the configuration files (`.flower.toml` and
-`sections.toml`), populates the templates (in the `templates/` folder)
-with metadata from `datapackage.json`, and outputs the generated
+`sections.toml`), populates the templates (in the `custom-style/`
+folder) with metadata from `datapackage.json`, and outputs the generated
 documentation files to the specified output directory.
 
 Your file structure should now look like:
@@ -415,7 +416,7 @@ Your file structure should now look like:
 flora/
 ├── datapackage.json
 ├── .flower.toml
-├── templates/
+├── custom-style/
 │   ├── sections.toml
 │   ├── package.qmd.jinja
 │   ├── contributors.qmd.jinja
