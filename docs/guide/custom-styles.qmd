@@ -242,7 +242,7 @@ Create a `.flower.toml` file in the root of your Data Package and add
 the following settings:
 
 ``` {.toml filename=".flower.toml"}
-template-path = "custom-style/"
+template-dir = "custom-style/"
 ```
 
 This line points Flower to the folder containing your templates. The
@@ -262,13 +262,13 @@ you can include the same settings there instead of in a separate
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
-template-path = "custom-style/"
+template-dir = "custom-style/"
 ```
 
 ::: callout-tip
 The main configuration also includes a `style` field. This specifies a
 built-in style and should not be used when creating a custom style. If
-you want to use a built-in style, leave `template-path` unset and set
+you want to use a built-in style, leave `template-dir` unset and set
 `style` to the name of your chosen built-in style.
 
 For examples of built-in styles, see the
