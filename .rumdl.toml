@@ -10,7 +10,7 @@ exclude = [
   # This has it's own structure
   "**/LICENSE.md",
   # Generated example output (subdirectories only)
-  "docs/examples/**"
+  "docs/examples/*/"
 ]
 
 # List style: `-`
