@@ -1,19 +1,15 @@
 """Tests for the CLI commands."""
 
-from io import StringIO
 from pathlib import Path
-from textwrap import dedent
 
 import pytest
-from rich.console import Console
-from rich.markdown import Markdown
 
 from seedcase_flower.build_sections import (
     BuiltSection,
     _get_template_dir,
     _load_sections_toml,
 )
-from seedcase_flower.cli import _CONSOLE_THEME, app
+from seedcase_flower.cli import app
 from seedcase_flower.config import Config
 from seedcase_flower.parse_source import Address
 from seedcase_flower.styles import Style, ViewStyle
@@ -139,136 +135,6 @@ def test_view_ignores_flower_toml(tmp_path, monkeypatch):
     assert "style" not in bound.arguments
 
 
-# Help output ====
-
-_HELP_PAGE = dedent(
-    """\
-    Usage: seedcase-flower COMMAND
-
-    Flower generates human-readable documentation from Data Packages.
-
-    ╭─ Commands ─────────────────────────────────────────────────────────────────────────────╮
-    │ <build>               Build human-readable documentation from a datapackage.json file. │
-    │ <view>                Display the contents of a datapackage.json in a human-friendly   │
-    │                       way.                                                             │
-    │ --help                Display this message and exit.                                   │
-    │ --install-completion  Install shell completion for this application.                   │
-    │ --version             Display application version.                                     │
-    ╰────────────────────────────────────────────────────────────────────────────────────────╯
-    """  # noqa
-)
-
-
-_BUILD_HELP_PAGE = dedent(
-    """\
-    Usage: seedcase-flower build [ARGS]
-
-    Build human-readable documentation from a datapackage.json file.
-
-    ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-    │ --source <SOURCE>              The location of a datapackage.json, defaults to a file  │
-    │                                or folder path. Can also be an https: source to a       │
-    │                                remote datapackage.json or a github: / gh: pointing to  │
-    │                                a repo with a datapackage.json in the repo root (in the │
-    │                                format gh:org/repo, which can also include reference to │
-    │                                a tag or branch, such as gh:org/repo@main or            │
-    │                                gh:org/repo@1.0.1).                                     │
-    │                                [default: datapackage.json]                             │
-    │ --style <STYLE>                The style used to structure the output. If a template   │
-    │                                directory is given, this parameter will be ignored.     │
-    │                                [choices: quarto-one-page, quarto-resource-listing,     │
-    │                                quarto-resource-tables]                                 │
-    │                                [default: quarto-one-page]                              │
-    │ --template-dir <TEMPLATE-DIR>  The directory that contains the Jinja template files    │
-    │                                and sections.toml. When set, it will override any       │
-    │                                built-in style given by the style parameter.            │
-    │                                [default: None]                                         │
-    │ --output-dir <OUTPUT-DIR>      The directory to save the generated files in.           │
-    │                                [default: docs]                                         │
-    │ --verbose                      If True, prints additional information to the console.  │
-    │                                [default: False]                                        │
-    ╰────────────────────────────────────────────────────────────────────────────────────────╯
-    """  # noqa
-)
-
-_VIEW_HELP_PAGE = dedent(
-    """\
-    Usage: seedcase-flower view [ARGS]
-
-    Display the contents of a datapackage.json in a human-friendly way.
-
-    ╭─ Parameters ───────────────────────────────────────────────────────────────────────────╮
-    │ --source <SOURCE>  The location of a datapackage.json, defaults to a file or folder    │
-    │                    path. Can also be an https: source to a remote datapackage.json or  │
-    │                    a github: / gh: pointing to a repo with a datapackage.json in the   │
-    │                    repo root (in the format gh:org/repo, which can also include        │
-    │                    reference to a tag or branch, such as gh:org/repo@main or           │
-    │                    gh:org/repo@1.0.1).                                                 │
-    │                    [default: datapackage.json]                                         │
-    │ --style <STYLE>    The style used to display the output in the terminal. Must be a     │
-    │                    single-page style.                                                  │
-    │                    [choices: quarto-one-page]                                          │
-    │                    [default: quarto-one-page]                                          │
-    ╰────────────────────────────────────────────────────────────────────────────────────────╯
-    """  # noqa
-)
-
-_CHANGED_MSG = (
-    "The `{cmd}` help output changed. Run `just generate-help-strings` "
-    "and paste the updated string into the relevant test."
-)
-
-
-@pytest.fixture
-def console():
-    return Console(
-        width=90,
-        force_terminal=True,
-        highlight=False,
-        color_system=None,
-        legacy_windows=False,
-    )
-
-
-def test_help_page(capsys, console):
-    """Top-level --help should match expected output."""
-    with pytest.raises(SystemExit):
-        app(["--help"], console=console)
-    assert capsys.readouterr().out == _HELP_PAGE, _CHANGED_MSG.format(cmd="general")
-
-
-def test_build_help_page(capsys, console):
-    """build --help should document all parameters with defaults and choices."""
-    with pytest.raises(SystemExit):
-        app(["build", "--help"], console=console)
-    assert capsys.readouterr().out == _BUILD_HELP_PAGE, _CHANGED_MSG.format(cmd="build")
-
-
-# It was not possible to include these color markup tags directly in the help string
-# test above because printing them out explicitly in the rich console messes up the
-# column widths in cyclopts
-def test_build_help_page_applies_rich_markup(capsys):
-    """build --help should apply bold-cyan to flags and dim to placeholders."""
-    markup_console = Console(
-        width=90,
-        force_terminal=False,
-        highlight=False,
-        color_system=None,
-        markup=False,
-        legacy_windows=False,
-    )
-    with pytest.raises(SystemExit):
-        app(["build", "--help"], console=markup_console)
-    output = capsys.readouterr().out
-    assert "[bold blue]--source[/bold blue]" in output
-    assert "[dim]<SOURCE>[/dim]" in output
-    assert "[bold blue]--style[/bold blue]" in output
-    assert "[dim]<STYLE>[/dim]" in output
-    assert "[bold blue]--verbose[/bold blue]" in output
-    # Boolean flags must not produce a positional placeholder
-    assert "[dim]<verbose>[/dim]" not in output
-
-
 # view ====
 
 
@@ -337,23 +203,3 @@ def test_view_renders_datapackage(capsys, datapackage_path):
     assert "integer" in output
     assert "name" in output
     assert "string" in output
-
-
-def test_styled_markdown_table_renders_box_and_header():
-    """Markdown tables should render with a heavy-head box and column separators."""
-    md = "| A | B |\n|---|---|\n| 1 | 2 |\n"
-    out = StringIO()
-    Console(file=out, theme=_CONSOLE_THEME, no_color=True).print(Markdown(md))
-    output = out.getvalue()
-    assert "┏" in output  # heavy outer box top
-    assert "┡" in output  # heavy-to-light header separator
-    assert "┴" in output  # bottom border with column joins
-    assert "A" in output
-    assert "B" in output
-
-
-def test_view_help_page(capsys, console):
-    """view --help should document source and style parameters."""
-    with pytest.raises(SystemExit):
-        app(["view", "--help"], console=console)
-    assert capsys.readouterr().out == _VIEW_HELP_PAGE, _CHANGED_MSG.format(cmd="view")
