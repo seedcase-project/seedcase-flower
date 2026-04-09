@@ -1,6 +1,6 @@
 ---
 title: "Configuration files"
-description: "How to configure Flower's settings and output options using a configuration file."
+description: "Configure Flower's settings and output options using a configuration file."
 order: 2
 ---
 
@@ -16,18 +16,19 @@ you're interested in the Python interface, check out the
 
 A configuration file lets you set your preferences once, so you don't
 have to repeat them every time you run `flower build`. Flower supports
-two configuration files: `.flower.toml` and `pyproject.toml`. Both
-should be placed in the root of your project — Flower will find them
+two configuration files: `.flower.toml` and `pyproject.toml`. These files
+should be placed in the root of your project---Flower will find them
 automatically.
 
 Use `.flower.toml` if you prefer a dedicated file for Flower's settings,
-or `pyproject.toml` if you already use it for other Python tools and
+or `pyproject.toml` if your Data Package is also a Python project and you
+use the `pyproject.toml` to store other config settings, and you
 prefer to keep everything in one place.
 
 ::: callout-note
 Settings provided via the CLI or Python interface always take priority
-over the configuration file. Some settings — like specifying a remote
-source or configuring the `view` command — can only be set via the CLI
+over the configuration file. Some settings---like specifying a remote
+source or configuring the `view` command---can only be set via the CLI
 or Python interface, not from the configuration file.
 :::
 
