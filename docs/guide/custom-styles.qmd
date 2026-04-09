@@ -145,7 +145,7 @@ date: "{{ package.created }}"
 {% endif %} # <2>
 ```
 
-1. `{{ package.description }}` outputs the value of the `description`
+1. `{{{ package.description }}}` outputs the value of the `description`
    property of the package metadata.
 2. The `if` statement checks if the `keywords` property exists in the
    package metadata. If it does, it will output a line with the keywords
@@ -339,11 +339,11 @@ template-path = "contributors.qmd.jinja" # <4>
 jinja-variable = "contributors" # <4>
 ```
 
-1. Select the entire metadata object from `datapackage.json`
-2. Render the selected metadata with this template
-3. Reference the selected metadata with this variable name
+1. Select the entire metadata object from `datapackage.json`.
+2. Render the selected metadata with this template.
+3. Reference the selected metadata with this variable name.
 4. Append this section to the previous section's output in
-   `docs/index.qmd`
+   `docs/index.qmd`.
 
 You can add more `[[one]]` sections if you want to create more output
 files that contain different metadata. Or you can keep adding content
