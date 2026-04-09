@@ -20,10 +20,10 @@ two configuration files: `.flower.toml` and `pyproject.toml`. These files
 should be placed in the root of your project---Flower will find them
 automatically.
 
-Use `.flower.toml` if you prefer a dedicated file for Flower's settings,
-or `pyproject.toml` if your Data Package is also a Python project and you
-use the `pyproject.toml` to store other config settings, and you
-prefer to keep everything in one place.
+Use `.flower.toml` if you prefer a file dedicated to Flower settings, or
+`pyproject.toml` if your Data Package is a Python project that already
+uses `pyproject.toml` and you prefer to keep all config settings in one
+place.
 
 ::: callout-note
 Settings provided via the CLI or Python interface always take priority
