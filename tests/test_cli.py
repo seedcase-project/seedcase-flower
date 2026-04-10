@@ -3,6 +3,8 @@
 from pathlib import Path
 
 import pytest
+from check_datapackage.check import DataPackageError
+from seedcase_soil import Address
 
 from seedcase_flower.build_sections import (
     BuiltSection,
@@ -11,7 +13,6 @@ from seedcase_flower.build_sections import (
 )
 from seedcase_flower.cli import app
 from seedcase_flower.config import Config
-from seedcase_flower.parse_source import Address
 from seedcase_flower.styles import Style, ViewStyle
 
 
@@ -25,6 +26,12 @@ def mock_parse_source(mocker):
 def mock_read_properties(mocker):
     """Mock read_properties to isolate CLI tests from file I/O."""
     return mocker.patch("seedcase_flower.cli.read_properties")
+
+
+@pytest.fixture
+def mock_check(mocker):
+    """Mock datapackage check to isolate CLI tests from schema checks."""
+    return mocker.patch("seedcase_flower.cli.check")
 
 
 @pytest.fixture
@@ -43,7 +50,11 @@ def mock_write_sections(mocker):
 
 
 def test_build_with_mocked_internals(
-    mock_parse_source, mock_read_properties, mock_build_sections, mock_write_sections
+    mock_parse_source,
+    mock_read_properties,
+    mock_check,
+    mock_build_sections,
+    mock_write_sections,
 ):
     """Isolate CLI behaviour by mocking internal helpers."""
     fake_source = Address(value="file:///datapackage.json", local=True)
@@ -54,6 +65,7 @@ def test_build_with_mocked_internals(
     # Checking that the correct values were passed to the internal functions
     mock_parse_source.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_source)
+    mock_check.assert_called_once_with(mock_read_properties.return_value, error=True)
     mock_build_sections.assert_called_once_with(
         mock_read_properties.return_value, Config()
     )
@@ -155,6 +167,7 @@ def test_view_with_mocked_internals(mocker):
     """view should parse source, build sections, and render via Console."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
+    mock_check = mocker.patch("seedcase_flower.cli.check")
     mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
     mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
     mock_console = mock_console_cls.return_value
@@ -170,11 +183,30 @@ def test_view_with_mocked_internals(mocker):
 
     mock_parse_source.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_source)
+    mock_check.assert_called_once_with(mock_read_properties.return_value, error=True)
     mock_build_sections.assert_called_once_with(
         mock_read_properties.return_value,
         Config(style=Style.quarto_one_page),
     )
     assert mock_console.print.called
+
+
+def test_build_raises_on_invalid_datapackage(tmp_path):
+    """build should validate datapackage content and raise on invalid metadata."""
+    json_file = tmp_path / "datapackage.json"
+    json_file.write_text('{"name": "invalid-package", "resources": []}')
+
+    with pytest.raises(DataPackageError, match="should be non-empty"):
+        app(["build", str(json_file)], result_action="return_value")
+
+
+def test_view_raises_on_invalid_datapackage(tmp_path):
+    """view should validate datapackage content and raise on invalid metadata."""
+    json_file = tmp_path / "datapackage.json"
+    json_file.write_text('{"name": "invalid-package", "resources": []}')
+
+    with pytest.raises(DataPackageError, match="should be non-empty"):
+        app(["view", str(json_file)], result_action="return_value")
 
 
 # The color codes cannot easily be tested so we look at substrings
