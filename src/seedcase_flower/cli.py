@@ -33,6 +33,8 @@ app = setup_cli(
 @app.command()
 def build(
     source: str = "datapackage.json",
+    /,  # End of positional-only args
+    *,  # Start of keyword-only params
     style: Style = Style.quarto_one_page,
     template_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
@@ -87,6 +89,8 @@ def build(
 @app.command(config=[])
 def view(
     source: str = "datapackage.json",
+    /,  # End of positional-only args
+    *,  # Start of keyword-only params
     style: ViewStyle = ViewStyle.quarto_one_page,
 ) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way.
