@@ -11,4 +11,9 @@ aspects can be customised through the website generator's theming system
 for details). The design decisions behind these styles are described in
 the [output interface page](/docs/design/interface/outputs.qmd).
 
+::: callout-note
+In general, one-page styles can be rendered to PDF or HTML, while
+multi-page styles are only suitable for HTML.
+:::
+
 - [Style: Quarto one page](quarto-one-page/index.qmd)
