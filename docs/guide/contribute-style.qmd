@@ -106,6 +106,15 @@ the `docs/examples/your-new-style` folder. You can then check the output
 files to ensure that the style is applied correctly and that the
 metadata is displayed as expected.
 
+## Adding the new style to the examples page
+
+When your new style is working properly, please add it to the
+[Examples](/docs/examples/index.qmd) page. This will allow users to see
+what the style looks like and how it can be used.
+
+With the testing command above, you will have generated the output files
+in the `docs/examples/your-new-style` folder already. You can then link
+to these files in the Examples page as is done for the other styles.
 
 ## Making a pull request
 
