@@ -1,0 +1,215 @@
+{
+  "name": "flora",
+  "title": "Observations of flora species and seasonal development",
+  "id": "29b1b5e4-3f4c-4d2a-9f8e-123456789abc",
+  "description": "A dataset containing flora species records and their observed growth stages across different environments.",
+  "version": "1.2.3",
+  "created": "2025-11-07T11:12:56+01:00",
+  "keywords": [
+    "flora",
+    "species",
+    "growth stages",
+    "observations",
+    "seasonal development"
+  ],
+  "licenses": [
+    {
+      "title": "CCO 1.0 UNIVERSAL",
+      "path": "https://creativecommons.org/publicdomain/zero/1.0/legalcode"
+    },
+    {
+      "title": "Academic Free License 3.0",
+      "path": "https://opensource.org/licenses/AFL-3.0"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "Jane Dölitz",
+      "roles": [
+        "creator"
+      ],
+      "organization": "Example University"
+    },
+    {
+      "title": "John Smith",
+      "roles": [
+        "author",
+        "data collector"
+      ],
+      "email": "john-smith@example.com"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Example Data Source",
+      "version": "1.0",
+      "path": "https://example.com/data-source",
+      "email": "source@example.com"
+    }
+  ],
+  "resources": [
+    {
+      "name": "species_catalog",
+      "description": "This resource contains a catalog of flora species.",
+      "path": "resources/species_catalog/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "schema": {
+        "primaryKey": "species_id",
+        "foreignKeys": [
+          {
+            "fields": [
+              "parent_species_id"
+            ],
+            "reference": {
+              "fields": [
+                "species_id"
+              ]
+            }
+          }
+        ],
+        "fields": [
+          {
+            "name": "species_id",
+            "type": "integer",
+            "description": "The unique identifier for each species."
+          },
+          {
+            "title": "Scientific name",
+            "name": "scientific_name",
+            "description": "The Latin name of the species."
+          },
+          {
+            "title": "Common name",
+            "name": "common_name",
+            "type": "string"
+          },
+          {
+            "title": "Family",
+            "name": "family",
+            "description": "The Latin family to which the species belongs."
+          },
+          {
+            "title": "Parent Species",
+            "name": "parent_species_id",
+            "type": "integer",
+            "description": "The parent species of this species."
+          }
+        ]
+      },
+      "sources": [
+        {
+          "title": "Flora Species Source",
+          "version": "1.0",
+          "path": "https://example.com/data-source/flora-species",
+          "email": "source@example.com"
+        }
+      ]
+    },
+    {
+      "name": "location_catalog",
+      "title": "Flora Species Locations",
+      "path": "resources/location_catalog/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "schema": {
+        "primaryKey": [
+          "region",
+          "country"
+        ],
+        "fields": [
+          {
+            "name": "region",
+            "type": "string",
+            "description": "The region the location is in."
+          },
+          {
+            "title": "Country",
+            "name": "country",
+            "description": "The country the location is in."
+          },
+          {
+            "title": "Local Name",
+            "name": "local_name",
+            "type": "string"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "title": "Flora Species Locations Source",
+          "version": "1.0",
+          "path": "https://example.com/data-source/locations",
+          "email": "source@example.com"
+        }
+      ]
+    },
+    {
+      "name": "growth_records",
+      "title": "Growth Stage Records",
+      "description": "This resource contains records of observed growth stages for various flora species.",
+      "path": "resources/growth_records/data.parquet",
+      "format": "parquet",
+      "encoding": "utf-8",
+      "schema": {
+        "primaryKey": [
+          "record_id"
+        ],
+        "foreignKeys": [
+          {
+            "fields": "species_id",
+            "reference": {
+              "resource": "species_catalog",
+              "fields": "species_id"
+            }
+          },
+          {
+            "fields": [
+              "location_region",
+              "location_country"
+            ],
+            "reference": {
+              "resource": "location_catalog",
+              "fields": [
+                "region",
+                "country"
+              ]
+            }
+          }
+        ],
+        "fields": [
+          {
+            "name": "record_id",
+            "type": "integer",
+            "description": "The unique identifier for each growth record."
+          },
+          {
+            "title": "Species",
+            "name": "species_id",
+            "description": "The species the observation was made for."
+          },
+          {
+            "title": "Observation date",
+            "name": "observation_date",
+            "type": "date"
+          },
+          {
+            "name": "growth_stage"
+          },
+          {
+            "title": "Location Region",
+            "name": "location_region",
+            "type": "string",
+            "description": "The region of the location."
+          },
+          {
+            "title": "Location Country",
+            "name": "location_country",
+            "type": "string",
+            "description": "The country of the location."
+          }
+        ]
+      }
+    }
+  ]
+}
