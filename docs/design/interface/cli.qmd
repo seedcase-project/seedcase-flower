@@ -15,7 +15,8 @@ development reference and to track implementation status.
 seedcase-flower <COMMAND> [PARAMETERS]
 ```
 
-When used on its own, `seedcase-flower` shows the help message as a shorthand for `--help`:
+When used on its own, `seedcase-flower` shows the help message as a
+shorthand for `--help`:
 
 ``` {.bash filename="Terminal"}
 seedcase-flower
@@ -154,7 +155,8 @@ A configuration file isn't required; the `--style` option lets you
 switch between several built-in styles:
 
 ::: callout-tip
-For examples of the built-in style, see the [Examples](/docs/examples/index.qmd) page.
+For examples of the built-in style, see the
+[Examples](/docs/examples/index.qmd) page.
 :::
 
 The behaviour of `--style` is as follows:
