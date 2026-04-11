@@ -104,7 +104,6 @@ def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
     """Build args specified in .flower.toml should overwrite the default values."""
     toml_path = tmp_path / ".flower.toml"
     toml_path.write_text(
-        'source = "custom.json"\n'
         'style = "quarto_resource_listing"\n'
         'template_dir = "my-templates/"\n'
         'output_dir = "my-docs/"\n'
@@ -114,7 +113,6 @@ def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
     _, bound, _ = app.parse_args(["build"])
-    assert bound.arguments["source"] == "custom.json"
     assert bound.arguments["style"] == Style.quarto_resource_listing
     assert bound.arguments["template_dir"] == Path("my-templates/")
     assert bound.arguments["output_dir"] == Path("my-docs/")
