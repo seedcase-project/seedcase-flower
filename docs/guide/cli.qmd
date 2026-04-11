@@ -135,7 +135,8 @@ options set in Flower's configuration file are ignored, even those with
 the same name as the options passed to `view`.
 :::
 
-For more details, see the [view](/docs/reference/view.qmd) reference or run:
+For more details, see the [view](/docs/reference/view.qmd) reference or
+run:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --help
@@ -229,7 +230,8 @@ create your own custom style in the
 
 <!-- TODO: Add section about using `template-dir` option -->
 
-For more details, see the [build](/docs/reference/build.qmd) reference or run:
+For more details, see the [build](/docs/reference/build.qmd) reference
+or run:
 
 ```{.bash filename="Terminal"}
 seedcase-flower build --help
