@@ -6,7 +6,6 @@ listing:
     field-display-names:
         title: "Name"
         subtitle: "Title"
-        resource-description: "Description"
     field-links: [subtitle, title]
     sort-ui: [subtitle, title, description]
     filter-ui: [subtitle, title, description]
