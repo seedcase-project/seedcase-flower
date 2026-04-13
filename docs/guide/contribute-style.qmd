@@ -36,8 +36,8 @@ styles. It should be given in snake case (e.g., `my_new_style`).
 ::: callout-note
 A terminal style for the `view` command must be a single-page output
 style, meaning it can only use a single `[[one]]` section. `view`
-ignores `output-path` since it doesn't output files and single-page styles can be used by
-`build` as well.
+ignores `output-path` since it doesn't output files and single-page
+styles can be used by `build` as well.
 :::
 
 ## Adding the style as built-in
@@ -98,7 +98,7 @@ You can use the example Data Package included in Flower for your tests.
 For example, to test with `build`, run:
 
 ``` {.bash filename="Terminal"}
-uv run seedcase-flower build --source docs/includes/datapackage.json --style your_new_style
+uv run seedcase-flower build docs/includes/datapackage.json --style your_new_style
 ```
 
 ## Making a pull request
