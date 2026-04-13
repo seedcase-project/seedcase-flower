@@ -69,4 +69,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", branch = "feat/read_props" }
+seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", rev = "0.3.0" }
