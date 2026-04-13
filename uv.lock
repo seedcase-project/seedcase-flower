@@ -2285,7 +2285,7 @@ wheels = [
 
 [[package]]
 name = "seedcase-flower"
-version = "0.25.0"
+version = "0.25.1"
 source = { editable = "." }
 dependencies = [
     { name = "check-datapackage" },
@@ -2323,7 +2323,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
     { name = "rich", specifier = ">=14.3.3" },
-    { name = "seedcase-soil", git = "https://github.com/seedcase-project/seedcase-soil?rev=0.2.0" },
+    { name = "seedcase-soil", git = "https://github.com/seedcase-project/seedcase-soil?branch=feat%2Fread_props" },
 ]
 
 [package.metadata.requires-dev]
@@ -2347,7 +2347,7 @@ dev = [
 [[package]]
 name = "seedcase-soil"
 version = "0.2.0"
-source = { git = "https://github.com/seedcase-project/seedcase-soil?rev=0.2.0#7a63c3700a3c271cba6d7b119fdcfafdf393bfbc" }
+source = { git = "https://github.com/seedcase-project/seedcase-soil?branch=feat%2Fread_props#3f33b534301f8bac6555eea4a42854a37c5a4f03" }
 dependencies = [
     { name = "cyclopts" },
     { name = "rich" },

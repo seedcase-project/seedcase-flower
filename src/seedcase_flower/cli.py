@@ -3,11 +3,15 @@
 from pathlib import Path
 from typing import Any, Optional
 
+from check_datapackage import check
 from rich.console import Console
 from rich.markdown import Markdown
 from seedcase_soil import (
     CONSOLE_THEME,
+    Address,
+    parse_source,
     print_if_verbose,
+    read_properties,
     run_without_tracebacks,
     setup_cli,
 )
@@ -18,8 +22,6 @@ from seedcase_flower.internals import (
     _map,
     _number,
 )
-from seedcase_flower.parse_source import Address, parse_source
-from seedcase_flower.read_properties import read_properties
 from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
@@ -64,6 +66,7 @@ def build(
     )
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
+    check(properties, error=True)
     print_if_verbose(
         verbose, f"Read Data Package {properties['name']!r} from {address.value!r}."
     )
@@ -107,6 +110,7 @@ def view(
     """
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
+    check(properties, error=True)
     built_sections = build_sections(properties, Config(style=Style[style.name]))
     console = Console(theme=CONSOLE_THEME)
     # TODO move back console theme? will it be used in CDP?

@@ -30,13 +30,13 @@ This resource contains a catalog of flora species.
 - Foreign keys:
   - From fields (`parent_species_id`) to fields (`species_id`) in resource `species_catalog`
 
-| Title           | Name                | Type    | Description                                    |
-|-----------------|---------------------|---------|------------------------------------------------|
-| Species ID      | `species_id`        | integer | The unique identifier for each species.        |
-| Scientific name | `scientific_name`   | string  | The Latin name of the species.                 |
-| Common name     | `common_name`       | string  | The common name of the species.                |
-| Family          | `family`            | string  | The Latin family to which the species belongs. |
-| Parent Species  | `parent_species_id` | integer | The parent species of this species.            |
+| Name                | Title           | Type    | Description                                    |
+|---------------------|-----------------|---------|------------------------------------------------|
+| `species_id`        | Species ID      | integer | The unique identifier for each species.        |
+| `scientific_name`   | Scientific name | string  | The Latin name of the species.                 |
+| `common_name`       | Common name     | string  | The common name of the species.                |
+| `family`            | Family          | string  | The Latin family to which the species belongs. |
+| `parent_species_id` | Parent Species  | integer | The parent species of this species.            |
 
 : Fields in the `species_catalog` resource.
 
@@ -47,11 +47,11 @@ This resource contains a catalog of flora species locations.
 - Path: `resources/location_catalog/data.parquet`
 - Primary key: (`region`, `country`)
 
-| Title      | Name         | Type   | Description                                     |
-|------------|--------------|--------|-------------------------------------------------|
-| Region     | `region`     | string | The region the location is in.                  |
-| Country    | `country`    | string | The country the location is in.                 |
-| Local Name | `local_name` | string | The name of the location in the local language. |
+| Name         | Title      | Type   | Description                                     |
+|--------------|------------|--------|-------------------------------------------------|
+| `region`     | Region     | string | The region the location is in.                  |
+| `country`    | Country    | string | The country the location is in.                 |
+| `local_name` | Local Name | string | The name of the location in the local language. |
 
 : Fields in the `location_catalog` resource.
 
@@ -65,13 +65,13 @@ This resource contains records of observed growth stages for various flora speci
   - From fields (`species_id`) to fields (`species_id`) in resource `species_catalog`
   - From fields (`location_region`, `location_country`) to fields (`region`, `country`) in resource `location_catalog`
 
-| Title            | Name               | Type    | Description                                   |
-|------------------|--------------------|---------|-----------------------------------------------|
-| Record ID        | `record_id`        | integer | The unique identifier for each growth record. |
-| Species          | `species_id`       | integer | The species the observation was made for.     |
-| Observation date | `observation_date` | date    | The date when the observation was made.       |
-| Growth Stage     | `growth_stage`     | string  | The observed growth stage of the species.     |
-| Location Region  | `location_region`  | string  | The region of the location.                   |
-| Location Country | `location_country` | string  | The country of the location.                  |
+| Name               | Title            | Type    | Description                                   |
+|--------------------|------------------|---------|-----------------------------------------------|
+| `record_id`        | Record ID        | integer | The unique identifier for each growth record. |
+| `species_id`       | Species          | integer | The species the observation was made for.     |
+| `observation_date` | Observation date | date    | The date when the observation was made.       |
+| `growth_stage`     | Growth Stage     | string  | The observed growth stage of the species.     |
+| `location_region`  | Location Region  | string  | The region of the location.                   |
+| `location_country` | Location Country | string  | The country of the location.                  |
 
 : Fields in the `growth_records` resource.

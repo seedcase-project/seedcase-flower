@@ -71,12 +71,12 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% endfor %}
 {% endif %}
 
-{% set headers = ["Title", "Name", "Type", "Description"] %}
+{% set headers = ["Name", "Title", "Type", "Description"] %}
 {%- set ns = namespace(rows=[]) -%}
 {%- for field in schema.fields -%}
   {%- set ns.rows = ns.rows + [[
-    field.title or "N/A",
     field.name | _inline_code or "N/A",
+    field.title or "N/A",
     field.type or "any",
     field.description or "N/A"
   ]] -%}
