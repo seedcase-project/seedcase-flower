@@ -14,4 +14,5 @@ the [output interface page](/docs/design/interface/outputs.qmd).
 ## Styles
 
 - [Quarto one page](quarto-one-page/index.qmd)
+- [Quarto resource listing](quarto-resource-listing/index.qmd)
 - [Quarto resource tables](quarto-resource-tables/index.qmd)
