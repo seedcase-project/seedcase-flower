@@ -98,7 +98,8 @@ You can use the example Data Package included in Flower for your tests.
 For example, to test with `build`, run:
 
 ``` {.bash filename="Terminal"}
-uv run seedcase-flower build --source docs/includes/datapackage.json --style your_new_style --output-dir docs/examples/your-new-style
+uv run seedcase-flower build --source docs/includes/datapackage.json \
+    --style your_new_style --output-dir docs/examples/your-new-style
 ```
 
 This will build the documentation using your new style and output it to
@@ -111,10 +112,7 @@ metadata is displayed as expected.
 When your new style is working properly, please add it to the
 [Examples](/docs/examples/index.qmd) page. This will allow users to see
 what the style looks like and how it can be used.
-
-With the testing command above, you will have generated the output files
-in the `docs/examples/your-new-style` folder already. You can then link
-to these files in the Examples page as is done for the other styles.
+To add your style to the Examples page, add the link to the folder you just created with the test command above (`docs/examples/your-new-style`) to the list of styles.
 
 ## Making a pull request
 
