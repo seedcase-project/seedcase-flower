@@ -166,46 +166,6 @@ instead of a listing. With this style, the tables are filterable and
 columns can be sorted, making it easier to find specific resources and
 variables within a Data Package.
 
-::: callout-note
-Since the resource documentation files are the same as those generated
-by the `quarto-resource-listing` style, they are not repeated here.
-Please refer to the previous section for the rendered and raw output of
-the resource files.
-:::
-
-::: panel-tabset
-#### Rendered output
-
-![The rendered output of `index.qmd` with the `quarto-resource-tables` style.](/docs/design/example-output/images/example-quarto-resource-tables.png){.border
-fig-alt="An example of the rendered output for the `index.qmd` file with
-Flower's quarto-resource-tables style. The top is a header with the data
-package name and title, with the license, version, ID, and description
-shown below. Below is a contributors section and a resources section
-with the resource title, name, and description shown in a table."}
-
-#### Raw output
-
-``` {.md filename="index.qmd"}
----
-listing:
-    type: table
-    contents: resources
-    fields: [title, subtitle, description]
-    field-display-names:
-        subtitle: "Name"
----
-
-# flora: Observations of flora species and seasonal development
-
-License: [CCO 1.0 UNIVERSAL](https://creativecommons.org/publicdomain/zero/1.0/legalcode) | Version: 1.2.3 | ID: 29b1b5e4-3f4c-4d2a-9f8e-123456789abc
-
-A dataset containing flora species records and their observed growth stages across different environments.
-
-## Contributors
-
-- Jane Doe, creator, jane-doe@example.com
-- John Smith, author, john-smith@example.com
-
-## Resources
-```
-:::
+For an example, see the
+[Quarto resource tables style](/docs/examples/quarto-resource-tables/index.qmd)
+example.

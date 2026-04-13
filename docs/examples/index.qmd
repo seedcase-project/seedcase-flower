@@ -11,4 +11,7 @@ aspects can be customised through the website generator's theming system
 for details). The design decisions behind these styles are described in
 the [output interface page](/docs/design/interface/outputs.qmd).
 
-- [Style: Quarto one page](quarto-one-page/index.qmd)
+## Styles
+
+- [Quarto one page](quarto-one-page/index.qmd)
+- [Quarto resource tables](quarto-resource-tables/index.qmd)
