@@ -1,6 +1,6 @@
 [project]
 name = "seedcase-flower"
-version = "0.24.0"
+version = "0.26.0"
 description = "Turn your Data Package metadata into human-readable documentation"
 authors = [
   { name = "Luke W. Johnston", email = "lwjohnst@gmail.com" },
@@ -69,4 +69,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", rev = "0.2.0" }
+seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", rev = "0.3.0" }

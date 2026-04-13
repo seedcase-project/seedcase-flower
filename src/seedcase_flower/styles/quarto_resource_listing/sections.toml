@@ -1,0 +1,13 @@
+[[one]]
+output-path = "index.qmd"
+
+[[one.contents]]
+jsonpath = "$"
+template-path = "package.qmd.jinja"
+jinja-variable = "package"
+
+[[many]]
+output-path = "resources/"
+content = "resources"
+template-path = "../quarto_resource_table/resource.qmd.jinja"
+jinja-variable = "resource"

@@ -16,4 +16,8 @@ In general, one-page styles can be rendered to PDF or HTML, while
 multi-page styles are only suitable for HTML.
 :::
 
-- [Style: Quarto one page](quarto-one-page/index.qmd)
+## Styles
+
+- [Quarto one page](quarto-one-page/index.qmd)
+- [Quarto resource listing](quarto-resource-listing/index.qmd)
+- [Quarto resource tables](quarto-resource-tables/index.qmd)
