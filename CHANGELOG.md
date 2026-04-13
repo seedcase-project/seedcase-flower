@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.25.2 (2026-04-13)
+
+### Refactor
+
+- ♻️ `read_properties()` and `parse_source()` from soil (#273)
+
 ## 0.25.1 (2026-04-13)
 
 ### Refactor
