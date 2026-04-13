@@ -201,7 +201,7 @@ def test_build_raises_on_invalid_datapackage(tmp_path):
 
 
 def test_view_raises_on_invalid_datapackage(tmp_path):
-    """view should validate datapackage content and raise on invalid metadata."""
+    """view should check datapackage content and fail for malformed metadata."""
     json_file = tmp_path / "datapackage.json"
     json_file.write_text('{"name": "invalid-package", "resources": []}')
 
