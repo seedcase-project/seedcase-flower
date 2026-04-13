@@ -98,7 +98,7 @@ You can use the example Data Package included in Flower for your tests.
 For example, to test with `build`, run:
 
 ``` {.bash filename="Terminal"}
-uv run seedcase-flower build --source docs/includes/datapackage.json \
+uv run seedcase-flower build docs/includes/datapackage.json \
     --style your_new_style --output-dir docs/examples/your-new-style
 ```
 
