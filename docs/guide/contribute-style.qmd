@@ -98,8 +98,23 @@ You can use the example Data Package included in Flower for your tests.
 For example, to test with `build`, run:
 
 ``` {.bash filename="Terminal"}
-uv run seedcase-flower build docs/includes/datapackage.json --style your_new_style
+uv run seedcase-flower build docs/includes/datapackage.json \
+    --style your_new_style --output-dir docs/examples/your-new-style
 ```
+
+This will build the documentation using your new style and output it to
+the `docs/examples/your-new-style` folder. You can then check the output
+files to ensure that the style is applied correctly and that the
+metadata is displayed as expected.
+
+## Adding the new style to the examples page
+
+When your new style is working properly, please add it to the
+[Examples](/docs/examples/index.qmd) page. This will allow users to see
+what the style looks like and how it can be used. To add your style to
+the Examples page, add the link to the folder you just created with the
+test command above (`docs/examples/your-new-style`) to the list of
+styles.
 
 ## Making a pull request
 
