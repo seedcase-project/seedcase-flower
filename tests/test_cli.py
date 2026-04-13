@@ -194,7 +194,7 @@ def test_view_with_mocked_internals(mocker):
 def test_build_raises_on_invalid_datapackage(tmp_path):
     """build should check datapackage content and fail for malformed metadata."""
     json_file = tmp_path / "datapackage.json"
-    json_file.write_text('{"name": "invalid-package", "resources": []}')
+    json_file.write_text('{"name": "malformed-package", "resources": []}')
 
     with pytest.raises(DataPackageError, match="should be non-empty"):
         app(["build", str(json_file)], result_action="return_value")
