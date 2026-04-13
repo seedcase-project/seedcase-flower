@@ -36,8 +36,8 @@ styles. It should be given in snake case (e.g., `my_new_style`).
 ::: callout-note
 A terminal style for the `view` command must be a single-page output
 style, meaning it can only use a single `[[one]]` section. `view`
-ignores `output-path` since it doesn't output files and single-page styles can be used by
-`build` as well.
+ignores `output-path` since it doesn't output files and single-page
+styles can be used by `build` as well.
 :::
 
 ## Adding the style as built-in
@@ -111,8 +111,10 @@ metadata is displayed as expected.
 
 When your new style is working properly, please add it to the
 [Examples](/docs/examples/index.qmd) page. This will allow users to see
-what the style looks like and how it can be used.
-To add your style to the Examples page, add the link to the folder you just created with the test command above (`docs/examples/your-new-style`) to the list of styles.
+what the style looks like and how it can be used. To add your style to
+the Examples page, add the link to the folder you just created with the
+test command above (`docs/examples/your-new-style`) to the list of
+styles.
 
 ## Making a pull request
 
