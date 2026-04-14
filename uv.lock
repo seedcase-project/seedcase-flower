@@ -2323,7 +2323,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
     { name = "rich", specifier = ">=14.3.3" },
-    { name = "seedcase-soil", git = "https://github.com/seedcase-project/seedcase-soil?branch=feat%2Fread_props" },
+    { name = "seedcase-soil", git = "https://github.com/seedcase-project/seedcase-soil?rev=0.4.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -2346,8 +2346,8 @@ dev = [
 
 [[package]]
 name = "seedcase-soil"
-version = "0.2.0"
-source = { git = "https://github.com/seedcase-project/seedcase-soil?branch=feat%2Fread_props#3f33b534301f8bac6555eea4a42854a37c5a4f03" }
+version = "0.4.0"
+source = { git = "https://github.com/seedcase-project/seedcase-soil?rev=0.4.0#e6cab2ad26c4831a0006b76a1b56833faac275c1" }
 dependencies = [
     { name = "cyclopts" },
     { name = "rich" },

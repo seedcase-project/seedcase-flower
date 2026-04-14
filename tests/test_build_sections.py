@@ -3,10 +3,10 @@ from typing import Any
 
 from pydantic import ValidationError
 from pytest import fixture, mark, raises
+from seedcase_soil import flat_fmap, fmap
 
 from seedcase_flower.build_sections import BuiltSection, build_sections
 from seedcase_flower.config import Config
-from seedcase_flower.internals import _flat_map, _map
 from seedcase_flower.styles import Style
 
 # One section ====
@@ -227,7 +227,7 @@ many_section_both = f"""
 
 
 def _get_resource_sections(properties: dict[str, Any]) -> list[BuiltSection]:
-    return _map(
+    return fmap(
         properties["resources"],
         lambda resource: BuiltSection(
             content=resource["name"],
@@ -237,8 +237,8 @@ def _get_resource_sections(properties: dict[str, Any]) -> list[BuiltSection]:
 
 
 def _get_field_sections(properties: dict[str, Any]) -> list[BuiltSection]:
-    return _map(
-        _flat_map(
+    return fmap(
+        flat_fmap(
             properties["resources"], lambda resource: resource["schema"]["fields"]
         ),
         lambda field: BuiltSection(
