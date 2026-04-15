@@ -9,6 +9,7 @@ from rich.markdown import Markdown
 from seedcase_soil import (
     CONSOLE_THEME,
     Address,
+    fmap,
     parse_source,
     print_if_verbose,
     read_properties,
@@ -18,10 +19,7 @@ from seedcase_soil import (
 
 from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
-from seedcase_flower.internals import (
-    _map,
-    _number,
-)
+from seedcase_flower.internals import _number
 from seedcase_flower.styles import Style, ViewStyle
 from seedcase_flower.write_sections import write_sections
 
@@ -85,7 +83,7 @@ def build(
         verbose, f"Created {_number('file', output_files)} in '{output_dir}/':"
     )
     print_if_verbose(
-        verbose, "\n".join(_map(output_files, lambda file: f"  - '{file}'"))
+        verbose, "\n".join(fmap(output_files, lambda file: f"  - '{file}'"))
     )
 
 
