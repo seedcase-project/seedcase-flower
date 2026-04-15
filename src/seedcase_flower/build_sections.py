@@ -9,9 +9,9 @@ from typing import Any, Optional, Union, cast
 from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
 from jsonpath import findall, finditer
 from pydantic import BaseModel, Field
+from seedcase_soil import flat_fmap, fmap
 
 from seedcase_flower.config import Config
-from seedcase_flower.internals import _flat_map, _map
 from seedcase_flower.sections import Content, Many, ManyContent, One
 from seedcase_flower.styles import Style
 
@@ -73,7 +73,7 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     # Some Data Package fields allow either a string or a list of strings
     if isinstance(value, str):
         value = [value]
-    return ", ".join(_map(value, lambda item: f"`{item}`"))
+    return ", ".join(fmap(value, lambda item: f"`{item}`"))
 
 
 def _replace_newlines(cell: str) -> str:
@@ -81,7 +81,7 @@ def _replace_newlines(cell: str) -> str:
 
 
 def _replace_newlines_in_row(row: list[str]) -> list[str]:
-    return _map(row, _replace_newlines)
+    return fmap(row, _replace_newlines)
 
 
 def _max_column_width(rows: list[list[str]], col: int) -> int:
@@ -93,7 +93,7 @@ def _cell_width(header_row: list[str], data_rows: list[list[str]], col: int) -> 
 
 
 def _column_widths(header_row: list[str], data_rows: list[list[str]]) -> list[int]:
-    return _map(range(len(header_row)), lambda i: _cell_width(header_row, data_rows, i))
+    return fmap(range(len(header_row)), lambda i: _cell_width(header_row, data_rows, i))
 
 
 def _format_row(row: list[str], widths: list[int]) -> str:
@@ -109,7 +109,7 @@ def _adjust_column_widths(header_row: list[str], data_rows: list[list[str]]) -> 
         return ""
 
     header_row = _replace_newlines_in_row(header_row)
-    data_rows = _map(data_rows, _replace_newlines_in_row)
+    data_rows = fmap(data_rows, _replace_newlines_in_row)
     widths = _column_widths(header_row, data_rows)
 
     return "\n".join(
@@ -177,7 +177,7 @@ def _build_content_one(
 def _build_one(
     one: One, properties: dict[str, Any], template_dir: Path, env: Environment
 ) -> BuiltSection:
-    built_contents = _map(
+    built_contents = fmap(
         one.contents,
         lambda content: _build_content_one(content, properties, template_dir, env),
     )
@@ -201,7 +201,7 @@ class ManyMatch:
 
 
 def _get_many_matches(jsonpath: str, properties: dict[str, Any]) -> list[ManyMatch]:
-    return _map(
+    return fmap(
         finditer(jsonpath, properties),
         lambda match: ManyMatch(
             resource_name=properties["resources"][match.parts[1]]["name"],
@@ -216,7 +216,7 @@ def _build_many(
     template = _get_template(template_dir, many.template_path, env)
     matches = _get_many_matches(many.content.jsonpath, properties)
 
-    return _map(
+    return fmap(
         matches,
         lambda match: BuiltSection(
             output_path=_get_output_path_for_match(match, many),
@@ -249,10 +249,10 @@ def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSect
     template_dir = config.template_dir or _get_template_dir(config.style)
     sections_toml = _load_sections_toml(template_dir)
     env = _create_jinja_env(template_dir)
-    return _map(
+    return fmap(
         sections_toml.one_sections,
         lambda one: _build_one(one, properties, template_dir, env),
-    ) + _flat_map(
+    ) + flat_fmap(
         sections_toml.many_sections,
         lambda many: _build_many(many, properties, template_dir, env),
     )
