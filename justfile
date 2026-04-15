@@ -130,13 +130,18 @@ build-quartodoc:
 # Build an examples page for each style
 build-examples:
     #!/usr/bin/env bash
+    styles() {
+      basename src/seedcase_flower/styles/*/ |tr '_' '-'
+    }
     build_example() {
-    local style=$1
+      local style=$1
       uv run seedcase-flower build docs/includes/datapackage.json \
         --style $style \
         --output-dir docs/examples/$style
     }
-    build_example quarto-one-page
+    for style in $(styles); do
+      build_example $style
+    done
 
 # Build the documentation website using Quarto
 build-website: build-quartodoc build-examples
