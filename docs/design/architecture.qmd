@@ -226,13 +226,14 @@ flowchart TD
             section("Section<br>[class]")
         end
 
+        parse_source["parse_source()<br>[function]"]
+        address["address<br>[Address]"]
         read_properties["read_properties()<br>[function]"]
         properties["properties<br>[dict]"]
         build("build()<br>[function]")
         view("view()<br>[function]")
 
-        read_properties --> properties
-        properties --> build & view
+        parse_source --> address --> read_properties --> properties --> build & view
         cfg --> build & view
     end
 
@@ -243,7 +244,7 @@ flowchart TD
         output_screen("Human-readable metadata<br>[terminal output]")
     end
 
-    user --"Provides datapackage.json path<br>programmatically"--> read_properties
+    user --"Provides datapackage.json <br>source string"--> parse_source
     user -."(Optional)<br>Provides configurations,<br>as file or Python class".-> cfg
     user -."(Optional)<br>Provides custom templates<br>in folder".-> templates
     templates --"Defines output<br>structure and layout"--> cfg

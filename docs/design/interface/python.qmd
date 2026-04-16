@@ -64,10 +64,10 @@ The internal flow of `build()` is shown in the diagram below.
 %%| label: fig-python-build-flow
 %%| fig-cap: "Diagram of the internal flow of functions and objects in the `build()` CLI function."
 flowchart TD
-    source:::input --> parse_source{{"parse_source()"}} --> path
+    source:::input --> parse_source{{"parse_source()"}} --> Address
     style_cfg[style]:::input --> Config
     template_dir_cfg[template_dir]:::input --> Config
-    path --> read_properties{{"read_properties()"}} --> properties
+    Address --> read_properties{{"read_properties()"}} --> properties
     properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
     output --> write_sections{{"write_sections()"}}
     output_dir:::input --> Config
@@ -93,9 +93,9 @@ The internal flow of `view()` is shown in the diagram below.
 %%| label: fig-python-view-flow
 %%| fig-cap: "Diagram of the internal flow of functions and objects in the `view()` CLI function."
 flowchart TD
-    source:::input --> parse_source{{"parse_source()"}} --> path
+    source:::input --> parse_source{{"parse_source()"}} --> address
     style_cfg[style]:::input --> Config
-    path --> read_properties{{"read_properties()"}} --> properties
+    address --> read_properties{{"read_properties()"}} --> properties
     properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
     output --> pretty_print{{"pretty_print()"}}
 
