@@ -90,7 +90,7 @@ The following naming scheme draws on terms from the
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | package    | A Data Package that contains a collection of related data resources and descriptor(s).                                                                     |
 | descriptor | A standalone and complete metadata structure contained in a JSON file, for example, in `datapackage.json`.                                                 |
-| properties | Metadata fields (name-value pairs) of a descriptor loaded as a Python dictionary. This can be a subset of the original descriptor or the entire structure. |
+| properties | Metadata fields (name-value pairs) of a descriptor loaded as a `Properties` type. This can be a subset of the original descriptor or the entire structure. |
 | config     | An object containing settings for modifying the behaviour and output of Flower, e.g., output format, template paths, or style.                             |
 | section    | A configuration unit that defines an output path and a list of metadata items to render at that path.                                                      |
 | template   | A Jinja file that defines the structure, layout, and format for rendering a metadata item.                                                                 |
@@ -212,8 +212,6 @@ Because the core Python package is relatively small and both diagram
 levels include classes, we combine the component and code levels into a
 single diagram.
 
-<!-- TODO: Switch to using a Properties class instead of dict? -->
-
 ```{mermaid}
 %%| label: fig-c4-component
 %%| fig-cap: "C4 component diagram showing the main functions and classes within the Python package and their connections."
@@ -229,7 +227,7 @@ flowchart TD
         parse_source["parse_source()<br>[function]"]
         address["address<br>[Address]"]
         read_properties["read_properties()<br>[function]"]
-        properties["properties<br>[dict]"]
+        properties["properties<br>[Properties]"]
         build("build()<br>[function]")
         view("view()<br>[function]")
 
