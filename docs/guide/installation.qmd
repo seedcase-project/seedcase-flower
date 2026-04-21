@@ -12,23 +12,24 @@ uv --version
 ```
 
 The command should print a version number. If you get an error instead,
-install uv before continuing.
+install `uv` before continuing.
 
 ## Install globally
 
 Installing Flower globally lets you run it from any directory on your
-machine. To install Flower globally, run:
+machine. To install globally, run:
 
 ``` {.bash filename="Terminal"}
-uv tool install seedcase_flower
+uv tool install seedcase-flower
 ```
 
-Once installed, you can run Flower with `seedcase-flower` (or `flower`
-for short). Alternatively, use `uvx` to run Flower without having to
-separately install it first---this always fetches the latest version:
+Once installed, you can run the program with `seedcase-flower` (or
+`flower` for short). Alternatively, use `uvx` to run Flower without
+having to separately install it first---this always fetches the latest
+version:
 
 ``` {.bash filename="Terminal"}
-uvx seedcase_flower
+uvx seedcase-flower
 ```
 
 To enable shell auto-completions, run:
@@ -54,13 +55,13 @@ We assume you've already created a Python project with a
 From your project's directory, run:
 
 ``` {.bash filename="Terminal"}
-uv add seedcase_flower
+uv add seedcase-flower
 ```
 
 To verify the installation, run:
 
 ``` {.bash filename="Terminal"}
-uv pip show seedcase_flower
+uv pip show seedcase-flower
 ```
 
 If successful, the output will show details about the installed package
