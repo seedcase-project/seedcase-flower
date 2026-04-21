@@ -121,8 +121,7 @@ Flower supports the following sources:
 
 ::: content-hidden
 ::: callout-note
-Flower reads the `datapackage.json` file using the `read-datapackage`
-package, which also outputs a structured `Properties` class.
+Flower reads the `datapackage.json` file into a `Properties` type.
 :::
 :::
 
