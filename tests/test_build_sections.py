@@ -136,6 +136,24 @@ def test_uses_style_when_no_template_dir_given():
     assert "example-datapackage" in built_sections[0].content
 
 
+@mark.parametrize(
+    "style", [Style.quarto_resource_listing, Style.quarto_resource_tables]
+)
+def test_built_in_styles_can_use_shared_templates(style):
+    config = Config(style=style)
+
+    built_sections = build_sections(properties, config)
+
+    resource_sections = [
+        section
+        for section in built_sections
+        if section.output_path != Path("index.qmd")
+    ]
+    assert len(resource_sections) == 1
+    assert "example-resource" in resource_sections[0].content
+
+
+
 def test_handles_no_match_for_jsonpath_gracefully(tmp_path, _template):
     (tmp_path / "sections.toml").write_text(
         one_content_toml.replace('jsonpath = "$"', 'jsonpath = "$.nonexistent"')
