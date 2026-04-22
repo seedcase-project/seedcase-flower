@@ -43,9 +43,16 @@ class BuiltSection:
     output_path: Optional[Path] = None
 
 
+def _get_styles_dir() -> Path:
+    return Path(str(files("seedcase_flower").joinpath("styles")))
+
+
 def _get_template_dir(style: Style) -> Path:
-    styles_path = Path(str(files("seedcase_flower").joinpath("styles")))
-    return styles_path / style.name
+    return _get_styles_dir() / style.name
+
+
+def _get_shared_dir() -> Path:
+    return _get_styles_dir() / "shared"
 
 
 def _load_sections_toml(template_dir: Path) -> SectionsToml:
