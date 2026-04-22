@@ -153,6 +153,13 @@ def test_built_in_styles_can_use_shared_templates(style):
     assert "example-resource" in resource_sections[0].content
 
 
+def test_custom_template_dir_cannot_access_shared_templates(tmp_path):
+    (tmp_path / "sections.toml").write_text(many_section_resources)
+    config = Config(template_dir=tmp_path)
+
+    with raises(FileNotFoundError):
+        build_sections(properties, config)
+
 
 def test_handles_no_match_for_jsonpath_gracefully(tmp_path, _template):
     (tmp_path / "sections.toml").write_text(
