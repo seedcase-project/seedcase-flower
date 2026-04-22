@@ -128,9 +128,9 @@ def _adjust_column_widths(header_row: list[str], data_rows: list[list[str]]) -> 
     )
 
 
-def _create_jinja_env(template_dir: Path) -> Environment:
+def _create_jinja_env(search_paths: list[Path]) -> Environment:
     env = Environment(
-        loader=FileSystemLoader(template_dir),
+        loader=FileSystemLoader(search_paths),
         trim_blocks=True,
         autoescape=select_autoescape(
             enabled_extensions=(
