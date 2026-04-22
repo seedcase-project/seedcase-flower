@@ -9,5 +9,5 @@ jinja-variable = "package"
 [[many]]
 output-path = "resources/"
 content = "resources"
-template-path = "../quarto_resource_table/resource.qmd.jinja"
+template-path = "resource.qmd.jinja"
 jinja-variable = "resource"
