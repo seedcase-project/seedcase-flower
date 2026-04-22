@@ -5,7 +5,7 @@
 
 @_tests: test-python
 
-@_builds: build-contributors build-website build-readme
+@_builds: build-contributors build-examples build-website build-readme
 
 # Run all build-related recipes in the justfile
 run-all: install-deps update-quarto-theme format-python format-md _checks _tests _builds
