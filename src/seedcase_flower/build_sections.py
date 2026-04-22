@@ -253,9 +253,16 @@ def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSect
     Returns:
         A list of built output files.
     """
-    template_dir = config.template_dir or _get_template_dir(config.style)
+    if config.template_dir is None:
+        template_dir = _get_template_dir(config.style)
+        # Search style dir first, then shared dir.
+        search_paths = [template_dir, _get_shared_dir()]
+    else:
+        # Only search the custom dir.
+        template_dir = config.template_dir
+        search_paths = [template_dir]
     sections_toml = _load_sections_toml(template_dir)
-    env = _create_jinja_env(template_dir)
+    env = _create_jinja_env(search_paths)
     return fmap(
         sections_toml.one_sections,
         lambda one: _build_one(one, properties, template_dir, env),
