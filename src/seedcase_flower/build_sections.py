@@ -6,7 +6,13 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any, Optional, Union, cast
 
-from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
+from jinja2 import (
+    Environment,
+    FileSystemLoader,
+    Template,
+    TemplateNotFound,
+    select_autoescape,
+)
 from jsonpath import findall, finditer
 from pydantic import BaseModel, Field
 from seedcase_soil import flat_fmap, fmap
@@ -149,19 +155,20 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     return env
 
 
-def _get_template(
-    template_dir: Path, content_template_path: Path, env: Environment
-) -> Template:
-    template_path = template_dir / content_template_path
-    if not template_path.is_file():
+def _get_template(content_template_path: Path, env: Environment) -> Template:
+    try:
+        # as_posix() ensures consistent separators; Jinja expects POSIX-style paths.
+        template = env.get_template(content_template_path.as_posix())
+    except TemplateNotFound:
         raise FileNotFoundError(
-            f"Template file '{template_path}' does not exist in the template directory."
+            f"Template file '{content_template_path}' does not exist in the "
+            f"search path: {cast(FileSystemLoader, env.loader).searchpath}"
         )
-    return env.get_template(template_path.name)
+    return template
 
 
 def _build_content_one(
-    content: Content, properties: dict[str, Any], template_dir: Path, env: Environment
+    content: Content, properties: dict[str, Any], env: Environment
 ) -> str:
     selected_properties = findall(content.jsonpath, properties)
     if len(selected_properties) > 1:
@@ -171,7 +178,7 @@ def _build_content_one(
             "matches. Use a more specific JSON path or switch to a `many` section."
         )
 
-    template = _get_template(template_dir, content.template_path, env)
+    template = _get_template(content.template_path, env)
     return template.render(
         **{
             content.jinja_variable: selected_properties[0]
@@ -181,12 +188,10 @@ def _build_content_one(
     )
 
 
-def _build_one(
-    one: One, properties: dict[str, Any], template_dir: Path, env: Environment
-) -> BuiltSection:
+def _build_one(one: One, properties: dict[str, Any], env: Environment) -> BuiltSection:
     built_contents = fmap(
         one.contents,
-        lambda content: _build_content_one(content, properties, template_dir, env),
+        lambda content: _build_content_one(content, properties, env),
     )
     return BuiltSection(
         output_path=one.output_path,
@@ -218,9 +223,9 @@ def _get_many_matches(jsonpath: str, properties: dict[str, Any]) -> list[ManyMat
 
 
 def _build_many(
-    many: Many, properties: dict[str, Any], template_dir: Path, env: Environment
+    many: Many, properties: dict[str, Any], env: Environment
 ) -> list[BuiltSection]:
-    template = _get_template(template_dir, many.template_path, env)
+    template = _get_template(many.template_path, env)
     matches = _get_many_matches(many.content.jsonpath, properties)
 
     return fmap(
@@ -265,8 +270,8 @@ def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSect
     env = _create_jinja_env(search_paths)
     return fmap(
         sections_toml.one_sections,
-        lambda one: _build_one(one, properties, template_dir, env),
+        lambda one: _build_one(one, properties, env),
     ) + flat_fmap(
         sections_toml.many_sections,
-        lambda many: _build_many(many, properties, template_dir, env),
+        lambda many: _build_many(many, properties, env),
     )
