@@ -24,10 +24,10 @@ and **non-CLI functions** (the underlying implementation) to:
 
 The Python CLI functions are the direct equivalents of the CLI commands
 described on the [CLI design page](cli.qmd): `build()` and `view()`.
-Both functions read `datapackage.json` into a `Properties` type, check it with
+Both functions read `datapackage.json` into a `Properties` type, check
+it with
 [`check-datapackage`](https://check-datapackage.seedcase-project.org),
-and pass it as input to the non-CLI functions that produce
-the output.
+and pass it as input to the non-CLI functions that produce the output.
 
 This `Properties` class is used instead of a dictionary for a few
 reasons:

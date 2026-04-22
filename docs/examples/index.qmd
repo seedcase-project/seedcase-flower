@@ -12,10 +12,10 @@ for details). The design decisions behind these styles are described in
 the [output interface page](/docs/design/interface/outputs.qmd).
 
 ::: callout-note
-Depending on your conversion tool (such as Quarto, Pandoc, or Typst), you can render
-one-page styles as PDF, HTML, or view them directly in the terminal with the `view`
-command. Multi-page styles are usually best suited for HTML, but this depends on
-your rendering pipeline.
+Depending on your conversion tool (such as Quarto, Pandoc, or Typst),
+you can render one-page styles as PDF, HTML, or view them directly in
+the terminal with the `view` command. Multi-page styles are usually best
+suited for HTML, but this depends on your rendering pipeline.
 :::
 
 ## Styles
