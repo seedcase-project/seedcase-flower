@@ -131,7 +131,7 @@ build-quartodoc:
 build-examples:
     #!/usr/bin/env bash
     styles() {
-      basename src/seedcase_flower/styles/*/ |tr '_' '-'
+      basename src/seedcase_flower/styles/*/ |tr '_' '-' | grep -v '^shared$'
     }
     build_example() {
       local style=$1
