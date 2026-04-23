@@ -16,6 +16,12 @@ individual release will not have many changes within it. Below is a list
 of the releases we've made so far, along with what was changed within
 each release.
 
+## 0.27.0 (2026-04-23)
+
+### Feat
+
+- ✨ allow shared templates for built-in styles (#298)
+
 ## 0.26.1 (2026-04-15)
 
 ### Refactor
