@@ -228,7 +228,7 @@ You can see examples of the available built-in styles on the
 create your own custom style in the
 [custom styles](/docs/guide/custom-styles.qmd) guide.
 
-<!-- TODO: Add section about using `template-dir` option -->
+<!-- TODO: Add section about using `style-dir` option -->
 
 For more details, see the [build](/docs/reference/build.qmd) reference
 or run:

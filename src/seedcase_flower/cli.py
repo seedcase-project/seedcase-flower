@@ -36,7 +36,7 @@ def build(
     /,  # End of positional-only args
     *,  # Start of keyword-only params
     style: Style = Style.quarto_one_page,
-    template_dir: Optional[Path] = None,
+    style_dir: Optional[Path] = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
 ) -> None:
@@ -51,7 +51,7 @@ def build(
             `gh:org/repo@1.0.1`).
         style: The style used to structure the output. If a template directory
             is given, this parameter will be ignored.
-        template_dir: The directory that contains the Jinja template
+        style_dir: The directory that contains the Jinja template
             files and `sections.toml`. When set, it will override any
             built-in style given by the `style` parameter.
         output_dir: The directory to save the generated files in.
@@ -59,7 +59,7 @@ def build(
     """
     config = Config(
         style=style,
-        template_dir=template_dir,
+        style_dir=style_dir,
         output_dir=output_dir,
     )
     address: Address = parse_source(source)

@@ -8,7 +8,7 @@ from seedcase_soil import Address
 
 from seedcase_flower.build_sections import (
     BuiltSection,
-    _get_template_dir,
+    _get_style_dir,
     _load_sections_toml,
 )
 from seedcase_flower.cli import app
@@ -117,7 +117,7 @@ def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
     toml_path = tmp_path / ".flower.toml"
     toml_path.write_text(
         'style = "quarto_resource_listing"\n'
-        'template_dir = "my-templates/"\n'
+        'style_dir = "my-style/"\n'
         'output_dir = "my-docs/"\n'
         "verbose = true\n"
     )
@@ -126,7 +126,7 @@ def test_build_reads_source_from_flower_toml(tmp_path, monkeypatch):
 
     _, bound, _ = app.parse_args(["build"])
     assert bound.arguments["style"] == Style.quarto_resource_listing
-    assert bound.arguments["template_dir"] == Path("my-templates/")
+    assert bound.arguments["style_dir"] == Path("my-style/")
     assert bound.arguments["output_dir"] == Path("my-docs/")
     assert bound.arguments["verbose"] is True
 
@@ -152,7 +152,7 @@ def test_view_styles_are_one_page():
     """Every ViewStyle member must map to a single-section (one-page) style."""
     for member in ViewStyle:
         style = Style[member.name]
-        sections = _load_sections_toml(_get_template_dir(style))
+        sections = _load_sections_toml(_get_style_dir(style))
         assert not sections.many_sections, (
             f"ViewStyle.{member.name} includes `Many` sections, "
             "but view styles must be single-page (exactly 1 `One` section)."

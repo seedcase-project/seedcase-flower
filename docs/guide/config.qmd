@@ -43,8 +43,8 @@ can be configured via the configuration file:
 - `output-dir`: The directory where Flower will save the output files.
   Defaults to `docs/`.
 
-- `template-dir`: The directory that contains the template files for a
-  custom style. If `template-dir` is set, `style` is ignored. Not set by
+- `style-dir`: The directory that contains the template files for a
+  custom style. If `style-dir` is set, `style` is ignored. Not set by
   default. For more information on how to create custom styles, see the
   [custom styles](custom-styles.qmd) guide.
 
@@ -68,18 +68,18 @@ output-dir = "my-docs/"
 Now, when you run `flower build` in your terminal, the output directory
 will be changed to `my-docs`.
 
-If you would like to use a custom style with your own templates in a
-`my-templates` directory, add the following line to `.flower.toml`:
+If you would like to use a custom style with your own style in a
+`my-style` directory, add the following line to `.flower.toml`:
 
 ``` {.toml filename=".flower.toml"}
-template-dir = "my-templates/"
+style-dir = "my-style/"
 ```
 
 With both these settings, the `.flower.toml` file would look like this:
 
 ``` {.toml filename=".flower.toml"}
 output-dir = "my-docs/"
-template-dir = "my-templates/"
+style-dir = "my-style/"
 ```
 
 <!-- TODO: Add style example when other built-in styles exist -->
@@ -94,7 +94,7 @@ below this table header.
 
 ``` {.toml filename="pyproject.toml"}
 [tool.seedcase-flower]
-template-dir = "my-templates/"
+style-dir = "my-style/"
 output-dir = "my-docs/"
 ```
 

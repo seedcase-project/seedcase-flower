@@ -53,7 +53,7 @@ def _get_styles_dir() -> Path:
     return Path(str(files("seedcase_flower").joinpath("styles")))
 
 
-def _get_template_dir(style: Style) -> Path:
+def _get_style_dir(style: Style) -> Path:
     return _get_styles_dir() / style.name
 
 
@@ -61,15 +61,14 @@ def _get_shared_dir() -> Path:
     return _get_styles_dir() / "shared"
 
 
-def _load_sections_toml(template_dir: Path) -> SectionsToml:
-    if not template_dir.is_dir():
-        raise NotADirectoryError(f"Template directory '{template_dir}' does not exist.")
+def _load_sections_toml(style_dir: Path) -> SectionsToml:
+    if not style_dir.is_dir():
+        raise NotADirectoryError(f"Template directory '{style_dir}' does not exist.")
 
-    toml_path = template_dir / "sections.toml"
+    toml_path = style_dir / "sections.toml"
     if not toml_path.is_file():
         raise FileNotFoundError(
-            f"Template directory '{template_dir}' does not contain a sections.toml "
-            "file."
+            f"Template directory '{style_dir}' does not contain a sections.toml file."
         )
 
     with open(toml_path, mode="rb") as file:
@@ -258,15 +257,15 @@ def build_sections(properties: dict[str, Any], config: Config) -> list[BuiltSect
     Returns:
         A list of built output files.
     """
-    if config.template_dir is None:
-        template_dir = _get_template_dir(config.style)
+    if config.style_dir is None:
+        style_dir = _get_style_dir(config.style)
         # Search style dir first, then shared dir.
-        search_paths = [template_dir, _get_shared_dir()]
+        search_paths = [style_dir, _get_shared_dir()]
     else:
         # Only search the custom dir.
-        template_dir = config.template_dir
-        search_paths = [template_dir]
-    sections_toml = _load_sections_toml(template_dir)
+        style_dir = config.style_dir
+        search_paths = [style_dir]
+    sections_toml = _load_sections_toml(style_dir)
     env = _create_jinja_env(search_paths)
     return fmap(
         sections_toml.one_sections,

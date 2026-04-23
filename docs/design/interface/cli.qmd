@@ -38,7 +38,7 @@ The `build` command builds documentation files from the metadata in the
 positional as well as keyword-based:
 
 ``` {.bash filename="Terminal"}
-seedcase-flower build [SOURCE] [STYLE] [TEMPLATE-DIR] [OUTPUT-DIR] [VERBOSE]
+seedcase-flower build [SOURCE] [STYLE] [STYLE-DIR] [OUTPUT-DIR] [VERBOSE]
 ```
 
 For example:
@@ -61,7 +61,7 @@ flowchart LR
     style_opt("--style<br>[option]")
     verbose_opt("--verbose<br>[option]")
     output_dir_opt("--output-dir<br>[option]")
-    template_dir_opt("--template-dir<br>[option]")
+    style_dir_opt("--style-dir<br>[option]")
     templates["Templates<br>[folder with<br>Jinja files]"]
     output["Output<br>[files and<br>folders]"]
     file{"file"}
@@ -70,7 +70,7 @@ flowchart LR
     source --> build
     config_file --> file
     output_dir_opt --> cli
-    template_dir_opt --> cli
+    style_dir_opt --> cli
     style_opt --> cli
 
     templates --> config_sections_file
@@ -170,7 +170,7 @@ The behaviour of `--style` is as follows:
   given in the command line overrides the style in the configuration
   file.
 
-The CLI options `--style`, `--output-dir`, and `--template-dir` override
+The CLI options `--style`, `--output-dir`, and `--style-dir` override
 the corresponding configuration file settings, which allows for easier
 testing of the styles and prevents unintended side effects from mixing
 incompatible configurations.
