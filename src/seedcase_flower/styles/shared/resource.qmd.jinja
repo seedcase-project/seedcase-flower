@@ -20,7 +20,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% if schema.foreignKeys %}
 - Foreign keys:
 {% for fk in schema.foreignKeys %}
-  - {{ fk.fields | _inline_code_list }} → {{(( fk.reference.resource or resource.name ) ~ ( fk.reference.fields | _bracket_list )) | _inline_code }}
+  - {{ fk.fields | _inline_code_list }} → {{(( fk.reference.resource or resource.name ) ~ ( fk.reference.fields | _parenthesised_list )) | _inline_code }}
 {% endfor %}
 {% endif %}
 
