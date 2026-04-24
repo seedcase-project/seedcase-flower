@@ -6,7 +6,7 @@
     </a>
 </p>
 
-# seedcase-flower: Turn your Data Package metadata into human-readable documentation
+# seedcase-flower: Turn your metadata into human-readable documentation
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19220976.svg)](https://doi.org/10.5281/zenodo.19220976)
 [![PyPI

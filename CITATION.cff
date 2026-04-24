@@ -1,4 +1,4 @@
-title: "Seedcase Flower: Turn your Data Package metadata into human-readable documentation"
+title: "Seedcase Flower: Turn your metadata into human-readable documentation"
 abstract: |
   Flower is a Python package and command-line interface (CLI) that generates
   human-friendly documentation from your machine-readable [Data
