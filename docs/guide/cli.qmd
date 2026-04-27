@@ -47,8 +47,9 @@ look different here.
 
 ```{python}
 #| echo: false
-# Needs root of Quarto project for path.
-!uv run seedcase-flower view docs/includes/datapackage.json
+import seedcase_soil as so
+
+!uv run seedcase-flower view {so.Example.flora.path}
 ```
 :::
 
@@ -153,16 +154,15 @@ seedcase-flower build
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Output example
+### Output
 
 The example below shows the output files generated when running
 `seedcase-flower build` in a directory containing a `datapackage.json`
-for an example Data Package, `flora`.
+from the example Data Package `flora`.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build docs/includes/datapackage.json --output-dir _temp/
-!ls _temp/
+!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/
 ```
 :::
 
@@ -214,8 +214,7 @@ Data Package, `flora`.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build docs/includes/datapackage.json --output-dir _temp/ --style quarto-one-page
-!ls _temp/
+!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-one-page
 ```
 :::
 
