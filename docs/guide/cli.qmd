@@ -163,6 +163,7 @@ from the example Data Package `flora`.
 ```{python}
 #| echo: false
 !uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/
+!ls _temp/
 ```
 :::
 
@@ -215,6 +216,7 @@ Data Package, `flora`.
 ```{python}
 #| echo: false
 !uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-one-page
+!ls _temp/
 ```
 :::
 
