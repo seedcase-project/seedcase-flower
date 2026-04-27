@@ -154,11 +154,12 @@ seedcase-flower build
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Output example
+### Output
 
-The example below shows the output files generated when running
-`seedcase-flower build` in a directory containing a `datapackage.json`
-for an example Data Package, `flora`.
+This example shows the output files generated when running
+`seedcase-flower build --style quarto-resource listing` in a directory
+containing a `datapackage.json` from the example Data Package `flora`.
+
 
 ```{python}
 #| echo: false
@@ -203,7 +204,10 @@ resource into its own file, use the `quarto-resource-listing` style:
 seedcase-flower build --style quarto-resource-listing
 ```
 
-The example below shows the output files generated when running
+::: {.callout-tip collapse="true" icon="false"}
+### Output
+
+This example shows the output files generated when running
 `seedcase-flower build --style quarto-resource listing` in a directory
 containing a `datapackage.json` from the example Data Package `flora`.
 
@@ -212,6 +216,8 @@ containing a `datapackage.json` from the example Data Package `flora`.
 !uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-resource-listing
 !ls _temp/
 ```
+
+:::
 
 Like the default `quarto-one-page` style, `quarto-resource-listing`
 creates a `docs/index.qmd`. In addition, it creates a separate file for
