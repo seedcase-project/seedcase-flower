@@ -2328,7 +2328,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
     { name = "rich", specifier = ">=14.3.3" },
-    { name = "seedcase-soil", specifier = ">=0.10.0" },
+    { name = "seedcase-soil", specifier = ">=0.11.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -2351,15 +2351,15 @@ dev = [
 
 [[package]]
 name = "seedcase-soil"
-version = "0.10.0"
+version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cyclopts" },
     { name = "rich" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/14/86/fc4347a094165ae1f7650be9ea013b3ae7c3a03dcff075a6d38c1f368c4e/seedcase_soil-0.10.0.tar.gz", hash = "sha256:9e0577bb8521aa1b7569c625c4633bfa73eb6fe6b6fd6fd438a109ad73479b43", size = 1042756, upload-time = "2026-04-24T09:54:28.734Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b8/2a/3ea3294f46accbe823dbb78bd7212877e6d09b975b6b61c3abab2e799b12/seedcase_soil-0.11.0.tar.gz", hash = "sha256:da57b31ea68201316921054e6e03bef8e1aa2fcf6bdfcc033c81d4c5d859a160", size = 1042838, upload-time = "2026-04-24T14:04:38.351Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/52/72/5bdfd8051a24bf262c03c57bcea1c0df4a9fe55502a2fec89c4dec58e803/seedcase_soil-0.10.0-py3-none-any.whl", hash = "sha256:740aa4359879b8ebea27b236bbc16f4b2f2340dffea6cb5d57b2bec6847d3d43", size = 16218, upload-time = "2026-04-24T09:54:30.044Z" },
+    { url = "https://files.pythonhosted.org/packages/74/52/a5bc09ab153ce0bee866d2d10cc33ed90bc0b940c31f07b528463a0ae7b5/seedcase_soil-0.11.0-py3-none-any.whl", hash = "sha256:86209d64d1e0ceddd10bd47bffc3c579088ef571d8a70f691bf183d796b57443", size = 16258, upload-time = "2026-04-24T14:04:39.873Z" },
 ]
 
 [[package]]
