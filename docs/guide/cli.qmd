@@ -109,7 +109,7 @@ Use the `--style` flag to format the terminal output with any of the
 seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
 ```
 
-<!-- TODO: Update this after another style is added so it doesn't use the default style. -->
+<!-- TODO: Update this after another one page style is added so it doesn't use the default style. -->
 
 This output will look identical to the output above, since
 `quarto-one-page` is the default style for `view`.
@@ -154,11 +154,11 @@ seedcase-flower build
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Output
+### Output example
 
 The example below shows the output files generated when running
 `seedcase-flower build` in a directory containing a `datapackage.json`
-from the example Data Package `flora`.
+for an example Data Package, `flora`.
 
 ```{python}
 #| echo: false
@@ -203,7 +203,6 @@ resource into its own file, use the `quarto-resource-listing` style:
 seedcase-flower build --style quarto-resource-listing
 ```
 
-<!-- TODO: Update this after another style is added. -->
 
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output example
@@ -215,7 +214,7 @@ Data Package, `flora`.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-one-page
+!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-resource-listing
 !ls _temp/
 ```
 :::
