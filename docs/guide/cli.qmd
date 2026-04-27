@@ -38,12 +38,12 @@ seedcase-flower view
 ```
 
 ::: {.callout-tip collapse="true" icon="false"}
-### Output example
+### Output
 
-The example below shows the output of running `seedcase-flower view` in
-a directory containing a `datapackage.json` for an example Data Package,
-`flora`. Terminal output is not optimised for web rendering, so it might
-look different here.
+This example shows the output of running `seedcase-flower view` in a
+directory containing a `datapackage.json` from the example Data Package
+`flora`. Note that the output from `view` is optimized for rendering in
+a terminal, so some aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
@@ -72,8 +72,8 @@ seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-Terminal output is not optimised for web rendering, so it might look
-different here.
+Note that the output from `view` is optimized for rendering in a
+terminal, so some aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
@@ -91,8 +91,8 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-Terminal output is not optimised for web rendering, so it might look
-different here.
+Note that the output from `view` is optimized for rendering in a
+terminal, so some aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
@@ -117,8 +117,8 @@ This output will look identical to the output above, since
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-Terminal output is not optimised for web rendering, so it might look
-different here.
+Note that the output from `view` is optimized for rendering in a
+terminal, so some aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
@@ -146,7 +146,7 @@ seedcase-flower view --help
 ## Building documentation from Data Package metadata
 
 To convert Data Package metadata into human-friendly plain text files
-for building sharable documentation, such as a website or PDF, use the
+for building shareable documentation, such as a website or PDF, use the
 `build` command:
 
 ```{.bash filename="Terminal"}
@@ -208,9 +208,8 @@ seedcase-flower build --style quarto-resource-listing
 ### Output example
 
 The example below shows the output files generated when running
-`seedcase-flower build` with the `--style quarto-resource-listing`
-option in a directory containing a `datapackage.json` for an example
-Data Package, `flora`.
+`seedcase-flower build --style quarto-resource listing` in a directory
+containing a `datapackage.json` from the example Data Package `flora`.
 
 ```{python}
 #| echo: false
