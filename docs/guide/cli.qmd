@@ -203,7 +203,6 @@ resource into its own file, use the `quarto-resource-listing` style:
 seedcase-flower build --style quarto-resource-listing
 ```
 
-
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output example
 
