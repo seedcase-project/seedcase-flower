@@ -30,8 +30,17 @@ conditions. To work through the steps yourself, copy the
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Expand to see the `datapackage.json` content
 
-``` {.json filename="datapackage.json"}
-{{< include /docs/includes/datapackage.json >}}
+```{python}
+#| echo: false
+#| output: asis
+import seedcase_soil as so
+
+print(
+    '```json',
+    so.Example.flora.path.read_text(),
+    '```',
+    sep='\n'
+)
 ```
 :::
 
