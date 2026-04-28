@@ -133,9 +133,10 @@ build-examples:
     styles() {
       basename src/seedcase_flower/styles/*/ |tr '_' '-' | grep -v '^shared$'
     }
+    flora_json="$(uv run python -c 'from seedcase_soil import Example; print(Example.flora.path)')"
     build_example() {
       local style=$1
-      uv run seedcase-flower build docs/includes/datapackage.json \
+      uv run seedcase-flower build "$flora_json" \
         --style $style \
         --output-dir docs/examples/$style
     }
