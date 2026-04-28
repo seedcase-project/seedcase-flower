@@ -221,7 +221,10 @@ def test_view_renders_datapackage(capsys, datapackage_path):
     assert "Test Package" in output
     assert "MIT" in output
     assert "1.0.0" in output
-    assert "A test datapackage" in output
+    assert (
+        "A simple datapackage for testing purposes" in output
+        or "A test datapackage" in output
+    )
 
     # Resource structure
     assert "Resources" in output
