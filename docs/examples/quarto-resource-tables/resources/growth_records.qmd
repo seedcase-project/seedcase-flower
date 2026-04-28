@@ -12,8 +12,8 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 - Path: `resources/growth_records/data.parquet`
 - Primary key: (`record_id`)
 - Foreign keys:
-  - `species_id` → `species_catalogspecies_id`
-  - `location_region`, `location_country` → `location_catalog[region, country]`
+  - `species_id` → `species_catalog.species_id`
+  - `location_region`, `location_country` → `location_catalog.[region, country]`
 
 | Name               | Title            | Type    | Description                                   |
 |--------------------|------------------|---------|-----------------------------------------------|
