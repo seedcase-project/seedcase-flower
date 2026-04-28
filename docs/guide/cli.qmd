@@ -216,7 +216,6 @@ containing a `datapackage.json` from the example Data Package `flora`.
 !uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-resource-listing
 !ls _temp/
 ```
-
 :::
 
 Like the default `quarto-one-page` style, `quarto-resource-listing`
