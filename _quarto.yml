@@ -69,6 +69,10 @@ website:
           contents:
             - text: "Quarto one page"
               href: docs/examples/quarto-one-page/index.qmd
+            - text: "Quarto resource listing"
+              href: docs/examples/quarto-resource-listing/index.qmd
+            - text: "Quarto resource tables"
+              href: docs/examples/quarto-resource-tables/index.qmd
 
 quartodoc:
   sidebar: "docs/reference/_sidebar.yml"

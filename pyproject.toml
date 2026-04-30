@@ -1,7 +1,7 @@
 [project]
 name = "seedcase-flower"
 version = "0.27.0"
-description = "Turn your Data Package metadata into human-readable documentation"
+description = "Turn your metadata into human-readable documentation"
 authors = [
   { name = "Luke W. Johnston", email = "lwjohnst@gmail.com" },
   { name = "Signe Kirk Brødbæk", email = "signekb@clin.au.dk" },
@@ -33,7 +33,7 @@ dependencies = [
   "pydantic>=2.12.5",
   "python-jsonpath>=2.0.2",
   "rich>=14.3.3",
-  "seedcase-soil",
+  "seedcase-soil>=0.11.0",
 ]
 
 [project.urls]
@@ -67,6 +67,3 @@ dev = [
   "typos>=1.40.0",
   "vulture>=2.14",
 ]
-
-[tool.uv.sources]
-seedcase-soil = { git = "https://github.com/seedcase-project/seedcase-soil", rev = "0.4.0" }
