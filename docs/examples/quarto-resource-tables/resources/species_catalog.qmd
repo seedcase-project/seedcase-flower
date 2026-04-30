@@ -12,7 +12,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 - Path: `resources/species_catalog/data.parquet`
 - Primary key: (`species_id`)
 - Foreign keys:
-  - From fields (`parent_species_id`) to fields (`species_id`) in resource `species_catalog`
+  - `parent_species_id` → `species_catalog.species_id`
 
 | Name                | Title           | Type    | Description                                    |
 |---------------------|-----------------|---------|------------------------------------------------|
