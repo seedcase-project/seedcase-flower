@@ -33,10 +33,10 @@ def _section_label(section: BuiltSection, index: int) -> str:
     front_matter, _ = _split_front_matter(section.content)
     title = _front_matter_value(front_matter, "title")
     subtitle = _front_matter_value(front_matter, "subtitle").strip("`")
-    if title and subtitle:
-        return f"{subtitle}: {title}"
-    if title or subtitle:
-        return title or subtitle
+    if subtitle:
+        return subtitle
+    if title:
+        return title
     if section.output_path:
         return _output_path_label(section.output_path)
     return f"Section {index}"
@@ -92,30 +92,132 @@ class FlowerViewApp(App[None]):
     CSS = """
     Screen {
         layout: vertical;
+        background: ansi_default;
+        color: ansi_default;
+    }
+
+    Header, Footer {
+        background: ansi_default;
+        color: ansi_default;
     }
 
     #body {
         height: 1fr;
+        background: ansi_default;
     }
 
     #toc {
         width: 32;
         min-width: 24;
         height: 100%;
-        border-right: solid $primary;
+        background: ansi_default;
+        color: ansi_default;
+        border-right: solid ansi_white;
     }
 
     #content {
         width: 1fr;
         height: 100%;
         padding: 0 1;
+        background: ansi_default;
     }
 
     ListItem > Label {
         padding: 0 1;
+        background: ansi_default;
+        color: ansi_default;
+    }
+
+    Markdown {
+        background: ansi_default;
+        color: ansi_default;
+    }
+
+    MarkdownBlock > .code_inline {
+        color: ansi_yellow;
+        background: ansi_default;
+        text-style: bold;
+    }
+
+    MarkdownBlock > .strong {
+        text-style: bold;
+    }
+
+    MarkdownBlock > .em {
+        text-style: italic;
+    }
+
+    MarkdownBlockQuote {
+        background: ansi_default;
+        border-left: outer ansi_magenta;
+        color: ansi_magenta;
+    }
+
+    MarkdownBullet {
+        color: ansi_cyan;
+    }
+
+    MarkdownFence {
+        color: ansi_cyan;
+        background: ansi_black;
+    }
+
+    MarkdownHeader {
+        margin: 1 0 0 0;
+    }
+
+    MarkdownH1 {
+        content-align: left middle;
+        color: ansi_blue;
+        text-style: bold;
+        margin: 0;
+    }
+
+    MarkdownH2 {
+        color: ansi_yellow;
+        text-style: bold;
+        margin: 0;
+    }
+
+    MarkdownH3 {
+        color: ansi_blue;
+    }
+
+    MarkdownH4 {
+        color: ansi_magenta;
+        text-style: italic;
+    }
+
+    MarkdownH5 {
+        text-style: italic;
+    }
+
+    MarkdownH6 {
+        text-opacity: 60%;
+    }
+
+    MarkdownHorizontalRule {
+        border-bottom: solid ansi_white;
+    }
+
+    MarkdownTableContent {
+        keyline: thin ansi_white;
+    }
+
+    MarkdownTableContent > .header {
+        color: ansi_blue;
+    }
+
+    MarkdownTableContent > .markdown-table--header {
+        color: ansi_blue;
+        text-style: bold;
     }
     """
-    BINDINGS = [("q", "quit", "Quit")]
+    BINDINGS = [
+        ("j", "toc_down", "Down"),
+        ("k", "toc_up", "Up"),
+        ("q", "quit", "Quit"),
+    ]
     TITLE = "Flower"
 
     def __init__(self, pages: list[ViewPage]) -> None:
@@ -139,9 +241,26 @@ class FlowerViewApp(App[None]):
         """Focus page navigation when the app starts."""
         self.query_one("#toc", ListView).focus()
 
+    async def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
+        """Show the highlighted page in the content pane."""
+        index = event.list_view.index
+        if index is not None:
+            await self._show_page(index)
+
     async def on_list_view_selected(self, event: ListView.Selected) -> None:
         """Show the selected page in the content pane."""
-        page = self.pages[event.index]
+        await self._show_page(event.index)
+
+    def action_toc_down(self) -> None:
+        """Move down in the page navigation."""
+        self.query_one("#toc", ListView).action_cursor_down()
+
+    def action_toc_up(self) -> None:
+        """Move up in the page navigation."""
+        self.query_one("#toc", ListView).action_cursor_up()
+
+    async def _show_page(self, index: int) -> None:
+        page = self.pages[index]
         self.sub_title = page.label
         await self.query_one("#content", Markdown).update(page.content)
 
