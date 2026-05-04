@@ -239,6 +239,11 @@ def test_format_view_sections_separates_sections_with_rule():
     assert "Package" in output
     assert "Resource details" in output
 
+    output_lines = output.splitlines()
+    rule_index = next(index for index, line in enumerate(output_lines) if "─" in line)
+    assert output_lines[rule_index - 1] == ""
+    assert output_lines[rule_index + 1] == ""
+
 
 def test_format_view_sections_removes_listing_front_matter():
     """Index page listing front matter should not be displayed in the pager."""

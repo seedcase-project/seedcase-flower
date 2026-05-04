@@ -125,7 +125,9 @@ def _format_view_sections(built_sections: list[BuiltSection]) -> RenderableType:
     sections: list[RenderableType] = []
     for index, section in enumerate(built_sections):
         if index > 0:
+            sections.append(Text(""))
             sections.append(Rule(style="dim"))
+            sections.append(Text(""))
         sections.append(_format_view_section_content(section.content))
     return Group(*sections)
 
