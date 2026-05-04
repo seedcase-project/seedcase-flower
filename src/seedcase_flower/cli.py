@@ -1,5 +1,6 @@
 """Functions for the exposed CLI."""
 
+from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
@@ -30,6 +31,13 @@ app = setup_cli(
     help="Flower generates human-readable documentation from Data Packages.",
     config_name=".flower.toml",
 )
+
+
+class Viewer(Enum):
+    """Ways to display `view` output in the terminal."""
+
+    pager = "pager"
+    textual = "textual"
 
 
 @app.command()
@@ -95,6 +103,7 @@ def view(
     /,  # End of positional-only args
     *,  # Start of keyword-only params
     style: Style = Style.quarto_one_page,
+    viewer: Viewer = Viewer.pager,
 ) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way.
 
@@ -106,11 +115,19 @@ def view(
             reference to a tag or branch, such as `gh:org/repo@main` or
             `gh:org/repo@1.0.1`).
         style: The built-in style used to display the output in the terminal.
+        viewer: The terminal viewer to use. Use `pager` for plain scrolling output
+            or `textual` for an interactive interface with section navigation.
     """
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     check(properties, error=True)
     built_sections = build_sections(properties, Config(style=style))
+    if viewer == Viewer.textual:
+        from seedcase_flower.tui import run_textual_viewer
+
+        run_textual_viewer(built_sections)
+        return
+
     console = Console(theme=CONSOLE_THEME)
     # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title

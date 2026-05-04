@@ -128,12 +128,19 @@ terminal, so some aspects of it might not display as expected here.
 
 For long output, `view` opens the rendered metadata in a terminal pager.
 Multi-section styles, such as `quarto-resource-listing`, are shown as a
-single paged document with each generated section labelled by its output
-path.
+single paged document.
 
 Flower preserves terminal colors in the pager. If colors do not display,
 set your pager to one that supports ANSI styles, such as
 `PAGER="less -R"`.
+
+To try the interactive Textual viewer, use `--viewer textual`. This shows
+the package and resources in a left-hand table of contents and the
+selected section in a scrollable content pane:
+
+```{.bash filename="Terminal"}
+seedcase-flower view --style quarto-resource-listing --viewer textual
+```
 
 ::: callout-important
 `view` is only configurable via command line flags. This means that any
