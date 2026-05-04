@@ -1,6 +1,6 @@
 [project]
 name = "seedcase-flower"
-version = "0.27.1"
+version = "0.28.0"
 description = "Turn your metadata into human-readable documentation"
 authors = [
   { name = "Luke W. Johnston", email = "lwjohnst@gmail.com" },
