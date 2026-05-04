@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any, Optional
 
 from check_datapackage import check
-from rich.align import Align
 from rich.console import Console, Group, RenderableType
 from rich.markdown import Markdown
 from rich.rule import Rule
@@ -123,16 +122,12 @@ def _format_view_sections(built_sections: list[BuiltSection]) -> RenderableType:
     if len(built_sections) == 1:
         return _format_view_section_content(built_sections[0].content)
 
-    return Group(
-        *(
-            Group(
-                Align.center(Text(str(section.output_path or index), style="bold")),
-                Rule(style="dim"),
-                _format_view_section_content(section.content),
-            )
-            for index, section in enumerate(built_sections, start=1)
-        )
-    )
+    sections: list[RenderableType] = []
+    for index, section in enumerate(built_sections):
+        if index > 0:
+            sections.append(Rule(style="dim"))
+        sections.append(_format_view_section_content(section.content))
+    return Group(*sections)
 
 
 def _format_view_section_content(content: str) -> RenderableType:
@@ -144,9 +139,9 @@ def _format_view_section_content(content: str) -> RenderableType:
     title = _front_matter_value(front_matter, "title")
     subtitle = _front_matter_value(front_matter, "subtitle")
     if title:
-        headings.append(Markdown(f"# {title}"))
+        headings.append(Text(title, style="markdown.h1"))
     if subtitle:
-        headings.append(Align.center(Text(subtitle.strip("`"), style="bold dim")))
+        headings.append(Text(subtitle.strip("`"), style="yellow bold"))
 
     if not headings:
         return Markdown(body.lstrip())

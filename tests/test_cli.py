@@ -222,8 +222,8 @@ def test_view_with_multi_section_style(mocker):
     assert mock_console.print.called
 
 
-def test_format_view_sections_adds_section_labels():
-    """Multi-section view output should include each section path."""
+def test_format_view_sections_separates_sections_with_rule():
+    """Multi-section view output should separate sections without file labels."""
     output = _render_view_sections(
         [
             BuiltSection(content="# Package", output_path=Path("index.qmd")),
@@ -233,9 +233,10 @@ def test_format_view_sections_adds_section_labels():
         ]
     )
 
-    assert "index.qmd" in output
-    assert "resources/data.qmd" in output
+    assert "index.qmd" not in output
+    assert "resources/data.qmd" not in output
     assert "─" in output
+    assert "Package" in output
     assert "Resource details" in output
 
 
@@ -283,8 +284,8 @@ def test_format_view_sections_converts_resource_front_matter_to_headings():
     assert "title:" not in output
     assert "subtitle:" not in output
     assert "description:" not in output
-    assert "Species Catalog" in output
-    assert "                                species_catalog" in output
+    assert "Species Catalog" in output.splitlines()
+    assert "species_catalog" in output.splitlines()
     assert "Path: data/species.csv" in output
 
 
