@@ -19,13 +19,19 @@ def test_flower_view_app_styles_markdown_headings_like_terminal_output():
     assert "color: ansi_yellow" in FlowerViewApp.CSS
     assert "MarkdownHeader" in FlowerViewApp.CSS
     assert "margin: 1 0 0 0" in FlowerViewApp.CSS
+    assert "margin: 0 0 1 0" in FlowerViewApp.CSS
 
 
-def test_flower_view_app_themes_chrome_like_main_panel():
+def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
     assert "Header, Footer" in FlowerViewApp.CSS
+    assert "FooterLabel, FooterKey" in FlowerViewApp.CSS
     assert "#toc" in FlowerViewApp.CSS
-    assert "background: ansi_default" in FlowerViewApp.CSS
+    assert "#toc:focus" in FlowerViewApp.CSS
+    assert "background: #292E42" in FlowerViewApp.CSS
+    assert "background-tint: ansi_default 0%" in FlowerViewApp.CSS
     assert "color: ansi_default" in FlowerViewApp.CSS
+    assert "ListItem" in FlowerViewApp.CSS
+    assert "width: 100%" in FlowerViewApp.CSS
 
 
 def test_flower_view_app_maps_markdown_colors_to_ansi_terminal_styles():

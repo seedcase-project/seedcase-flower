@@ -97,7 +97,14 @@ class FlowerViewApp(App[None]):
     }
 
     Header, Footer {
-        background: ansi_default;
+        background: #292E42;
+        background-tint: ansi_default 0%;
+        color: ansi_default;
+    }
+
+    FooterLabel, FooterKey {
+        background: #292E42;
+        background-tint: ansi_default 0%;
         color: ansi_default;
     }
 
@@ -110,9 +117,14 @@ class FlowerViewApp(App[None]):
         width: 32;
         min-width: 24;
         height: 100%;
-        background: ansi_default;
+        background: #292E42;
+        background-tint: ansi_default 0%;
         color: ansi_default;
         border-right: solid ansi_white;
+    }
+
+    #toc:focus {
+        background-tint: ansi_default 0%;
     }
 
     #content {
@@ -122,9 +134,13 @@ class FlowerViewApp(App[None]):
         background: ansi_default;
     }
 
+    ListItem {
+        width: 100%;
+    }
+
     ListItem > Label {
+        width: 100%;
         padding: 0 1;
-        background: ansi_default;
         color: ansi_default;
     }
 
@@ -176,7 +192,7 @@ class FlowerViewApp(App[None]):
     MarkdownH2 {
         color: ansi_yellow;
         text-style: bold;
-        margin: 0;
+        margin: 0 0 1 0;
     }
 
     MarkdownH3 {
