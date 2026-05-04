@@ -1,14 +1,22 @@
 """Tests for the Textual viewer helpers."""
 
+import asyncio
+import inspect
 from pathlib import Path
 
 from seedcase_flower.build_sections import BuiltSection
-from seedcase_flower.tui import FlowerViewApp, prepare_view_pages
+from seedcase_flower.tui import FlowerViewApp, ViewPage, prepare_view_pages
 
 
 def test_flower_view_app_has_vim_navigation_bindings():
     assert ("j", "toc_down", "Down") in FlowerViewApp.BINDINGS
     assert ("k", "toc_up", "Up") in FlowerViewApp.BINDINGS
+
+
+def test_flower_view_app_pre_mounts_markdown_pages():
+    assert "ContentSwitcher" in inspect.getsource(FlowerViewApp.compose)
+    assert "#content-switcher" in FlowerViewApp.CSS
+    assert ".content-page" in FlowerViewApp.CSS
 
 
 def test_flower_view_app_styles_markdown_headings_like_terminal_output():
@@ -56,6 +64,7 @@ def test_prepare_view_pages_uses_package_label_for_index():
 
     assert pages[0].label == "Package"
     assert pages[0].content == "# Test Package"
+    assert pages[0].id == "page-1"
 
 
 def test_prepare_view_pages_uses_resource_front_matter_for_label_and_content():
@@ -76,6 +85,7 @@ def test_prepare_view_pages_uses_resource_front_matter_for_label_and_content():
     )
 
     assert pages[0].label == "species_catalog"
+    assert pages[0].id == "page-1"
     assert "title:" not in pages[0].content
     assert "description:" not in pages[0].content
     assert "# Species Catalog" in pages[0].content
@@ -94,3 +104,40 @@ def test_prepare_view_pages_falls_back_to_output_stem():
     )
 
     assert pages[0].label == "Growth Records"
+
+
+def test_flower_view_app_switches_between_pre_mounted_pages():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(label="Package", content="# Package", id="page-1"),
+                ViewPage(label="species_catalog", content="# Species", id="page-2"),
+            ]
+        )
+
+        async with app.run_test():
+            await app._show_page(1)
+
+            assert app.sub_title == "species_catalog"
+            assert app.query_one("#content-switcher").current == "page-2"
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_does_not_update_markdown_on_page_switch():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(label="Package", content="# Package", id="page-1"),
+                ViewPage(label="species_catalog", content="# Species", id="page-2"),
+            ]
+        )
+
+        async with app.run_test():
+            markdown = app.query_one("#page-2")
+            markdown.update = None  # type: ignore[method-assign]
+            await app._show_page(1)
+
+            assert app.query_one("#content-switcher").current == "page-2"
+
+    asyncio.run(run_test())

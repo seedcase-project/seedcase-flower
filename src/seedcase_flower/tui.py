@@ -5,7 +5,15 @@ from pathlib import Path
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal
-from textual.widgets import Footer, Header, Label, ListItem, ListView, Markdown
+from textual.widgets import (
+    ContentSwitcher,
+    Footer,
+    Header,
+    Label,
+    ListItem,
+    ListView,
+    Markdown,
+)
 
 from seedcase_flower.build_sections import BuiltSection
 
@@ -16,6 +24,7 @@ class ViewPage:
 
     label: str
     content: str
+    id: str
 
 
 def prepare_view_pages(built_sections: list[BuiltSection]) -> list[ViewPage]:
@@ -24,6 +33,7 @@ def prepare_view_pages(built_sections: list[BuiltSection]) -> list[ViewPage]:
         ViewPage(
             label=_section_label(section, index),
             content=_section_content(section.content),
+            id=f"page-{index}",
         )
         for index, section in enumerate(built_sections, start=1)
     ]
@@ -127,11 +137,16 @@ class FlowerViewApp(App[None]):
         background-tint: ansi_default 0%;
     }
 
-    #content {
+    #content-switcher {
         width: 1fr;
         height: 100%;
         padding: 0 1;
         background: ansi_default;
+    }
+
+    .content-page {
+        width: 1fr;
+        height: 100%;
     }
 
     ListItem {
@@ -250,7 +265,9 @@ class FlowerViewApp(App[None]):
             yield ListView(
                 *[ListItem(Label(page.label)) for page in self.pages], id="toc"
             )
-            yield Markdown(initial_page.content, id="content")
+            with ContentSwitcher(id="content-switcher", initial=initial_page.id):
+                for page in self.pages:
+                    yield Markdown(page.content, id=page.id, classes="content-page")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -278,7 +295,7 @@ class FlowerViewApp(App[None]):
     async def _show_page(self, index: int) -> None:
         page = self.pages[index]
         self.sub_title = page.label
-        await self.query_one("#content", Markdown).update(page.content)
+        self.query_one("#content-switcher", ContentSwitcher).current = page.id
 
 
 def run_textual_viewer(built_sections: list[BuiltSection]) -> None:
