@@ -4,8 +4,11 @@ from pathlib import Path
 from typing import Any, Optional
 
 from check_datapackage import check
-from rich.console import Console
+from rich.align import Align
+from rich.console import Console, Group, RenderableType
 from rich.markdown import Markdown
+from rich.rule import Rule
+from rich.text import Text
 from seedcase_soil import (
     CONSOLE_THEME,
     Address,
@@ -113,19 +116,62 @@ def view(
     # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title
     with console.pager(styles=True):
-        console.print(Markdown(_format_view_sections(built_sections)))
+        console.print(_format_view_sections(built_sections))
 
 
-def _format_view_sections(built_sections: list[BuiltSection]) -> str:
+def _format_view_sections(built_sections: list[BuiltSection]) -> RenderableType:
     if len(built_sections) == 1:
-        return built_sections[0].content
+        return _format_view_section_content(built_sections[0].content)
 
-    return "\n\n".join(
-        (
-            f"# {section.output_path or f'Section {index}'}\n\n{section.content}"
+    return Group(
+        *(
+            Group(
+                Align.center(Text(str(section.output_path or index), style="bold")),
+                Rule(style="dim"),
+                _format_view_section_content(section.content),
+            )
             for index, section in enumerate(built_sections, start=1)
         )
     )
+
+
+def _format_view_section_content(content: str) -> RenderableType:
+    front_matter, body = _split_front_matter(content)
+    if not front_matter:
+        return Markdown(body)
+
+    headings = []
+    title = _front_matter_value(front_matter, "title")
+    subtitle = _front_matter_value(front_matter, "subtitle")
+    if title:
+        headings.append(Markdown(f"# {title}"))
+    if subtitle:
+        headings.append(Align.center(Text(subtitle.strip("`"), style="bold dim")))
+
+    if not headings:
+        return Markdown(body.lstrip())
+    return Group(*headings, Markdown(body.lstrip()))
+
+
+def _split_front_matter(content: str) -> tuple[list[str], str]:
+    lines = content.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return [], content
+
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            return lines[1:index], "\n".join(lines[index + 1 :])
+
+    return [], content
+
+
+def _front_matter_value(front_matter: list[str], key: str) -> str:
+    prefix = f"{key}:"
+    for line in front_matter:
+        if not line.startswith(prefix):
+            continue
+        return line.removeprefix(prefix).strip().strip("\"'")
+    return ""
 
 
 def main() -> None:

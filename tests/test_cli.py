@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from check_datapackage.check import DataPackageError
+from rich.console import Console
 from seedcase_soil import Address
 
 from seedcase_flower.build_sections import (
@@ -12,6 +13,12 @@ from seedcase_flower.build_sections import (
 from seedcase_flower.cli import _format_view_sections, app
 from seedcase_flower.config import Config
 from seedcase_flower.styles import Style, ViewStyle
+
+
+def _render_view_sections(sections: list[BuiltSection]) -> str:
+    console = Console(record=True, width=80, color_system=None)
+    console.print(_format_view_sections(sections))
+    return console.export_text()
 
 
 @pytest.fixture
@@ -215,9 +222,9 @@ def test_view_with_multi_section_style(mocker):
     assert mock_console.print.called
 
 
-def test_format_view_sections_adds_section_headings():
+def test_format_view_sections_adds_section_labels():
     """Multi-section view output should include each section path."""
-    output = _format_view_sections(
+    output = _render_view_sections(
         [
             BuiltSection(content="# Package", output_path=Path("index.qmd")),
             BuiltSection(
@@ -226,9 +233,59 @@ def test_format_view_sections_adds_section_headings():
         ]
     )
 
-    assert "# index.qmd" in output
-    assert "# resources/data.qmd" in output
+    assert "index.qmd" in output
+    assert "resources/data.qmd" in output
+    assert "─" in output
     assert "Resource details" in output
+
+
+def test_format_view_sections_removes_listing_front_matter():
+    """Index page listing front matter should not be displayed in the pager."""
+    output = _render_view_sections(
+        [
+            BuiltSection(
+                content=(
+                    "---\n"
+                    "listing:\n"
+                    "    type: default\n"
+                    "    contents: resources\n"
+                    "---\n\n"
+                    "# Package"
+                ),
+                output_path=Path("index.qmd"),
+            )
+        ]
+    )
+
+    assert "listing:" not in output
+    assert "contents: resources" not in output
+    assert "Package" in output
+
+
+def test_format_view_sections_converts_resource_front_matter_to_headings():
+    """Resource title and subtitle front matter should become Markdown headings."""
+    output = _render_view_sections(
+        [
+            BuiltSection(
+                content=(
+                    "---\n"
+                    'title: "Species Catalog"\n'
+                    'subtitle: "`species_catalog`"\n'
+                    'description: "Resource description"\n'
+                    "---\n\n"
+                    "- Path: `data/species.csv`"
+                ),
+                output_path=Path("resources/species_catalog.qmd"),
+            )
+        ]
+    )
+
+    assert "title:" not in output
+    assert "subtitle:" not in output
+    assert "description:" not in output
+    assert "Species Catalog" in output
+    assert "                                species_catalog" in output
+    assert "Path: data/species.csv" in output
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):
