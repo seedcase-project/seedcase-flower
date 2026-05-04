@@ -8,10 +8,8 @@ from seedcase_soil import Address
 
 from seedcase_flower.build_sections import (
     BuiltSection,
-    _get_template_dir,
-    _load_sections_toml,
 )
-from seedcase_flower.cli import app
+from seedcase_flower.cli import _format_view_sections, app
 from seedcase_flower.config import Config
 from seedcase_flower.styles import Style, ViewStyle
 
@@ -148,19 +146,11 @@ def test_view_ignores_flower_toml(tmp_path, monkeypatch):
 # view ====
 
 
-def test_view_styles_are_one_page():
-    """Every ViewStyle member must map to a single-section (one-page) style."""
+def test_view_styles_map_to_builtin_styles():
+    """Every ViewStyle member must map to a built-in style."""
     for member in ViewStyle:
         style = Style[member.name]
-        sections = _load_sections_toml(_get_template_dir(style))
-        assert not sections.many_sections, (
-            f"ViewStyle.{member.name} includes `Many` sections, "
-            "but view styles must be single-page (exactly 1 `One` section)."
-        )
-        assert len(sections.one_sections) == 1, (
-            f"ViewStyle.{member.name} has {len(sections.one_sections)} sections, "
-            "but view styles must be single-page (exactly 1 `One` section)."
-        )
+        assert style.value == member.value
 
 
 def test_view_with_mocked_internals(mocker):
@@ -188,7 +178,57 @@ def test_view_with_mocked_internals(mocker):
         mock_read_properties.return_value,
         Config(style=Style.quarto_one_page),
     )
+    mock_console.pager.assert_called_once_with(styles=True)
     assert mock_console.print.called
+
+
+def test_view_with_multi_section_style(mocker):
+    """view should allow multi-section styles and render via a pager."""
+    mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
+    mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
+    mocker.patch("seedcase_flower.cli.check")
+    mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
+    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
+    mock_console = mock_console_cls.return_value
+
+    mock_build_sections.return_value = [
+        BuiltSection(content="# Package", output_path=Path("index.qmd")),
+        BuiltSection(
+            content="Resource details", output_path=Path("resources/data.qmd")
+        ),
+    ]
+
+    fake_source = Address(value="file:///datapackage.json", local=True)
+    mock_parse_source.return_value = fake_source
+
+    app(
+        ["view", "datapackage.json", "--style", "quarto-resource-listing"],
+        result_action="return_value",
+    )
+
+    mock_read_properties.assert_called_once_with(fake_source)
+    mock_build_sections.assert_called_once_with(
+        mock_read_properties.return_value,
+        Config(style=Style.quarto_resource_listing),
+    )
+    mock_console.pager.assert_called_once_with(styles=True)
+    assert mock_console.print.called
+
+
+def test_format_view_sections_adds_section_headings():
+    """Multi-section view output should include each section path."""
+    output = _format_view_sections(
+        [
+            BuiltSection(content="# Package", output_path=Path("index.qmd")),
+            BuiltSection(
+                content="Resource details", output_path=Path("resources/data.qmd")
+            ),
+        ]
+    )
+
+    assert "# index.qmd" in output
+    assert "# resources/data.qmd" in output
+    assert "Resource details" in output
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):

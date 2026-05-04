@@ -103,7 +103,7 @@ terminal, so some aspects of it might not display as expected here.
 ### Styling terminal output
 
 Use the `--style` flag to format the terminal output with any of the
-[built-in view styles](/docs/reference/ViewStyle.qmd). For example:
+[built-in styles](/docs/reference/Style.qmd). For example:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
@@ -126,9 +126,14 @@ terminal, so some aspects of it might not display as expected here.
 ```
 :::
 
-`view` only works with single-page
-[built-in styles](/docs/reference/Style.qmd); multi-page styles are not
-supported.
+For long output, `view` opens the rendered metadata in a terminal pager.
+Multi-section styles, such as `quarto-resource-listing`, are shown as a
+single paged document with each generated section labelled by its output
+path.
+
+Flower preserves terminal colors in the pager. If colors do not display,
+set your pager to one that supports ANSI styles, such as
+`PAGER="less -R"`.
 
 ::: callout-important
 `view` is only configurable via command line flags. This means that any

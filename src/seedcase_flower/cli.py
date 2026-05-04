@@ -17,10 +17,10 @@ from seedcase_soil import (
     setup_cli,
 )
 
-from seedcase_flower.build_sections import build_sections
+from seedcase_flower.build_sections import BuiltSection, build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import _number
-from seedcase_flower.styles import Style, ViewStyle
+from seedcase_flower.styles import Style
 from seedcase_flower.write_sections import write_sections
 
 app = setup_cli(
@@ -92,7 +92,7 @@ def view(
     source: str = "datapackage.json",
     /,  # End of positional-only args
     *,  # Start of keyword-only params
-    style: ViewStyle = ViewStyle.quarto_one_page,
+    style: Style = Style.quarto_one_page,
 ) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way.
 
@@ -103,17 +103,29 @@ def view(
             in the repo root (in the format `gh:org/repo`, which can also include
             reference to a tag or branch, such as `gh:org/repo@main` or
             `gh:org/repo@1.0.1`).
-        style: The style used to display the output in the terminal. Must be a
-            single-page style.
+        style: The built-in style used to display the output in the terminal.
     """
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     check(properties, error=True)
-    built_sections = build_sections(properties, Config(style=Style[style.name]))
+    built_sections = build_sections(properties, Config(style=style))
     console = Console(theme=CONSOLE_THEME)
     # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title
-    console.print(Markdown(built_sections[0].content))
+    with console.pager(styles=True):
+        console.print(Markdown(_format_view_sections(built_sections)))
+
+
+def _format_view_sections(built_sections: list[BuiltSection]) -> str:
+    if len(built_sections) == 1:
+        return built_sections[0].content
+
+    return "\n\n".join(
+        (
+            f"# {section.output_path or f'Section {index}'}\n\n{section.content}"
+            for index, section in enumerate(built_sections, start=1)
+        )
+    )
 
 
 def main() -> None:

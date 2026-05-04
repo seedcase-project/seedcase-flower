@@ -10,6 +10,8 @@ class Style(Enum):
 
 
 class ViewStyle(Enum):
-    """Subset of styles suitable for terminal output (single-page only)."""
+    """Built-in styles suitable for terminal output."""
 
     quarto_one_page = "quarto_one_page"
+    quarto_resource_listing = "quarto_resource_listing"
+    quarto_resource_tables = "quarto_resource_tables"

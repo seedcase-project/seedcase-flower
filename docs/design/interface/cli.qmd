@@ -200,7 +200,7 @@ flowchart LR
     source("datapackage.json<br>[SOURCE: file, https,<br>gh/github]")
     view("view")
     style_opt("--style<br>[option]")
-    output("Output<br>[Terminal]")
+    output("Output<br>[Terminal pager]")
 
     source --> view
     style_opt --> view
@@ -211,7 +211,7 @@ flowchart LR
 differences:
 
 - No output files are generated---`view` only displays the metadata in
-  the terminal.
+  the terminal pager.
 - No configuration file is used. The only way to change the output is
   via `--style` with one of the built-in styles.
 

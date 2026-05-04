@@ -34,10 +34,9 @@ should be short, descriptive, and distinct from existing built-in
 styles. It should be given in snake case (e.g., `my_new_style`).
 
 ::: callout-note
-A terminal style for the `view` command must be a single-page output
-style, meaning it can only use a single `[[one]]` section. `view`
-ignores `output-path` since it doesn't output files and single-page
-styles can be used by `build` as well.
+The `view` command can display built-in styles with one or more sections.
+Multi-section styles are rendered as one paged terminal document, with
+each section labelled by its `output-path`.
 :::
 
 ## Adding the style as built-in
