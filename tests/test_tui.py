@@ -234,6 +234,42 @@ def test_flower_view_app_switches_between_pre_mounted_pages():
     asyncio.run(run_test())
 
 
+def test_flower_view_app_debounces_highlight_navigation():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[TextBlock("Package")],
+                ),
+                ViewPage(
+                    label="species_catalog",
+                    id="page-2",
+                    blocks=[TextBlock("Species")],
+                ),
+                ViewPage(
+                    label="location_catalog",
+                    id="page-3",
+                    blocks=[TextBlock("Locations")],
+                ),
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            app.action_toc_down()
+            app.action_toc_down()
+
+            assert app.query_one("#content-switcher").current == "page-1"
+
+            await pilot.pause(0.15)
+
+            assert app.sub_title == "location_catalog"
+            assert app.query_one("#content-switcher").current == "page-3"
+
+    asyncio.run(run_test())
+
+
 def test_flower_view_app_does_not_update_page_on_switch():
     async def run_test() -> None:
         app = FlowerViewApp(

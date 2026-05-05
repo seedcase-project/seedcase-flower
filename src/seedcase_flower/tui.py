@@ -6,6 +6,7 @@ from typing import Any
 from rich.text import Text
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, VerticalScroll
+from textual.timer import Timer
 from textual.widgets import (
     ContentSwitcher,
     DataTable,
@@ -19,6 +20,7 @@ from textual.widgets import (
 
 RICH_BLUE = "color(4) bold"
 RICH_YELLOW = "color(3) bold"
+HIGHLIGHT_DEBOUNCE_SECONDS = 0.1
 
 
 @dataclass(frozen=True)
@@ -399,6 +401,8 @@ class FlowerViewApp(App[None]):
         """Initialize the app with pages to display."""
         super().__init__(ansi_color=True)
         self.pages = pages
+        self._pending_page_index: int | None = None
+        self._highlight_timer: Timer | None = None
 
     def compose(self) -> ComposeResult:
         """Compose the page navigation and content widgets."""
@@ -422,10 +426,19 @@ class FlowerViewApp(App[None]):
         """Show the highlighted page in the content pane."""
         index = event.list_view.index
         if index is not None:
-            await self._show_page(index)
+            self._pending_page_index = index
+            if self._highlight_timer is not None:
+                self._highlight_timer.stop()
+            self._highlight_timer = self.set_timer(
+                HIGHLIGHT_DEBOUNCE_SECONDS,
+                self._show_pending_page,
+            )
 
     async def on_list_view_selected(self, event: ListView.Selected) -> None:
         """Show the selected page in the content pane."""
+        if self._highlight_timer is not None:
+            self._highlight_timer.stop()
+        self._pending_page_index = None
         await self._show_page(event.index)
 
     def action_toc_down(self) -> None:
@@ -435,6 +448,13 @@ class FlowerViewApp(App[None]):
     def action_toc_up(self) -> None:
         """Move up in the page navigation."""
         self.query_one("#toc", ListView).action_cursor_up()
+
+    async def _show_pending_page(self) -> None:
+        """Show the latest highlighted page after a short navigation debounce."""
+        if self._pending_page_index is not None:
+            await self._show_page(self._pending_page_index)
+            self._pending_page_index = None
+        self._highlight_timer = None
 
     async def _show_page(self, index: int) -> None:
         page = self.pages[index]
