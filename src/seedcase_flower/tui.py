@@ -664,13 +664,14 @@ class SearchableDataTable(DataTable[str]):
     def _refresh_sort_indicators(self) -> None:
         """Show the active sort column and direction in table headers."""
         for column_index, header in enumerate(self.headers):
-            label = header
+            label = Text(header)
             if column_index == self._sort_column_index:
-                label = f"{header} {'↓' if self._sort_reverse else '↑'}"
-            text = Text(label)
-            column = self.columns[ColumnKey(header)]
-            column.label = text
-            column.content_width = measure(self.app.console, text, 1)
+                label.append(" ")
+                label.append("↓" if self._sort_reverse else "↑", style=RICH_YELLOW)
+            column = self.columns[header]
+            column.label = label
+            label_width = len(label.plain)
+            column.content_width = max(column.content_width, label_width)
             if column.auto_width:
-                column.width = column.content_width
+                column.width = max(column.width, label_width)
             self.refresh_column(column_index)
