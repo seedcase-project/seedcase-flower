@@ -12,11 +12,13 @@ from textual.widgets import (
     DataTable,
     Footer,
     Header,
+    Input,
     Label,
     ListItem,
     ListView,
     Static,
 )
+from textual.widgets._data_table import ColumnKey, measure
 
 RICH_BLUE = "color(4) bold"
 RICH_YELLOW = "color(3) bold"
@@ -389,8 +391,20 @@ class FlowerViewApp(App[None]):
         text-style: italic;
         margin: 0 0 1 0;
     }
+
+    #table-search {
+        display: none;
+        height: 3;
+        background: #292E42;
+        color: ansi_yellow;
+        text-style: bold;
+        border: solid ansi_yellow;
+    }
     """
     BINDINGS = [
+        ("/", "search_table", "Search table"),
+        ("s", "sort_table", "Sort table"),
+        ("escape", "clear_search", "Clear search"),
         ("j", "toc_down", "Down"),
         ("k", "toc_up", "Up"),
         ("q", "quit", "Quit"),
@@ -416,6 +430,7 @@ class FlowerViewApp(App[None]):
             with ContentSwitcher(id="content-switcher", initial=initial_page.id):
                 for page in self.pages:
                     yield PageView(page.blocks, id=page.id, classes="content-page")
+        yield Input(placeholder="Search current table", id="table-search")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -449,6 +464,36 @@ class FlowerViewApp(App[None]):
         """Move up in the page navigation."""
         self.query_one("#toc", ListView).action_cursor_up()
 
+    def action_search_table(self) -> None:
+        """Focus the table search input."""
+        search = self.query_one("#table-search", Input)
+        search.display = True
+        search.focus()
+
+    def action_sort_table(self) -> None:
+        """Sort the current page table by the next column."""
+        if table := self._current_table():
+            table.sort_next_column()
+
+    def action_clear_search(self) -> None:
+        """Clear table filtering and hide the search input."""
+        search = self.query_one("#table-search", Input)
+        search.value = ""
+        search.display = False
+        if table := self._current_table():
+            table.filter_rows("")
+        self.query_one("#toc", ListView).focus()
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        """Filter the current page table while typing in the search input."""
+        if event.input.id == "table-search" and (table := self._current_table()):
+            table.filter_rows(event.value)
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        """Return focus to navigation after submitting table search."""
+        if event.input.id == "table-search":
+            self.query_one("#toc", ListView).focus()
+
     async def _show_pending_page(self) -> None:
         """Show the latest highlighted page after a short navigation debounce."""
         if self._pending_page_index is not None:
@@ -460,6 +505,18 @@ class FlowerViewApp(App[None]):
         page = self.pages[index]
         self.sub_title = page.label
         self.query_one("#content-switcher", ContentSwitcher).current = page.id
+        search = self.query_one("#table-search", Input)
+        if table := self._current_table():
+            table.filter_rows(search.value)
+
+    def _current_table(self) -> "SearchableDataTable | None":
+        """Return the first table on the currently visible page."""
+        switcher = self.query_one("#content-switcher", ContentSwitcher)
+        if not switcher.current:
+            return None
+        page = self.query_one(f"#{switcher.current}", PageView)
+        tables = page.query(SearchableDataTable)
+        return tables.first() if tables else None
 
 
 def run_textual_viewer(properties: dict[str, Any]) -> None:
@@ -484,14 +541,81 @@ class PageView(VerticalScroll):
                     text.stylize(style, start, end)
                 yield Static(text, classes=block.classes)
             else:
-                table = DataTable(
-                    show_row_labels=False,
-                    zebra_stripes=True,
-                    cursor_type="row",
-                    classes="field-table",
-                )
-                table.add_columns(*block.headers)
-                table.add_rows(block.rows)
+                table = SearchableDataTable(block)
                 yield table
                 if block.caption:
                     yield Label(block.caption, classes="table-caption")
+
+
+class SearchableDataTable(DataTable[str]):
+    """DataTable with simple current-page sorting and row filtering."""
+
+    def __init__(self, block: TableBlock) -> None:
+        """Initialize a table from prepared table data."""
+        super().__init__(
+            show_row_labels=False,
+            zebra_stripes=True,
+            cursor_type="row",
+            classes="field-table",
+        )
+        self.headers = block.headers
+        self.all_rows = block.rows
+        self._sort_column_index: int | None = None
+        self._sort_reverse = False
+
+    def on_mount(self) -> None:
+        """Populate the table once it has app context for measuring columns."""
+        for header in self.headers:
+            self.add_column(header, key=header)
+        self.filter_rows("")
+
+    def filter_rows(self, query: str) -> None:
+        """Show only rows that contain the query text."""
+        normalized_query = query.casefold()
+        rows = [
+            row
+            for row in self.all_rows
+            if not normalized_query
+            or normalized_query in " ".join(str(cell) for cell in row).casefold()
+        ]
+        self.clear()
+        self.add_rows(rows)
+        if self._sort_column_index is not None:
+            self._sort_by_column(self._sort_column_index)
+
+    def sort_next_column(self) -> None:
+        """Sort rows by columns, toggling direction before moving on."""
+        if not self.headers:
+            return
+        if self._sort_column_index is None:
+            self._sort_column_index = 0
+            self._sort_reverse = False
+        elif not self._sort_reverse:
+            self._sort_reverse = True
+        else:
+            self._sort_column_index = (self._sort_column_index + 1) % len(self.headers)
+            self._sort_reverse = False
+        self._sort_by_column(self._sort_column_index)
+
+    def _sort_by_column(self, column_index: int) -> None:
+        """Sort rows case-insensitively by one column."""
+        self._refresh_sort_indicators()
+        self.sort(
+            self.headers[column_index],
+            key=lambda value: str(value).casefold(),
+            reverse=self._sort_reverse,
+        )
+
+    def _refresh_sort_indicators(self) -> None:
+        """Show the active sort column and direction in table headers."""
+        for column_index, header in enumerate(self.headers):
+            label = header
+            if column_index == self._sort_column_index:
+                label = f"{header} {'↓' if self._sort_reverse else '↑'}"
+            text = Text(label)
+            column = self.columns[ColumnKey(header)]
+            column.label = text
+            column.content_width = measure(self.app.console, text, 1)
+            if column.auto_width:
+                column.width = column.content_width
+            self.refresh_column(column_index)

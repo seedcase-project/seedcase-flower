@@ -6,6 +6,7 @@ import inspect
 from seedcase_flower.tui import (
     FlowerViewApp,
     PageView,
+    SearchableDataTable,
     TableBlock,
     TextBlock,
     ViewPage,
@@ -16,6 +17,9 @@ from seedcase_flower.tui import (
 def test_flower_view_app_has_vim_navigation_bindings():
     assert ("j", "toc_down", "Down") in FlowerViewApp.BINDINGS
     assert ("k", "toc_up", "Up") in FlowerViewApp.BINDINGS
+    assert ("/", "search_table", "Search table") in FlowerViewApp.BINDINGS
+    assert ("s", "sort_table", "Sort table") in FlowerViewApp.BINDINGS
+    assert ("escape", "clear_search", "Clear search") in FlowerViewApp.BINDINGS
 
 
 def test_flower_view_app_pre_mounts_pages():
@@ -26,8 +30,12 @@ def test_flower_view_app_pre_mounts_pages():
 
 def test_flower_view_app_uses_native_datatables_for_tables():
     assert "DataTable" in inspect.getsource(PageView.compose)
+    assert "SearchableDataTable" in inspect.getsource(PageView.compose)
     assert "field-table" in FlowerViewApp.CSS
     assert "table-caption" in FlowerViewApp.CSS
+    assert "#table-search" in FlowerViewApp.CSS
+    assert "color: ansi_yellow" in FlowerViewApp.CSS
+    assert "border: solid ansi_yellow" in FlowerViewApp.CSS
 
 
 def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
@@ -293,5 +301,81 @@ def test_flower_view_app_does_not_update_page_on_switch():
             await app._show_page(1)
 
             assert app.query_one("#content-switcher").current == "page-2"
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_filters_current_page_table():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name", "Type"],
+                            rows=[
+                                ["species", "string"],
+                                ["plot_id", "integer"],
+                            ],
+                        )
+                    ],
+                )
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+
+            app.action_search_table()
+            await pilot.press("s", "p")
+
+            assert table.row_count == 1
+            assert table.get_row_at(0) == ["species", "string"]
+
+            app.action_clear_search()
+
+            assert table.row_count == 2
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_sorts_current_page_table():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name", "Type"],
+                            rows=[
+                                ["species", "string"],
+                                ["plot_id", "integer"],
+                            ],
+                        )
+                    ],
+                )
+            ]
+        )
+
+        async with app.run_test():
+            table = app.query_one(SearchableDataTable)
+
+            app.action_sort_table()
+
+            assert table.get_row_at(0) == ["plot_id", "integer"]
+            assert table.columns["Name"].label.plain == "Name ↑"
+
+            app.action_sort_table()
+            assert table.get_row_at(0) == ["species", "string"]
+            assert table.columns["Name"].label.plain == "Name ↓"
+
+            app.action_sort_table()
+            assert table.get_row_at(0) == ["plot_id", "integer"]
+            assert table.columns["Name"].label.plain == "Name"
+            assert table.columns["Type"].label.plain == "Type ↑"
 
     asyncio.run(run_test())
