@@ -17,6 +17,9 @@ from textual.widgets import (
     Static,
 )
 
+RICH_BLUE = "color(4) bold"
+RICH_YELLOW = "color(3) bold"
+
 
 @dataclass(frozen=True)
 class ViewPage:
@@ -34,6 +37,7 @@ class TextBlock:
     content: str
     style: str = ""
     classes: str = "body-text"
+    spans: tuple[tuple[int, int, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -72,23 +76,18 @@ def _package_blocks(properties: dict[str, Any]) -> list[ViewBlock]:
     blocks: list[ViewBlock] = []
     title = _package_title(properties)
     if title:
-        blocks.append(TextBlock(title, style="ansi_blue bold", classes="title"))
+        blocks.append(TextBlock(title, style=RICH_BLUE, classes="title"))
 
-    if licenses := properties.get("licenses"):
-        blocks.append(TextBlock(_licenses_text(licenses)))
-    if version := properties.get("version"):
-        blocks.append(TextBlock(f"Version: {version}"))
+    metadata = _package_metadata_text(properties)
+    if metadata:
+        blocks.append(metadata)
     if description := properties.get("description"):
         blocks.append(TextBlock(description))
     if contributors := properties.get("contributors"):
-        blocks.append(
-            TextBlock("Contributors", style="ansi_yellow bold", classes="heading")
-        )
+        blocks.append(TextBlock("Contributors", style=RICH_YELLOW, classes="heading"))
         blocks.append(TextBlock("\n".join(_contributor_text(contributors))))
     if resources := properties.get("resources"):
-        blocks.append(
-            TextBlock("Resources", style="ansi_yellow bold", classes="heading")
-        )
+        blocks.append(TextBlock("Resources", style=RICH_YELLOW, classes="heading"))
         blocks.append(
             TableBlock(
                 headers=["Name", "Title", "Description"],
@@ -115,7 +114,29 @@ def _package_title(properties: dict[str, Any]) -> str:
 
 def _licenses_text(licenses: list[dict[str, Any]]) -> str:
     labels = [license.get("title") or license.get("name") for license in licenses]
-    return "Licenses: " + ", ".join(label for label in labels if label)
+    return ", ".join(label for label in labels if label)
+
+
+def _package_metadata_text(properties: dict[str, Any]) -> TextBlock | None:
+    lines = []
+    spans = []
+    if licenses := properties.get("licenses"):
+        lines.append(("Licenses: ", _licenses_text(licenses)))
+    if version := properties.get("version"):
+        lines.append(("Version: ", version))
+
+    if not lines:
+        return None
+
+    content_lines = []
+    offset = 0
+    for label, value in lines:
+        line = f"{label}{value}"
+        start = offset + len(label)
+        spans.append((start, start + len(str(value)), RICH_YELLOW))
+        content_lines.append(line)
+        offset += len(line) + 1
+    return TextBlock("\n".join(content_lines), spans=tuple(spans))
 
 
 def _contributor_text(contributors: list[dict[str, Any]]) -> list[str]:
@@ -138,29 +159,22 @@ def _single_contributor_text(contributor: dict[str, Any]) -> str:
         or ""
     )
     roles = ", ".join(contributor.get("roles", []))
-    return f"- {label}{': ' + roles if roles else ''}" if label else ""
+    return f"• {label}{': ' + roles if roles else ''}" if label else ""
 
 
 def _resource_blocks(resource: dict[str, Any]) -> list[ViewBlock]:
     blocks: list[ViewBlock] = []
-    title = resource.get("title") or resource.get("name") or "Resource"
-    blocks.append(TextBlock(title, style="ansi_blue bold", classes="title"))
+    resource_name = resource.get("name", "")
+    if (title := resource.get("title")) and _metadata_label(title) != resource_name:
+        blocks.append(TextBlock(title, style=RICH_BLUE, classes="title"))
 
-    if name := resource.get("name"):
-        blocks.append(TextBlock(name, style="ansi_yellow bold", classes="subtitle"))
-    if description := resource.get("description"):
+    if description := _resource_description(resource):
         blocks.append(TextBlock(description))
-    if path := resource.get("path"):
-        blocks.append(TextBlock(f"Path: {path}"))
 
     schema = resource.get("schema") or {}
-    if primary_key := schema.get("primaryKey"):
-        blocks.append(TextBlock(f"Primary key: {_as_list_text(primary_key)}"))
-    if foreign_keys := schema.get("foreignKeys"):
-        blocks.append(
-            TextBlock("Foreign keys", style="ansi_yellow bold", classes="heading")
-        )
-        blocks.append(TextBlock("\n".join(_foreign_key_text(foreign_keys, resource))))
+    if bullets := _resource_bullets(resource, schema):
+        blocks.append(_compact_bullets(bullets))
+
     if fields := schema.get("fields"):
         blocks.append(
             TableBlock(
@@ -180,6 +194,62 @@ def _resource_blocks(resource: dict[str, Any]) -> list[ViewBlock]:
     return blocks
 
 
+def _resource_description(resource: dict[str, Any]) -> str:
+    description = resource.get("description", "")
+    resource_name = resource.get("name", "")
+    title = resource.get("title", "")
+    labels = {_metadata_label(resource_name), _metadata_label(title)}
+    return "" if _metadata_label(description) in labels else description
+
+
+def _metadata_label(value: str) -> str:
+    return value.strip().strip("`")
+
+
+def _resource_bullets(
+    resource: dict[str, Any], schema: dict[str, Any]
+) -> list[TextBlock]:
+    blocks = []
+    if path := resource.get("path"):
+        blocks.append(_label_value_line("• Path: ", path))
+    if primary_key := schema.get("primaryKey"):
+        blocks.append(_label_value_line("• Primary key: ", _as_list_text(primary_key)))
+    if foreign_keys := schema.get("foreignKeys"):
+        blocks.append(_label_value_line("• Foreign keys:", ""))
+        blocks.extend(
+            _label_value_line("  ◦ ", foreign_key)
+            for foreign_key in _foreign_key_text(foreign_keys, resource)
+        )
+    return blocks
+
+
+def _label_value_line(label: str, value: str) -> TextBlock:
+    content = f"{label}{value}"
+    if not value:
+        return TextBlock(content)
+    return TextBlock(
+        content,
+        spans=((len(label), len(content), RICH_YELLOW),),
+    )
+
+
+def _compact_bullets(bullets: list[TextBlock]) -> TextBlock:
+    content_lines = []
+    spans = []
+    offset = 0
+    for bullet in bullets:
+        content_lines.append(bullet.content)
+        spans.extend(
+            (offset + start, offset + end, style) for start, end, style in bullet.spans
+        )
+        offset += len(bullet.content) + 1
+    return TextBlock(
+        "\n".join(content_lines),
+        classes="compact-list",
+        spans=tuple(spans),
+    )
+
+
 def _as_list_text(value: str | list[str]) -> str:
     return value if isinstance(value, str) else ", ".join(value)
 
@@ -192,7 +262,7 @@ def _foreign_key_text(
         reference = foreign_key.get("reference", {})
         reference_resource = reference.get("resource") or resource.get("name", "")
         lines.append(
-            f"- {_as_list_text(foreign_key.get('fields', []))} -> "
+            f"{_as_list_text(foreign_key.get('fields', []))} -> "
             f"{reference_resource}.{_as_list_text(reference.get('fields', []))}"
         )
     return lines
@@ -272,8 +342,15 @@ class FlowerViewApp(App[None]):
         color: ansi_default;
     }
 
+    .compact-list {
+        margin: 0 0 1 0;
+        color: ansi_default;
+    }
+
     .title {
-        margin: 0;
+        margin: 0 0 1 0;
+        color: ansi_blue;
+        text-style: bold;
     }
 
     .subtitle {
@@ -282,6 +359,8 @@ class FlowerViewApp(App[None]):
 
     .heading {
         margin: 1 0 1 0;
+        color: ansi_yellow;
+        text-style: bold;
     }
 
     .field-table {
@@ -380,9 +459,10 @@ class PageView(VerticalScroll):
         """Compose text fragments and DataTables for the page."""
         for block in self.blocks:
             if isinstance(block, TextBlock):
-                yield Static(
-                    Text(block.content, style=block.style), classes=block.classes
-                )
+                text = Text(block.content, style=block.style)
+                for start, end, style in block.spans:
+                    text.stylize(style, start, end)
+                yield Static(text, classes=block.classes)
             else:
                 table = DataTable(
                     show_row_labels=False,

@@ -40,6 +40,9 @@ def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
     assert "color: ansi_default" in FlowerViewApp.CSS
     assert "ListItem" in FlowerViewApp.CSS
     assert "width: 100%" in FlowerViewApp.CSS
+    assert ".title" in FlowerViewApp.CSS
+    assert ".compact-list" in FlowerViewApp.CSS
+    assert "margin: 0 0 1 0" in FlowerViewApp.CSS
 
 
 def test_prepare_view_pages_builds_package_page_from_properties():
@@ -64,15 +67,15 @@ def test_prepare_view_pages_builds_package_page_from_properties():
     assert pages[0].label == "Package"
     assert pages[0].id == "page-1"
     assert pages[0].blocks == [
+        TextBlock("test-package: Test Package", style="color(4) bold", classes="title"),
         TextBlock(
-            "test-package: Test Package", style="ansi_blue bold", classes="title"
+            "Licenses: MIT\nVersion: 1.0.0",
+            spans=((10, 13, "color(3) bold"), (23, 28, "color(3) bold")),
         ),
-        TextBlock("Licenses: MIT"),
-        TextBlock("Version: 1.0.0"),
         TextBlock("A test package."),
-        TextBlock("Contributors", style="ansi_yellow bold", classes="heading"),
-        TextBlock("- Ada: author"),
-        TextBlock("Resources", style="ansi_yellow bold", classes="heading"),
+        TextBlock("Contributors", style="color(3) bold", classes="heading"),
+        TextBlock("• Ada: author"),
+        TextBlock("Resources", style="color(3) bold", classes="heading"),
         TableBlock(
             headers=["Name", "Title", "Description"],
             rows=[["species_catalog", "Species Catalog", "Species metadata."]],
@@ -115,11 +118,13 @@ def test_prepare_view_pages_builds_resource_page_from_properties():
     assert pages[1].label == "species_catalog"
     assert pages[1].id == "page-2"
     assert pages[1].blocks == [
-        TextBlock("Species Catalog", style="ansi_blue bold", classes="title"),
-        TextBlock("species_catalog", style="ansi_yellow bold", classes="subtitle"),
+        TextBlock("Species Catalog", style="color(4) bold", classes="title"),
         TextBlock("Species metadata."),
-        TextBlock("Path: data/species.csv"),
-        TextBlock("Primary key: id"),
+        TextBlock(
+            "• Path: data/species.csv\n• Primary key: id",
+            classes="compact-list",
+            spans=((8, 24, "color(3) bold"), (40, 42, "color(3) bold")),
+        ),
         TableBlock(
             headers=["Name", "Title", "Type", "Description"],
             rows=[
@@ -155,10 +160,32 @@ def test_prepare_view_pages_handles_foreign_keys():
     )
 
     assert (
-        TextBlock("Foreign keys", style="ansi_yellow bold", classes="heading")
+        TextBlock(
+            "• Foreign keys:\n  ◦ species_id -> species.id",
+            classes="compact-list",
+            spans=((20, 44, "color(3) bold"),),
+        )
         in pages[1].blocks
     )
-    assert TextBlock("- species_id -> species.id") in pages[1].blocks
+
+
+def test_prepare_view_pages_omits_resource_name_from_main_content():
+    pages = prepare_view_pages(
+        {
+            "name": "test-package",
+            "resources": [
+                {
+                    "name": "species_catalog",
+                    "title": "species_catalog",
+                    "description": "`species_catalog`",
+                    "schema": {"fields": []},
+                }
+            ],
+        }
+    )
+
+    assert pages[1].label == "species_catalog"
+    assert pages[1].blocks == []
 
 
 def test_flower_view_app_switches_between_pre_mounted_pages():
