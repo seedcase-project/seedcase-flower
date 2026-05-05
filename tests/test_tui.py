@@ -2,14 +2,12 @@
 
 import asyncio
 import inspect
-from pathlib import Path
 
-from seedcase_flower.build_sections import BuiltSection
 from seedcase_flower.tui import (
     FlowerViewApp,
-    MarkdownBlock,
     PageView,
     TableBlock,
+    TextBlock,
     ViewPage,
     prepare_view_pages,
 )
@@ -20,21 +18,16 @@ def test_flower_view_app_has_vim_navigation_bindings():
     assert ("k", "toc_up", "Up") in FlowerViewApp.BINDINGS
 
 
-def test_flower_view_app_pre_mounts_markdown_pages():
+def test_flower_view_app_pre_mounts_pages():
     assert "ContentSwitcher" in inspect.getsource(FlowerViewApp.compose)
     assert "#content-switcher" in FlowerViewApp.CSS
     assert ".content-page" in FlowerViewApp.CSS
 
 
-def test_flower_view_app_styles_markdown_headings_like_terminal_output():
-    assert "MarkdownH1" in FlowerViewApp.CSS
-    assert "content-align: left middle" in FlowerViewApp.CSS
-    assert "color: ansi_blue" in FlowerViewApp.CSS
-    assert "MarkdownH2" in FlowerViewApp.CSS
-    assert "color: ansi_yellow" in FlowerViewApp.CSS
-    assert "MarkdownHeader" in FlowerViewApp.CSS
-    assert "margin: 1 0 0 0" in FlowerViewApp.CSS
-    assert "margin: 0 0 1 0" in FlowerViewApp.CSS
+def test_flower_view_app_uses_native_datatables_for_tables():
+    assert "DataTable" in inspect.getsource(PageView.compose)
+    assert "field-table" in FlowerViewApp.CSS
+    assert "table-caption" in FlowerViewApp.CSS
 
 
 def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
@@ -49,151 +42,123 @@ def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
     assert "width: 100%" in FlowerViewApp.CSS
 
 
-def test_flower_view_app_maps_markdown_colors_to_ansi_terminal_styles():
-    assert "background: ansi_default" in FlowerViewApp.CSS
-    assert "MarkdownBlock > .code_inline" in FlowerViewApp.CSS
-    assert "color: ansi_yellow" in FlowerViewApp.CSS
-    assert "MarkdownFence" in FlowerViewApp.CSS
-    assert "color: ansi_cyan" in FlowerViewApp.CSS
-    assert "background: ansi_black" in FlowerViewApp.CSS
-    assert "MarkdownBlockQuote" in FlowerViewApp.CSS
-    assert "border-left: outer ansi_magenta" in FlowerViewApp.CSS
-    assert "MarkdownBullet" in FlowerViewApp.CSS
-    assert "MarkdownTableContent" in FlowerViewApp.CSS
-    assert "keyline: thin ansi_white" in FlowerViewApp.CSS
-    assert "MarkdownTableContent > .header" in FlowerViewApp.CSS
-
-
-def test_flower_view_app_uses_native_datatables_for_tables():
-    assert "DataTable" in inspect.getsource(PageView.compose)
-    assert "field-table" in FlowerViewApp.CSS
-    assert "table-caption" in FlowerViewApp.CSS
-
-
-def test_prepare_view_pages_uses_package_label_for_index():
+def test_prepare_view_pages_builds_package_page_from_properties():
     pages = prepare_view_pages(
-        [BuiltSection(content="# Test Package", output_path=Path("index.qmd"))]
+        {
+            "name": "test-package",
+            "title": "Test Package",
+            "version": "1.0.0",
+            "description": "A test package.",
+            "licenses": [{"name": "MIT"}],
+            "contributors": [{"title": "Ada", "roles": ["author"]}],
+            "resources": [
+                {
+                    "name": "species_catalog",
+                    "title": "Species Catalog",
+                    "description": "Species metadata.",
+                }
+            ],
+        }
     )
 
     assert pages[0].label == "Package"
-    assert pages[0].content == "# Test Package"
     assert pages[0].id == "page-1"
-    assert pages[0].blocks == [MarkdownBlock("# Test Package")]
-
-
-def test_prepare_view_pages_uses_resource_front_matter_for_label_and_content():
-    pages = prepare_view_pages(
-        [
-            BuiltSection(
-                content=(
-                    "---\n"
-                    'title: "Species Catalog"\n'
-                    'subtitle: "`species_catalog`"\n'
-                    'description: "Resource description"\n'
-                    "---\n\n"
-                    "- Path: `data/species.csv`"
-                ),
-                output_path=Path("resources/species_catalog.qmd"),
-            )
-        ]
-    )
-
-    assert pages[0].label == "species_catalog"
-    assert pages[0].id == "page-1"
-    assert "title:" not in pages[0].content
-    assert "description:" not in pages[0].content
-    assert "# Species Catalog" in pages[0].content
-    assert "## `species_catalog`" in pages[0].content
-    assert "- Path: `data/species.csv`" in pages[0].content
     assert pages[0].blocks == [
-        MarkdownBlock(
-            "# Species Catalog\n\n## `species_catalog`\n\n- Path: `data/species.csv`"
-        )
-    ]
-
-
-def test_prepare_view_pages_extracts_markdown_tables_into_table_blocks():
-    pages = prepare_view_pages(
-        [
-            BuiltSection(
-                content=(
-                    "# Resource\n\n"
-                    "| Name | Type |\n"
-                    "|------|------|\n"
-                    "| `id` | integer |\n"
-                    "| `name` | string |\n\n"
-                    ": Fields in the resource."
-                ),
-                output_path=Path("resources/data.qmd"),
-            )
-        ]
-    )
-
-    assert pages[0].blocks == [
-        MarkdownBlock("# Resource"),
+        TextBlock(
+            "test-package: Test Package", style="ansi_blue bold", classes="title"
+        ),
+        TextBlock("Licenses: MIT"),
+        TextBlock("Version: 1.0.0"),
+        TextBlock("A test package."),
+        TextBlock("Contributors", style="ansi_yellow bold", classes="heading"),
+        TextBlock("- Ada: author"),
+        TextBlock("Resources", style="ansi_yellow bold", classes="heading"),
         TableBlock(
-            headers=["Name", "Type"],
-            rows=[["`id`", "integer"], ["`name`", "string"]],
-            caption="Fields in the resource.",
+            headers=["Name", "Title", "Description"],
+            rows=[["species_catalog", "Species Catalog", "Species metadata."]],
         ),
     ]
 
 
-def test_prepare_view_pages_keeps_extra_pipes_in_final_table_cell():
+def test_prepare_view_pages_builds_resource_page_from_properties():
     pages = prepare_view_pages(
-        [
-            BuiltSection(
-                content=(
-                    "| Name | Type | Description |\n"
-                    "|------|------|-------------|\n"
-                    "| `vas` | number | Left anchor | right anchor |\n"
-                ),
-                output_path=Path("resources/data.qmd"),
-            )
-        ]
+        {
+            "name": "test-package",
+            "resources": [
+                {
+                    "name": "species_catalog",
+                    "title": "Species Catalog",
+                    "description": "Species metadata.",
+                    "path": "data/species.csv",
+                    "schema": {
+                        "primaryKey": "id",
+                        "fields": [
+                            {
+                                "name": "id",
+                                "title": "Identifier",
+                                "type": "integer",
+                                "description": "Stable identifier.",
+                            },
+                            {
+                                "name": "species",
+                                "title": "Species",
+                                "type": "string",
+                                "description": "Scientific name.",
+                            },
+                        ],
+                    },
+                }
+            ],
+        }
     )
 
-    assert pages[0].blocks == [
+    assert pages[1].label == "species_catalog"
+    assert pages[1].id == "page-2"
+    assert pages[1].blocks == [
+        TextBlock("Species Catalog", style="ansi_blue bold", classes="title"),
+        TextBlock("species_catalog", style="ansi_yellow bold", classes="subtitle"),
+        TextBlock("Species metadata."),
+        TextBlock("Path: data/species.csv"),
+        TextBlock("Primary key: id"),
         TableBlock(
-            headers=["Name", "Type", "Description"],
-            rows=[["`vas`", "number", "Left anchor | right anchor"]],
-        )
+            headers=["Name", "Title", "Type", "Description"],
+            rows=[
+                ["id", "Identifier", "integer", "Stable identifier."],
+                ["species", "Species", "string", "Scientific name."],
+            ],
+            caption="Fields in the species_catalog resource.",
+        ),
     ]
 
 
-def test_prepare_view_pages_pads_short_table_rows():
+def test_prepare_view_pages_handles_foreign_keys():
     pages = prepare_view_pages(
-        [
-            BuiltSection(
-                content=(
-                    "| Name | Type | Description |\n"
-                    "|------|------|-------------|\n"
-                    "| `id` | integer |\n"
-                ),
-                output_path=Path("resources/data.qmd"),
-            )
-        ]
+        {
+            "name": "test-package",
+            "resources": [
+                {
+                    "name": "plots",
+                    "schema": {
+                        "foreignKeys": [
+                            {
+                                "fields": ["species_id"],
+                                "reference": {
+                                    "resource": "species",
+                                    "fields": ["id"],
+                                },
+                            }
+                        ]
+                    },
+                }
+            ],
+        }
     )
 
-    assert pages[0].blocks == [
-        TableBlock(
-            headers=["Name", "Type", "Description"],
-            rows=[["`id`", "integer", ""]],
-        )
-    ]
-
-
-def test_prepare_view_pages_falls_back_to_output_stem():
-    pages = prepare_view_pages(
-        [
-            BuiltSection(
-                content="Resource details",
-                output_path=Path("resources/growth-records.qmd"),
-            )
-        ]
+    assert (
+        TextBlock("Foreign keys", style="ansi_yellow bold", classes="heading")
+        in pages[1].blocks
     )
-
-    assert pages[0].label == "Growth Records"
+    assert TextBlock("- species_id -> species.id") in pages[1].blocks
 
 
 def test_flower_view_app_switches_between_pre_mounted_pages():
@@ -202,15 +167,13 @@ def test_flower_view_app_switches_between_pre_mounted_pages():
             [
                 ViewPage(
                     label="Package",
-                    content="# Package",
                     id="page-1",
-                    blocks=[MarkdownBlock("# Package")],
+                    blocks=[TextBlock("Package")],
                 ),
                 ViewPage(
                     label="species_catalog",
-                    content="# Species",
                     id="page-2",
-                    blocks=[MarkdownBlock("# Species")],
+                    blocks=[TextBlock("Species")],
                 ),
             ]
         )
@@ -224,28 +187,26 @@ def test_flower_view_app_switches_between_pre_mounted_pages():
     asyncio.run(run_test())
 
 
-def test_flower_view_app_does_not_update_markdown_on_page_switch():
+def test_flower_view_app_does_not_update_page_on_switch():
     async def run_test() -> None:
         app = FlowerViewApp(
             [
                 ViewPage(
                     label="Package",
-                    content="# Package",
                     id="page-1",
-                    blocks=[MarkdownBlock("# Package")],
+                    blocks=[TextBlock("Package")],
                 ),
                 ViewPage(
                     label="species_catalog",
-                    content="# Species",
                     id="page-2",
-                    blocks=[MarkdownBlock("# Species")],
+                    blocks=[TextBlock("Species")],
                 ),
             ]
         )
 
         async with app.run_test():
-            markdown = app.query_one("#page-2")
-            markdown.update = None  # type: ignore[method-assign]
+            page = app.query_one("#page-2")
+            page.remove = None  # type: ignore[method-assign]
             await app._show_page(1)
 
             assert app.query_one("#content-switcher").current == "page-2"

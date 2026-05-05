@@ -1,8 +1,9 @@
-"""Textual terminal app for browsing built Data Package sections."""
+"""Textual terminal app for browsing Data Package metadata."""
 
 from dataclasses import dataclass
-from pathlib import Path
+from typing import Any
 
+from rich.text import Text
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import (
@@ -13,192 +14,188 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
-    Markdown,
+    Static,
 )
-
-from seedcase_flower.build_sections import BuiltSection
 
 
 @dataclass(frozen=True)
 class ViewPage:
-    """A built section prepared for navigation in the Textual viewer."""
+    """A Data Package page prepared for navigation in the Textual viewer."""
 
     label: str
-    content: str
     id: str
     blocks: list["ViewBlock"]
 
 
 @dataclass(frozen=True)
-class MarkdownBlock:
-    """A Markdown fragment in a Textual viewer page."""
+class TextBlock:
+    """A text fragment in a Textual viewer page."""
 
     content: str
+    style: str = ""
+    classes: str = "body-text"
 
 
 @dataclass(frozen=True)
 class TableBlock:
-    """A Markdown table prepared for Textual's DataTable."""
+    """Structured table data prepared for Textual's DataTable."""
 
     headers: list[str]
     rows: list[list[str]]
     caption: str = ""
 
 
-type ViewBlock = MarkdownBlock | TableBlock
+type ViewBlock = TextBlock | TableBlock
 
 
-def prepare_view_pages(built_sections: list[BuiltSection]) -> list[ViewPage]:
-    """Prepare built sections for display in the Textual viewer."""
-    pages = []
-    for index, section in enumerate(built_sections, start=1):
-        content = _section_content(section.content)
-        pages.append(
-            ViewPage(
-                label=_section_label(section, index),
-                content=content,
-                id=f"page-{index}",
-                blocks=_extract_view_blocks(content),
-            )
+def prepare_view_pages(properties: dict[str, Any]) -> list[ViewPage]:
+    """Prepare Data Package properties for display in the Textual viewer."""
+    pages = [
+        ViewPage(
+            label="Package",
+            id="page-1",
+            blocks=_package_blocks(properties),
         )
+    ]
+    pages.extend(
+        ViewPage(
+            label=resource.get("name", f"Resource {index}"),
+            id=f"page-{index + 1}",
+            blocks=_resource_blocks(resource),
+        )
+        for index, resource in enumerate(properties.get("resources", []), start=1)
+    )
     return pages
 
 
-def _extract_view_blocks(content: str) -> list[ViewBlock]:
-    lines = content.splitlines()
+def _package_blocks(properties: dict[str, Any]) -> list[ViewBlock]:
     blocks: list[ViewBlock] = []
-    markdown_lines: list[str] = []
-    index = 0
+    title = _package_title(properties)
+    if title:
+        blocks.append(TextBlock(title, style="ansi_blue bold", classes="title"))
 
-    while index < len(lines):
-        if _starts_markdown_table(lines, index):
-            _append_markdown_block(blocks, markdown_lines)
-            markdown_lines = []
-            table, index = _extract_table_block(lines, index)
-            blocks.append(table)
-            continue
-
-        markdown_lines.append(lines[index])
-        index += 1
-
-    _append_markdown_block(blocks, markdown_lines)
+    if licenses := properties.get("licenses"):
+        blocks.append(TextBlock(_licenses_text(licenses)))
+    if version := properties.get("version"):
+        blocks.append(TextBlock(f"Version: {version}"))
+    if description := properties.get("description"):
+        blocks.append(TextBlock(description))
+    if contributors := properties.get("contributors"):
+        blocks.append(
+            TextBlock("Contributors", style="ansi_yellow bold", classes="heading")
+        )
+        blocks.append(TextBlock("\n".join(_contributor_text(contributors))))
+    if resources := properties.get("resources"):
+        blocks.append(
+            TextBlock("Resources", style="ansi_yellow bold", classes="heading")
+        )
+        blocks.append(
+            TableBlock(
+                headers=["Name", "Title", "Description"],
+                rows=[
+                    [
+                        resource.get("name", ""),
+                        resource.get("title", ""),
+                        resource.get("description", ""),
+                    ]
+                    for resource in resources
+                ],
+            )
+        )
     return blocks
 
 
-def _append_markdown_block(blocks: list[ViewBlock], markdown_lines: list[str]) -> None:
-    markdown = "\n".join(markdown_lines).strip()
-    if markdown:
-        blocks.append(MarkdownBlock(markdown))
+def _package_title(properties: dict[str, Any]) -> str:
+    name = properties.get("name")
+    title = properties.get("title")
+    if name and title:
+        return f"{name}: {title}"
+    return name or title or ""
 
 
-def _starts_markdown_table(lines: list[str], index: int) -> bool:
-    return (
-        index + 1 < len(lines)
-        and _is_table_row(lines[index])
-        and _is_table_separator(lines[index + 1])
+def _licenses_text(licenses: list[dict[str, Any]]) -> str:
+    labels = [license.get("title") or license.get("name") for license in licenses]
+    return "Licenses: " + ", ".join(label for label in labels if label)
+
+
+def _contributor_text(contributors: list[dict[str, Any]]) -> list[str]:
+    return [
+        text
+        for contributor in contributors
+        if (text := _single_contributor_text(contributor))
+    ]
+
+
+def _single_contributor_text(contributor: dict[str, Any]) -> str:
+    full_name = (
+        f"{contributor.get('firstName', '')} {contributor.get('lastName', '')}"
+    ).strip()
+    label = (
+        contributor.get("title")
+        or full_name
+        or contributor.get("organization")
+        or contributor.get("email")
+        or ""
     )
+    roles = ", ".join(contributor.get("roles", []))
+    return f"- {label}{': ' + roles if roles else ''}" if label else ""
 
 
-def _extract_table_block(lines: list[str], index: int) -> tuple[TableBlock, int]:
-    header = _table_cells(lines[index])
-    index += 2
-    rows = []
-    while index < len(lines) and _is_table_row(lines[index]):
-        rows.append(_normalize_table_row(_table_cells(lines[index]), len(header)))
-        index += 1
+def _resource_blocks(resource: dict[str, Any]) -> list[ViewBlock]:
+    blocks: list[ViewBlock] = []
+    title = resource.get("title") or resource.get("name") or "Resource"
+    blocks.append(TextBlock(title, style="ansi_blue bold", classes="title"))
 
-    caption = ""
-    if index + 1 < len(lines) and not lines[index].strip():
-        if lines[index + 1].startswith(":"):
-            caption = lines[index + 1].removeprefix(":").strip()
-            index += 2
-    elif index < len(lines) and lines[index].startswith(":"):
-        caption = lines[index].removeprefix(":").strip()
-        index += 1
+    if name := resource.get("name"):
+        blocks.append(TextBlock(name, style="ansi_yellow bold", classes="subtitle"))
+    if description := resource.get("description"):
+        blocks.append(TextBlock(description))
+    if path := resource.get("path"):
+        blocks.append(TextBlock(f"Path: {path}"))
 
-    return TableBlock(headers=header, rows=rows, caption=caption), index
-
-
-def _normalize_table_row(row: list[str], width: int) -> list[str]:
-    if len(row) == width:
-        return row
-    if len(row) < width:
-        return row + [""] * (width - len(row))
-    return [*row[: width - 1], " | ".join(row[width - 1 :])]
-
-
-def _is_table_row(line: str) -> bool:
-    return line.strip().startswith("|") and line.strip().endswith("|")
-
-
-def _is_table_separator(line: str) -> bool:
-    if not _is_table_row(line):
-        return False
-    cells = _table_cells(line)
-    return bool(cells) and all(
-        cell and all(character in "-: " for character in cell) for cell in cells
-    )
+    schema = resource.get("schema") or {}
+    if primary_key := schema.get("primaryKey"):
+        blocks.append(TextBlock(f"Primary key: {_as_list_text(primary_key)}"))
+    if foreign_keys := schema.get("foreignKeys"):
+        blocks.append(
+            TextBlock("Foreign keys", style="ansi_yellow bold", classes="heading")
+        )
+        blocks.append(TextBlock("\n".join(_foreign_key_text(foreign_keys, resource))))
+    if fields := schema.get("fields"):
+        blocks.append(
+            TableBlock(
+                headers=["Name", "Title", "Type", "Description"],
+                rows=[
+                    [
+                        field.get("name", ""),
+                        field.get("title", ""),
+                        field.get("type", "any"),
+                        field.get("description", ""),
+                    ]
+                    for field in fields
+                ],
+                caption=f"Fields in the {resource.get('name', 'resource')} resource.",
+            )
+        )
+    return blocks
 
 
-def _table_cells(line: str) -> list[str]:
-    return [cell.strip() for cell in line.strip().strip("|").split("|")]
+def _as_list_text(value: str | list[str]) -> str:
+    return value if isinstance(value, str) else ", ".join(value)
 
 
-def _section_label(section: BuiltSection, index: int) -> str:
-    front_matter, _ = _split_front_matter(section.content)
-    title = _front_matter_value(front_matter, "title")
-    subtitle = _front_matter_value(front_matter, "subtitle").strip("`")
-    if subtitle:
-        return subtitle
-    if title:
-        return title
-    if section.output_path:
-        return _output_path_label(section.output_path)
-    return f"Section {index}"
-
-
-def _output_path_label(output_path: Path) -> str:
-    if output_path.name == "index.qmd":
-        return "Package"
-    return output_path.stem.replace("_", " ").replace("-", " ").title()
-
-
-def _section_content(content: str) -> str:
-    front_matter, body = _split_front_matter(content)
-    if not front_matter:
-        return body
-
-    headings = []
-    title = _front_matter_value(front_matter, "title")
-    subtitle = _front_matter_value(front_matter, "subtitle")
-    if title:
-        headings.append(f"# {title}")
-    if subtitle:
-        headings.append(f"## {subtitle}")
-
-    if not headings:
-        return body.lstrip()
-    return "\n\n".join([*headings, body.lstrip()])
-
-
-def _split_front_matter(content: str) -> tuple[list[str], str]:
-    lines = content.splitlines()
-    if not lines or lines[0].strip() != "---":
-        return [], content
-
-    for index, line in enumerate(lines[1:], start=1):
-        if line.strip() == "---":
-            return lines[1:index], "\n".join(lines[index + 1 :])
-
-    return [], content
-
-
-def _front_matter_value(front_matter: list[str], key: str) -> str:
-    prefix = f"{key}:"
-    for line in front_matter:
-        if line.startswith(prefix):
-            return line.removeprefix(prefix).strip().strip("\"'")
-    return ""
+def _foreign_key_text(
+    foreign_keys: list[dict[str, Any]], resource: dict[str, Any]
+) -> list[str]:
+    lines = []
+    for foreign_key in foreign_keys:
+        reference = foreign_key.get("reference", {})
+        reference_resource = reference.get("resource") or resource.get("name", "")
+        lines.append(
+            f"- {_as_list_text(foreign_key.get('fields', []))} -> "
+            f"{reference_resource}.{_as_list_text(reference.get('fields', []))}"
+        )
+    return lines
 
 
 class FlowerViewApp(App[None]):
@@ -264,95 +261,27 @@ class FlowerViewApp(App[None]):
         color: ansi_default;
     }
 
-    Markdown {
-        background: ansi_default;
-        color: ansi_default;
-    }
-
-    MarkdownBlock > .code_inline {
-        color: ansi_yellow;
-        background: ansi_default;
-        text-style: bold;
-    }
-
-    MarkdownBlock > .strong {
-        text-style: bold;
-    }
-
-    MarkdownBlock > .em {
-        text-style: italic;
-    }
-
-    MarkdownBlockQuote {
-        background: ansi_default;
-        border-left: outer ansi_magenta;
-        color: ansi_magenta;
-    }
-
-    MarkdownBullet {
-        color: ansi_cyan;
-    }
-
-    MarkdownFence {
-        color: ansi_cyan;
-        background: ansi_black;
-    }
-
-    MarkdownHeader {
-        margin: 1 0 0 0;
-    }
-
-    MarkdownH1 {
-        content-align: left middle;
-        color: ansi_blue;
-        text-style: bold;
-        margin: 0;
-    }
-
-    MarkdownH2 {
-        color: ansi_yellow;
-        text-style: bold;
-        margin: 0 0 1 0;
-    }
-
-    MarkdownH3 {
-        color: ansi_blue;
-    }
-
-    MarkdownH4 {
-        color: ansi_magenta;
-        text-style: italic;
-    }
-
-    MarkdownH5 {
-        text-style: italic;
-    }
-
-    MarkdownH6 {
-        text-opacity: 60%;
-    }
-
-    MarkdownHorizontalRule {
-        border-bottom: solid ansi_white;
-    }
-
-    MarkdownTableContent {
-        keyline: thin ansi_white;
-    }
-
-    MarkdownTableContent > .header {
-        color: ansi_blue;
-    }
-
-    MarkdownTableContent > .markdown-table--header {
-        color: ansi_blue;
-        text-style: bold;
-    }
-
     PageView {
         width: 1fr;
         height: 100%;
         background: ansi_default;
+    }
+
+    .body-text {
+        margin: 0 0 1 0;
+        color: ansi_default;
+    }
+
+    .title {
+        margin: 0;
+    }
+
+    .subtitle {
+        margin: 0 0 1 0;
+    }
+
+    .heading {
+        margin: 1 0 1 0;
     }
 
     .field-table {
@@ -434,13 +363,13 @@ class FlowerViewApp(App[None]):
         self.query_one("#content-switcher", ContentSwitcher).current = page.id
 
 
-def run_textual_viewer(built_sections: list[BuiltSection]) -> None:
-    """Run the interactive Textual viewer for built sections."""
-    FlowerViewApp(prepare_view_pages(built_sections)).run()
+def run_textual_viewer(properties: dict[str, Any]) -> None:
+    """Run the interactive Textual viewer for Data Package properties."""
+    FlowerViewApp(prepare_view_pages(properties)).run()
 
 
 class PageView(VerticalScroll):
-    """A cached Textual page composed from Markdown and native tables."""
+    """A cached Textual page composed from text and native tables."""
 
     def __init__(self, blocks: list[ViewBlock], **kwargs: object) -> None:
         """Initialize the page with prepared content blocks."""
@@ -448,10 +377,12 @@ class PageView(VerticalScroll):
         self.blocks = blocks
 
     def compose(self) -> ComposeResult:
-        """Compose Markdown fragments and DataTables for the page."""
+        """Compose text fragments and DataTables for the page."""
         for block in self.blocks:
-            if isinstance(block, MarkdownBlock):
-                yield Markdown(block.content)
+            if isinstance(block, TextBlock):
+                yield Static(
+                    Text(block.content, style=block.style), classes=block.classes
+                )
             else:
                 table = DataTable(
                     show_row_labels=False,

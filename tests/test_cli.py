@@ -224,18 +224,16 @@ def test_view_with_multi_section_style(mocker):
 
 
 def test_view_with_textual_viewer(mocker):
-    """view should route built sections to the Textual viewer when requested."""
+    """view should route Data Package properties to the Textual viewer."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mocker.patch("seedcase_flower.cli.check")
     mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
     mock_textual_viewer = mocker.patch("seedcase_flower.tui.run_textual_viewer")
     mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
-    built_sections = [BuiltSection(content="# Package", output_path=Path("index.qmd"))]
 
     fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
-    mock_build_sections.return_value = built_sections
 
     app(
         ["view", "datapackage.json", "--viewer", "textual"],
@@ -243,11 +241,8 @@ def test_view_with_textual_viewer(mocker):
     )
 
     mock_read_properties.assert_called_once_with(fake_source)
-    mock_build_sections.assert_called_once_with(
-        mock_read_properties.return_value,
-        Config(style=Style.quarto_one_page),
-    )
-    mock_textual_viewer.assert_called_once_with(built_sections)
+    mock_build_sections.assert_not_called()
+    mock_textual_viewer.assert_called_once_with(mock_read_properties.return_value)
     mock_console_cls.assert_not_called()
 
 

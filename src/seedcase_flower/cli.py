@@ -121,13 +121,13 @@ def view(
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     check(properties, error=True)
-    built_sections = build_sections(properties, Config(style=style))
     if viewer == Viewer.textual:
         from seedcase_flower.tui import run_textual_viewer
 
-        run_textual_viewer(built_sections)
+        run_textual_viewer(properties)
         return
 
+    built_sections = build_sections(properties, Config(style=style))
     console = Console(theme=CONSOLE_THEME)
     # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title
