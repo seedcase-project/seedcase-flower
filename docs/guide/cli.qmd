@@ -144,9 +144,10 @@ seedcase-flower view --style quarto-resource-listing --viewer textual
 
 In the Textual viewer, use `j` and `k` or the arrow keys to move through
 the table of contents. For tables, use `s` to cycle sorting through the
-columns and directions, `/` to search the current table, and `Esc` to clear
-the search. The sorted column shows an arrow for ascending or descending
-order.
+columns and directions, `/` to search all tables, and `Esc` to clear the
+search. The sorted column shows an arrow for ascending or descending order,
+and the table of contents hides resources whose tables have no search
+matches.
 
 ::: callout-important
 `view` is only configurable via command line flags. This means that any

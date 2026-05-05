@@ -18,7 +18,6 @@ from textual.widgets import (
     ListView,
     Static,
 )
-from textual.widgets._data_table import ColumnKey, measure
 
 RICH_BLUE = "color(4) bold"
 RICH_YELLOW = "color(3) bold"
@@ -430,7 +429,7 @@ class FlowerViewApp(App[None]):
             with ContentSwitcher(id="content-switcher", initial=initial_page.id):
                 for page in self.pages:
                     yield PageView(page.blocks, id=page.id, classes="content-page")
-        yield Input(placeholder="Search current table", id="table-search")
+        yield Input(placeholder="Search all tables", id="table-search")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -458,11 +457,30 @@ class FlowerViewApp(App[None]):
 
     def action_toc_down(self) -> None:
         """Move down in the page navigation."""
-        self.query_one("#toc", ListView).action_cursor_down()
+        self._move_toc(1)
 
     def action_toc_up(self) -> None:
         """Move up in the page navigation."""
-        self.query_one("#toc", ListView).action_cursor_up()
+        self._move_toc(-1)
+
+    def _move_toc(self, step: int) -> None:
+        """Move to the next visible table-of-contents item."""
+        toc = self.query_one("#toc", ListView)
+        visible_indices = self._visible_toc_indices()
+        if not visible_indices:
+            return
+
+        current = toc.index
+        if current is None or current not in visible_indices:
+            toc.index = visible_indices[0 if step > 0 else -1]
+            return
+
+        current_position = visible_indices.index(current)
+        next_position = max(
+            0,
+            min(len(visible_indices) - 1, current_position + step),
+        )
+        toc.index = visible_indices[next_position]
 
     def action_search_table(self) -> None:
         """Focus the table search input."""
@@ -480,14 +498,16 @@ class FlowerViewApp(App[None]):
         search = self.query_one("#table-search", Input)
         search.value = ""
         search.display = False
-        if table := self._current_table():
-            table.filter_rows("")
+        self._filter_all_tables("")
         self.query_one("#toc", ListView).focus()
 
-    def on_input_changed(self, event: Input.Changed) -> None:
+    async def on_input_changed(self, event: Input.Changed) -> None:
         """Filter the current page table while typing in the search input."""
-        if event.input.id == "table-search" and (table := self._current_table()):
-            table.filter_rows(event.value)
+        if event.input.id == "table-search":
+            visible_pages = self._filter_all_tables(event.value)
+            if visible_pages and self._current_page_index() not in visible_pages:
+                self.query_one("#toc", ListView).index = visible_pages[0]
+                await self._show_page(visible_pages[0])
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """Return focus to navigation after submitting table search."""
@@ -508,6 +528,41 @@ class FlowerViewApp(App[None]):
         search = self.query_one("#table-search", Input)
         if table := self._current_table():
             table.filter_rows(search.value)
+
+    def _filter_all_tables(self, query: str) -> list[int]:
+        """Filter all mounted tables and return visible page indices."""
+        for table in self.query(SearchableDataTable):
+            table.filter_rows(query)
+
+        visible_pages = []
+        toc = self.query_one("#toc", ListView)
+        for index, item in enumerate(toc.children):
+            page = self.query_one(f"#{self.pages[index].id}", PageView)
+            tables = page.query(SearchableDataTable)
+            is_visible = (
+                not query or index == 0 or any(table.row_count > 0 for table in tables)
+            )
+            item.display = is_visible
+            if is_visible:
+                visible_pages.append(index)
+        return visible_pages
+
+    def _visible_toc_indices(self) -> list[int]:
+        """Return indices for visible table-of-contents items."""
+        toc = self.query_one("#toc", ListView)
+        return [
+            index
+            for index, item in enumerate(toc.children)
+            if item.display is not False
+        ]
+
+    def _current_page_index(self) -> int | None:
+        """Return the index of the currently visible page."""
+        current = self.query_one("#content-switcher", ContentSwitcher).current
+        for index, page in enumerate(self.pages):
+            if page.id == current:
+                return index
+        return None
 
     def _current_table(self) -> "SearchableDataTable | None":
         """Return the first table on the currently visible page."""

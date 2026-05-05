@@ -329,6 +329,7 @@ def test_flower_view_app_filters_current_page_table():
             table = app.query_one(SearchableDataTable)
 
             app.action_search_table()
+            assert app.query_one("#table-search").placeholder == "Search all tables"
             await pilot.press("s", "p")
 
             assert table.row_count == 1
@@ -337,6 +338,64 @@ def test_flower_view_app_filters_current_page_table():
             app.action_clear_search()
 
             assert table.row_count == 2
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_filters_sidebar_to_matching_resource_tables():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[TextBlock("Package")],
+                ),
+                ViewPage(
+                    label="species_catalog",
+                    id="page-2",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name"],
+                            rows=[["species"]],
+                        )
+                    ],
+                ),
+                ViewPage(
+                    label="location_catalog",
+                    id="page-3",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name"],
+                            rows=[["location"]],
+                        )
+                    ],
+                ),
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            app.action_search_table()
+            await pilot.press("s", "p")
+
+            toc_items = app.query_one("#toc").children
+            assert toc_items[0].display is True
+            assert toc_items[1].display is True
+            assert toc_items[2].display is False
+
+            toc = app.query_one("#toc")
+            app.action_toc_down()
+            assert toc.index == 1
+
+            app.action_toc_down()
+            assert toc.index == 1
+
+            app.action_toc_up()
+            assert toc.index == 0
+
+            app.action_clear_search()
+
+            assert all(item.display is True for item in toc_items)
 
     asyncio.run(run_test())
 
@@ -363,11 +422,14 @@ def test_flower_view_app_sorts_current_page_table():
 
         async with app.run_test():
             table = app.query_one(SearchableDataTable)
+            initial_width = table.columns["Name"].width
 
             app.action_sort_table()
 
             assert table.get_row_at(0) == ["plot_id", "integer"]
             assert table.columns["Name"].label.plain == "Name ↑"
+            assert table.columns["Name"].width >= initial_width
+            assert str(table.columns["Name"].label.spans[0].style) == "color(3) bold"
 
             app.action_sort_table()
             assert table.get_row_at(0) == ["species", "string"]
