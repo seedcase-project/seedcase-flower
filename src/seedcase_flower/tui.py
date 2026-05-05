@@ -402,8 +402,8 @@ class FlowerViewApp(App[None]):
     }
     """
     BINDINGS = [
-        Binding("j", "toc_down", "Down"),
-        Binding("k", "toc_up", "Up"),
+        Binding("j,down", "toc_down", "Down", key_display="j/down"),
+        Binding("k,up", "toc_up", "Up", key_display="k/up"),
         Binding("l,right", "focus_table", "Select", key_display="l/right"),
         Binding("h,left", "focus_toc", "Back", key_display="h/left"),
         Binding("s", "sort_table", "Sort table"),
@@ -520,12 +520,19 @@ class FlowerViewApp(App[None]):
             table.sort_next_column()
 
     def action_focus_table(self) -> None:
-        """Focus the current page table when one is available."""
+        """Focus the current page table or advance its column selection."""
+        if isinstance(self.focused, SearchableDataTable):
+            self.focused.select_next_column()
+            return
         if table := self._current_table():
+            table.focus_row_selection()
             table.focus()
 
     def action_focus_toc(self) -> None:
-        """Focus the table of contents."""
+        """Move table selection back or focus the table of contents."""
+        if isinstance(self.focused, SearchableDataTable):
+            if self.focused.select_previous_column_or_row():
+                return
         self.query_one("#toc", ListView).focus()
 
     def action_clear_search(self) -> None:
@@ -676,6 +683,7 @@ class SearchableDataTable(DataTable[str]):
     def on_blur(self) -> None:
         """Hide row selection when focus returns to navigation or search."""
         self.show_cursor = False
+        self.focus_row_selection()
 
     def filter_rows(self, query: str) -> None:
         """Show only rows that contain the query text."""
@@ -704,6 +712,31 @@ class SearchableDataTable(DataTable[str]):
             self._sort_column_index = (self._sort_column_index + 1) % len(self.headers)
             self._sort_reverse = False
         self._sort_by_column(self._sort_column_index)
+
+    def focus_row_selection(self) -> None:
+        """Select rows rather than columns."""
+        self.cursor_type = "row"
+
+    def select_next_column(self) -> None:
+        """Select the next table column."""
+        if not self.headers:
+            return
+        if self.cursor_type != "column":
+            next_column = 0
+        else:
+            next_column = min(self.cursor_column + 1, len(self.headers) - 1)
+        self.cursor_type = "column"
+        self.move_cursor(column=next_column)
+
+    def select_previous_column_or_row(self) -> bool:
+        """Move column selection left, returning True if table focus remains."""
+        if self.cursor_type != "column":
+            return False
+        if self.cursor_column <= 0:
+            self.focus_row_selection()
+            return True
+        self.move_cursor(column=self.cursor_column - 1)
+        return True
 
     def _sort_by_column(self, column_index: int) -> None:
         """Sort rows case-insensitively by one column."""

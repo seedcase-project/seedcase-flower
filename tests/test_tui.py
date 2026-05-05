@@ -18,8 +18,8 @@ from seedcase_flower.tui import (
 def test_flower_view_app_has_vim_navigation_bindings():
     visible_bindings = [binding for binding in FlowerViewApp.BINDINGS if binding.show]
     assert [binding.key for binding in visible_bindings] == [
-        "j",
-        "k",
+        "j,down",
+        "k,up",
         "l,right",
         "h,left",
         "s",
@@ -27,6 +27,8 @@ def test_flower_view_app_has_vim_navigation_bindings():
         "escape",
         "q",
     ]
+    assert visible_bindings[0].key_display == "j/down"
+    assert visible_bindings[1].key_display == "k/up"
     assert visible_bindings[2].key_display == "l/right"
     assert visible_bindings[2].description == "Select"
     assert visible_bindings[3].key_display == "h/left"
@@ -490,6 +492,7 @@ def test_flower_view_app_moves_focus_between_toc_and_table():
             await pilot.pause()
             assert app.focused == table
             assert table.show_cursor is True
+            assert table.cursor_type == "row"
 
             app.action_focus_toc()
             await pilot.pause()
@@ -498,6 +501,56 @@ def test_flower_view_app_moves_focus_between_toc_and_table():
 
             app.action_focus_table()
             await pilot.pause()
+            app.action_focus_toc()
+            await pilot.pause()
+            assert app.focused == toc
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_cycles_table_column_selection():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name", "Type"],
+                            rows=[["species", "string"]],
+                        )
+                    ],
+                )
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+            toc = app.query_one("#toc")
+
+            app.action_focus_table()
+            await pilot.pause()
+
+            assert table.cursor_type == "row"
+
+            app.action_focus_table()
+            assert table.cursor_type == "column"
+            assert table.cursor_column == 0
+
+            app.action_focus_table()
+            assert table.cursor_type == "column"
+            assert table.cursor_column == 1
+
+            app.action_focus_toc()
+            assert table.cursor_type == "column"
+            assert table.cursor_column == 0
+            assert app.focused == table
+
+            app.action_focus_toc()
+            assert table.cursor_type == "row"
+            assert app.focused == table
+
             app.action_focus_toc()
             await pilot.pause()
             assert app.focused == toc
