@@ -104,7 +104,7 @@ def _extract_table_block(lines: list[str], index: int) -> tuple[TableBlock, int]
     index += 2
     rows = []
     while index < len(lines) and _is_table_row(lines[index]):
-        rows.append(_table_cells(lines[index]))
+        rows.append(_normalize_table_row(_table_cells(lines[index]), len(header)))
         index += 1
 
     caption = ""
@@ -117,6 +117,14 @@ def _extract_table_block(lines: list[str], index: int) -> tuple[TableBlock, int]
         index += 1
 
     return TableBlock(headers=header, rows=rows, caption=caption), index
+
+
+def _normalize_table_row(row: list[str], width: int) -> list[str]:
+    if len(row) == width:
+        return row
+    if len(row) < width:
+        return row + [""] * (width - len(row))
+    return [*row[: width - 1], " | ".join(row[width - 1 :])]
 
 
 def _is_table_row(line: str) -> bool:

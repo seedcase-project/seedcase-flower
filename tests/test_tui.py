@@ -139,6 +139,50 @@ def test_prepare_view_pages_extracts_markdown_tables_into_table_blocks():
     ]
 
 
+def test_prepare_view_pages_keeps_extra_pipes_in_final_table_cell():
+    pages = prepare_view_pages(
+        [
+            BuiltSection(
+                content=(
+                    "| Name | Type | Description |\n"
+                    "|------|------|-------------|\n"
+                    "| `vas` | number | Left anchor | right anchor |\n"
+                ),
+                output_path=Path("resources/data.qmd"),
+            )
+        ]
+    )
+
+    assert pages[0].blocks == [
+        TableBlock(
+            headers=["Name", "Type", "Description"],
+            rows=[["`vas`", "number", "Left anchor | right anchor"]],
+        )
+    ]
+
+
+def test_prepare_view_pages_pads_short_table_rows():
+    pages = prepare_view_pages(
+        [
+            BuiltSection(
+                content=(
+                    "| Name | Type | Description |\n"
+                    "|------|------|-------------|\n"
+                    "| `id` | integer |\n"
+                ),
+                output_path=Path("resources/data.qmd"),
+            )
+        ]
+    )
+
+    assert pages[0].blocks == [
+        TableBlock(
+            headers=["Name", "Type", "Description"],
+            rows=[["`id`", "integer", ""]],
+        )
+    ]
+
+
 def test_prepare_view_pages_falls_back_to_output_stem():
     pages = prepare_view_pages(
         [
