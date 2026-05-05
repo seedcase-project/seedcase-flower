@@ -7,6 +7,7 @@ from seedcase_flower.tui import (
     FlowerViewApp,
     PageView,
     SearchableDataTable,
+    SearchInput,
     TableBlock,
     TextBlock,
     ViewPage,
@@ -15,11 +16,28 @@ from seedcase_flower.tui import (
 
 
 def test_flower_view_app_has_vim_navigation_bindings():
-    assert ("j", "toc_down", "Down") in FlowerViewApp.BINDINGS
-    assert ("k", "toc_up", "Up") in FlowerViewApp.BINDINGS
-    assert ("/", "search_table", "Search table") in FlowerViewApp.BINDINGS
-    assert ("s", "sort_table", "Sort table") in FlowerViewApp.BINDINGS
-    assert ("escape", "clear_search", "Clear search") in FlowerViewApp.BINDINGS
+    visible_bindings = [binding for binding in FlowerViewApp.BINDINGS if binding.show]
+    assert [binding.key for binding in visible_bindings] == [
+        "j",
+        "k",
+        "l,right",
+        "h,left",
+        "s",
+        "/",
+        "escape",
+        "q",
+    ]
+    assert visible_bindings[2].key_display == "l/right"
+    assert visible_bindings[2].description == "Select"
+    assert visible_bindings[3].key_display == "h/left"
+    assert visible_bindings[3].description == "Back"
+    assert visible_bindings[5].description == "Search"
+    assert any(binding.key == "ctrl+d" for binding in FlowerViewApp.BINDINGS)
+    assert any(binding.key == "ctrl+u" for binding in FlowerViewApp.BINDINGS)
+
+
+def test_search_input_supports_ctrl_backspace_word_delete():
+    assert any(binding.key == "ctrl+backspace" for binding in SearchInput.BINDINGS)
 
 
 def test_flower_view_app_pre_mounts_pages():
@@ -48,6 +66,7 @@ def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
     assert "color: ansi_default" in FlowerViewApp.CSS
     assert "ListItem" in FlowerViewApp.CSS
     assert "#toc > ListItem.-highlight" in FlowerViewApp.CSS
+    assert "#toc:focus > ListItem.-highlight" in FlowerViewApp.CSS
     assert "background: ansi_yellow" in FlowerViewApp.CSS
     assert "color: #1A1B26" in FlowerViewApp.CSS
     assert "color: $footer-key-foreground" not in FlowerViewApp.CSS
@@ -439,5 +458,155 @@ def test_flower_view_app_sorts_current_page_table():
             assert table.get_row_at(0) == ["plot_id", "integer"]
             assert table.columns["Name"].label.plain == "Name"
             assert table.columns["Type"].label.plain == "Type ↑"
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_moves_focus_between_toc_and_table():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name"],
+                            rows=[["species"]],
+                        )
+                    ],
+                )
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+            toc = app.query_one("#toc")
+
+            assert app.focused == toc
+            assert table.show_cursor is False
+
+            app.action_focus_table()
+            await pilot.pause()
+            assert app.focused == table
+            assert table.show_cursor is True
+
+            app.action_focus_toc()
+            await pilot.pause()
+            assert app.focused == toc
+            assert table.show_cursor is False
+
+            app.action_focus_table()
+            await pilot.pause()
+            app.action_focus_toc()
+            await pilot.pause()
+            assert app.focused == toc
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_uses_vim_keys_in_focused_table():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name"],
+                            rows=[["species"], ["location"]],
+                        )
+                    ],
+                )
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+
+            app.action_focus_table()
+            await pilot.pause()
+            app.action_toc_down()
+
+            assert table.cursor_row == 1
+
+            app.action_toc_up()
+
+            assert table.cursor_row == 0
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_jumps_in_focused_table():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name"],
+                            rows=[[str(index)] for index in range(10)],
+                        )
+                    ],
+                )
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+
+            app.action_focus_table()
+            await pilot.pause()
+            app.action_jump_down()
+
+            assert table.cursor_row == 6
+
+            app.action_jump_up()
+
+            assert table.cursor_row == 0
+
+    asyncio.run(run_test())
+
+
+def test_flower_view_app_selecting_toc_item_does_not_focus_table():
+    async def run_test() -> None:
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[TextBlock("Package")],
+                ),
+                ViewPage(
+                    label="species_catalog",
+                    id="page-2",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name"],
+                            rows=[["species"]],
+                        )
+                    ],
+                ),
+            ]
+        )
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+            toc = app.query_one("#toc")
+
+            toc.index = 1
+            toc.action_select_cursor()
+            await pilot.pause()
+
+            assert app.focused == toc
+            assert table.show_cursor is False
+
+            app.action_focus_table()
+            await pilot.pause()
+
+            assert app.focused == table
 
     asyncio.run(run_test())

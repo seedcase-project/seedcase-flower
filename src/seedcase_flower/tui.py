@@ -5,6 +5,7 @@ from typing import Any
 
 from rich.text import Text
 from textual.app import App, ComposeResult
+from textual.binding import Binding
 from textual.containers import Horizontal, VerticalScroll
 from textual.timer import Timer
 from textual.widgets import (
@@ -309,13 +310,13 @@ class FlowerViewApp(App[None]):
     }
 
     #toc > ListItem.-highlight {
-        background: ansi_yellow;
-        color: #1A1B26;
+        background: #292E42;
+        color: ansi_default;
     }
 
     #toc > ListItem.-highlight > Label {
-        background: ansi_yellow;
-        color: #1A1B26;
+        background: #292E42;
+        color: ansi_default;
     }
 
     #toc:focus > ListItem.-highlight {
@@ -381,8 +382,8 @@ class FlowerViewApp(App[None]):
     }
 
     .field-table > .datatable--cursor {
-        background: #292E42;
-        color: ansi_default;
+        background: ansi_yellow;
+        color: #1A1B26;
     }
 
     .table-caption {
@@ -401,12 +402,16 @@ class FlowerViewApp(App[None]):
     }
     """
     BINDINGS = [
-        ("/", "search_table", "Search table"),
-        ("s", "sort_table", "Sort table"),
-        ("escape", "clear_search", "Clear search"),
-        ("j", "toc_down", "Down"),
-        ("k", "toc_up", "Up"),
-        ("q", "quit", "Quit"),
+        Binding("j", "toc_down", "Down"),
+        Binding("k", "toc_up", "Up"),
+        Binding("l,right", "focus_table", "Select", key_display="l/right"),
+        Binding("h,left", "focus_toc", "Back", key_display="h/left"),
+        Binding("s", "sort_table", "Sort table"),
+        Binding("/", "search_table", "Search"),
+        Binding("escape", "clear_search", "Clear search"),
+        Binding("q", "quit", "Quit"),
+        Binding("ctrl+d", "jump_down", show=False),
+        Binding("ctrl+u", "jump_up", show=False),
     ]
     TITLE = "Flower"
 
@@ -429,7 +434,7 @@ class FlowerViewApp(App[None]):
             with ContentSwitcher(id="content-switcher", initial=initial_page.id):
                 for page in self.pages:
                     yield PageView(page.blocks, id=page.id, classes="content-page")
-        yield Input(placeholder="Search all tables", id="table-search")
+        yield SearchInput(placeholder="Search all tables", id="table-search")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -456,12 +461,33 @@ class FlowerViewApp(App[None]):
         await self._show_page(event.index)
 
     def action_toc_down(self) -> None:
-        """Move down in the page navigation."""
-        self._move_toc(1)
+        """Move down in the focused table or page navigation."""
+        self._move_focused(1)
 
     def action_toc_up(self) -> None:
-        """Move up in the page navigation."""
-        self._move_toc(-1)
+        """Move up in the focused table or page navigation."""
+        self._move_focused(-1)
+
+    def action_jump_down(self) -> None:
+        """Move down six rows or table-of-contents items."""
+        self._move_focused(6)
+
+    def action_jump_up(self) -> None:
+        """Move up six rows or table-of-contents items."""
+        self._move_focused(-6)
+
+    def _move_focused(self, step: int) -> None:
+        """Move the focused table or sidebar by one or more rows."""
+        if isinstance(self.focused, SearchableDataTable):
+            action = (
+                self.focused.action_cursor_down
+                if step > 0
+                else self.focused.action_cursor_up
+            )
+            for _ in range(abs(step)):
+                action()
+            return
+        self._move_toc(step)
 
     def _move_toc(self, step: int) -> None:
         """Move to the next visible table-of-contents item."""
@@ -470,7 +496,7 @@ class FlowerViewApp(App[None]):
         if not visible_indices:
             return
 
-        current = toc.index
+        current = toc.index if toc.index is not None else self._current_page_index()
         if current is None or current not in visible_indices:
             toc.index = visible_indices[0 if step > 0 else -1]
             return
@@ -492,6 +518,15 @@ class FlowerViewApp(App[None]):
         """Sort the current page table by the next column."""
         if table := self._current_table():
             table.sort_next_column()
+
+    def action_focus_table(self) -> None:
+        """Focus the current page table when one is available."""
+        if table := self._current_table():
+            table.focus()
+
+    def action_focus_toc(self) -> None:
+        """Focus the table of contents."""
+        self.query_one("#toc", ListView).focus()
 
     def action_clear_search(self) -> None:
         """Clear table filtering and hide the search input."""
@@ -579,6 +614,15 @@ def run_textual_viewer(properties: dict[str, Any]) -> None:
     FlowerViewApp(prepare_view_pages(properties)).run()
 
 
+class SearchInput(Input):
+    """Search input with common terminal word-delete bindings."""
+
+    BINDINGS = [
+        *Input.BINDINGS,
+        Binding("ctrl+backspace", "delete_left_word", show=False),
+    ]
+
+
 class PageView(VerticalScroll):
     """A cached Textual page composed from text and native tables."""
 
@@ -609,6 +653,7 @@ class SearchableDataTable(DataTable[str]):
         """Initialize a table from prepared table data."""
         super().__init__(
             show_row_labels=False,
+            show_cursor=False,
             zebra_stripes=True,
             cursor_type="row",
             classes="field-table",
@@ -623,6 +668,14 @@ class SearchableDataTable(DataTable[str]):
         for header in self.headers:
             self.add_column(header, key=header)
         self.filter_rows("")
+
+    def on_focus(self) -> None:
+        """Show row selection only while the table is active."""
+        self.show_cursor = True
+
+    def on_blur(self) -> None:
+        """Hide row selection when focus returns to navigation or search."""
+        self.show_cursor = False
 
     def filter_rows(self, query: str) -> None:
         """Show only rows that contain the query text."""
