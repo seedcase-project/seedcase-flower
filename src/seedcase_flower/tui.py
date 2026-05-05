@@ -4,9 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal
+from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import (
     ContentSwitcher,
+    DataTable,
     Footer,
     Header,
     Label,
@@ -25,18 +26,114 @@ class ViewPage:
     label: str
     content: str
     id: str
+    blocks: list["ViewBlock"]
+
+
+@dataclass(frozen=True)
+class MarkdownBlock:
+    """A Markdown fragment in a Textual viewer page."""
+
+    content: str
+
+
+@dataclass(frozen=True)
+class TableBlock:
+    """A Markdown table prepared for Textual's DataTable."""
+
+    headers: list[str]
+    rows: list[list[str]]
+    caption: str = ""
+
+
+type ViewBlock = MarkdownBlock | TableBlock
 
 
 def prepare_view_pages(built_sections: list[BuiltSection]) -> list[ViewPage]:
     """Prepare built sections for display in the Textual viewer."""
-    return [
-        ViewPage(
-            label=_section_label(section, index),
-            content=_section_content(section.content),
-            id=f"page-{index}",
+    pages = []
+    for index, section in enumerate(built_sections, start=1):
+        content = _section_content(section.content)
+        pages.append(
+            ViewPage(
+                label=_section_label(section, index),
+                content=content,
+                id=f"page-{index}",
+                blocks=_extract_view_blocks(content),
+            )
         )
-        for index, section in enumerate(built_sections, start=1)
-    ]
+    return pages
+
+
+def _extract_view_blocks(content: str) -> list[ViewBlock]:
+    lines = content.splitlines()
+    blocks: list[ViewBlock] = []
+    markdown_lines: list[str] = []
+    index = 0
+
+    while index < len(lines):
+        if _starts_markdown_table(lines, index):
+            _append_markdown_block(blocks, markdown_lines)
+            markdown_lines = []
+            table, index = _extract_table_block(lines, index)
+            blocks.append(table)
+            continue
+
+        markdown_lines.append(lines[index])
+        index += 1
+
+    _append_markdown_block(blocks, markdown_lines)
+    return blocks
+
+
+def _append_markdown_block(blocks: list[ViewBlock], markdown_lines: list[str]) -> None:
+    markdown = "\n".join(markdown_lines).strip()
+    if markdown:
+        blocks.append(MarkdownBlock(markdown))
+
+
+def _starts_markdown_table(lines: list[str], index: int) -> bool:
+    return (
+        index + 1 < len(lines)
+        and _is_table_row(lines[index])
+        and _is_table_separator(lines[index + 1])
+    )
+
+
+def _extract_table_block(lines: list[str], index: int) -> tuple[TableBlock, int]:
+    header = _table_cells(lines[index])
+    index += 2
+    rows = []
+    while index < len(lines) and _is_table_row(lines[index]):
+        rows.append(_table_cells(lines[index]))
+        index += 1
+
+    caption = ""
+    if index + 1 < len(lines) and not lines[index].strip():
+        if lines[index + 1].startswith(":"):
+            caption = lines[index + 1].removeprefix(":").strip()
+            index += 2
+    elif index < len(lines) and lines[index].startswith(":"):
+        caption = lines[index].removeprefix(":").strip()
+        index += 1
+
+    return TableBlock(headers=header, rows=rows, caption=caption), index
+
+
+def _is_table_row(line: str) -> bool:
+    return line.strip().startswith("|") and line.strip().endswith("|")
+
+
+def _is_table_separator(line: str) -> bool:
+    if not _is_table_row(line):
+        return False
+    cells = _table_cells(line)
+    return bool(cells) and all(
+        cell and all(character in "-: " for character in cell) for cell in cells
+    )
+
+
+def _table_cells(line: str) -> list[str]:
+    return [cell.strip() for cell in line.strip().strip("|").split("|")]
 
 
 def _section_label(section: BuiltSection, index: int) -> str:
@@ -243,6 +340,37 @@ class FlowerViewApp(App[None]):
         color: ansi_blue;
         text-style: bold;
     }
+
+    PageView {
+        width: 1fr;
+        height: 100%;
+        background: ansi_default;
+    }
+
+    .field-table {
+        width: 1fr;
+        height: 1fr;
+        min-height: 8;
+        background: ansi_default;
+        color: ansi_default;
+    }
+
+    .field-table > .datatable--header {
+        background: ansi_default;
+        color: ansi_blue;
+        text-style: bold;
+    }
+
+    .field-table > .datatable--cursor {
+        background: #292E42;
+        color: ansi_default;
+    }
+
+    .table-caption {
+        color: ansi_default;
+        text-style: italic;
+        margin: 0 0 1 0;
+    }
     """
     BINDINGS = [
         ("j", "toc_down", "Down"),
@@ -267,7 +395,7 @@ class FlowerViewApp(App[None]):
             )
             with ContentSwitcher(id="content-switcher", initial=initial_page.id):
                 for page in self.pages:
-                    yield Markdown(page.content, id=page.id, classes="content-page")
+                    yield PageView(page.blocks, id=page.id, classes="content-page")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -301,3 +429,30 @@ class FlowerViewApp(App[None]):
 def run_textual_viewer(built_sections: list[BuiltSection]) -> None:
     """Run the interactive Textual viewer for built sections."""
     FlowerViewApp(prepare_view_pages(built_sections)).run()
+
+
+class PageView(VerticalScroll):
+    """A cached Textual page composed from Markdown and native tables."""
+
+    def __init__(self, blocks: list[ViewBlock], **kwargs: object) -> None:
+        """Initialize the page with prepared content blocks."""
+        super().__init__(**kwargs)
+        self.blocks = blocks
+
+    def compose(self) -> ComposeResult:
+        """Compose Markdown fragments and DataTables for the page."""
+        for block in self.blocks:
+            if isinstance(block, MarkdownBlock):
+                yield Markdown(block.content)
+            else:
+                table = DataTable(
+                    show_row_labels=False,
+                    zebra_stripes=True,
+                    cursor_type="row",
+                    classes="field-table",
+                )
+                table.add_columns(*block.headers)
+                table.add_rows(block.rows)
+                yield table
+                if block.caption:
+                    yield Label(block.caption, classes="table-caption")

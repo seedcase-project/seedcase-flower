@@ -5,7 +5,14 @@ import inspect
 from pathlib import Path
 
 from seedcase_flower.build_sections import BuiltSection
-from seedcase_flower.tui import FlowerViewApp, ViewPage, prepare_view_pages
+from seedcase_flower.tui import (
+    FlowerViewApp,
+    MarkdownBlock,
+    PageView,
+    TableBlock,
+    ViewPage,
+    prepare_view_pages,
+)
 
 
 def test_flower_view_app_has_vim_navigation_bindings():
@@ -57,6 +64,12 @@ def test_flower_view_app_maps_markdown_colors_to_ansi_terminal_styles():
     assert "MarkdownTableContent > .header" in FlowerViewApp.CSS
 
 
+def test_flower_view_app_uses_native_datatables_for_tables():
+    assert "DataTable" in inspect.getsource(PageView.compose)
+    assert "field-table" in FlowerViewApp.CSS
+    assert "table-caption" in FlowerViewApp.CSS
+
+
 def test_prepare_view_pages_uses_package_label_for_index():
     pages = prepare_view_pages(
         [BuiltSection(content="# Test Package", output_path=Path("index.qmd"))]
@@ -65,6 +78,7 @@ def test_prepare_view_pages_uses_package_label_for_index():
     assert pages[0].label == "Package"
     assert pages[0].content == "# Test Package"
     assert pages[0].id == "page-1"
+    assert pages[0].blocks == [MarkdownBlock("# Test Package")]
 
 
 def test_prepare_view_pages_uses_resource_front_matter_for_label_and_content():
@@ -91,6 +105,38 @@ def test_prepare_view_pages_uses_resource_front_matter_for_label_and_content():
     assert "# Species Catalog" in pages[0].content
     assert "## `species_catalog`" in pages[0].content
     assert "- Path: `data/species.csv`" in pages[0].content
+    assert pages[0].blocks == [
+        MarkdownBlock(
+            "# Species Catalog\n\n## `species_catalog`\n\n- Path: `data/species.csv`"
+        )
+    ]
+
+
+def test_prepare_view_pages_extracts_markdown_tables_into_table_blocks():
+    pages = prepare_view_pages(
+        [
+            BuiltSection(
+                content=(
+                    "# Resource\n\n"
+                    "| Name | Type |\n"
+                    "|------|------|\n"
+                    "| `id` | integer |\n"
+                    "| `name` | string |\n\n"
+                    ": Fields in the resource."
+                ),
+                output_path=Path("resources/data.qmd"),
+            )
+        ]
+    )
+
+    assert pages[0].blocks == [
+        MarkdownBlock("# Resource"),
+        TableBlock(
+            headers=["Name", "Type"],
+            rows=[["`id`", "integer"], ["`name`", "string"]],
+            caption="Fields in the resource.",
+        ),
+    ]
 
 
 def test_prepare_view_pages_falls_back_to_output_stem():
@@ -110,8 +156,18 @@ def test_flower_view_app_switches_between_pre_mounted_pages():
     async def run_test() -> None:
         app = FlowerViewApp(
             [
-                ViewPage(label="Package", content="# Package", id="page-1"),
-                ViewPage(label="species_catalog", content="# Species", id="page-2"),
+                ViewPage(
+                    label="Package",
+                    content="# Package",
+                    id="page-1",
+                    blocks=[MarkdownBlock("# Package")],
+                ),
+                ViewPage(
+                    label="species_catalog",
+                    content="# Species",
+                    id="page-2",
+                    blocks=[MarkdownBlock("# Species")],
+                ),
             ]
         )
 
@@ -128,8 +184,18 @@ def test_flower_view_app_does_not_update_markdown_on_page_switch():
     async def run_test() -> None:
         app = FlowerViewApp(
             [
-                ViewPage(label="Package", content="# Package", id="page-1"),
-                ViewPage(label="species_catalog", content="# Species", id="page-2"),
+                ViewPage(
+                    label="Package",
+                    content="# Package",
+                    id="page-1",
+                    blocks=[MarkdownBlock("# Package")],
+                ),
+                ViewPage(
+                    label="species_catalog",
+                    content="# Species",
+                    id="page-2",
+                    blocks=[MarkdownBlock("# Species")],
+                ),
             ]
         )
 
