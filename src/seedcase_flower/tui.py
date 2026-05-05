@@ -78,14 +78,26 @@ def _package_blocks(properties: dict[str, Any]) -> list[ViewBlock]:
     if title:
         blocks.append(TextBlock(title, style=RICH_BLUE, classes="title"))
 
-    metadata = _package_metadata_text(properties)
-    if metadata:
-        blocks.append(metadata)
     if description := properties.get("description"):
         blocks.append(TextBlock(description))
+    if version := properties.get("version"):
+        blocks.append(_labeled_list("Version", [version]))
+    if licenses := properties.get("licenses"):
+        blocks.append(
+            TextBlock("Licenses", style=RICH_YELLOW, classes="compact-heading")
+        )
+        blocks.append(
+            TextBlock("\n".join(_license_text(licenses)), classes="metadata-list")
+        )
     if contributors := properties.get("contributors"):
-        blocks.append(TextBlock("Contributors", style=RICH_YELLOW, classes="heading"))
-        blocks.append(TextBlock("\n".join(_contributor_text(contributors))))
+        blocks.append(
+            TextBlock("Contributors", style=RICH_YELLOW, classes="compact-heading")
+        )
+        blocks.append(
+            TextBlock(
+                "\n".join(_contributor_text(contributors)), classes="metadata-list"
+            )
+        )
     if resources := properties.get("resources"):
         blocks.append(TextBlock("Resources", style=RICH_YELLOW, classes="heading"))
         blocks.append(
@@ -112,31 +124,12 @@ def _package_title(properties: dict[str, Any]) -> str:
     return name or title or ""
 
 
-def _licenses_text(licenses: list[dict[str, Any]]) -> str:
-    labels = [license.get("title") or license.get("name") for license in licenses]
-    return ", ".join(label for label in labels if label)
-
-
-def _package_metadata_text(properties: dict[str, Any]) -> TextBlock | None:
-    lines = []
-    spans = []
-    if licenses := properties.get("licenses"):
-        lines.append(("Licenses: ", _licenses_text(licenses)))
-    if version := properties.get("version"):
-        lines.append(("Version: ", version))
-
-    if not lines:
-        return None
-
-    content_lines = []
-    offset = 0
-    for label, value in lines:
-        line = f"{label}{value}"
-        start = offset + len(label)
-        spans.append((start, start + len(str(value)), RICH_YELLOW))
-        content_lines.append(line)
-        offset += len(line) + 1
-    return TextBlock("\n".join(content_lines), spans=tuple(spans))
+def _license_text(licenses: list[dict[str, Any]]) -> list[str]:
+    return [
+        f"• {label}"
+        for license in licenses
+        if (label := license.get("title") or license.get("name"))
+    ]
 
 
 def _contributor_text(contributors: list[dict[str, Any]]) -> list[str]:
@@ -165,17 +158,18 @@ def _single_contributor_text(contributor: dict[str, Any]) -> str:
 def _resource_blocks(resource: dict[str, Any]) -> list[ViewBlock]:
     blocks: list[ViewBlock] = []
     resource_name = resource.get("name", "")
-    if (title := resource.get("title")) and _metadata_label(title) != resource_name:
+    title = resource.get("title") or resource_name
+    if title:
         blocks.append(TextBlock(title, style=RICH_BLUE, classes="title"))
 
     if description := _resource_description(resource):
         blocks.append(TextBlock(description))
 
     schema = resource.get("schema") or {}
-    if bullets := _resource_bullets(resource, schema):
-        blocks.append(_compact_bullets(bullets))
+    blocks.extend(_resource_metadata_blocks(resource, schema))
 
     if fields := schema.get("fields"):
+        blocks.append(TextBlock("Fields", style=RICH_YELLOW, classes="heading"))
         blocks.append(
             TableBlock(
                 headers=["Name", "Title", "Type", "Description"],
@@ -206,47 +200,27 @@ def _metadata_label(value: str) -> str:
     return value.strip().strip("`")
 
 
-def _resource_bullets(
+def _resource_metadata_blocks(
     resource: dict[str, Any], schema: dict[str, Any]
 ) -> list[TextBlock]:
     blocks = []
     if path := resource.get("path"):
-        blocks.append(_label_value_line("• Path: ", path))
+        blocks.append(_labeled_list("Path", [path]))
     if primary_key := schema.get("primaryKey"):
-        blocks.append(_label_value_line("• Primary key: ", _as_list_text(primary_key)))
+        blocks.append(_labeled_list("Primary key", [_as_list_text(primary_key)]))
     if foreign_keys := schema.get("foreignKeys"):
-        blocks.append(_label_value_line("• Foreign keys:", ""))
-        blocks.extend(
-            _label_value_line("  ◦ ", foreign_key)
-            for foreign_key in _foreign_key_text(foreign_keys, resource)
+        blocks.append(
+            _labeled_list("Foreign keys", _foreign_key_text(foreign_keys, resource))
         )
     return blocks
 
 
-def _label_value_line(label: str, value: str) -> TextBlock:
-    content = f"{label}{value}"
-    if not value:
-        return TextBlock(content)
+def _labeled_list(label: str, values: list[str]) -> TextBlock:
+    lines = [label] + [f"• {value}" for value in values]
     return TextBlock(
-        content,
-        spans=((len(label), len(content), RICH_YELLOW),),
-    )
-
-
-def _compact_bullets(bullets: list[TextBlock]) -> TextBlock:
-    content_lines = []
-    spans = []
-    offset = 0
-    for bullet in bullets:
-        content_lines.append(bullet.content)
-        spans.extend(
-            (offset + start, offset + end, style) for start, end, style in bullet.spans
-        )
-        offset += len(bullet.content) + 1
-    return TextBlock(
-        "\n".join(content_lines),
-        classes="compact-list",
-        spans=tuple(spans),
+        "\n".join(lines),
+        classes="metadata-list",
+        spans=((0, len(label), RICH_YELLOW),),
     )
 
 
@@ -262,7 +236,7 @@ def _foreign_key_text(
         reference = foreign_key.get("reference", {})
         reference_resource = reference.get("resource") or resource.get("name", "")
         lines.append(
-            f"{_as_list_text(foreign_key.get('fields', []))} -> "
+            f"{_as_list_text(foreign_key.get('fields', []))} → "
             f"{reference_resource}.{_as_list_text(reference.get('fields', []))}"
         )
     return lines
@@ -331,6 +305,26 @@ class FlowerViewApp(App[None]):
         color: ansi_default;
     }
 
+    #toc > ListItem.-highlight {
+        background: ansi_yellow;
+        color: #1A1B26;
+    }
+
+    #toc > ListItem.-highlight > Label {
+        background: ansi_yellow;
+        color: #1A1B26;
+    }
+
+    #toc:focus > ListItem.-highlight {
+        background: ansi_yellow;
+        color: #1A1B26;
+    }
+
+    #toc:focus > ListItem.-highlight > Label {
+        background: ansi_yellow;
+        color: #1A1B26;
+    }
+
     PageView {
         width: 1fr;
         height: 100%;
@@ -342,8 +336,8 @@ class FlowerViewApp(App[None]):
         color: ansi_default;
     }
 
-    .compact-list {
-        margin: 0 0 1 0;
+    .metadata-list {
+        margin: 0;
         color: ansi_default;
     }
 
@@ -358,7 +352,13 @@ class FlowerViewApp(App[None]):
     }
 
     .heading {
-        margin: 1 0 1 0;
+        margin: 1 0 0 0;
+        color: ansi_yellow;
+        text-style: bold;
+    }
+
+    .compact-heading {
+        margin: 0;
         color: ansi_yellow;
         text-style: bold;
     }

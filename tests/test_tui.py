@@ -39,9 +39,15 @@ def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
     assert "background-tint: ansi_default 0%" in FlowerViewApp.CSS
     assert "color: ansi_default" in FlowerViewApp.CSS
     assert "ListItem" in FlowerViewApp.CSS
+    assert "#toc > ListItem.-highlight" in FlowerViewApp.CSS
+    assert "background: ansi_yellow" in FlowerViewApp.CSS
+    assert "color: #1A1B26" in FlowerViewApp.CSS
+    assert "color: $footer-key-foreground" not in FlowerViewApp.CSS
     assert "width: 100%" in FlowerViewApp.CSS
     assert ".title" in FlowerViewApp.CSS
-    assert ".compact-list" in FlowerViewApp.CSS
+    assert ".compact-list" not in FlowerViewApp.CSS
+    assert ".metadata-list" in FlowerViewApp.CSS
+    assert ".compact-heading" in FlowerViewApp.CSS
     assert "margin: 0 0 1 0" in FlowerViewApp.CSS
 
 
@@ -68,13 +74,16 @@ def test_prepare_view_pages_builds_package_page_from_properties():
     assert pages[0].id == "page-1"
     assert pages[0].blocks == [
         TextBlock("test-package: Test Package", style="color(4) bold", classes="title"),
-        TextBlock(
-            "Licenses: MIT\nVersion: 1.0.0",
-            spans=((10, 13, "color(3) bold"), (23, 28, "color(3) bold")),
-        ),
         TextBlock("A test package."),
-        TextBlock("Contributors", style="color(3) bold", classes="heading"),
-        TextBlock("• Ada: author"),
+        TextBlock(
+            "Version\n• 1.0.0",
+            classes="metadata-list",
+            spans=((0, 7, "color(3) bold"),),
+        ),
+        TextBlock("Licenses", style="color(3) bold", classes="compact-heading"),
+        TextBlock("• MIT", classes="metadata-list"),
+        TextBlock("Contributors", style="color(3) bold", classes="compact-heading"),
+        TextBlock("• Ada: author", classes="metadata-list"),
         TextBlock("Resources", style="color(3) bold", classes="heading"),
         TableBlock(
             headers=["Name", "Title", "Description"],
@@ -121,10 +130,16 @@ def test_prepare_view_pages_builds_resource_page_from_properties():
         TextBlock("Species Catalog", style="color(4) bold", classes="title"),
         TextBlock("Species metadata."),
         TextBlock(
-            "• Path: data/species.csv\n• Primary key: id",
-            classes="compact-list",
-            spans=((8, 24, "color(3) bold"), (40, 42, "color(3) bold")),
+            "Path\n• data/species.csv",
+            classes="metadata-list",
+            spans=((0, 4, "color(3) bold"),),
         ),
+        TextBlock(
+            "Primary key\n• id",
+            classes="metadata-list",
+            spans=((0, 11, "color(3) bold"),),
+        ),
+        TextBlock("Fields", style="color(3) bold", classes="heading"),
         TableBlock(
             headers=["Name", "Title", "Type", "Description"],
             rows=[
@@ -159,11 +174,14 @@ def test_prepare_view_pages_handles_foreign_keys():
         }
     )
 
+    assert pages[1].blocks[0] == TextBlock(
+        "plots", style="color(4) bold", classes="title"
+    )
     assert (
         TextBlock(
-            "• Foreign keys:\n  ◦ species_id -> species.id",
-            classes="compact-list",
-            spans=((20, 44, "color(3) bold"),),
+            "Foreign keys\n• species_id → species.id",
+            classes="metadata-list",
+            spans=((0, 12, "color(3) bold"),),
         )
         in pages[1].blocks
     )
@@ -185,7 +203,9 @@ def test_prepare_view_pages_omits_resource_name_from_main_content():
     )
 
     assert pages[1].label == "species_catalog"
-    assert pages[1].blocks == []
+    assert pages[1].blocks == [
+        TextBlock("species_catalog", style="color(4) bold", classes="title")
+    ]
 
 
 def test_flower_view_app_switches_between_pre_mounted_pages():
