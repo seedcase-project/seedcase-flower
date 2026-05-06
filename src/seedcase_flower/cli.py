@@ -1,5 +1,6 @@
 """Functions for the exposed CLI."""
 
+from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
@@ -28,6 +29,13 @@ app = setup_cli(
     help="Flower generates human-readable documentation from Data Packages.",
     config_name=".flower.toml",
 )
+
+
+class ViewMode(Enum):
+    """Ways to display `view` output in the terminal."""
+
+    tui = "tui"
+    stdout = "stdout"
 
 
 @app.command()
@@ -93,6 +101,7 @@ def view(
     /,  # End of positional-only args
     *,  # Start of keyword-only params
     style: ViewStyle = ViewStyle.quarto_one_page,
+    mode: ViewMode = ViewMode.tui,
 ) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way.
 
@@ -105,10 +114,18 @@ def view(
             `gh:org/repo@1.0.1`).
         style: The style used to display the output in the terminal. Must be a
             single-page style.
+        mode: The terminal display mode. Use `tui` for an interactive interface
+            or `stdout` for plain output that can be piped to other tools.
     """
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     check(properties, error=True)
+    if mode == ViewMode.tui:
+        from seedcase_flower.tui import run_textual_viewer
+
+        run_textual_viewer(properties)
+        return
+
     built_sections = build_sections(properties, Config(style=Style[style.name]))
     console = Console(theme=CONSOLE_THEME)
     # TODO move back console theme? will it be used in CDP?

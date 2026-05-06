@@ -72,12 +72,12 @@ seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-Note that the output from `view` is optimized for rendering in a
-terminal, so some aspects of it might not display as expected here.
+These docs use `--mode stdout` to show rendered terminal output, so some
+aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower view https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
+!uv run seedcase-flower view --mode stdout https://raw.githubusercontent.com/seedcase-project/example-seed-beetle/refs/heads/main/datapackage.json
 ```
 :::
 
@@ -91,42 +91,47 @@ seedcase-flower view gh:seedcase-project/example-seed-beetle
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-Note that the output from `view` is optimized for rendering in a
-terminal, so some aspects of it might not display as expected here.
+These docs use `--mode stdout` to show rendered terminal output, so some
+aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower view gh:seedcase-project/example-seed-beetle
+!uv run seedcase-flower view --mode stdout gh:seedcase-project/example-seed-beetle
 ```
 :::
 
+By default, `view` opens an interactive terminal interface. Use
+`--mode stdout` to render the output directly to the terminal instead,
+which is useful when piping output to other tools.
+
 ### Styling terminal output
 
-Use the `--style` flag to format the terminal output with any of the
-[built-in view styles](/docs/reference/ViewStyle.qmd). For example:
+Use the `--style` flag with `--mode stdout` to format the terminal
+output with any of the [built-in view styles](/docs/reference/ViewStyle.qmd).
+For example:
 
 ```{.bash filename="Terminal"}
-seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
+seedcase-flower view --mode stdout --style quarto-one-page gh:seedcase-project/example-seed-beetle
 ```
 
 <!-- TODO: Update this after another one page style is added so it doesn't use the default style. -->
 
 This output will look identical to the output above, since
-`quarto-one-page` is the default style for `view`.
+`quarto-one-page` is the default stdout style for `view`.
 
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-Note that the output from `view` is optimized for rendering in a
-terminal, so some aspects of it might not display as expected here.
+These docs use `--mode stdout` to show rendered terminal output, so some
+aspects of it might not display as expected here.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower view --style quarto-one-page gh:seedcase-project/example-seed-beetle
+!uv run seedcase-flower view --mode stdout --style quarto-one-page gh:seedcase-project/example-seed-beetle
 ```
 :::
 
-`view` only works with single-page
+The stdout mode only works with single-page
 [built-in styles](/docs/reference/Style.qmd); multi-page styles are not
 supported.
 
