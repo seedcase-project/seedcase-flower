@@ -17,28 +17,53 @@ from seedcase_flower.tui import (
 
 def test_flower_view_app_has_vim_navigation_bindings():
     visible_bindings = [binding for binding in FlowerViewApp.BINDINGS if binding.show]
-    assert [binding.key for binding in visible_bindings] == [
-        "j,down",
-        "k,up",
-        "l,right",
-        "h,left",
-        "y,c",
-        "s",
-        "/",
-        "escape",
-        "q",
-    ]
-    assert visible_bindings[0].key_display == "j/down"
-    assert visible_bindings[1].key_display == "k/up"
-    assert visible_bindings[2].key_display == "l/right"
-    assert visible_bindings[2].description == "Select"
-    assert visible_bindings[3].key_display == "h/left"
-    assert visible_bindings[3].description == "Back"
-    assert visible_bindings[4].key_display == "y/c"
-    assert visible_bindings[4].description == "Copy"
-    assert visible_bindings[6].description == "Search"
-    assert any(binding.key == "ctrl+d" for binding in FlowerViewApp.BINDINGS)
-    assert any(binding.key == "ctrl+u" for binding in FlowerViewApp.BINDINGS)
+    assert [binding.key for binding in visible_bindings] == ["escape", "?"]
+    assert visible_bindings[0].key_display == "esc"
+    assert visible_bindings[1].description == "Keyboard shortcuts"
+    assert FlowerViewApp.COMMAND_PALETTE_DISPLAY == "ctrl+p"
+
+    bindings = {binding.key: binding for binding in FlowerViewApp.BINDINGS}
+    assert bindings["q"].key_display == "| q"
+    assert bindings["q"].description == "Quit"
+    assert bindings["ctrl+q"].system is True
+    assert bindings["ctrl+p"].description == "Command Palette"
+    assert bindings["ctrl+p"].key_display == "ctrl+p"
+    assert bindings["j,down"].key_display == "down | j"
+    assert bindings["k,up"].key_display == "up | k"
+    assert bindings["l,right"].key_display == "right | l"
+    assert bindings["l,right"].description == "Select"
+    assert bindings["h,left"].key_display == "left | h"
+    assert bindings["h,left"].description == "Back"
+    assert bindings["y,c"].key_display == "c | y"
+    assert bindings["y,c"].description == "Copy"
+    assert bindings["/,ctrl+f"].key_display == "ctrl+f | /"
+    assert bindings["/,ctrl+f"].description == "Search"
+    assert bindings["ctrl+d"].description == "Jump down"
+    assert bindings["ctrl+u"].description == "Jump up"
+
+
+def test_flower_view_app_uses_ctrl_not_caret_in_key_displays():
+    app = FlowerViewApp([])
+
+    assert app.get_key_display(FlowerViewApp.BINDINGS[-2]) == "ctrl+d"
+
+
+def test_flower_view_app_toggles_keyboard_shortcuts_panel():
+    async def run_test() -> None:
+        app = FlowerViewApp([ViewPage(label="Package", id="page-1", blocks=[])])
+
+        async with app.run_test() as pilot:
+            app.action_toggle_help_panel()
+            await pilot.pause()
+
+            assert app.screen.query("HelpPanel")
+
+            app.action_toggle_help_panel()
+            await pilot.pause()
+
+            assert not app.screen.query("HelpPanel")
+
+    asyncio.run(run_test())
 
 
 def test_search_input_supports_ctrl_backspace_word_delete():

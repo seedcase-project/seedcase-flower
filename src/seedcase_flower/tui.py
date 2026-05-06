@@ -401,18 +401,36 @@ class FlowerViewApp(App[None]):
         border: solid ansi_yellow;
     }
     """
+    COMMAND_PALETTE_DISPLAY = "ctrl+p"
     BINDINGS = [
-        Binding("j,down", "toc_down", "Down", key_display="j/down"),
-        Binding("k,up", "toc_up", "Up", key_display="k/up"),
-        Binding("l,right", "focus_table", "Select", key_display="l/right"),
-        Binding("h,left", "focus_toc", "Back", key_display="h/left"),
-        Binding("y,c", "copy_selection", "Copy", key_display="y/c"),
-        Binding("s", "sort_table", "Sort table"),
-        Binding("/", "search_table", "Search"),
-        Binding("escape", "clear_search", "Clear search"),
-        Binding("q", "quit", "Quit"),
-        Binding("ctrl+d", "jump_down", show=False),
-        Binding("ctrl+u", "jump_up", show=False),
+        Binding("escape", "quit", "Quit", key_display="esc"),
+        Binding("q", "quit", "Quit", key_display="| q", show=False),
+        Binding("ctrl+q", "quit", show=False, system=True),
+        Binding("?", "toggle_help_panel", "Keyboard shortcuts"),
+        Binding(
+            "ctrl+p",
+            "command_palette",
+            "Command Palette",
+            key_display="ctrl+p",
+            show=False,
+        ),
+        Binding("j,down", "toc_down", "Down", key_display="down | j", show=False),
+        Binding("k,up", "toc_up", "Up", key_display="up | k", show=False),
+        Binding(
+            "l,right", "focus_table", "Select", key_display="right | l", show=False
+        ),
+        Binding("h,left", "focus_toc", "Back", key_display="left | h", show=False),
+        Binding("y,c", "copy_selection", "Copy", key_display="c | y", show=False),
+        Binding("s", "sort_table", "Sort table", show=False),
+        Binding(
+            "/,ctrl+f",
+            "search_table",
+            "Search",
+            key_display="ctrl+f | /",
+            show=False,
+        ),
+        Binding("ctrl+d", "jump_down", "Jump down", key_display="ctrl+d", show=False),
+        Binding("ctrl+u", "jump_up", "Jump up", key_display="ctrl+u", show=False),
     ]
     TITLE = "Flower"
 
@@ -422,6 +440,18 @@ class FlowerViewApp(App[None]):
         self.pages = pages
         self._pending_page_index: int | None = None
         self._highlight_timer: Timer | None = None
+
+    def get_key_display(self, binding: Binding) -> str:
+        """Format key labels with explicit ctrl names instead of caret syntax."""
+        key_display = super().get_key_display(binding)
+        return key_display.replace("^", "ctrl+")
+
+    def action_toggle_help_panel(self) -> None:
+        """Toggle the keyboard shortcuts help panel."""
+        if self.screen.query("HelpPanel"):
+            self.action_hide_help_panel()
+        else:
+            self.action_show_help_panel()
 
     def compose(self) -> ComposeResult:
         """Compose the page navigation and content widgets."""
