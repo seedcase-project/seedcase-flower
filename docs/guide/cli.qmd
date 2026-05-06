@@ -107,8 +107,8 @@ which is useful when piping output to other tools.
 ### Styling terminal output
 
 Use the `--style` flag with `--mode stdout` to format the terminal
-output with any of the [built-in view styles](/docs/reference/ViewStyle.qmd).
-For example:
+output with any of the
+[built-in view styles](/docs/reference/ViewStyle.qmd). For example:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --mode stdout --style quarto-one-page gh:seedcase-project/example-seed-beetle
