@@ -400,6 +400,20 @@ class FlowerViewApp(App[None]):
         text-style: bold;
         border: solid ansi_yellow;
     }
+
+    Toast {
+        background: #292E42;
+        color: ansi_default;
+        border-left: outer ansi_yellow;
+    }
+
+    Toast:ansi {
+        background: #292E42;
+    }
+
+    ToastRack {
+        margin-bottom: 2;
+    }
     """
     COMMAND_PALETTE_DISPLAY = "ctrl+p"
     BINDINGS = [

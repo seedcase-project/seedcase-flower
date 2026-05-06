@@ -94,6 +94,9 @@ def test_flower_view_app_themes_chrome_and_full_width_toc_rows():
     assert "background: #292E42" in FlowerViewApp.CSS
     assert "background-tint: ansi_default 0%" in FlowerViewApp.CSS
     assert "color: ansi_default" in FlowerViewApp.CSS
+    assert "Toast" in FlowerViewApp.CSS
+    assert "Toast:ansi" in FlowerViewApp.CSS
+    assert "ToastRack" in FlowerViewApp.CSS
     assert "ListItem" in FlowerViewApp.CSS
     assert "#toc > ListItem.-highlight" in FlowerViewApp.CSS
     assert "#toc:focus > ListItem.-highlight" in FlowerViewApp.CSS
