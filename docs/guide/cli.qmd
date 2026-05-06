@@ -148,9 +148,10 @@ page's table. Press `l` or the right arrow again to select columns, and
 `h` or the left arrow to move back through selected columns, row selection,
 and the table of contents. Use `Ctrl+d` and `Ctrl+u` to move six items down
 or up. For tables, use `s` to cycle sorting through the columns and
-directions, `/` to search all tables, and `Esc` to clear the search. The
-sorted column shows an arrow for ascending or descending order, and the
-table of contents hides resources whose tables have no search matches.
+directions, `/` to search all tables, `y` or `c` to copy the selected
+row or column, and `Esc` to clear the search. The sorted column shows an
+arrow for ascending or descending order, and the table of contents hides
+resources whose tables have no search matches.
 
 ::: callout-important
 `view` is only configurable via command line flags. This means that any

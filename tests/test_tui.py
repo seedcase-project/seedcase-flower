@@ -22,6 +22,7 @@ def test_flower_view_app_has_vim_navigation_bindings():
         "k,up",
         "l,right",
         "h,left",
+        "y,c",
         "s",
         "/",
         "escape",
@@ -33,7 +34,9 @@ def test_flower_view_app_has_vim_navigation_bindings():
     assert visible_bindings[2].description == "Select"
     assert visible_bindings[3].key_display == "h/left"
     assert visible_bindings[3].description == "Back"
-    assert visible_bindings[5].description == "Search"
+    assert visible_bindings[4].key_display == "y/c"
+    assert visible_bindings[4].description == "Copy"
+    assert visible_bindings[6].description == "Search"
     assert any(binding.key == "ctrl+d" for binding in FlowerViewApp.BINDINGS)
     assert any(binding.key == "ctrl+u" for binding in FlowerViewApp.BINDINGS)
 
@@ -620,6 +623,48 @@ def test_flower_view_app_jumps_in_focused_table():
             app.action_jump_up()
 
             assert table.cursor_row == 0
+
+    asyncio.run(run_test())
+
+
+def test_searchable_data_table_copies_selected_row_or_column():
+    async def run_test() -> None:
+        copied = []
+        app = FlowerViewApp(
+            [
+                ViewPage(
+                    label="Package",
+                    id="page-1",
+                    blocks=[
+                        TableBlock(
+                            headers=["Name", "Type"],
+                            rows=[
+                                ["species", "string"],
+                                ["plot_id", "integer"],
+                            ],
+                        )
+                    ],
+                )
+            ]
+        )
+        app.copy_to_clipboard = copied.append  # type: ignore[method-assign]
+
+        async with app.run_test() as pilot:
+            table = app.query_one(SearchableDataTable)
+
+            app.action_focus_table()
+            await pilot.pause()
+            table.move_cursor(row=1)
+            table.action_copy_selection()
+            await pilot.pause()
+
+            assert copied[-1] == "plot_id\tinteger"
+
+            table.select_next_column()
+            app.action_copy_selection()
+            await pilot.pause()
+
+            assert copied[-1] == "species\nplot_id"
 
     asyncio.run(run_test())
 

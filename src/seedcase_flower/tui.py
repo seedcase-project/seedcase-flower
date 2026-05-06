@@ -406,6 +406,7 @@ class FlowerViewApp(App[None]):
         Binding("k,up", "toc_up", "Up", key_display="k/up"),
         Binding("l,right", "focus_table", "Select", key_display="l/right"),
         Binding("h,left", "focus_toc", "Back", key_display="h/left"),
+        Binding("y,c", "copy_selection", "Copy", key_display="y/c"),
         Binding("s", "sort_table", "Sort table"),
         Binding("/", "search_table", "Search"),
         Binding("escape", "clear_search", "Clear search"),
@@ -513,6 +514,14 @@ class FlowerViewApp(App[None]):
         search = self.query_one("#table-search", Input)
         search.display = True
         search.focus()
+
+    def action_copy_selection(self) -> None:
+        """Copy the selected row or column and show a toast notification."""
+        if isinstance(self.focused, SearchableDataTable):
+            text = self.focused.selected_text()
+            if text:
+                self.copy_to_clipboard(text)
+                self.notify("Selection copied", markup=False)
 
     def action_sort_table(self) -> None:
         """Sort the current page table by the next column."""
@@ -656,6 +665,10 @@ class PageView(VerticalScroll):
 class SearchableDataTable(DataTable[str]):
     """DataTable with simple current-page sorting and row filtering."""
 
+    BINDINGS = [
+        *DataTable.BINDINGS,
+    ]
+
     def __init__(self, block: TableBlock) -> None:
         """Initialize a table from prepared table data."""
         super().__init__(
@@ -684,6 +697,20 @@ class SearchableDataTable(DataTable[str]):
         """Hide row selection when focus returns to navigation or search."""
         self.show_cursor = False
         self.focus_row_selection()
+
+    def action_copy_selection(self) -> None:
+        """Copy the selected row or column to the clipboard with a toast."""
+        if not self.row_count:
+            return
+        self.app.copy_to_clipboard(self.selected_text())
+        self.app.notify("Selection copied", markup=False)
+
+    def selected_text(self) -> str:
+        """Return selected row or column as tabular plain text."""
+        if self.cursor_type == "column" and self.headers:
+            column = self.headers[self.cursor_column]
+            return "\n".join(str(value) for value in self.get_column(column))
+        return "\t".join(str(value) for value in self.get_row_at(self.cursor_row))
 
     def filter_rows(self, query: str) -> None:
         """Show only rows that contain the query text."""
