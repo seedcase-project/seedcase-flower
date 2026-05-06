@@ -3,6 +3,8 @@
 import asyncio
 import inspect
 
+from textual.widgets import ContentSwitcher
+
 from seedcase_flower.tui import (
     FlowerViewApp,
     PageView,
@@ -92,6 +94,8 @@ def test_flower_view_app_switches_between_pages():
             await app._show_page(1)
 
             assert app.sub_title == "species_catalog"
-            assert app.query_one("#content-switcher").current == "page-2"
+            assert (
+                app.query_one("#content-switcher", ContentSwitcher).current == "page-2"
+            )
 
     asyncio.run(run_test())

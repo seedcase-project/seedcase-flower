@@ -225,9 +225,15 @@ def run_textual_viewer(properties: dict[str, Any]) -> None:
 class PageView(VerticalScroll):
     """A cached Textual page composed from text and native tables."""
 
-    def __init__(self, blocks: list[ViewBlock], **kwargs: object) -> None:
+    def __init__(
+        self,
+        blocks: list[ViewBlock],
+        *,
+        id: str | None = None,
+        classes: str | None = None,
+    ) -> None:
         """Initialize the page with prepared content blocks."""
-        super().__init__(**kwargs)
+        super().__init__(id=id, classes=classes)
         self.blocks = blocks
 
     def compose(self) -> ComposeResult:
@@ -236,7 +242,7 @@ class PageView(VerticalScroll):
             if isinstance(block, TextBlock):
                 yield Static(block.content, classes=block.classes)
             else:
-                table = DataTable(
+                table: DataTable[str] = DataTable(
                     show_row_labels=False,
                     zebra_stripes=True,
                     cursor_type="row",
