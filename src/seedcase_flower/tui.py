@@ -19,6 +19,7 @@ from textual.widgets import (
     ListView,
     Static,
 )
+from textual.widgets._data_table import ColumnKey
 
 RICH_BLUE = "color(4) bold"
 RICH_YELLOW = "color(3) bold"
@@ -677,9 +678,15 @@ class SearchInput(Input):
 class PageView(VerticalScroll):
     """A cached Textual page composed from text and native tables."""
 
-    def __init__(self, blocks: list[ViewBlock], **kwargs: object) -> None:
+    def __init__(
+        self,
+        blocks: list[ViewBlock],
+        *,
+        id: str | None = None,
+        classes: str | None = None,
+    ) -> None:
         """Initialize the page with prepared content blocks."""
-        super().__init__(**kwargs)
+        super().__init__(id=id, classes=classes)
         self.blocks = blocks
 
     def compose(self) -> ComposeResult:
@@ -713,13 +720,14 @@ class SearchableDataTable(DataTable[str]):
         )
         self.headers = block.headers
         self.all_rows = block.rows
+        self.column_keys: list[ColumnKey] = []
         self._sort_column_index: int | None = None
         self._sort_reverse = False
 
     def on_mount(self) -> None:
         """Populate the table once it has app context for measuring columns."""
         for header in self.headers:
-            self.add_column(header, key=header)
+            self.column_keys.append(self.add_column(header, key=header))
         self.filter_rows("")
 
     def on_focus(self) -> None:
@@ -741,7 +749,7 @@ class SearchableDataTable(DataTable[str]):
     def selected_text(self) -> str:
         """Return selected row or column as tabular plain text."""
         if self.cursor_type == "column" and self.headers:
-            column = self.headers[self.cursor_column]
+            column = self.column_keys[self.cursor_column]
             return "\n".join(str(value) for value in self.get_column(column))
         return "\t".join(str(value) for value in self.get_row_at(self.cursor_row))
 
@@ -802,7 +810,7 @@ class SearchableDataTable(DataTable[str]):
         """Sort rows case-insensitively by one column."""
         self._refresh_sort_indicators()
         self.sort(
-            self.headers[column_index],
+            self.column_keys[column_index],
             key=lambda value: str(value).casefold(),
             reverse=self._sort_reverse,
         )
@@ -814,7 +822,7 @@ class SearchableDataTable(DataTable[str]):
             if column_index == self._sort_column_index:
                 label.append(" ")
                 label.append("↓" if self._sort_reverse else "↑", style=RICH_YELLOW)
-            column = self.columns[header]
+            column = self.columns[self.column_keys[column_index]]
             column.label = label
             label_width = len(label.plain)
             column.content_width = max(column.content_width, label_width)

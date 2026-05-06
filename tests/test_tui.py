@@ -2,6 +2,10 @@
 
 import asyncio
 import inspect
+from typing import cast
+
+from textual.binding import Binding
+from textual.widgets import ContentSwitcher, Input, ListView
 
 from seedcase_flower.tui import (
     FlowerViewApp,
@@ -15,14 +19,22 @@ from seedcase_flower.tui import (
 )
 
 
+def _flower_bindings() -> list[Binding]:
+    return cast(list[Binding], FlowerViewApp.BINDINGS)
+
+
+def _search_bindings() -> list[Binding]:
+    return cast(list[Binding], SearchInput.BINDINGS)
+
+
 def test_flower_view_app_has_vim_navigation_bindings():
-    visible_bindings = [binding for binding in FlowerViewApp.BINDINGS if binding.show]
+    visible_bindings = [binding for binding in _flower_bindings() if binding.show]
     assert [binding.key for binding in visible_bindings] == ["q", "?"]
     assert visible_bindings[0].description == "Quit"
     assert visible_bindings[1].description == "Keyboard shortcuts"
     assert FlowerViewApp.COMMAND_PALETTE_DISPLAY == "ctrl+p"
 
-    bindings = {binding.key: binding for binding in FlowerViewApp.BINDINGS}
+    bindings = {binding.key: binding for binding in _flower_bindings()}
     assert "escape" not in bindings
     assert bindings["ctrl+q"].description == "Quit"
     assert bindings["ctrl+q"].key_display == "ctrl+q |"
@@ -45,7 +57,7 @@ def test_flower_view_app_has_vim_navigation_bindings():
 def test_flower_view_app_uses_ctrl_not_caret_in_key_displays():
     app = FlowerViewApp([])
 
-    assert app.get_key_display(FlowerViewApp.BINDINGS[-2]) == "ctrl+d"
+    assert app.get_key_display(_flower_bindings()[-2]) == "ctrl+d"
 
 
 def test_flower_view_app_toggles_keyboard_shortcuts_panel():
@@ -67,7 +79,7 @@ def test_flower_view_app_toggles_keyboard_shortcuts_panel():
 
 
 def test_search_input_supports_ctrl_backspace_word_delete():
-    assert any(binding.key == "ctrl+backspace" for binding in SearchInput.BINDINGS)
+    assert any(binding.key == "ctrl+backspace" for binding in _search_bindings())
 
 
 def test_flower_view_app_pre_mounts_pages():
@@ -288,7 +300,8 @@ def test_flower_view_app_switches_between_pre_mounted_pages():
             await app._show_page(1)
 
             assert app.sub_title == "species_catalog"
-            assert app.query_one("#content-switcher").current == "page-2"
+            switcher = app.query_one("#content-switcher", ContentSwitcher)
+            assert switcher.current == "page-2"
 
     asyncio.run(run_test())
 
@@ -319,12 +332,13 @@ def test_flower_view_app_debounces_highlight_navigation():
             app.action_toc_down()
             app.action_toc_down()
 
-            assert app.query_one("#content-switcher").current == "page-1"
+            switcher = app.query_one("#content-switcher", ContentSwitcher)
+            assert switcher.current == "page-1"
 
             await pilot.pause(0.15)
 
             assert app.sub_title == "location_catalog"
-            assert app.query_one("#content-switcher").current == "page-3"
+            assert switcher.current == "page-3"
 
     asyncio.run(run_test())
 
@@ -347,11 +361,12 @@ def test_flower_view_app_does_not_update_page_on_switch():
         )
 
         async with app.run_test():
-            page = app.query_one("#page-2")
-            page.remove = None  # type: ignore[method-assign]
+            page = app.query_one("#page-2", PageView)
+            page.remove = None  # type: ignore[assignment, method-assign]
             await app._show_page(1)
 
-            assert app.query_one("#content-switcher").current == "page-2"
+            switcher = app.query_one("#content-switcher", ContentSwitcher)
+            assert switcher.current == "page-2"
 
     asyncio.run(run_test())
 
@@ -380,7 +395,8 @@ def test_flower_view_app_filters_current_page_table():
             table = app.query_one(SearchableDataTable)
 
             app.action_search_table()
-            assert app.query_one("#table-search").placeholder == "Search all tables"
+            search = app.query_one("#table-search", Input)
+            assert search.placeholder == "Search all tables"
             await pilot.press("s", "p")
 
             assert table.row_count == 1
@@ -429,12 +445,12 @@ def test_flower_view_app_filters_sidebar_to_matching_resource_tables():
             app.action_search_table()
             await pilot.press("s", "p")
 
-            toc_items = app.query_one("#toc").children
+            toc = app.query_one("#toc", ListView)
+            toc_items = toc.children
             assert toc_items[0].display is True
             assert toc_items[1].display is True
             assert toc_items[2].display is False
 
-            toc = app.query_one("#toc")
             app.action_toc_down()
             assert toc.index == 1
 
@@ -473,23 +489,25 @@ def test_flower_view_app_sorts_current_page_table():
 
         async with app.run_test():
             table = app.query_one(SearchableDataTable)
-            initial_width = table.columns["Name"].width
+            name_key = table.column_keys[0]
+            type_key = table.column_keys[1]
+            initial_width = table.columns[name_key].width
 
             app.action_sort_table()
 
             assert table.get_row_at(0) == ["plot_id", "integer"]
-            assert table.columns["Name"].label.plain == "Name ↑"
-            assert table.columns["Name"].width >= initial_width
-            assert str(table.columns["Name"].label.spans[0].style) == "color(3) bold"
+            assert table.columns[name_key].label.plain == "Name ↑"
+            assert table.columns[name_key].width >= initial_width
+            assert str(table.columns[name_key].label.spans[0].style) == "color(3) bold"
 
             app.action_sort_table()
             assert table.get_row_at(0) == ["species", "string"]
-            assert table.columns["Name"].label.plain == "Name ↓"
+            assert table.columns[name_key].label.plain == "Name ↓"
 
             app.action_sort_table()
             assert table.get_row_at(0) == ["plot_id", "integer"]
-            assert table.columns["Name"].label.plain == "Name"
-            assert table.columns["Type"].label.plain == "Type ↑"
+            assert table.columns[name_key].label.plain == "Name"
+            assert table.columns[type_key].label.plain == "Type ↑"
 
     asyncio.run(run_test())
 
@@ -513,14 +531,14 @@ def test_flower_view_app_moves_focus_between_toc_and_table():
 
         async with app.run_test() as pilot:
             table = app.query_one(SearchableDataTable)
-            toc = app.query_one("#toc")
+            toc = app.query_one("#toc", ListView)
 
             assert app.focused == toc
             assert table.show_cursor is False
 
             app.action_focus_table()
             await pilot.pause()
-            assert app.focused == table
+            assert app.focused == cast(object, table)
             assert table.show_cursor is True
             assert table.cursor_type == "row"
 
@@ -557,7 +575,7 @@ def test_flower_view_app_cycles_table_column_selection():
 
         async with app.run_test() as pilot:
             table = app.query_one(SearchableDataTable)
-            toc = app.query_one("#toc")
+            toc = app.query_one("#toc", ListView)
 
             app.action_focus_table()
             await pilot.pause()
@@ -565,21 +583,21 @@ def test_flower_view_app_cycles_table_column_selection():
             assert table.cursor_type == "row"
 
             app.action_focus_table()
-            assert table.cursor_type == "column"
+            assert str(table.cursor_type) == "column"
             assert table.cursor_column == 0
 
             app.action_focus_table()
-            assert table.cursor_type == "column"
+            assert str(table.cursor_type) == "column"
             assert table.cursor_column == 1
 
             app.action_focus_toc()
-            assert table.cursor_type == "column"
+            assert str(table.cursor_type) == "column"
             assert table.cursor_column == 0
-            assert app.focused == table
+            assert app.focused == cast(object, table)
 
             app.action_focus_toc()
             assert table.cursor_type == "row"
-            assert app.focused == table
+            assert app.focused == cast(object, table)
 
             app.action_focus_toc()
             await pilot.pause()
@@ -656,7 +674,7 @@ def test_flower_view_app_jumps_in_focused_table():
 
 def test_searchable_data_table_copies_selected_row_or_column():
     async def run_test() -> None:
-        copied = []
+        copied: list[str] = []
         app = FlowerViewApp(
             [
                 ViewPage(
@@ -674,7 +692,7 @@ def test_searchable_data_table_copies_selected_row_or_column():
                 )
             ]
         )
-        app.copy_to_clipboard = copied.append  # type: ignore[method-assign]
+        app.copy_to_clipboard = copied.append  # type: ignore[assignment, method-assign]
 
         async with app.run_test() as pilot:
             table = app.query_one(SearchableDataTable)
@@ -720,7 +738,7 @@ def test_flower_view_app_selecting_toc_item_does_not_focus_table():
 
         async with app.run_test() as pilot:
             table = app.query_one(SearchableDataTable)
-            toc = app.query_one("#toc")
+            toc = app.query_one("#toc", ListView)
 
             toc.index = 1
             toc.action_select_cursor()
@@ -732,6 +750,6 @@ def test_flower_view_app_selecting_toc_item_does_not_focus_table():
             app.action_focus_table()
             await pilot.pause()
 
-            assert app.focused == table
+            assert app.focused == cast(object, table)
 
     asyncio.run(run_test())
