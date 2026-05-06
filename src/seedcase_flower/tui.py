@@ -50,7 +50,6 @@ class TableBlock:
 
     headers: list[str]
     rows: list[list[str]]
-    caption: str = ""
 
 
 type ViewBlock = TextBlock | TableBlock
@@ -186,7 +185,6 @@ def _resource_blocks(resource: dict[str, Any]) -> list[ViewBlock]:
                     ]
                     for field in fields
                 ],
-                caption=f"Fields in the {resource.get('name', 'resource')} resource.",
             )
         )
     return blocks
@@ -384,12 +382,6 @@ class FlowerViewApp(App[None]):
     .field-table > .datatable--cursor {
         background: ansi_yellow;
         color: #1A1B26;
-    }
-
-    .table-caption {
-        color: ansi_default;
-        text-style: italic;
-        margin: 0 0 1 0;
     }
 
     #table-search {
@@ -702,8 +694,6 @@ class PageView(VerticalScroll):
             else:
                 table = SearchableDataTable(block)
                 yield table
-                if block.caption:
-                    yield Label(block.caption, classes="table-caption")
 
 
 class SearchableDataTable(DataTable[str]):

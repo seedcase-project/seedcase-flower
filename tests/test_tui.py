@@ -80,7 +80,7 @@ def test_flower_view_app_uses_native_datatables_for_tables():
     assert "DataTable" in inspect.getsource(PageView.compose)
     assert "SearchableDataTable" in inspect.getsource(PageView.compose)
     assert "field-table" in FlowerViewApp.CSS
-    assert "table-caption" in FlowerViewApp.CSS
+    assert "table-caption" not in FlowerViewApp.CSS
     assert "#table-search" in FlowerViewApp.CSS
     assert "color: ansi_yellow" in FlowerViewApp.CSS
     assert "border: solid ansi_yellow" in FlowerViewApp.CSS
@@ -206,7 +206,6 @@ def test_prepare_view_pages_builds_resource_page_from_properties():
                 ["id", "Identifier", "integer", "Stable identifier."],
                 ["species", "Species", "string", "Scientific name."],
             ],
-            caption="Fields in the species_catalog resource.",
         ),
     ]
 
