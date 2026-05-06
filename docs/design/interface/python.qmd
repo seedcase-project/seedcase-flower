@@ -82,10 +82,10 @@ flowchart TD
 
 ### {{< var done >}} `view()`
 
-`view()` takes the same parameters as `build()`: `source` and `style`.
-Unlike `build()`, `view()` only accepts built-in styles and ignores
-custom styles and the configuration file. The rendered metadata is shown
-in a terminal pager. For details about the parameters, see
+`view()` takes a `source` and a display `mode`. Unlike `build()`, `view()`
+does not use styles, custom templates, output files, or the configuration
+file. The metadata is shown in an interactive TUI by default, or printed to
+stdout when `mode="stdout"`. For details about the parameters, see
 [`view()`](/docs/reference/view.qmd).
 
 The internal flow of `view()` is shown in the diagram below.
@@ -95,10 +95,9 @@ The internal flow of `view()` is shown in the diagram below.
 %%| fig-cap: "Diagram of the internal flow of functions and objects in the `view()` CLI function."
 flowchart TD
     source:::input --> parse_source{{"parse_source()"}} --> address
-    style_cfg[style]:::input --> Config
+    mode[mode]:::input
     address --> read_properties{{"read_properties()"}} --> properties
-    properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
-    output --> pager{{"pager"}}
+    properties & mode --> output{{"TUI or stdout"}}
 
     classDef input fill:#FFF
 ```

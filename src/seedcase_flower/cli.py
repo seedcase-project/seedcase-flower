@@ -6,8 +6,8 @@ from typing import Any, Optional
 
 from check_datapackage import check
 from rich.console import Console, Group, RenderableType
-from rich.markdown import Markdown
 from rich.rule import Rule
+from rich.table import Table
 from rich.text import Text
 from seedcase_soil import (
     CONSOLE_THEME,
@@ -20,7 +20,7 @@ from seedcase_soil import (
     setup_cli,
 )
 
-from seedcase_flower.build_sections import BuiltSection, build_sections
+from seedcase_flower.build_sections import build_sections
 from seedcase_flower.config import Config
 from seedcase_flower.internals import _number
 from seedcase_flower.styles import Style
@@ -33,11 +33,11 @@ app = setup_cli(
 )
 
 
-class Viewer(Enum):
+class ViewMode(Enum):
     """Ways to display `view` output in the terminal."""
 
-    pager = "pager"
-    textual = "textual"
+    tui = "tui"
+    stdout = "stdout"
 
 
 @app.command()
@@ -102,8 +102,7 @@ def view(
     source: str = "datapackage.json",
     /,  # End of positional-only args
     *,  # Start of keyword-only params
-    style: Style = Style.quarto_one_page,
-    viewer: Viewer = Viewer.pager,
+    mode: ViewMode = ViewMode.tui,
 ) -> None:
     """Display the contents of a `datapackage.json` in a human-friendly way.
 
@@ -114,78 +113,179 @@ def view(
             in the repo root (in the format `gh:org/repo`, which can also include
             reference to a tag or branch, such as `gh:org/repo@main` or
             `gh:org/repo@1.0.1`).
-        style: The built-in style used to display the output in the terminal.
-        viewer: The terminal viewer to use. Use `pager` for plain scrolling output
-            or `textual` for an interactive interface with section navigation.
+        mode: The terminal display mode. Use `tui` for an interactive interface
+            or `stdout` for plain output that can be piped to other tools.
     """
     address: Address = parse_source(source)
     properties: dict[str, Any] = read_properties(address)
     check(properties, error=True)
-    if viewer == Viewer.textual:
+    if mode == ViewMode.tui:
         from seedcase_flower.tui import run_textual_viewer
 
         run_textual_viewer(properties)
         return
 
-    built_sections = build_sections(properties, Config(style=style))
     console = Console(theme=CONSOLE_THEME)
-    # TODO move back console theme? will it be used in CDP?
-    print()  # One line separation between the command and the datapackage title
-    with console.pager(styles=True):
-        console.print(_format_view_sections(built_sections))
+    console.print(_format_view_properties(properties))
 
 
-def _format_view_sections(built_sections: list[BuiltSection]) -> RenderableType:
-    if len(built_sections) == 1:
-        return _format_view_section_content(built_sections[0].content)
-
-    sections: list[RenderableType] = []
-    for index, section in enumerate(built_sections):
-        if index > 0:
-            sections.append(Text(""))
-            sections.append(Rule(style="dim"))
-            sections.append(Text(""))
-        sections.append(_format_view_section_content(section.content))
-    return Group(*sections)
-
-
-def _format_view_section_content(content: str) -> RenderableType:
-    front_matter, body = _split_front_matter(content)
-    if not front_matter:
-        return Markdown(body)
-
-    headings = []
-    title = _front_matter_value(front_matter, "title")
-    subtitle = _front_matter_value(front_matter, "subtitle")
+def _format_view_properties(properties: dict[str, Any]) -> RenderableType:
+    """Format Data Package properties for plain terminal output."""
+    renderables: list[RenderableType] = []
+    title = _package_title(properties)
     if title:
-        headings.append(Text(title, style="markdown.h1"))
-    if subtitle:
-        headings.append(Text(subtitle.strip("`"), style="yellow bold"))
+        renderables.append(Text(title, style="markdown.h1"))
+    if description := properties.get("description"):
+        renderables.append(Text(description))
+    if version := properties.get("version"):
+        renderables.extend(_metadata_list("Version", [version]))
+    if licenses := properties.get("licenses"):
+        renderables.extend(_metadata_list("Licenses", _license_labels(licenses)))
+    if contributors := properties.get("contributors"):
+        renderables.extend(
+            _metadata_list("Contributors", _contributor_labels(contributors))
+        )
+    if resources := properties.get("resources"):
+        renderables.append(Text("Resources", style="yellow bold"))
+        renderables.append(_resources_table(resources))
 
-    if not headings:
-        return Markdown(body.lstrip())
-    return Group(*headings, Markdown(body.lstrip()))
+    for resource in properties.get("resources", []):
+        renderables.extend([Text(""), Rule(style="dim"), Text("")])
+        renderables.extend(_format_resource(resource))
+
+    return Group(*renderables)
 
 
-def _split_front_matter(content: str) -> tuple[list[str], str]:
-    lines = content.splitlines()
-    if not lines or lines[0].strip() != "---":
-        return [], content
+def _format_resource(resource: dict[str, Any]) -> list[RenderableType]:
+    renderables: list[RenderableType] = []
+    resource_name = resource.get("name", "")
+    title = resource.get("title") or resource_name
+    if title:
+        renderables.append(Text(title, style="markdown.h1"))
+    if description := _resource_description(resource):
+        renderables.append(Text(description))
 
-    for index, line in enumerate(lines[1:], start=1):
-        if line.strip() == "---":
-            return lines[1:index], "\n".join(lines[index + 1 :])
+    schema = resource.get("schema") or {}
+    if path := resource.get("path"):
+        renderables.extend(_metadata_list("Path", [path]))
+    if primary_key := schema.get("primaryKey"):
+        renderables.extend(_metadata_list("Primary key", [_as_list_text(primary_key)]))
+    if foreign_keys := schema.get("foreignKeys"):
+        renderables.extend(
+            _metadata_list("Foreign keys", _foreign_key_text(foreign_keys, resource))
+        )
+    if fields := schema.get("fields"):
+        renderables.append(Text("Fields", style="yellow bold"))
+        renderables.append(_fields_table(fields))
+    return renderables
 
-    return [], content
+
+def _package_title(properties: dict[str, Any]) -> str:
+    name = properties.get("name")
+    title = properties.get("title")
+    if name and title:
+        return f"{name}: {title}"
+    return name or title or ""
 
 
-def _front_matter_value(front_matter: list[str], key: str) -> str:
-    prefix = f"{key}:"
-    for line in front_matter:
-        if not line.startswith(prefix):
-            continue
-        return line.removeprefix(prefix).strip().strip("\"'")
-    return ""
+def _metadata_list(label: str, values: list[str]) -> list[RenderableType]:
+    if not values:
+        return []
+    text = Text(label, style="yellow bold")
+    for value in values:
+        text.append(f"\n• {value}")
+    return [text]
+
+
+def _license_labels(licenses: list[dict[str, Any]]) -> list[str]:
+    return [
+        label
+        for license in licenses
+        if (label := license.get("title") or license.get("name"))
+    ]
+
+
+def _contributor_labels(contributors: list[dict[str, Any]]) -> list[str]:
+    return [
+        label
+        for contributor in contributors
+        if (label := _single_contributor_label(contributor))
+    ]
+
+
+def _single_contributor_label(contributor: dict[str, Any]) -> str:
+    full_name = (
+        f"{contributor.get('firstName', '')} {contributor.get('lastName', '')}"
+    ).strip()
+    label = (
+        contributor.get("title")
+        or full_name
+        or contributor.get("organization")
+        or contributor.get("email")
+        or ""
+    )
+    roles = ", ".join(contributor.get("roles", []))
+    return f"{label}{': ' + roles if roles else ''}" if label else ""
+
+
+def _resource_description(resource: dict[str, Any]) -> str:
+    description = resource.get("description", "")
+    resource_name = resource.get("name", "")
+    title = resource.get("title", "")
+    labels = {_metadata_label(resource_name), _metadata_label(title)}
+    return "" if _metadata_label(description) in labels else description
+
+
+def _metadata_label(value: str) -> str:
+    return value.strip().strip("`")
+
+
+def _as_list_text(value: str | list[str]) -> str:
+    return value if isinstance(value, str) else ", ".join(value)
+
+
+def _foreign_key_text(
+    foreign_keys: list[dict[str, Any]], resource: dict[str, Any]
+) -> list[str]:
+    lines = []
+    for foreign_key in foreign_keys:
+        reference = foreign_key.get("reference", {})
+        reference_resource = reference.get("resource") or resource.get("name", "")
+        lines.append(
+            f"{_as_list_text(foreign_key.get('fields', []))} -> "
+            f"{reference_resource}.{_as_list_text(reference.get('fields', []))}"
+        )
+    return lines
+
+
+def _resources_table(resources: list[dict[str, Any]]) -> Table:
+    table = Table(show_lines=False)
+    table.add_column("Name", style="markdown.h1")
+    table.add_column("Title")
+    table.add_column("Description")
+    for resource in resources:
+        table.add_row(
+            resource.get("name", ""),
+            resource.get("title", ""),
+            resource.get("description", ""),
+        )
+    return table
+
+
+def _fields_table(fields: list[dict[str, Any]]) -> Table:
+    table = Table(show_lines=False)
+    table.add_column("Name", style="markdown.h1")
+    table.add_column("Title")
+    table.add_column("Type")
+    table.add_column("Description")
+    for field in fields:
+        table.add_row(
+            field.get("name", ""),
+            field.get("title", ""),
+            field.get("type", "any"),
+            field.get("description", ""),
+        )
+    return table
 
 
 def main() -> None:

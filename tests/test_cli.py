@@ -7,17 +7,14 @@ from check_datapackage.check import DataPackageError
 from rich.console import Console
 from seedcase_soil import Address
 
-from seedcase_flower.build_sections import (
-    BuiltSection,
-)
-from seedcase_flower.cli import _format_view_sections, app
+from seedcase_flower.cli import _format_view_properties, app
 from seedcase_flower.config import Config
-from seedcase_flower.styles import Style, ViewStyle
+from seedcase_flower.styles import Style
 
 
-def _render_view_sections(sections: list[BuiltSection]) -> str:
+def _render_view_properties(properties: dict) -> str:
     console = Console(record=True, width=80, color_system=None)
-    console.print(_format_view_sections(sections))
+    console.print(_format_view_properties(properties))
     return console.export_text()
 
 
@@ -147,32 +144,20 @@ def test_view_ignores_flower_toml(tmp_path, monkeypatch):
 
     _, bound, _ = app.parse_args(["view"])
     assert "source" not in bound.arguments
-    assert "style" not in bound.arguments
-    assert "viewer" not in bound.arguments
+    assert "mode" not in bound.arguments
 
 
 # view ====
 
 
-def test_view_styles_map_to_builtin_styles():
-    """Every ViewStyle member must map to a built-in style."""
-    for member in ViewStyle:
-        style = Style[member.name]
-        assert style.value == member.value
-
-
 def test_view_with_mocked_internals(mocker):
-    """view should parse source, build sections, and render via Console."""
+    """view should parse source and route properties to the TUI by default."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mock_check = mocker.patch("seedcase_flower.cli.check")
     mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
-    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
-    mock_console = mock_console_cls.return_value
-
-    mock_build_sections.return_value = [
-        BuiltSection(content="# Test", output_path=None)
-    ]
+    mock_tui = mocker.patch("seedcase_flower.tui.run_textual_viewer")
+    mocker.patch("seedcase_flower.cli.Console")
 
     fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
@@ -182,16 +167,12 @@ def test_view_with_mocked_internals(mocker):
     mock_parse_source.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_source)
     mock_check.assert_called_once_with(mock_read_properties.return_value, error=True)
-    mock_build_sections.assert_called_once_with(
-        mock_read_properties.return_value,
-        Config(style=Style.quarto_one_page),
-    )
-    mock_console.pager.assert_called_once_with(styles=True)
-    assert mock_console.print.called
+    mock_build_sections.assert_not_called()
+    mock_tui.assert_called_once_with(mock_read_properties.return_value)
 
 
-def test_view_with_multi_section_style(mocker):
-    """view should allow multi-section styles and render via a pager."""
+def test_view_with_stdout_mode(mocker):
+    """view --mode stdout should print one terminal-oriented representation."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mocker.patch("seedcase_flower.cli.check")
@@ -199,32 +180,21 @@ def test_view_with_multi_section_style(mocker):
     mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
     mock_console = mock_console_cls.return_value
 
-    mock_build_sections.return_value = [
-        BuiltSection(content="# Package", output_path=Path("index.qmd")),
-        BuiltSection(
-            content="Resource details", output_path=Path("resources/data.qmd")
-        ),
-    ]
-
     fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
 
     app(
-        ["view", "datapackage.json", "--style", "quarto-resource-listing"],
+        ["view", "datapackage.json", "--mode", "stdout"],
         result_action="return_value",
     )
 
     mock_read_properties.assert_called_once_with(fake_source)
-    mock_build_sections.assert_called_once_with(
-        mock_read_properties.return_value,
-        Config(style=Style.quarto_resource_listing),
-    )
-    mock_console.pager.assert_called_once_with(styles=True)
+    mock_build_sections.assert_not_called()
     assert mock_console.print.called
 
 
-def test_view_with_textual_viewer(mocker):
-    """view should route Data Package properties to the Textual viewer."""
+def test_view_with_tui_mode(mocker):
+    """view should route Data Package properties to the TUI viewer."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mocker.patch("seedcase_flower.cli.check")
@@ -236,7 +206,7 @@ def test_view_with_textual_viewer(mocker):
     mock_parse_source.return_value = fake_source
 
     app(
-        ["view", "datapackage.json", "--viewer", "textual"],
+        ["view", "datapackage.json", "--mode", "tui"],
         result_action="return_value",
     )
 
@@ -246,76 +216,43 @@ def test_view_with_textual_viewer(mocker):
     mock_console_cls.assert_not_called()
 
 
-def test_format_view_sections_separates_sections_with_rule():
-    """Multi-section view output should separate sections without file labels."""
-    output = _render_view_sections(
-        [
-            BuiltSection(content="# Package", output_path=Path("index.qmd")),
-            BuiltSection(
-                content="Resource details", output_path=Path("resources/data.qmd")
-            ),
-        ]
+def test_format_view_properties_separates_resources_with_rule():
+    """Plain stdout output should separate resources with rules."""
+    output = _render_view_properties(
+        {
+            "name": "test-package",
+            "resources": [
+                {
+                    "name": "species_catalog",
+                    "title": "Species Catalog",
+                    "description": "Species metadata.",
+                    "path": "data/species.csv",
+                    "schema": {
+                        "fields": [
+                            {
+                                "name": "id",
+                                "type": "integer",
+                                "description": "Stable identifier.",
+                            }
+                        ]
+                    },
+                }
+            ],
+        }
     )
 
-    assert "index.qmd" not in output
-    assert "resources/data.qmd" not in output
     assert "─" in output
-    assert "Package" in output
-    assert "Resource details" in output
+    assert "test-package" in output
+    assert "Species Catalog" in output
+    assert "Species metadata." in output
+    assert "Path" in output
+    assert "data/species.csv" in output
+    assert "Fields" in output
+    assert "integer" in output
 
     output_lines = output.splitlines()
     rule_index = next(index for index, line in enumerate(output_lines) if "─" in line)
-    assert output_lines[rule_index - 1] == ""
     assert output_lines[rule_index + 1] == ""
-
-
-def test_format_view_sections_removes_listing_front_matter():
-    """Index page listing front matter should not be displayed in the pager."""
-    output = _render_view_sections(
-        [
-            BuiltSection(
-                content=(
-                    "---\n"
-                    "listing:\n"
-                    "    type: default\n"
-                    "    contents: resources\n"
-                    "---\n\n"
-                    "# Package"
-                ),
-                output_path=Path("index.qmd"),
-            )
-        ]
-    )
-
-    assert "listing:" not in output
-    assert "contents: resources" not in output
-    assert "Package" in output
-
-
-def test_format_view_sections_converts_resource_front_matter_to_headings():
-    """Resource title and subtitle front matter should become Markdown headings."""
-    output = _render_view_sections(
-        [
-            BuiltSection(
-                content=(
-                    "---\n"
-                    'title: "Species Catalog"\n'
-                    'subtitle: "`species_catalog`"\n'
-                    'description: "Resource description"\n'
-                    "---\n\n"
-                    "- Path: `data/species.csv`"
-                ),
-                output_path=Path("resources/species_catalog.qmd"),
-            )
-        ]
-    )
-
-    assert "title:" not in output
-    assert "subtitle:" not in output
-    assert "description:" not in output
-    assert "Species Catalog" in output.splitlines()
-    assert "species_catalog" in output.splitlines()
-    assert "Path: data/species.csv" in output
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):
@@ -340,7 +277,7 @@ def test_view_raises_on_invalid_datapackage(tmp_path):
 # instead of the exact full output
 def test_view_renders_datapackage(capsys, datapackage_path):
     """view should render all key datapackage fields to the terminal."""
-    app(["view", datapackage_path], result_action="return_value")
+    app(["view", datapackage_path, "--mode", "stdout"], result_action="return_value")
     output = capsys.readouterr().out
 
     # Package metadata
