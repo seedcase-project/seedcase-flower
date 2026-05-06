@@ -409,9 +409,8 @@ class FlowerViewApp(App[None]):
     """
     COMMAND_PALETTE_DISPLAY = "ctrl+p"
     BINDINGS = [
-        Binding("escape", "quit", "Quit", key_display="esc"),
-        Binding("q", "quit", "Quit", key_display="| q", show=False),
-        Binding("ctrl+q", "quit", show=False, system=True),
+        Binding("ctrl+q", "quit", "Quit", key_display="ctrl+q |", show=False),
+        Binding("q", "quit", "Quit"),
         Binding("?", "toggle_help_panel", "Keyboard shortcuts"),
         Binding(
             "ctrl+p",

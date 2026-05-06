@@ -17,15 +17,15 @@ from seedcase_flower.tui import (
 
 def test_flower_view_app_has_vim_navigation_bindings():
     visible_bindings = [binding for binding in FlowerViewApp.BINDINGS if binding.show]
-    assert [binding.key for binding in visible_bindings] == ["escape", "?"]
-    assert visible_bindings[0].key_display == "esc"
+    assert [binding.key for binding in visible_bindings] == ["q", "?"]
+    assert visible_bindings[0].description == "Quit"
     assert visible_bindings[1].description == "Keyboard shortcuts"
     assert FlowerViewApp.COMMAND_PALETTE_DISPLAY == "ctrl+p"
 
     bindings = {binding.key: binding for binding in FlowerViewApp.BINDINGS}
-    assert bindings["q"].key_display == "| q"
-    assert bindings["q"].description == "Quit"
-    assert bindings["ctrl+q"].system is True
+    assert "escape" not in bindings
+    assert bindings["ctrl+q"].description == "Quit"
+    assert bindings["ctrl+q"].key_display == "ctrl+q |"
     assert bindings["ctrl+p"].description == "Command Palette"
     assert bindings["ctrl+p"].key_display == "ctrl+p"
     assert bindings["j,down"].key_display == "down | j"

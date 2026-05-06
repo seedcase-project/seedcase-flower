@@ -149,7 +149,7 @@ page's table. Press `l` or the right arrow again to select columns, and
 and the table of contents. Use `ctrl+d` and `ctrl+u` to move six items down
 or up. For tables, use `s` to cycle sorting through the columns and
 directions, `ctrl+f` or `/` to search all tables, `c` or `y` to copy the
-selected row or column, and `q` or `Esc` to quit. Press `?` to show all
+selected row or column, and `q` or `ctrl+q` to quit. Press `?` to show all
 keyboard shortcuts, and press `?` again to close them. The sorted column shows an arrow for ascending or
 descending order, and the table of contents hides resources whose tables
 have no search matches.
