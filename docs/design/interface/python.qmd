@@ -82,11 +82,11 @@ flowchart TD
 
 ### {{< var done >}} `view()`
 
-`view()` takes a `source` and a display `mode`. Unlike `build()`, `view()`
-does not use styles, custom templates, output files, or the configuration
-file. The metadata is shown in an interactive TUI by default, or printed to
-stdout when `mode="stdout"`. For details about the parameters, see
-[`view()`](/docs/reference/view.qmd).
+`view()` takes a `source` and a display `mode`. Unlike `build()`,
+`view()` does not use styles, custom templates, output files, or the
+configuration file. The metadata is shown in an interactive TUI by
+default, or printed to stdout when `mode="stdout"`. For details about
+the parameters, see [`view()`](/docs/reference/view.qmd).
 
 The internal flow of `view()` is shown in the diagram below.
 

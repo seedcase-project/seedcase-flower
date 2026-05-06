@@ -102,8 +102,9 @@ terminal, so some aspects of it might not display as expected here.
 
 ### Plain terminal output
 
-By default, `view` opens an interactive TUI. Use `--mode stdout` to print a
-plain terminal representation that can be piped to tools like `less`:
+By default, `view` opens an interactive TUI. Use `--mode stdout` to
+print a plain terminal representation that can be piped to tools like
+`less`:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view --mode stdout gh:seedcase-project/example-seed-beetle | less -R
@@ -123,24 +124,24 @@ terminal, so some aspects of it might not display as expected here.
 
 ### Interactive TUI
 
-The default `view` mode shows the package and resources in a left-hand table
-of contents and the selected section in a scrollable content pane:
+The default `view` mode shows the package and resources in a left-hand
+table of contents and the selected section in a scrollable content pane:
 
 ```{.bash filename="Terminal"}
 seedcase-flower view gh:seedcase-project/example-seed-beetle
 ```
 
-In the TUI, use `j` and `k` or the arrow keys to move through
-the table of contents. Press `l` or the right arrow to focus the current
-page's table. Press `l` or the right arrow again to select columns, and
-`h` or the left arrow to move back through selected columns, row selection,
-and the table of contents. Use `ctrl+d` and `ctrl+u` to move six items down
+In the TUI, use `j` and `k` or the arrow keys to move through the table
+of contents. Press `l` or the right arrow to focus the current page's
+table. Press `l` or the right arrow again to select columns, and `h` or
+the left arrow to move back through selected columns, row selection, and
+the table of contents. Use `ctrl+d` and `ctrl+u` to move six items down
 or up. For tables, use `s` to cycle sorting through the columns and
 directions, `ctrl+f` or `/` to search all tables, `c` or `y` to copy the
-selected row or column, and `q` or `ctrl+q` to quit. Press `?` to show all
-keyboard shortcuts, and press `?` again to close them. The sorted column
-shows an arrow for ascending or descending order, and the table of contents
-hides resources whose tables have no search matches.
+selected row or column, and `q` or `ctrl+q` to quit. Press `?` to show
+all keyboard shortcuts, and press `?` again to close them. The sorted
+column shows an arrow for ascending or descending order, and the table
+of contents hides resources whose tables have no search matches.
 
 ::: callout-important
 `view` is only configurable via command line flags. This means that any

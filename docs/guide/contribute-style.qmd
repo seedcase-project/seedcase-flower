@@ -34,9 +34,9 @@ should be short, descriptive, and distinct from existing built-in
 styles. It should be given in snake case (e.g., `my_new_style`).
 
 ::: callout-note
-The `view` command can display built-in styles with one or more sections.
-Multi-section styles are rendered as one paged terminal document, with
-each section labelled by its `output-path`.
+The `view` command can display built-in styles with one or more
+sections. Multi-section styles are rendered as one paged terminal
+document, with each section labelled by its `output-path`.
 :::
 
 ## Adding the style as built-in
@@ -64,8 +64,8 @@ plain text format (e.g., `.html`, `.md`, `.yml`).
 
 Finally, add your style to the style enum in
 `src/seedcase_flower/styles.py`. Build styles are defined in the `Style`
-enum. For example, if `your_new_style` is your new style, you would include
-it in `Style` like so:
+enum. For example, if `your_new_style` is your new style, you would
+include it in `Style` like so:
 
 ``` {.python filename="src/seedcase_flower/styles.py"}
 class Style(Enum):
