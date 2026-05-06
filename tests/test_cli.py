@@ -4,18 +4,12 @@ from pathlib import Path
 
 import pytest
 from check_datapackage.check import DataPackageError
-from rich.console import Console
 from seedcase_soil import Address
 
-from seedcase_flower.cli import _format_view_properties, app
+from seedcase_flower.build_sections import BuiltSection
+from seedcase_flower.cli import app
 from seedcase_flower.config import Config
 from seedcase_flower.styles import Style
-
-
-def _render_view_properties(properties: dict) -> str:
-    console = Console(record=True, width=80, color_system=None)
-    console.print(_format_view_properties(properties))
-    return console.export_text()
 
 
 @pytest.fixture
@@ -172,7 +166,7 @@ def test_view_with_mocked_internals(mocker):
 
 
 def test_view_with_stdout_mode(mocker):
-    """view --mode stdout should print one terminal-oriented representation."""
+    """view --mode stdout should render the Quarto one-page Markdown style."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mocker.patch("seedcase_flower.cli.check")
@@ -182,6 +176,9 @@ def test_view_with_stdout_mode(mocker):
 
     fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
+    mock_build_sections.return_value = [
+        BuiltSection(content="# Test Package", output_path=Path("index.qmd"))
+    ]
 
     app(
         ["view", "datapackage.json", "--mode", "stdout"],
@@ -189,7 +186,10 @@ def test_view_with_stdout_mode(mocker):
     )
 
     mock_read_properties.assert_called_once_with(fake_source)
-    mock_build_sections.assert_not_called()
+    mock_build_sections.assert_called_once_with(
+        mock_read_properties.return_value,
+        Config(style=Style.quarto_one_page),
+    )
     assert mock_console.print.called
 
 
@@ -214,45 +214,6 @@ def test_view_with_tui_mode(mocker):
     mock_build_sections.assert_not_called()
     mock_textual_viewer.assert_called_once_with(mock_read_properties.return_value)
     mock_console_cls.assert_not_called()
-
-
-def test_format_view_properties_separates_resources_with_rule():
-    """Plain stdout output should separate resources with rules."""
-    output = _render_view_properties(
-        {
-            "name": "test-package",
-            "resources": [
-                {
-                    "name": "species_catalog",
-                    "title": "Species Catalog",
-                    "description": "Species metadata.",
-                    "path": "data/species.csv",
-                    "schema": {
-                        "fields": [
-                            {
-                                "name": "id",
-                                "type": "integer",
-                                "description": "Stable identifier.",
-                            }
-                        ]
-                    },
-                }
-            ],
-        }
-    )
-
-    assert "─" in output
-    assert "test-package" in output
-    assert "Species Catalog" in output
-    assert "Species metadata." in output
-    assert "Path" in output
-    assert "data/species.csv" in output
-    assert "Fields" in output
-    assert "integer" in output
-
-    output_lines = output.splitlines()
-    rule_index = next(index for index, line in enumerate(output_lines) if "─" in line)
-    assert output_lines[rule_index + 1] == ""
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):
