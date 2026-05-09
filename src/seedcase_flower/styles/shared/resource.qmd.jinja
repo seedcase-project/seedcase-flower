@@ -20,14 +20,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% if schema.foreignKeys %}
 - Foreign keys:
 {% for fk in schema.foreignKeys %}
-  - From fields ({{
-      fk.fields | _inline_code_list
-  }}) to fields ({{
-      fk.reference.fields | _inline_code_list
-  }}) in resource {{
-    (fk.reference.resource or resource.name)
-    | _inline_code
-  }}
+  - {{ fk.fields | _inline_code_list }} → {{(( fk.reference.resource or resource.name ) ~ "." ~ ( fk.reference.fields | _bracket_list )) | _inline_code }}
 {% endfor %}
 {% endif %}
 

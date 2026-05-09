@@ -4,8 +4,8 @@ listing:
     contents: resources
     fields: [subtitle, title, description]
     field-display-names:
-        title: "Name"
-        subtitle: "Title"
+        subtitle: "Name"
+        title: "Title"
     field-links: [subtitle, title]
     sort-ui: [subtitle, title, description]
     filter-ui: [subtitle, title, description]
