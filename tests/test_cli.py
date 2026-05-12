@@ -143,6 +143,7 @@ def test_view_ignores_flower_toml(tmp_path, monkeypatch):
     _, bound, _ = app.parse_args(["view"])
     assert "source" not in bound.arguments
     assert "style" not in bound.arguments
+    assert "mode" not in bound.arguments
 
 
 # view ====
@@ -164,7 +165,29 @@ def test_view_styles_are_one_page():
 
 
 def test_view_with_mocked_internals(mocker):
-    """view should parse source, build sections, and render via Console."""
+    """view should parse source and route raw properties to the TUI by default."""
+    mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
+    mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
+    mock_check = mocker.patch("seedcase_flower.cli.check")
+    mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
+    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
+    mock_tui = mocker.patch("seedcase_flower.tui.run_textual_viewer")
+
+    fake_source = Address(value="file:///datapackage.json", local=True)
+    mock_parse_source.return_value = fake_source
+
+    app(["view", "datapackage.json"], result_action="return_value")
+
+    mock_parse_source.assert_called_once_with("datapackage.json")
+    mock_read_properties.assert_called_once_with(fake_source)
+    mock_check.assert_called_once_with(mock_read_properties.return_value, error=True)
+    mock_build_sections.assert_not_called()
+    mock_console_cls.assert_not_called()
+    mock_tui.assert_called_once_with(mock_read_properties.return_value)
+
+
+def test_view_with_stdout_mode(mocker):
+    """view --mode stdout should keep the existing styled terminal output."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mock_check = mocker.patch("seedcase_flower.cli.check")
@@ -179,7 +202,7 @@ def test_view_with_mocked_internals(mocker):
     fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
 
-    app(["view", "datapackage.json"], result_action="return_value")
+    app(["view", "datapackage.json", "--mode", "stdout"], result_action="return_value")
 
     mock_parse_source.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_source)
@@ -213,7 +236,7 @@ def test_view_raises_on_invalid_datapackage(tmp_path):
 # instead of the exact full output
 def test_view_renders_datapackage(capsys, datapackage_path):
     """view should render all key datapackage fields to the terminal."""
-    app(["view", datapackage_path], result_action="return_value")
+    app(["view", datapackage_path, "--mode", "stdout"], result_action="return_value")
     output = capsys.readouterr().out
 
     # Package metadata
