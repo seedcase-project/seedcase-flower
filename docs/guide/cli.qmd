@@ -156,15 +156,17 @@ seedcase-flower build
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-This example shows the output files generated when running
-`seedcase-flower build --style quarto-resource listing` in a directory
-containing a `datapackage.json` from the example Data Package `flora`.
-
+The output below shows the files generated in a directory
+`my-datapackage/` when running the command above. The directory already
+contained a `datapackage.json` from the example Data Package `flora`.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/
-!find _temp -type f | sed 's|^_temp/||'
+!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/my-datapackage/
+
+from pathlib import Path
+!touch _temp/my-datapackage/datapackage.json
+print(so.file_tree(Path("_temp/my-datapackage")))
 ```
 :::
 
@@ -207,14 +209,22 @@ seedcase-flower build --style quarto-resource-listing
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-This example shows the output files generated when running
-`seedcase-flower build --style quarto-resource listing` in a directory
-containing a `datapackage.json` from the example Data Package `flora`.
+This example shows the files in a Data Package directory
+`my-datapackage` when running
+`seedcase-flower build --style quarto-resource listing`. The directory
+already contain a `datapackage.json` from the example Data Package
+`flora`.
+
+The output below shows the files generated in a directory
+`my-datapackage/` when running the command above. The directory already
+contained a `datapackage.json` from the example Data Package `flora`.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/ --style quarto-resource-listing
-!find _temp -type f | sed 's|^_temp/||'
+!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/my-datapackage/ --style quarto-resource-listing
+
+!touch _temp/my-datapackage/datapackage.json
+print(so.file_tree(Path("_temp/my-datapackage")))
 ```
 :::
 
