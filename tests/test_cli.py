@@ -6,14 +6,10 @@ import pytest
 from check_datapackage.check import DataPackageError
 from seedcase_soil import Address
 
-from seedcase_flower.build_sections import (
-    BuiltSection,
-    _get_template_dir,
-    _load_sections_toml,
-)
+from seedcase_flower.build_sections import BuiltSection
 from seedcase_flower.cli import app
 from seedcase_flower.config import Config
-from seedcase_flower.styles import Style, ViewStyle
+from seedcase_flower.styles import Style
 
 
 @pytest.fixture
@@ -142,39 +138,20 @@ def test_view_ignores_flower_toml(tmp_path, monkeypatch):
 
     _, bound, _ = app.parse_args(["view"])
     assert "source" not in bound.arguments
-    assert "style" not in bound.arguments
+    assert "mode" not in bound.arguments
 
 
 # view ====
 
 
-def test_view_styles_are_one_page():
-    """Every ViewStyle member must map to a single-section (one-page) style."""
-    for member in ViewStyle:
-        style = Style[member.name]
-        sections = _load_sections_toml(_get_template_dir(style))
-        assert not sections.many_sections, (
-            f"ViewStyle.{member.name} includes `Many` sections, "
-            "but view styles must be single-page (exactly 1 `One` section)."
-        )
-        assert len(sections.one_sections) == 1, (
-            f"ViewStyle.{member.name} has {len(sections.one_sections)} sections, "
-            "but view styles must be single-page (exactly 1 `One` section)."
-        )
-
-
 def test_view_with_mocked_internals(mocker):
-    """view should parse source, build sections, and render via Console."""
+    """view should parse source and route properties to the TUI by default."""
     mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
     mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
     mock_check = mocker.patch("seedcase_flower.cli.check")
     mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
-    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
-    mock_console = mock_console_cls.return_value
-
-    mock_build_sections.return_value = [
-        BuiltSection(content="# Test", output_path=None)
-    ]
+    mock_tui = mocker.patch("seedcase_flower.tui.run_textual_viewer")
+    mocker.patch("seedcase_flower.cli.Console")
 
     fake_source = Address(value="file:///datapackage.json", local=True)
     mock_parse_source.return_value = fake_source
@@ -184,11 +161,59 @@ def test_view_with_mocked_internals(mocker):
     mock_parse_source.assert_called_once_with("datapackage.json")
     mock_read_properties.assert_called_once_with(fake_source)
     mock_check.assert_called_once_with(mock_read_properties.return_value, error=True)
+    mock_build_sections.assert_not_called()
+    mock_tui.assert_called_once_with(mock_read_properties.return_value)
+
+
+def test_view_with_stdout_mode(mocker):
+    """view --mode stdout should render the Quarto one-page Markdown style."""
+    mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
+    mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
+    mocker.patch("seedcase_flower.cli.check")
+    mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
+    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
+    mock_console = mock_console_cls.return_value
+
+    fake_source = Address(value="file:///datapackage.json", local=True)
+    mock_parse_source.return_value = fake_source
+    mock_build_sections.return_value = [
+        BuiltSection(content="# Test Package", output_path=Path("index.qmd"))
+    ]
+
+    app(
+        ["view", "datapackage.json", "--mode", "stdout"],
+        result_action="return_value",
+    )
+
+    mock_read_properties.assert_called_once_with(fake_source)
     mock_build_sections.assert_called_once_with(
         mock_read_properties.return_value,
         Config(style=Style.quarto_one_page),
     )
     assert mock_console.print.called
+
+
+def test_view_with_tui_mode(mocker):
+    """view should route Data Package properties to the TUI viewer."""
+    mock_parse_source = mocker.patch("seedcase_flower.cli.parse_source")
+    mock_read_properties = mocker.patch("seedcase_flower.cli.read_properties")
+    mocker.patch("seedcase_flower.cli.check")
+    mock_build_sections = mocker.patch("seedcase_flower.cli.build_sections")
+    mock_textual_viewer = mocker.patch("seedcase_flower.tui.run_textual_viewer")
+    mock_console_cls = mocker.patch("seedcase_flower.cli.Console")
+
+    fake_source = Address(value="file:///datapackage.json", local=True)
+    mock_parse_source.return_value = fake_source
+
+    app(
+        ["view", "datapackage.json", "--mode", "tui"],
+        result_action="return_value",
+    )
+
+    mock_read_properties.assert_called_once_with(fake_source)
+    mock_build_sections.assert_not_called()
+    mock_textual_viewer.assert_called_once_with(mock_read_properties.return_value)
+    mock_console_cls.assert_not_called()
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):
@@ -213,7 +238,7 @@ def test_view_raises_on_invalid_datapackage(tmp_path):
 # instead of the exact full output
 def test_view_renders_datapackage(capsys, datapackage_path):
     """view should render all key datapackage fields to the terminal."""
-    app(["view", datapackage_path], result_action="return_value")
+    app(["view", datapackage_path, "--mode", "stdout"], result_action="return_value")
     output = capsys.readouterr().out
 
     # Package metadata

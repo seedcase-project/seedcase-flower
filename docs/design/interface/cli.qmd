@@ -182,13 +182,13 @@ human-friendly way in the terminal. It has the following signature that
 is positional as well as keyword-based:
 
 ``` {.bash filename="Terminal"}
-seedcase-flower view [SOURCE] [STYLE]
+seedcase-flower view [SOURCE] [MODE]
 ```
 
 For example:
 
 ``` {.bash filename="Terminal"}
-seedcase-flower view SOURCE --style STYLE
+seedcase-flower view SOURCE --mode stdout
 ```
 
 The diagram below shows the flow of inputs and outputs for `view`.
@@ -199,27 +199,20 @@ The diagram below shows the flow of inputs and outputs for `view`.
 flowchart LR
     source("datapackage.json<br>[SOURCE: file, https,<br>gh/github]")
     view("view")
-    style_opt("--style<br>[option]")
-    output("Output<br>[Terminal]")
+    mode_opt("--mode<br>[option]")
+    output("Output<br>[TUI or stdout]")
 
     source --> view
-    style_opt --> view
+    mode_opt --> view
     view --> output
 ```
 
-`view` takes a `SOURCE` and `--style` argument like `build`, with two
-differences:
+`view` takes a `SOURCE` and an optional `--mode` argument, with two modes:
 
-- No output files are generated---`view` only displays the metadata in
-  the terminal.
-- No configuration file is used. The only way to change the output is
-  via `--style` with one of the built-in styles.
+- `tui` opens an interactive terminal interface.
+- `stdout` prints a plain terminal representation that can be piped to
+  other tools.
 
 `view` intentionally has no configuration file support; it's meant for
 quick, lightweight inspection of a Data Package's metadata and terminal
 display also limits customisation options.
-
-::: callout-tip
-Want a different style for viewing the metadata? Check out our
-[contribute a style](/docs/guide/contribute-style.qmd) guide.
-:::

@@ -34,6 +34,7 @@ dependencies = [
   "python-jsonpath>=2.0.2",
   "rich>=14.3.3",
   "seedcase-soil>=0.11.0",
+  "textual>=8.2.5",
 ]
 
 [project.urls]

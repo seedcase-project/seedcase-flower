@@ -34,10 +34,9 @@ should be short, descriptive, and distinct from existing built-in
 styles. It should be given in snake case (e.g., `my_new_style`).
 
 ::: callout-note
-A terminal style for the `view` command must be a single-page output
-style, meaning it can only use a single `[[one]]` section. `view`
-ignores `output-path` since it doesn't output files and single-page
-styles can be used by `build` as well.
+The `view` command can display built-in styles with one or more
+sections. Multi-section styles are rendered as one paged terminal
+document, with each section labelled by its `output-path`.
 :::
 
 ## Adding the style as built-in
@@ -63,23 +62,13 @@ license, or schema fields. Remember to give your templates descriptive
 names. The `.qmd` extension serves as an example; Jinja2 can produce any
 plain text format (e.g., `.html`, `.md`, `.yml`).
 
-Finally, add your style to the appropriate style enum(s) in
-`src/seedcase_flower/styles.py`. All styles are defined in the `Style`
-enum, while styles for terminal output with `view` are also added to
-`ViewStyle`. For example, if `your_new_style` is your new style, you
-would include it in `Style` like so:
+Finally, add your style to the style enum in
+`src/seedcase_flower/styles.py`. Build styles are defined in the `Style`
+enum. For example, if `your_new_style` is your new style, you would
+include it in `Style` like so:
 
 ``` {.python filename="src/seedcase_flower/styles.py"}
 class Style(Enum):
-    # ...
-    your_new_style = "your_new_style"
-```
-
-If your style is also a terminal style for the `view` command, add it
-below the existing styles in the `ViewStyle` enum as well:
-
-``` {.python filename="src/seedcase_flower/styles.py"}
-class ViewStyle(Enum):
     # ...
     your_new_style = "your_new_style"
 ```
