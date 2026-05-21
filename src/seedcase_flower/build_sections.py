@@ -88,6 +88,14 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(fmap(value, lambda item: f"`{item}`"))
 
 
+def _bracket_list(value: Union[str, list[str]]) -> str:
+    if isinstance(value, str):
+        return value
+    if len(value) == 1:
+        return value[0]
+    return f"[{', '.join(value)}]"
+
+
 def _replace_newlines(cell: str) -> str:
     return cell.replace("\n", " ")
 
@@ -149,6 +157,8 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     env.filters["_inline_code_list"] = _inline_code_list
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
+    # Render a list of strings as bracketed list
+    env.filters["_bracket_list"] = _bracket_list
     # Render a markdown table with adjusted column widths
     env.globals["_adjust_column_widths"] = _adjust_column_widths
     return env

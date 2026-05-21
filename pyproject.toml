@@ -1,6 +1,6 @@
 [project]
 name = "seedcase-flower"
-version = "0.27.0"
+version = "0.28.1"
 description = "Turn your metadata into human-readable documentation"
 authors = [
   { name = "Luke W. Johnston", email = "lwjohnst@gmail.com" },
@@ -33,7 +33,7 @@ dependencies = [
   "pydantic>=2.12.5",
   "python-jsonpath>=2.0.2",
   "rich>=14.3.3",
-  "seedcase-soil>=0.11.0",
+  "seedcase-soil>=0.12.0",
 ]
 
 [project.urls]
