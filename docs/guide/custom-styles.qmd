@@ -65,7 +65,7 @@ flora/
         └── growth_records.qmd
 ```
 
-## Creating the templates
+## Creating the style templates
 
 The first step is to set up the files within the `my-style/` folder.
 With Flower, you define a custom layout for your metadata (or part of

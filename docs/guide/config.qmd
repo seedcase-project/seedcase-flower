@@ -43,7 +43,7 @@ can be configured via the configuration file:
 - `output-dir`: The directory where Flower will save the output files.
   Defaults to `docs/`.
 
-- `style-dir`: The directory that contains the template files for a
+- `style-dir`: The directory that contains the Jinja template files for a
   custom style. If `style-dir` is set, `style` is ignored. Not set by
   default. For more information on how to create custom styles, see the
   [custom styles](custom-styles.qmd) guide.
@@ -68,7 +68,7 @@ output-dir = "my-docs/"
 Now, when you run `flower build` in your terminal, the output directory
 will be changed to `my-docs`.
 
-If you would like to use a custom style with your own style in a
+If you would like to use a custom style in a
 `my-style` directory, add the following line to `.flower.toml`:
 
 ``` {.toml filename=".flower.toml"}
