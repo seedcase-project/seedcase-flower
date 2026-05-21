@@ -171,14 +171,18 @@ seedcase-flower build
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-This example shows the output files generated when running
-`seedcase-flower build` in a directory containing a `datapackage.json`
-from the example Data Package `flora`.
+The output below shows the files generated in a directory
+`my-datapackage/` when running the command above. The directory already
+contained a `datapackage.json` from the example Data Package `flora`.
 
 ```{python}
 #| echo: false
-!uv run seedcase-flower build {so.Example.flora.path} --output-dir _temp/
-so.format_output_for_docs(["ls", "_temp/"])
+!uv run seedcase-flower build {so.Example.flora.path} \
+    --output-dir _temp/my-datapackage/
+
+from pathlib import Path
+!touch _temp/my-datapackage/datapackage.json
+print(so.file_tree(Path("_temp/my-datapackage")))
 ```
 :::
 
@@ -221,16 +225,18 @@ seedcase-flower build --style quarto-resource-listing
 ::: {.callout-tip collapse="true" icon="false"}
 ### Output
 
-This example shows the output files generated when running
-`seedcase-flower build --style quarto-resource-listing` in a directory
-containing a `datapackage.json` from the example Data Package `flora`.
+The output below shows the files generated in a directory
+`my-datapackage/` when running the command above. The directory already
+contained a `datapackage.json` from the example Data Package `flora`.
 
 ```{python}
 #| echo: false
 !uv run seedcase-flower build {so.Example.flora.path} \
-    --output-dir _temp/ \
+    --output-dir _temp/my-datapackage/ \
     --style quarto-resource-listing
-so.format_output_for_docs(["ls", "_temp/"])
+
+!touch _temp/my-datapackage/datapackage.json
+print(so.file_tree(Path("_temp/my-datapackage")))
 ```
 :::
 
