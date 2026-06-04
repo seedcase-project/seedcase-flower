@@ -137,6 +137,110 @@ def test_uses_style_when_no_template_dir_given():
 
 
 @mark.parametrize(
+    "style",
+    [
+        Style.quarto_one_page,
+        Style.quarto_resource_listing,
+        Style.quarto_resource_tables,
+    ],
+)
+def test_built_in_styles_include_possible_field_values(style):
+    config = Config(style=style)
+    properties_with_values = {
+        "name": "example-datapackage",
+        "resources": [
+            {
+                "name": "example-resource",
+                "schema": {
+                    "fields": [
+                        {
+                            "name": "growth_stage",
+                            "type": "string",
+                            "constraints": {"enum": ["seedling", "flowering"]},
+                        }
+                    ]
+                },
+            }
+        ],
+    }
+
+    built_sections = build_sections(properties_with_values, config)
+    content = "\n".join(section.content for section in built_sections)
+
+    assert "Values" in content
+    assert "`seedling`, `flowering`" in content
+
+
+def test_built_in_styles_collapse_long_possible_field_values():
+    config = Config(style=Style.quarto_one_page)
+    properties_with_values = {
+        "name": "example-datapackage",
+        "resources": [
+            {
+                "name": "example-resource",
+                "schema": {
+                    "fields": [
+                        {
+                            "name": "country",
+                            "type": "string",
+                            "constraints": {
+                                "enum": [
+                                    "DK",
+                                    "SE",
+                                    "NO",
+                                    "FI",
+                                    "IS",
+                                    "DE",
+                                    "NL",
+                                    "FR",
+                                    "ES",
+                                    "IT",
+                                    "PL",
+                                    "BE",
+                                    "IE",
+                                    "AT",
+                                    "CH",
+                                    "CZ",
+                                    "PT",
+                                    "GR",
+                                    "LU",
+                                    "EE",
+                                    "United Kingdom",
+                                    "Romania",
+                                    "Bulgaria",
+                                    "Croatia",
+                                    "Slovenia",
+                                    "Lithuania",
+                                    "Latvia",
+                                    "Slovakia",
+                                    "Hungary",
+                                    "Malta",
+                                    "Cyprus",
+                                    "Serbia",
+                                    "Montenegro",
+                                ]
+                            },
+                        }
+                    ]
+                },
+            }
+        ],
+    }
+
+    built_sections = build_sections(properties_with_values, config)
+    content = built_sections[0].content
+
+    assert (
+        "`DK`, `SE`, `NO`, `FI`, `IS`, `DE`, `NL`, `FR`, `ES`, `IT`, "
+        "`PL`, `BE`, `IE`, `AT`, `CH`"
+    ) in content
+    assert (
+        '<span title="Latvia, Slovakia, Hungary, Malta, Cyprus, Serbia, Montenegro">'
+        "... (hover for 7 more)</span>"
+    ) in content
+
+
+@mark.parametrize(
     "style", [Style.quarto_resource_listing, Style.quarto_resource_tables]
 )
 def test_built_in_styles_can_use_shared_templates(style):

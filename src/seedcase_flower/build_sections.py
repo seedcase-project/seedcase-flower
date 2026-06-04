@@ -2,6 +2,7 @@
 
 import tomllib
 from dataclasses import dataclass
+from html import escape
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, Optional, Union, cast
@@ -89,6 +90,50 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(fmap(value, lambda item: f"`{item}`"))
 
 
+def _inline_code_values(value: Any) -> str:
+    if isinstance(value, list):
+        return ", ".join(fmap(value, lambda item: f"`{item}`"))
+    return f"`{value}`"
+
+
+def _within_character_limit(values: list[str], character_limit: int) -> bool:
+    return len(", ".join(values)) <= character_limit
+
+
+def _last_index_within_character_limit(
+    values: list[str], character_limit: int
+) -> int:
+    valid_indexes = filter(
+        lambda i: _within_character_limit(values[:i], character_limit),
+        range(1, len(values) + 1),
+    )
+    return max(valid_indexes, default=1)
+
+
+def _possible_values_cell(
+    value: Any, visible_characters: int = 150, hidden_characters: int = 50
+) -> str:
+    if not isinstance(value, list):
+        return f"`{value}`"
+    raw_values = list(map(str, value))
+    full_values = ", ".join(raw_values)
+    if len(full_values) <= visible_characters:
+        return _inline_code_values(value)
+
+    visible_count = _last_index_within_character_limit(raw_values, visible_characters)
+    hidden_values = raw_values[visible_count:]
+    hidden = ", ".join(hidden_values)
+    if len(hidden) < hidden_characters:
+        return _inline_code_values(value)
+
+    visible = _inline_code_values(raw_values[:visible_count])
+    hidden = escape(hidden, quote=True)
+    return (
+        f'{visible}, <span title="{hidden}">'
+        f"... (hover for {len(hidden_values)} more)</span>"
+    )
+
+
 def _bracket_list(value: Union[str, list[str]]) -> str:
     if isinstance(value, str):
         return value
@@ -156,6 +201,10 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     )
     # Render a list of strings as comma-separated inline code
     env.filters["_inline_code_list"] = _inline_code_list
+    # Render a possible value or list of possible values as inline code
+    env.filters["_inline_code_values"] = _inline_code_values
+    # Render possible values compactly, with long lists available on hover
+    env.filters["_possible_values_cell"] = _possible_values_cell
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     # Render a list of strings as bracketed list

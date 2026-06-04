@@ -24,17 +24,28 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% endfor %}
 {% endif %}
 
-{% set headers = ["Name", "Title", "Type", "Description"] %}
+{%- set table = namespace(has_values=false) -%}
+{%- for field in schema.fields -%}
+  {%- if field.constraints and field.constraints.enum -%}
+    {%- set table.has_values = true -%}
+  {%- endif -%}
+{%- endfor -%}
+{% set headers = ["Name", "Title", "Type", "Description"] + (["Values"] if table.has_values else []) %}
+
 {%- set ns = namespace(rows=[]) -%}
 {%- for field in schema.fields -%}
-  {%- set ns.rows = ns.rows + [[
+  {%- set row = [
     field.name | _inline_code or "N/A",
     field.title or "N/A",
     field.type or "any",
     field.description or "N/A"
-  ]] -%}
+  ] -%}
+  {%- if table.has_values -%}
+    {%- set row = row + [field.constraints.enum | _possible_values_cell if field.constraints and field.constraints.enum else "N/A"] -%}
+  {%- endif -%}
+  {%- set ns.rows = ns.rows + [row] -%}
 {%- endfor -%}
-{{ _adjust_column_widths(headers, ns.rows) }}
+{{ "\n" ~ _adjust_column_widths(headers, ns.rows) }}
 
 : Fields in the {{ resource.name | _inline_code }} resource.
 {% endif %}
