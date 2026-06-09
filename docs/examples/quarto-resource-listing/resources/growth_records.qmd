@@ -15,13 +15,13 @@ If you want to edit the content, please make changes to the `datapackage.json` f
   - `species_id` → `species_catalog.species_id`
   - `location_region`, `location_country` → `location_catalog.[region, country]`
 
-| Name               | Title            | Type    | Description                                   |
-|--------------------|------------------|---------|-----------------------------------------------|
-| `record_id`        | Record ID        | integer | The unique identifier for each growth record. |
-| `species_id`       | Species          | integer | The species the observation was made for.     |
-| `observation_date` | Observation date | date    | The date when the observation was made.       |
-| `growth_stage`     | Growth Stage     | string  | The observed growth stage of the species.     |
-| `location_region`  | Location Region  | string  | The region of the location.                   |
-| `location_country` | Location Country | string  | The country of the location.                  |
+| Name               | Title            | Type    | Description                                   | Values                                                                                                                                                                                                                                                                                               |
+|--------------------|------------------|---------|-----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `record_id`        | Record ID        | integer | The unique identifier for each growth record. | N/A                                                                                                                                                                                                                                                                                                  |
+| `species_id`       | Species          | integer | The species the observation was made for.     | N/A                                                                                                                                                                                                                                                                                                  |
+| `observation_date` | Observation date | date    | The date when the observation was made.       | N/A                                                                                                                                                                                                                                                                                                  |
+| `growth_stage`     | Growth Stage     | string  | The observed growth stage of the species.     | `seedling`, `vegetative`, `flowering`, `fruiting`                                                                                                                                                                                                                                                    |
+| `location_region`  | Location Region  | string  | The region of the location.                   | N/A                                                                                                                                                                                                                                                                                                  |
+| `location_country` | Location Country | string  | The country of the location.                  | `Denmark`, `Sweden`, `Norway`, `Finland`, `Iceland`, `Germany`, `Netherlands`, `France`, `Spain`, `Italy`, `Poland`, `Belgium`, `Ireland`, `Austria`, `Switzerland`, `Czechia`, <span title="Portugal, Greece, Luxembourg, Estonia, United Kingdom, Romania, Bulgaria">... (hover for 7 more)</span> |
 
 : Fields in the `growth_records` resource.

@@ -12,10 +12,10 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 - Path: `resources/location_catalog/data.parquet`
 - Primary key: (`region`, `country`)
 
-| Name         | Title      | Type   | Description                                     |
-|--------------|------------|--------|-------------------------------------------------|
-| `region`     | Region     | string | The region the location is in.                  |
-| `country`    | Country    | string | The country the location is in.                 |
-| `local_name` | Local Name | string | The name of the location in the local language. |
+| Name         | Title      | Type   | Description                                     | Values                                                                                                                                                                                                                                                                                               |
+|--------------|------------|--------|-------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `region`     | Region     | string | The region the location is in.                  | N/A                                                                                                                                                                                                                                                                                                  |
+| `country`    | Country    | string | The country the location is in.                 | `Denmark`, `Sweden`, `Norway`, `Finland`, `Iceland`, `Germany`, `Netherlands`, `France`, `Spain`, `Italy`, `Poland`, `Belgium`, `Ireland`, `Austria`, `Switzerland`, `Czechia`, <span title="Portugal, Greece, Luxembourg, Estonia, United Kingdom, Romania, Bulgaria">... (hover for 7 more)</span> |
+| `local_name` | Local Name | string | The name of the location in the local language. | N/A                                                                                                                                                                                                                                                                                                  |
 
 : Fields in the `location_catalog` resource.

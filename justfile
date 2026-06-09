@@ -131,9 +131,62 @@ build-quartodoc:
 build-examples:
     #!/usr/bin/env bash
     styles() {
-      basename src/seedcase_flower/styles/*/ |tr '_' '-' | grep -v '^shared$'
+      for dir in src/seedcase_flower/styles/*/; do
+        style="$(basename "$dir" | tr '_' '-')"
+        if [[ "$style" != "shared" ]]; then
+          printf '%s\n' "$style"
+        fi
+      done
     }
-    flora_json="$(uv run python -c 'from seedcase_soil import Example; print(Example.flora.path)')"
+    flora_json="$(mktemp)"
+    trap 'rm -f "$flora_json"' EXIT
+    uv run python - "$flora_json" <<'PY'
+    import json
+    import sys
+
+    from seedcase_soil import Example
+
+    countries = [
+        "Denmark",
+        "Sweden",
+        "Norway",
+        "Finland",
+        "Iceland",
+        "Germany",
+        "Netherlands",
+        "France",
+        "Spain",
+        "Italy",
+        "Poland",
+        "Belgium",
+        "Ireland",
+        "Austria",
+        "Switzerland",
+        "Czechia",
+        "Portugal",
+        "Greece",
+        "Luxembourg",
+        "Estonia",
+        "United Kingdom",
+        "Romania",
+        "Bulgaria",
+    ]
+
+    with open(Example.flora.path) as file:
+        datapackage = json.load(file)
+
+    for resource in datapackage["resources"]:
+        for field in resource["schema"]["fields"]:
+            if field["name"] == "growth_stage":
+                field["constraints"] = {
+                    "enum": ["seedling", "vegetative", "flowering", "fruiting"]
+                }
+            if field["name"] in ["country", "location_country"]:
+                field["constraints"] = {"enum": countries}
+
+    with open(sys.argv[1], "w") as file:
+        json.dump(datapackage, file, indent=2)
+    PY
     build_example() {
       local style=$1
       uv run seedcase-flower build "$flora_json" \

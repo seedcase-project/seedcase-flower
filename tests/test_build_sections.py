@@ -185,39 +185,29 @@ def test_built_in_styles_collapse_long_possible_field_values():
                             "type": "string",
                             "constraints": {
                                 "enum": [
-                                    "DK",
-                                    "SE",
-                                    "NO",
-                                    "FI",
-                                    "IS",
-                                    "DE",
-                                    "NL",
-                                    "FR",
-                                    "ES",
-                                    "IT",
-                                    "PL",
-                                    "BE",
-                                    "IE",
-                                    "AT",
-                                    "CH",
-                                    "CZ",
-                                    "PT",
-                                    "GR",
-                                    "LU",
-                                    "EE",
+                                    "Denmark",
+                                    "Sweden",
+                                    "Norway",
+                                    "Finland",
+                                    "Iceland",
+                                    "Germany",
+                                    "Netherlands",
+                                    "France",
+                                    "Spain",
+                                    "Italy",
+                                    "Poland",
+                                    "Belgium",
+                                    "Ireland",
+                                    "Austria",
+                                    "Switzerland",
+                                    "Czechia",
+                                    "Portugal",
+                                    "Greece",
+                                    "Luxembourg",
+                                    "Estonia",
                                     "United Kingdom",
                                     "Romania",
                                     "Bulgaria",
-                                    "Croatia",
-                                    "Slovenia",
-                                    "Lithuania",
-                                    "Latvia",
-                                    "Slovakia",
-                                    "Hungary",
-                                    "Malta",
-                                    "Cyprus",
-                                    "Serbia",
-                                    "Montenegro",
                                 ]
                             },
                         }
@@ -231,11 +221,13 @@ def test_built_in_styles_collapse_long_possible_field_values():
     content = built_sections[0].content
 
     assert (
-        "`DK`, `SE`, `NO`, `FI`, `IS`, `DE`, `NL`, `FR`, `ES`, `IT`, "
-        "`PL`, `BE`, `IE`, `AT`, `CH`"
+        "`Denmark`, `Sweden`, `Norway`, `Finland`, `Iceland`, `Germany`, "
+        "`Netherlands`, `France`, `Spain`, `Italy`, `Poland`, `Belgium`, "
+        "`Ireland`, `Austria`, `Switzerland`, `Czechia`"
     ) in content
     assert (
-        '<span title="Latvia, Slovakia, Hungary, Malta, Cyprus, Serbia, Montenegro">'
+        '<span title="Portugal, Greece, Luxembourg, Estonia, United Kingdom, '
+        'Romania, Bulgaria">'
         "... (hover for 7 more)</span>"
     ) in content
 
