@@ -14,6 +14,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 - Foreign keys:
   - `parent_species_id` → `species_catalog.species_id`
 
+
 | Name                | Title           | Type    | Description                                    |
 |---------------------|-----------------|---------|------------------------------------------------|
 | `species_id`        | Species ID      | integer | The unique identifier for each species.        |

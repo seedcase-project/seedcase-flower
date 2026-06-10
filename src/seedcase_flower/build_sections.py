@@ -132,6 +132,10 @@ def _possible_values_cell(
     )
 
 
+def _description_with_allowed_values(description: str, value: Any) -> str:
+    return f"{description}<br>Allowed values: {_possible_values_cell(value)}"
+
+
 def _bracket_list(value: Union[str, list[str]]) -> str:
     if isinstance(value, str):
         return value
@@ -203,6 +207,8 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     env.filters["_inline_code_values"] = _inline_code_values
     # Render possible values compactly, with long lists available on hover
     env.filters["_possible_values_cell"] = _possible_values_cell
+    # Append possible values to field descriptions
+    env.globals["_description_with_allowed_values"] = _description_with_allowed_values
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     # Render a list of strings as bracketed list
