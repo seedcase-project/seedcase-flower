@@ -30,7 +30,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
     {%- set table.has_values = true -%}
   {%- endif -%}
 {%- endfor -%}
-{% set headers = ["Name", "Title", "Type", "Description"] + (["Values"] if table.has_values else []) %}
+{% set headers = ["Name", "Title", "Type", "Description"] + (["Allowed Values"] if table.has_values else []) %}
 
 {%- set ns = namespace(rows=[]) -%}
 {%- for field in schema.fields -%}

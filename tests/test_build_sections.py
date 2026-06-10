@@ -150,7 +150,7 @@ def test_built_in_styles_include_possible_field_values(style, flora_datapackage)
     built_sections = build_sections(flora_datapackage, config)
     content = "\n".join(section.content for section in built_sections)
 
-    assert "Values" in content
+    assert "Allowed Values" in content
     assert "`seedling`, `vegetative`, `flowering`, `fruiting`" in content
 
 
