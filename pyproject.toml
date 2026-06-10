@@ -67,3 +67,6 @@ dev = [
   "typos>=1.40.0",
   "vulture>=2.14",
 ]
+
+[tool.uv.sources]
+seedcase-soil = { path = "../seedcase-soil", editable = true }

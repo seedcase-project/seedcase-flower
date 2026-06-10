@@ -138,7 +138,7 @@ build-examples:
         fi
       done
     }
-    flora_json="tests/data/flora-with-values.json"
+    flora_json="$(uv run python -c 'from seedcase_soil import Example; print(Example.flora.path)')"
     build_example() {
       local style=$1
       uv run seedcase-flower build "$flora_json" \

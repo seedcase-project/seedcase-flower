@@ -2380,7 +2380,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "python-jsonpath", specifier = ">=2.0.2" },
     { name = "rich", specifier = ">=14.3.3" },
-    { name = "seedcase-soil", specifier = ">=0.12.0" },
+    { name = "seedcase-soil", editable = "../seedcase-soil" },
 ]
 
 [package.metadata.requires-dev]
@@ -2403,17 +2403,39 @@ dev = [
 
 [[package]]
 name = "seedcase-soil"
-version = "0.14.0"
-source = { registry = "https://pypi.org/simple" }
+version = "0.15.0"
+source = { editable = "../seedcase-soil" }
 dependencies = [
     { name = "cyclopts" },
     { name = "emoji" },
     { name = "rich" },
     { name = "seedir" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/61/d51546f7023ecfbadacba8067a1f16eb68299b7e18d6e3a25f1ddb0479fc/seedcase_soil-0.14.0.tar.gz", hash = "sha256:9eee5a03fb587aa34f62d8877dba5c84a0e7e75bbf25a77f32d04b8523c16351", size = 1046626, upload-time = "2026-05-06T13:52:48.227Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/02/05f2901b00dbb46d0559d4394e7a1ce4e27adda8a8aed179e465a0ccdd70/seedcase_soil-0.14.0-py3-none-any.whl", hash = "sha256:c5606edc9b6b8cecd81352274d9cd96d2d49acf7965874cae3c6e380ac77ac5b", size = 18334, upload-time = "2026-05-06T13:52:49.487Z" },
+
+[package.metadata]
+requires-dist = [
+    { name = "cyclopts", specifier = ">=4.10.1" },
+    { name = "emoji", specifier = ">=2.15.0" },
+    { name = "rich", specifier = ">=14.3.3" },
+    { name = "seedir", specifier = ">=0.5.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "bandit", specifier = ">=1.9.4" },
+    { name = "commitizen", specifier = ">=4.13.9" },
+    { name = "genbadge", specifier = ">=1.1.3" },
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "mypy", specifier = ">=1.20.0" },
+    { name = "pre-commit", specifier = ">=4.5.1" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "pytest-mock", specifier = ">=3.15.1" },
+    { name = "quartodoc", specifier = ">=0.11.1" },
+    { name = "ruff", specifier = ">=0.15.8" },
+    { name = "types-tabulate", specifier = ">=0.10.0.20260308" },
+    { name = "typos", specifier = ">=1.44.0" },
+    { name = "vulture", specifier = ">=2.16" },
 ]
 
 [[package]]
