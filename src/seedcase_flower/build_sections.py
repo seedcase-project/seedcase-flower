@@ -100,9 +100,7 @@ def _within_character_limit(values: list[str], character_limit: int) -> bool:
     return len(", ".join(values)) <= character_limit
 
 
-def _last_index_within_character_limit(
-    values: list[str], character_limit: int
-) -> int:
+def _last_index_within_character_limit(values: list[str], character_limit: int) -> int:
     valid_indexes = filter(
         lambda i: _within_character_limit(values[:i], character_limit),
         range(1, len(values) + 1),

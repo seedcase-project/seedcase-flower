@@ -192,10 +192,7 @@ def test_view_with_mocked_internals(mocker):
 
 
 def test_view_replaces_hover_text_for_terminal():
-    content = (
-        '`Denmark`, <span title="Brazil, Canada">'
-        "... (hover for 2 more)</span>"
-    )
+    content = '`Denmark`, <span title="Brazil, Canada">... (hover for 2 more)</span>'
 
     terminal_content = _replace_hover_text(content)
 
