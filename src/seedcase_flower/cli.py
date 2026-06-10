@@ -1,5 +1,6 @@
 """Functions for the exposed CLI."""
 
+import re
 from pathlib import Path
 from typing import Any, Optional
 
@@ -28,6 +29,14 @@ app = setup_cli(
     help="Flower generates human-readable documentation from Data Packages.",
     config_name=".flower.toml",
 )
+
+
+def _replace_hover_text(content: str) -> str:
+    return re.sub(
+        r'<span title="[^"]*">\.\.\. \(hover for (\d+) more\)</span>',
+        r"... (\1 values truncated)",
+        content,
+    )
 
 
 @app.command()
@@ -113,7 +122,7 @@ def view(
     console = Console(theme=CONSOLE_THEME)
     # TODO move back console theme? will it be used in CDP?
     print()  # One line separation between the command and the datapackage title
-    console.print(Markdown(built_sections[0].content))
+    console.print(Markdown(_replace_hover_text(built_sections[0].content)))
 
 
 def main() -> None:

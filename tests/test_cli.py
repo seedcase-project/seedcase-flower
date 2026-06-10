@@ -11,7 +11,7 @@ from seedcase_flower.build_sections import (
     _get_template_dir,
     _load_sections_toml,
 )
-from seedcase_flower.cli import app
+from seedcase_flower.cli import _replace_hover_text, app
 from seedcase_flower.config import Config
 from seedcase_flower.styles import Style, ViewStyle
 
@@ -189,6 +189,17 @@ def test_view_with_mocked_internals(mocker):
         Config(style=Style.quarto_one_page),
     )
     assert mock_console.print.called
+
+
+def test_view_replaces_hover_text_for_terminal():
+    content = (
+        '`Denmark`, <span title="Brazil, Canada">'
+        "... (hover for 2 more)</span>"
+    )
+
+    terminal_content = _replace_hover_text(content)
+
+    assert terminal_content == "`Denmark`, ... (2 values truncated)"
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):
