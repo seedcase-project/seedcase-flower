@@ -131,12 +131,7 @@ build-quartodoc:
 build-examples:
     #!/usr/bin/env bash
     styles() {
-      for dir in src/seedcase_flower/styles/*/; do
-        style="$(basename "$dir" | tr '_' '-')"
-        if [[ "$style" != "shared" ]]; then
-          printf '%s\n' "$style"
-        fi
-      done
+      basename -a src/seedcase_flower/styles/*/ | tr '_' '-' | grep -v '^shared$'
     }
     flora_json="$(uv run python -c 'from seedcase_soil import Example; print(Example.flora.path)')"
     build_example() {
