@@ -138,55 +138,7 @@ build-examples:
         fi
       done
     }
-    flora_json="$(mktemp)"
-    trap 'rm -f "$flora_json"' EXIT
-    uv run python - "$flora_json" <<'PY'
-    import json
-    import sys
-
-    from seedcase_soil import Example
-
-    countries = [
-        "Denmark",
-        "Sweden",
-        "Norway",
-        "Finland",
-        "Iceland",
-        "Germany",
-        "Netherlands",
-        "France",
-        "Spain",
-        "Italy",
-        "Poland",
-        "Belgium",
-        "Ireland",
-        "Austria",
-        "Switzerland",
-        "Czechia",
-        "Portugal",
-        "Greece",
-        "Luxembourg",
-        "Estonia",
-        "United Kingdom",
-        "Romania",
-        "Bulgaria",
-    ]
-
-    with open(Example.flora.path) as file:
-        datapackage = json.load(file)
-
-    for resource in datapackage["resources"]:
-        for field in resource["schema"]["fields"]:
-            if field["name"] == "growth_stage":
-                field["constraints"] = {
-                    "enum": ["seedling", "vegetative", "flowering", "fruiting"]
-                }
-            if field["name"] in ["country", "location_country"]:
-                field["constraints"] = {"enum": countries}
-
-    with open(sys.argv[1], "w") as file:
-        json.dump(datapackage, file, indent=2)
-    PY
+    flora_json="tests/data/flora-with-values.json"
     build_example() {
       local style=$1
       uv run seedcase-flower build "$flora_json" \
