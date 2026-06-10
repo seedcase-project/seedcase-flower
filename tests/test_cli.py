@@ -192,11 +192,16 @@ def test_view_with_mocked_internals(mocker):
 
 
 def test_view_replaces_hover_text_for_terminal():
-    content = '`Denmark`, <span title="Brazil, Canada">... (hover for 2 more)</span>'
+    content = (
+        'A description.<br>Allowed values: `Denmark`, '
+        '<span title="Brazil, Canada">... (hover for 2 more)</span>'
+    )
 
     terminal_content = _replace_hover_text(content)
 
-    assert terminal_content == "`Denmark`, ... (2 values truncated)"
+    assert terminal_content == (
+        "A description. Allowed values: `Denmark`, ... (2 values truncated)"
+    )
 
 
 def test_build_raises_on_invalid_datapackage(tmp_path):
