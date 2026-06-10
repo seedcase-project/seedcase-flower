@@ -15,6 +15,12 @@ def datapackage():
 
 
 @pytest.fixture
+def flora_datapackage():
+    """Return the flora datapackage dict."""
+    return read_properties(Example.flora.address)
+
+
+@pytest.fixture
 def datapackage_path(tmp_path, datapackage):
     """Create a temporary datapackage.json file and return its path as a string."""
     file_path = tmp_path / "datapackage.json"

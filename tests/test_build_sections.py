@@ -144,80 +144,20 @@ def test_uses_style_when_no_template_dir_given():
         Style.quarto_resource_tables,
     ],
 )
-def test_built_in_styles_include_possible_field_values(style):
+def test_built_in_styles_include_possible_field_values(style, flora_datapackage):
     config = Config(style=style)
-    properties_with_values = {
-        "name": "example-datapackage",
-        "resources": [
-            {
-                "name": "example-resource",
-                "schema": {
-                    "fields": [
-                        {
-                            "name": "growth_stage",
-                            "type": "string",
-                            "constraints": {"enum": ["seedling", "flowering"]},
-                        }
-                    ]
-                },
-            }
-        ],
-    }
 
-    built_sections = build_sections(properties_with_values, config)
+    built_sections = build_sections(flora_datapackage, config)
     content = "\n".join(section.content for section in built_sections)
 
     assert "Values" in content
-    assert "`seedling`, `flowering`" in content
+    assert "`seedling`, `vegetative`, `flowering`, `fruiting`" in content
 
 
-def test_built_in_styles_collapse_long_possible_field_values():
+def test_built_in_styles_collapse_long_possible_field_values(flora_datapackage):
     config = Config(style=Style.quarto_one_page)
-    properties_with_values = {
-        "name": "example-datapackage",
-        "resources": [
-            {
-                "name": "example-resource",
-                "schema": {
-                    "fields": [
-                        {
-                            "name": "country",
-                            "type": "string",
-                            "constraints": {
-                                "enum": [
-                                    "Denmark",
-                                    "Brazil",
-                                    "Canada",
-                                    "Chile",
-                                    "China",
-                                    "Egypt",
-                                    "Ghana",
-                                    "India",
-                                    "Indonesia",
-                                    "Japan",
-                                    "Kenya",
-                                    "Mexico",
-                                    "Morocco",
-                                    "New Zealand",
-                                    "Nigeria",
-                                    "Peru",
-                                    "South Africa",
-                                    "South Korea",
-                                    "Sweden",
-                                    "Thailand",
-                                    "Turkey",
-                                    "United Kingdom",
-                                    "Vietnam",
-                                ]
-                            },
-                        }
-                    ]
-                },
-            }
-        ],
-    }
 
-    built_sections = build_sections(properties_with_values, config)
+    built_sections = build_sections(flora_datapackage, config)
     content = built_sections[0].content
 
     assert (
