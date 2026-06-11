@@ -30,7 +30,6 @@ This resource contains a catalog of flora species.
 - Foreign keys:
   - `parent_species_id` → `species_catalog.species_id`
 
-
 | Name                | Title           | Type    | Description                                    |
 |---------------------|-----------------|---------|------------------------------------------------|
 | `species_id`        | Species ID      | integer | The unique identifier for each species.        |
@@ -47,7 +46,6 @@ This resource contains a catalog of flora species locations.
 
 - Path: `resources/location_catalog/data.parquet`
 - Primary key: (`region`, `country`)
-
 
 | Name         | Title      | Type   | Description                                                                                                                                                                                                                                                                                                                                     |
 |--------------|------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -66,7 +64,6 @@ This resource contains records of observed growth stages for various flora speci
 - Foreign keys:
   - `species_id` → `species_catalog.species_id`
   - `location_region`, `location_country` → `location_catalog.[region, country]`
-
 
 | Name               | Title            | Type    | Description                                                                                                                                                                                                                                                                                                                                  |
 |--------------------|------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

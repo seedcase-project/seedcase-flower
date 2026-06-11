@@ -12,7 +12,6 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 - Path: `resources/location_catalog/data.parquet`
 - Primary key: (`region`, `country`)
 
-
 | Name         | Title      | Type   | Description                                                                                                                                                                                                                                                                                                                                     |
 |--------------|------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `region`     | Region     | string | The region the location is in.                                                                                                                                                                                                                                                                                                                  |

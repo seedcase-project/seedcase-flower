@@ -36,7 +36,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
   ] -%}
   {%- set ns.rows = ns.rows + [row] -%}
 {%- endfor -%}
-{{ "\n" ~ _adjust_column_widths(headers, ns.rows) }}
+{{ _adjust_column_widths(headers, ns.rows) }}
 
 : Fields in the {{ resource.name | _inline_code }} resource.
 {% endif %}

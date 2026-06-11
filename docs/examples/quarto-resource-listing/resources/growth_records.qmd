@@ -15,7 +15,6 @@ If you want to edit the content, please make changes to the `datapackage.json` f
   - `species_id` → `species_catalog.species_id`
   - `location_region`, `location_country` → `location_catalog.[region, country]`
 
-
 | Name               | Title            | Type    | Description                                                                                                                                                                                                                                                                                                                                  |
 |--------------------|------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `record_id`        | Record ID        | integer | The unique identifier for each growth record.                                                                                                                                                                                                                                                                                                |
