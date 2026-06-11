@@ -32,6 +32,7 @@ app = setup_cli(
 
 
 def _replace_hover_text(content: str) -> str:
+    """Replace hover text since a hover popup can't be shown in the terminal."""
     content = content.replace("<br>Allowed values:", " Allowed values:")
     return re.sub(
         r'<span title="[^"]*">\.\.\. \(hover for (\d+) more\)</span>',
