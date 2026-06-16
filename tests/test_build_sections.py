@@ -171,6 +171,44 @@ def test_built_in_styles_collapse_long_possible_field_values(flora_datapackage):
     ) in content
 
 
+def test_built_in_styles_escape_hidden_allowed_values():
+    config = Config(style=Style.quarto_one_page)
+    properties_with_values = {
+        "name": "example-datapackage",
+        "resources": [
+            {
+                "name": "example-resource",
+                "schema": {
+                    "fields": [
+                        {
+                            "name": "status",
+                            "type": "string",
+                            "constraints": {
+                                "enum": [
+                                    "visible value with enough text to count toward "
+                                    "the visible character threshold",
+                                    "another visible value with enough text to count "
+                                    "toward the visible character threshold",
+                                    "hidden \"quoted\" value",
+                                    "hidden & value",
+                                    "hidden <value>",
+                                ]
+                            },
+                        }
+                    ]
+                },
+            }
+        ],
+    }
+
+    built_sections = build_sections(properties_with_values, config)
+    content = built_sections[0].content
+
+    assert "hidden &#34;quoted&#34; value" in content
+    assert "hidden &amp; value" in content
+    assert "hidden &lt;value&gt;" in content
+
+
 @mark.parametrize(
     "style", [Style.quarto_resource_listing, Style.quarto_resource_tables]
 )

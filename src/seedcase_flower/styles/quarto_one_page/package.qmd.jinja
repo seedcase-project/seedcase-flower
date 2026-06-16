@@ -72,7 +72,7 @@ If you want to edit the content, please make changes to the `datapackage.json` f
   {%- if allowed_values -%}
     {%- set description.text = description.text ~ "<br>Allowed values: " ~ (allowed_values.visible | _inline_code_values) -%}
     {%- if allowed_values.hidden -%}
-      {%- set description.text = description.text ~ ", <span title=\"" ~ (allowed_values.hidden | _join_values) ~ "\">... (hover for " ~ (allowed_values.hidden | length) ~ " more)</span>" -%}
+      {%- set description.text = description.text ~ ", <span title=\"" ~ (allowed_values.hidden | _join_values | e) ~ "\">... (hover for " ~ (allowed_values.hidden | length) ~ " more)</span>" -%}
     {%- endif -%}
   {%- endif -%}
   {%- set ns.rows = ns.rows + [[
