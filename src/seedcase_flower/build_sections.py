@@ -2,7 +2,6 @@
 
 import tomllib
 from dataclasses import dataclass
-from html import escape
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, Optional, Union, cast
@@ -108,32 +107,27 @@ def _last_index_within_character_limit(values: list[str], character_limit: int) 
     return max(valid_indexes, default=1)
 
 
-def _possible_values_cell(
+def _split_allowed_values(
     value: Any, visible_characters: int = 150, hidden_characters: int = 50
-) -> str:
+) -> dict[str, Any]:
     if not isinstance(value, list):
-        return f"`{value}`"
+        return {"visible": [str(value)], "hidden": []}
     raw_values = list(map(str, value))
     full_values = ", ".join(raw_values)
     if len(full_values) <= visible_characters:
-        return _inline_code_values(value)
+        return {"visible": raw_values, "hidden": []}
 
     visible_count = _last_index_within_character_limit(raw_values, visible_characters)
     hidden_values = raw_values[visible_count:]
     hidden = ", ".join(hidden_values)
     if len(hidden) < hidden_characters:
-        return _inline_code_values(value)
+        return {"visible": raw_values, "hidden": []}
 
-    visible = _inline_code_values(raw_values[:visible_count])
-    hidden = escape(hidden, quote=True)
-    return (
-        f'{visible}, <span title="{hidden}">'
-        f"... (hover for {len(hidden_values)} more)</span>"
-    )
+    return {"visible": raw_values[:visible_count], "hidden": hidden_values}
 
 
-def _description_with_allowed_values(description: str, value: Any) -> str:
-    return f"{description}<br>Allowed values: {_possible_values_cell(value)}"
+def _join_values(value: list[str]) -> str:
+    return ", ".join(value)
 
 
 def _bracket_list(value: Union[str, list[str]]) -> str:
@@ -205,10 +199,10 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     env.filters["_inline_code_list"] = _inline_code_list
     # Render a possible value or list of possible values as inline code
     env.filters["_inline_code_values"] = _inline_code_values
-    # Render possible values compactly, with long lists available on hover
-    env.filters["_possible_values_cell"] = _possible_values_cell
-    # Append possible values to field descriptions
-    env.globals["_description_with_allowed_values"] = _description_with_allowed_values
+    # Split possible values into visible and hidden values for templates to render
+    env.globals["_split_allowed_values"] = _split_allowed_values
+    # Render a list of strings as comma-separated text
+    env.filters["_join_values"] = _join_values
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     # Render a list of strings as bracketed list

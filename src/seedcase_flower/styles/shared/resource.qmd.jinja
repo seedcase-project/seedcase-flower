@@ -27,11 +27,19 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% set headers = ["Name", "Title", "Type", "Description"] %}
 {%- set ns = namespace(rows=[]) -%}
 {%- for field in schema.fields -%}
+  {%- set allowed_values = _split_allowed_values(field.constraints.enum) if field.constraints and field.constraints.enum else none -%}
+  {%- set description = namespace(text=field.description or "N/A") -%}
+  {%- if allowed_values -%}
+    {%- set description.text = description.text ~ "<br>Allowed values: " ~ (allowed_values.visible | _inline_code_values) -%}
+    {%- if allowed_values.hidden -%}
+      {%- set description.text = description.text ~ ", <span title=\"" ~ (allowed_values.hidden | _join_values) ~ "\">... (hover for " ~ (allowed_values.hidden | length) ~ " more)</span>" -%}
+    {%- endif -%}
+  {%- endif -%}
   {%- set ns.rows = ns.rows + [[
     field.name | _inline_code or "N/A",
     field.title or "N/A",
     field.type or "any",
-    _description_with_allowed_values(field.description or "N/A", field.constraints.enum) if field.constraints and field.constraints.enum else field.description or "N/A"
+    description.text
   ]] -%}
 {%- endfor -%}
 {{ _adjust_column_widths(headers, ns.rows) }}
