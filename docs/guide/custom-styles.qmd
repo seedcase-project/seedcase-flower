@@ -93,7 +93,7 @@ flora/
 └── my-style/
 ```
 
-Inside the template folder, create three files, one for each type of
+Inside the style folder, create three files, one for each type of
 metadata listed above.
 
 - `package.qmd.jinja` for the general metadata.
@@ -327,7 +327,7 @@ Each content item requires the following fields:
   [JSON path](https://jg-rp.github.io/python-jsonpath/syntax/) pointing
   to the metadata property or properties to send to the template.
 - `template-path`: The path to the Jinja template file, relative to the
-  template folder.
+  style folder.
 - `jinja-variable`: The variable name used in the template to reference
   the metadata selected by the `jsonpath`.
 

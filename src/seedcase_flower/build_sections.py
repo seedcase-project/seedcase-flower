@@ -63,12 +63,12 @@ def _get_shared_dir() -> Path:
 
 def _load_sections_toml(style_dir: Path) -> SectionsToml:
     if not style_dir.is_dir():
-        raise NotADirectoryError(f"Template directory '{style_dir}' does not exist.")
+        raise NotADirectoryError(f"Style directory '{style_dir}' does not exist.")
 
     toml_path = style_dir / "sections.toml"
     if not toml_path.is_file():
         raise FileNotFoundError(
-            f"Template directory '{style_dir}' does not contain a sections.toml file."
+            f"Style directory '{style_dir}' does not contain a sections.toml file."
         )
 
     with open(toml_path, mode="rb") as file:

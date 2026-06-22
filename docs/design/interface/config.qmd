@@ -31,7 +31,7 @@ Configuration is split into two main levels:
   each section of the documentation and where those sections are
   outputted. This is represented by one or more `One` and `Many` section
   classes or `[[one]]` and `[[many]]` tables in the `sections.toml` file
-  in the template directory and cannot be set in `pyproject.toml` or
+  in the style directory and cannot be set in `pyproject.toml` or
   `.flower.toml`.
 
 ## Python classes

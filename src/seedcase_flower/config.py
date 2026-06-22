@@ -39,11 +39,11 @@ class Config(BaseModel, frozen=True):
             style=fl.Style.quarto_resource_listing, output_dir=Path("my-docs/")
         )
 
-        # A custom style that points to a template folder and outputs
+        # A custom style that points to a style folder and outputs
         # to the default `docs/` folder.
         config = fl.Config(style_dir=Path("style/"))
 
-        # A custom style that points to a template folder and outputs
+        # A custom style that points to a style folder and outputs
         # to the `my-docs/` folder.
         config = fl.Config(style_dir=Path("style/"), output_dir=Path("my-docs/"))
         ```

@@ -49,7 +49,7 @@ def build(
             in the repo root (in the format `gh:org/repo`, which can also include
             reference to a tag or branch, such as `gh:org/repo@main` or
             `gh:org/repo@1.0.1`).
-        style: The style used to structure the output. If a template directory
+        style: The style used to structure the output. If a style directory
             is given, this parameter will be ignored.
         style_dir: The directory that contains the Jinja template
             files and `sections.toml`. When set, it will override any
