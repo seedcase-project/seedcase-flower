@@ -95,41 +95,6 @@ def _inline_code_values(value: Any) -> str:
     return f"`{value}`"
 
 
-def _within_character_limit(values: list[str], character_limit: int) -> bool:
-    return len(", ".join(values)) <= character_limit
-
-
-def _last_index_within_character_limit(values: list[str], character_limit: int) -> int:
-    valid_indexes = filter(
-        lambda i: _within_character_limit(values[:i], character_limit),
-        range(1, len(values) + 1),
-    )
-    return max(valid_indexes, default=1)
-
-
-def _split_allowed_values(
-    value: Any, visible_characters: int = 150, hidden_characters: int = 50
-) -> dict[str, Any]:
-    if not isinstance(value, list):
-        return {"visible": [str(value)], "hidden": []}
-    raw_values = list(map(str, value))
-    full_values = ", ".join(raw_values)
-    if len(full_values) <= visible_characters:
-        return {"visible": raw_values, "hidden": []}
-
-    visible_count = _last_index_within_character_limit(raw_values, visible_characters)
-    hidden_values = raw_values[visible_count:]
-    hidden = ", ".join(hidden_values)
-    if len(hidden) < hidden_characters:
-        return {"visible": raw_values, "hidden": []}
-
-    return {"visible": raw_values[:visible_count], "hidden": hidden_values}
-
-
-def _join_values(value: list[str]) -> str:
-    return ", ".join(value)
-
-
 def _bracket_list(value: Union[str, list[str]]) -> str:
     if isinstance(value, str):
         return value
@@ -199,10 +164,6 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     env.filters["_inline_code_list"] = _inline_code_list
     # Render a possible value or list of possible values as inline code
     env.filters["_inline_code_values"] = _inline_code_values
-    # Split possible values into visible and hidden values for templates to render
-    env.globals["_split_allowed_values"] = _split_allowed_values
-    # Render a list of strings as comma-separated text
-    env.filters["_join_values"] = _join_values
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     # Render a list of strings as bracketed list

@@ -154,7 +154,7 @@ def test_built_in_styles_include_possible_field_values(style, flora_datapackage)
     assert "`seedling`, `vegetative`, `flowering`, `fruiting`" in content
 
 
-def test_built_in_styles_collapse_long_possible_field_values(flora_datapackage):
+def test_built_in_styles_include_long_possible_field_values(flora_datapackage):
     config = Config(style=Style.quarto_one_page)
 
     built_sections = build_sections(flora_datapackage, config)
@@ -166,47 +166,8 @@ def test_built_in_styles_collapse_long_possible_field_values(flora_datapackage):
         "`New Zealand`, `Nigeria`, `Peru`, `South Africa`"
     ) in content
     assert (
-        '<span title="South Korea, Sweden, Thailand, Turkey, United Kingdom, Vietnam">'
-        "... (hover for 6 more)</span>"
+        "`South Korea`, `Sweden`, `Thailand`, `Turkey`, `United Kingdom`, `Vietnam`"
     ) in content
-
-
-def test_built_in_styles_escape_hidden_allowed_values():
-    config = Config(style=Style.quarto_one_page)
-    properties_with_values = {
-        "name": "example-datapackage",
-        "resources": [
-            {
-                "name": "example-resource",
-                "schema": {
-                    "fields": [
-                        {
-                            "name": "status",
-                            "type": "string",
-                            "constraints": {
-                                "enum": [
-                                    "visible value with enough text to count toward "
-                                    "the visible character threshold",
-                                    "another visible value with enough text to count "
-                                    "toward the visible character threshold",
-                                    "hidden \"quoted\" value",
-                                    "hidden & value",
-                                    "hidden <value>",
-                                ]
-                            },
-                        }
-                    ]
-                },
-            }
-        ],
-    }
-
-    built_sections = build_sections(properties_with_values, config)
-    content = built_sections[0].content
-
-    assert "hidden &#34;quoted&#34; value" in content
-    assert "hidden &amp; value" in content
-    assert "hidden &lt;value&gt;" in content
 
 
 @mark.parametrize(
