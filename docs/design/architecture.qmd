@@ -42,7 +42,7 @@ describe both types and how they relate to Flower and its design.
   controlling how the data and metadata are organised---not just the
   output Flower generates. Depending on their technical expertise, they
   may use Flower's defaults, make minor customisations, or create their
-  own templates.
+  own style with template files.
 
 - **Communication or outreach lead**: This role is responsible for
   disseminating the Data Package to a wider, external audience, such as

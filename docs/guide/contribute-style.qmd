@@ -29,7 +29,7 @@ and
 [add the `sections.toml`](/docs/guide/custom-styles.qmd#sections.toml-configuration-file)
 locally.
 
-Use the name of your style as the name of the template folder. The name
+Use the name of your style as the name of the custom style folder. The name
 should be short, descriptive, and distinct from existing built-in
 styles. It should be given in snake case (e.g., `my_new_style`).
 
@@ -42,7 +42,7 @@ styles can be used by `build` as well.
 
 ## Adding the style as built-in
 
-Next, in your local copy of the Flower repo, place the template folder
+Next, in your local copy of the Flower repo, place the style folder
 into the `src/seedcase_flower/styles/` folder. The file structure should
 now look something like:
 

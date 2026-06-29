@@ -7,19 +7,19 @@ from seedcase_flower.styles import Style
 def test_creates_config():
     config = Config()
     assert config.style == Style.quarto_one_page
-    assert config.template_dir is None
+    assert config.style_dir is None
     assert config.output_dir == Path("docs/")
 
     config = Config(
         style=Style.quarto_resource_listing,
-        template_dir=Path("templates/"),
+        style_dir=Path("style/"),
         output_dir=Path("my-docs/"),
     )
     assert config.style == Style.quarto_resource_listing
-    assert config.template_dir == Path("templates/")
+    assert config.style_dir == Path("style/")
     assert config.output_dir == Path("my-docs/")
 
-    config = Config(template_dir=Path("templates/"))
+    config = Config(style_dir=Path("style/"))
     assert config.style == Style.quarto_one_page
-    assert config.template_dir == Path("templates/")
+    assert config.style_dir == Path("style/")
     assert config.output_dir == Path("docs/")

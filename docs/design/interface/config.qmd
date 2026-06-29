@@ -31,7 +31,7 @@ Configuration is split into two main levels:
   each section of the documentation and where those sections are
   outputted. This is represented by one or more `One` and `Many` section
   classes or `[[one]]` and `[[many]]` tables in the `sections.toml` file
-  in the template directory and cannot be set in `pyproject.toml` or
+  in the style directory and cannot be set in `pyproject.toml` or
   `.flower.toml`.
 
 ## Python classes
@@ -39,7 +39,7 @@ Configuration is split into two main levels:
 ### {{< var done >}} `Config`
 
 The `Config` class specifies the top-level configurations used by
-`build` via three attributes: `style`, `template_dir`, and `output_dir`.
+`build` via three attributes: `style`, `style_dir`, and `output_dir`.
 See the [Config](/docs/reference/Config.qmd) for details on each
 attribute.
 
@@ -130,10 +130,9 @@ this order, falling back to the next if not provided or found:
    style.
 
 The `sections.toml` file defines the style by configuring the `One` and
-`Many` classes, and must be present in the template directory
-(`Config.template_dir`). Built-in styles include this file internally
-while users must provide it in the template directory for their custom
-style.
+`Many` classes, and must be present in the style directory
+(`Config.style_dir`). Built-in styles include this file internally while
+users must provide it in the style directory for their custom style.
 
 ### {{< var done >}} Main config settings: `.flower.toml`
 
@@ -146,16 +145,16 @@ style = "quarto-one-page"
 output-dir = "docs/"
 ```
 
-Custom styles require a `template-dir`. For example:
+Custom styles require a `style-dir`. For example:
 
 ``` {.toml filename=".flower.toml"}
-template-dir = "path/to/templates/"
+style-dir = "path/to/style/"
 output-dir = "docs/"
 ```
 
-The `template-dir` above must include at least one Jinja and a
-`sections.toml` file. When `template-dir` is given, any value in `style`
-is ignored.
+The `style-dir` above must include at least one Jinja and a
+`sections.toml` file. When `style-dir` is given, any value in `style` is
+ignored.
 
 ### {{< var done >}} Main config settings: `pyproject.toml`
 
@@ -169,13 +168,13 @@ The custom example from `.flower.toml` above would look like this in
 ``` toml
 [tool.seedcase-flower]
 style = "custom"
-template-dir = "templates/"
+style-dir = "style/"
 output-dir = "docs/"
 ```
 
 ### {{< var done >}} Style config settings: `sections.toml`
 
-`sections.toml` is kept at the root of `Config.template_dir` and defines
+`sections.toml` is kept at the root of `Config.style_dir` and defines
 the `One`, `Many`, and `Content` classes for a given style. For example:
 
 ``` toml
@@ -185,11 +184,11 @@ the `One`, `Many`, and `Content` classes for a given style. For example:
 output-path = "index.qmd"
 [[one.contents]]
 jsonpath = "."
-template-path = "path/to/templates/package.qmd.jinja"
+template-path = "path/to/style/package.qmd.jinja"
 jinja-variable = "package"
 [[one.contents]]
 jsonpath = ".contributors"
-template-path = "path/to/templates/contributors.qmd.jinja"
+template-path = "path/to/style/contributors.qmd.jinja"
 jinja-variable = "contributors"
 
 # Creates one file per resource in a `docs/resources/` folder.
@@ -200,7 +199,7 @@ output-path = "resources/"
 # Or equivalently
 # output-path = "resources/{resource-name}.qmd"
 content = "resources"
-template-path = "path/to/templates/resource.qmd.jinja"
+template-path = "path/to/style/resource.qmd.jinja"
 jinja-variable = "resource"
 
 #  Creates one YAML file per field in each resource.
@@ -210,6 +209,6 @@ jinja-variable = "resource"
 [[many]]
 output-path = "resources/{resource-name}/{field-name}.yml"
 content = "fields"
-template-path = "path/to/templates/resource-schema-field.yml.jinja"
+template-path = "path/to/style/resource-schema-field.yml.jinja"
 jinja-variable = "field"
 ```

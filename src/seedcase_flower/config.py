@@ -19,8 +19,8 @@ class Config(BaseModel, frozen=True):
 
     Attributes:
         style: The built-in style to use for outputting the
-            documentation. Ignored when `template_dir` is set.
-        template_dir: When using a custom style, this should be the
+            documentation. Ignored when `style_dir` is set.
+        style_dir: When using a custom style, this should be the
             relative directory path to the
             [Jinja2](https://jinja.palletsprojects.com/en/stable/) template files.
             The directory **must** contain at least one template Jinja2 file and
@@ -39,16 +39,16 @@ class Config(BaseModel, frozen=True):
             style=fl.Style.quarto_resource_listing, output_dir=Path("my-docs/")
         )
 
-        # A custom style that points to a template folder and outputs
+        # A custom style that points to a style folder and outputs
         # to the default `docs/` folder.
-        config = fl.Config(template_dir=Path("templates/"))
+        config = fl.Config(style_dir=Path("style/"))
 
-        # A custom style that points to a template folder and outputs
+        # A custom style that points to a style folder and outputs
         # to the `my-docs/` folder.
-        config = fl.Config(template_dir=Path("templates/"), output_dir=Path("my-docs/"))
+        config = fl.Config(style_dir=Path("style/"), output_dir=Path("my-docs/"))
         ```
     """
 
     style: Style = Style.quarto_one_page
-    template_dir: Optional[Path] = None
+    style_dir: Optional[Path] = None
     output_dir: Path = Path("docs")

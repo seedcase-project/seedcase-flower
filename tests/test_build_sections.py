@@ -91,7 +91,7 @@ def _template(tmp_path):
 )
 def test_matches_sections_toml_config(sections_toml, expected, tmp_path, _template):
     (tmp_path / "sections.toml").write_text(sections_toml)
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     built_sections = build_sections(properties, config)
 
@@ -115,7 +115,7 @@ def test_can_use_multiple_templates_with_different_jsonpaths(tmp_path, _template
     """
     (tmp_path / "sections.toml").write_text(sections_toml)
     (tmp_path / "resources.qmd.jinja").write_text("{{ resources | length }}")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     built_sections = build_sections(properties, config)
 
@@ -126,7 +126,7 @@ def test_can_use_multiple_templates_with_different_jsonpaths(tmp_path, _template
     ]
 
 
-def test_uses_style_when_no_template_dir_given():
+def test_uses_style_when_no_style_dir_given():
     config = Config(style=Style.quarto_one_page)
 
     built_sections = build_sections(properties, config)
@@ -187,9 +187,9 @@ def test_built_in_styles_can_use_shared_templates(style):
     assert "example-resource" in resource_sections[0].content
 
 
-def test_custom_template_dir_cannot_access_shared_templates(tmp_path):
+def test_custom_style_dir_cannot_access_shared_templates(tmp_path):
     (tmp_path / "sections.toml").write_text(many_section_resources)
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     with raises(FileNotFoundError):
         build_sections(properties, config)
@@ -199,7 +199,7 @@ def test_handles_no_match_for_jsonpath_gracefully(tmp_path, _template):
     (tmp_path / "sections.toml").write_text(
         one_content_toml.replace('jsonpath = "$"', 'jsonpath = "$.nonexistent"')
     )
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     built_sections = build_sections(properties, config)
 
@@ -210,21 +210,21 @@ def test_handles_no_match_for_jsonpath_gracefully(tmp_path, _template):
 
 def test_rejects_bad_sections_toml(tmp_path):
     (tmp_path / "sections.toml").write_text("[[one]]\noutput-path = 'no-content.qmd'")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     with raises(ValidationError):
         build_sections(properties, config)
 
 
 def test_flags_missing_template_folder():
-    config = Config(template_dir=Path("nonexistent-folder"))
+    config = Config(style_dir=Path("nonexistent-folder"))
 
     with raises(NotADirectoryError):
         build_sections(properties, config)
 
 
 def test_flags_missing_sections_toml(tmp_path):
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     with raises(FileNotFoundError):
         build_sections(properties, config)
@@ -232,7 +232,7 @@ def test_flags_missing_sections_toml(tmp_path):
 
 def test_flags_missing_template_file(tmp_path):
     (tmp_path / "sections.toml").write_text(one_content_toml)
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     with raises(FileNotFoundError):
         build_sections(properties, config)
@@ -242,7 +242,7 @@ def test_flags_bad_jsonpath_for_one_section(tmp_path, _template):
     (tmp_path / "sections.toml").write_text(
         one_content_toml.replace('jsonpath = "$"', 'jsonpath = "$.resources[*]"')
     )
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
     multi_resource_properties = {
         "name": "example-datapackage",
         "resources": [
@@ -323,7 +323,7 @@ def test_builds_many_section(
     (tmp_path / "sections.toml").write_text(sections_toml)
     (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
     (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     built_sections = build_sections(datapackage, config)
 
@@ -334,7 +334,7 @@ def test_handles_no_fields_gracefully(tmp_path):
     (tmp_path / "sections.toml").write_text(many_section_fields)
     (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
     (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     built_sections = build_sections(properties, config)
 
@@ -360,7 +360,7 @@ def test_resolves_placeholder_for_resource_files(
         many_section_resources.replace("resources/", output_path_in)
     )
     (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     built_sections = build_sections(properties, config)
 
@@ -397,7 +397,7 @@ def test_resolves_placeholder_for_field_files(
         many_section_fields.replace("fields/", output_path_in)
     )
     (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
     one_field_properties = {
         "name": "example-datapackage",
         "resources": [
@@ -419,7 +419,7 @@ def test_builds_toml_with_one_and_many_sections(tmp_path, _template, datapackage
     (tmp_path / "sections.toml").write_text(toml)
     (tmp_path / "resource.qmd.jinja").write_text("{{ resource.name }}")
     (tmp_path / "field.qmd.jinja").write_text("{{ field.name }}")
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
     package_name = datapackage["name"]
 
     built_sections = build_sections(datapackage, config)
@@ -435,7 +435,7 @@ def test_builds_toml_with_one_and_many_sections(tmp_path, _template, datapackage
 
 def test_flags_missing_template_file_in_many_section(tmp_path):
     (tmp_path / "sections.toml").write_text(many_section_resources)
-    config = Config(template_dir=tmp_path)
+    config = Config(style_dir=tmp_path)
 
     with raises(FileNotFoundError):
         build_sections(properties, config)

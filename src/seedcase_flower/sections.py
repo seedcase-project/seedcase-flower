@@ -61,7 +61,7 @@ class Content(KebabModel, frozen=True):
             to the Data Package property that should be sent to the `template_path`
             Jinja2 file.
         template_path: The path to the Jinja2 template file for this content
-            item, relative to `Config.template_dir`.
+            item, relative to `Config.style_dir`.
         jinja_variable: The Jinja2 variable name that will be used in the template
             to reference this content item.
 

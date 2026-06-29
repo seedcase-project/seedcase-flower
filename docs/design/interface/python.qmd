@@ -55,7 +55,7 @@ reasons:
 
 ### {{< var done >}} `build()`
 
-`build()` takes the parameters `source`, `style`, `template_dir`,
+`build()` takes the parameters `source`, `style`, `style_dir`,
 `output_dir`, and `verbose`. See [`build()`](/docs/reference/build.qmd)
 for details.
 
@@ -67,7 +67,7 @@ The internal flow of `build()` is shown in the diagram below.
 flowchart TD
     source:::input --> parse_source{{"parse_source()"}} --> Address
     style_cfg[style]:::input --> Config
-    template_dir_cfg[template_dir]:::input --> Config
+    style_dir_cfg[style_dir]:::input --> Config
     Address --> read_properties{{"read_properties()"}} --> properties
     properties & Config --> build_sections{{"build_sections()"}} --> output["list[BuiltSection]"]
     output --> write_sections{{"write_sections()"}}
