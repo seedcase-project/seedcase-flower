@@ -137,6 +137,40 @@ def test_uses_style_when_no_template_dir_given():
 
 
 @mark.parametrize(
+    "style",
+    [
+        Style.quarto_one_page,
+        Style.quarto_resource_listing,
+        Style.quarto_resource_tables,
+    ],
+)
+def test_built_in_styles_include_possible_field_values(style, flora_datapackage):
+    config = Config(style=style)
+
+    built_sections = build_sections(flora_datapackage, config)
+    content = "\n".join(section.content for section in built_sections)
+
+    assert "Allowed values:" in content
+    assert "`seedling`, `vegetative`, `flowering`, `fruiting`" in content
+
+
+def test_built_in_styles_include_long_possible_field_values(flora_datapackage):
+    config = Config(style=Style.quarto_one_page)
+
+    built_sections = build_sections(flora_datapackage, config)
+    content = built_sections[0].content
+
+    assert (
+        "`Denmark`, `Brazil`, `Canada`, `Chile`, `China`, `Egypt`, `Ghana`, "
+        "`India`, `Indonesia`, `Japan`, `Kenya`, `Mexico`, `Morocco`, "
+        "`New Zealand`, `Nigeria`, `Peru`, `South Africa`"
+    ) in content
+    assert (
+        "`South Korea`, `Sweden`, `Thailand`, `Turkey`, `United Kingdom`, `Vietnam`"
+    ) in content
+
+
+@mark.parametrize(
     "style", [Style.quarto_resource_listing, Style.quarto_resource_tables]
 )
 def test_built_in_styles_can_use_shared_templates(style):

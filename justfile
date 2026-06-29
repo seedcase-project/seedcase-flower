@@ -131,7 +131,7 @@ build-quartodoc:
 build-examples:
     #!/usr/bin/env bash
     styles() {
-      basename src/seedcase_flower/styles/*/ |tr '_' '-' | grep -v '^shared$'
+      basename -a src/seedcase_flower/styles/*/ | tr '_' '-' | grep -v '^shared$'
     }
     flora_json="$(uv run python -c 'from seedcase_soil import Example; print(Example.flora.path)')"
     build_example() {
