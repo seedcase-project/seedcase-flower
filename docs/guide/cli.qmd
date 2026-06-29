@@ -190,7 +190,7 @@ This command generates one new file, `docs/index.qmd`, since `build` by
 default uses the `quarto-one-page` style. The `qmd` extension means that
 this file is a [Quarto](https://quarto.org/)-flavored Markdown file.
 While this is the default format, you can specify your own custom
-templates as detailed in the [custom styles](custom-styles.qmd) guide.
+styles as detailed in the [custom styles](custom-styles.qmd) guide.
 
 ### Changing input and output directory
 

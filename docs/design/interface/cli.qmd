@@ -62,7 +62,7 @@ flowchart LR
     verbose_opt("--verbose<br>[option]")
     output_dir_opt("--output-dir<br>[option]")
     style_dir_opt("--style-dir<br>[option]")
-    templates["Templates<br>[folder with<br>Jinja files]"]
+    styles["Style<br>[folder with<br>Jinja templates]"]
     output["Output<br>[files and<br>folders]"]
     file{"file"}
     cli{"cli"}
@@ -73,7 +73,7 @@ flowchart LR
     style_dir_opt --> cli
     style_opt --> cli
 
-    templates --> config_sections_file
+    styles --> config_sections_file
     config_sections_file --> config
     cli -- "either" --> config
     file -- "or" --> config
@@ -141,7 +141,8 @@ sections via the CLI to:
 
 - Simplify the CLI implementation
 - Avoid long commands. Customising the style of output can get quite
-  complex with multiple sections, templates, and output paths.
+- Avoid long commands. Customising the output structure can get quite
+  complex with multiple sections, style templates, and output paths.
 - Enforce reproducible builds by having the configuration in a file that
   can be version controlled and shared.
 
