@@ -67,11 +67,15 @@ If you want to edit the content, please make changes to the `datapackage.json` f
 {% set headers = ["Name", "Title", "Type", "Description"] %}
 {%- set ns = namespace(rows=[]) -%}
 {%- for field in schema.fields -%}
+  {%- set description = namespace(text=field.description or "N/A") -%}
+  {%- if field.constraints and field.constraints.enum -%}
+    {%- set description.text = description.text ~ "<br>Allowed values: " ~ (field.constraints.enum | _inline_code_values) -%}
+  {%- endif -%}
   {%- set ns.rows = ns.rows + [[
     field.name | _inline_code or "N/A",
     field.title or "N/A",
     field.type or "any",
-    field.description or "N/A"
+    description.text
   ]] -%}
 {%- endfor -%}
 {{ _adjust_column_widths(headers, ns.rows) }}

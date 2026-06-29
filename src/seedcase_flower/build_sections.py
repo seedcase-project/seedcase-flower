@@ -88,6 +88,12 @@ def _inline_code_list(value: Union[str, list[str]]) -> str:
     return ", ".join(fmap(value, lambda item: f"`{item}`"))
 
 
+def _inline_code_values(value: Any) -> str:
+    if isinstance(value, list):
+        return ", ".join(fmap(value, lambda item: f"`{item}`"))
+    return f"`{value}`"
+
+
 def _bracket_list(value: Union[str, list[str]]) -> str:
     if isinstance(value, str):
         return value
@@ -155,6 +161,8 @@ def _create_jinja_env(search_paths: list[Path]) -> Environment:
     )
     # Render a list of strings as comma-separated inline code
     env.filters["_inline_code_list"] = _inline_code_list
+    # Render a possible value or list of possible values as inline code
+    env.filters["_inline_code_values"] = _inline_code_values
     # Render a single value as inline code
     env.filters["_inline_code"] = _inline_code
     # Render a list of strings as bracketed list
