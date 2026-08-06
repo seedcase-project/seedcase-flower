@@ -6,13 +6,13 @@ from .sections import Content, Many, ManyContent, One
 from .styles import Style, ViewStyle
 
 __all__ = [
-    "build",
-    "view",
     "Config",
-    "Style",
-    "ViewStyle",
     "Content",
-    "One",
     "Many",
     "ManyContent",
+    "One",
+    "Style",
+    "ViewStyle",
+    "build",
+    "view",
 ]
