@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -50,5 +49,5 @@ class Config(BaseModel, frozen=True):
     """
 
     style: Style = Style.quarto_one_page
-    style_dir: Optional[Path] = None
+    style_dir: Path | None = None
     output_dir: Path = Path("docs")

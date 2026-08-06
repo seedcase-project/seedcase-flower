@@ -1,7 +1,7 @@
 import re
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Optional, Self
+from typing import Annotated, Self
 
 from jsonpath import JSONPathSyntaxError, compile
 from pydantic import (
@@ -143,7 +143,7 @@ class One(KebabModel, frozen=True):
         ```
     """
 
-    output_path: Optional[RelativePath] = None
+    output_path: RelativePath | None = None
     contents: list[Content]
 
 
@@ -217,7 +217,7 @@ class Many(KebabModel, frozen=True):
         ```
     """
 
-    output_path: Optional[RelativePath] = None
+    output_path: RelativePath | None = None
     content: ManyContent
     template_path: TemplatePath
     jinja_variable: str

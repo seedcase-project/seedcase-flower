@@ -4,7 +4,7 @@ import tomllib
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
-from typing import Any, Optional, Union, cast
+from typing import Any, cast
 
 from jinja2 import (
     Environment,
@@ -46,7 +46,7 @@ class BuiltSection:
     """
 
     content: str
-    output_path: Optional[Path] = None
+    output_path: Path | None = None
 
 
 def _get_styles_dir() -> Path:
@@ -77,11 +77,11 @@ def _load_sections_toml(style_dir: Path) -> SectionsToml:
     return SectionsToml.model_validate(toml_file)
 
 
-def _inline_code(value: Optional[str]) -> Optional[str]:
+def _inline_code(value: str | None) -> str | None:
     return f"`{value}`" if value else None
 
 
-def _inline_code_list(value: Union[str, list[str]]) -> str:
+def _inline_code_list(value: str | list[str]) -> str:
     # Some Data Package fields allow either a string or a list of strings
     if isinstance(value, str):
         value = [value]
@@ -94,7 +94,7 @@ def _inline_code_values(value: Any) -> str:
     return f"`{value}`"
 
 
-def _bracket_list(value: Union[str, list[str]]) -> str:
+def _bracket_list(value: str | list[str]) -> str:
     if isinstance(value, str):
         return value
     if len(value) == 1:
@@ -254,7 +254,7 @@ def _build_many(
     )
 
 
-def _get_output_path_for_match(match: ManyMatch, many: Many) -> Optional[Path]:
+def _get_output_path_for_match(match: ManyMatch, many: Many) -> Path | None:
     if not many.output_path:
         return None
 

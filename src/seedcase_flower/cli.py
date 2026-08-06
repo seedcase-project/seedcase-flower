@@ -1,7 +1,7 @@
 """Functions for the exposed CLI."""
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from check_datapackage import check
 from rich.console import Console
@@ -36,7 +36,7 @@ def build(
     /,  # End of positional-only args
     *,  # Start of keyword-only params
     style: Style = Style.quarto_one_page,
-    style_dir: Optional[Path] = None,
+    style_dir: Path | None = None,
     output_dir: Path = Path("docs"),
     verbose: bool = False,
 ) -> None:
