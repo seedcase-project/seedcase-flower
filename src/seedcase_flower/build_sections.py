@@ -111,7 +111,7 @@ def _replace_newlines_in_row(row: list[str]) -> list[str]:
 
 
 def _max_column_width(rows: list[list[str]], col: int) -> int:
-    return max(map(lambda row: len(row[col]), rows), default=0)
+    return max(fmap(rows, lambda row: len(row[col])), default=0)
 
 
 def _cell_width(header_row: list[str], data_rows: list[list[str]], col: int) -> int:
@@ -127,7 +127,7 @@ def _format_row(row: list[str], widths: list[int]) -> str:
 
 
 def _separator_row(widths: list[int]) -> str:
-    return "|" + "|".join(map(lambda w: "-" * (w + 2), widths)) + "|"
+    return "|" + "|".join(fmap(widths, lambda w: "-" * (w + 2))) + "|"
 
 
 def _adjust_column_widths(header_row: list[str], data_rows: list[list[str]]) -> str:
@@ -142,7 +142,7 @@ def _adjust_column_widths(header_row: list[str], data_rows: list[list[str]]) -> 
         [
             _format_row(header_row, widths),
             _separator_row(widths),
-            *map(lambda row: _format_row(row, widths), data_rows),
+            *fmap(data_rows, lambda row: _format_row(row, widths)),
         ]
     )
 

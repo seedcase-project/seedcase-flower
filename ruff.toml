@@ -18,6 +18,8 @@ ignore = [
   "D100",
   # Use `Optional[]` typing.
   "UP045",
+  # Use `Union[]` typing (not `|`) to be aligned with `Optional[]`.
+  "UP007"
 ]
 
 [lint.pydocstyle]
