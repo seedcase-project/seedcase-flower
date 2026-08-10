@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Union
 
 from plum import dispatch
 from quartodoc import MdRenderer, layout
@@ -31,7 +31,9 @@ class Renderer(MdRenderer):  # type: ignore[misc]
     # returns ----
 
     @dispatch
-    def render(self, el: ds.DocstringSectionReturns | ds.DocstringSectionRaises) -> str:
+    def render(
+        self, el: Union[ds.DocstringSectionReturns, ds.DocstringSectionRaises]
+    ) -> str:
         rows = list(map(self.render, el.value))
         header = [
             "Type",
