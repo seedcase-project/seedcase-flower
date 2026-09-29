@@ -8,24 +8,24 @@ abstract: |
   custom styles with the `build` command. See the
   <a href="https://flower.seedcase-project.org">website</a> for more information.
 authors:
-  - family-names: Johnston
-    given-names: Luke William
-    orcid: "https://orcid.org/0000-0003-4169-2616"
-    affiliation: "Steno Diabetes Center Aarhus"
   - family-names: Brødbæk
     given-names: Signe Kirk
     affiliation: "Steno Diabetes Center Aarhus"
     orcid: "https://orcid.org/0009-0000-2208-7088"
-  - family-names: Vago
-    given-names: Marton
+  - family-names: Johnston
+    given-names: Luke William
+    orcid: "https://orcid.org/0000-0003-4169-2616"
     affiliation: "Steno Diabetes Center Aarhus"
-    orcid: "https://orcid.org/0009-0007-4628-655X"
   - family-names: Ostblom
     given-names: Joel
-    orcid: ""
+    orcid: "https://orcid.org/0000-0003-0051-3239"
+  - family-names: Vago
+    given-names: Fruzsina
+    affiliation: "Steno Diabetes Center Aarhus"
+    orcid: "https://orcid.org/0009-0007-4628-655X"
 cff-version: 1.2.0
-# doi:
-# date-released: ""
+doi: "10.5281/zenodo.19220976"
+date-released: "2026-03-25"
 keywords:
   - "data package"
   - "frictionless data"
